@@ -1,0 +1,28 @@
+{
+  "compileOnSave": true,
+  "compilerOptions": {
+    "module": "commonjs",
+    "lib": [
+      "es6",
+      "dom",
+      "esnext.asynciterable"
+    ],
+    "target": "es2017",
+    "noImplicitAny": true,
+    "removeComments": false,
+    "preserveConstEnums": true,
+    "sourceMap": true,
+    "inlineSources": true,
+    "declaration": true
+  },
+  "include": [
+    "packages/*/index.ts",
+    "packages/*/index-browser.ts",
+    "packages/*/bin/**/*",
+    "packages/*/lib/**/*"
+  ],
+  "exclude": [
+    "**/node_modules",
+    "**/test/*"
+  ]
+}

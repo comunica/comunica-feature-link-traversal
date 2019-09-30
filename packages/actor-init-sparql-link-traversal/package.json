@@ -1,0 +1,52 @@
+{
+  "name": "@comunica/actor-init-sparql-link-traversal",
+  "version": "1.0.0",
+  "description": "A Comunica engine for link traversal-based query evaluation",
+  "lsd:importPaths": {
+    "https://linkedsoftwaredependencies.org/bundles/npm/@comunica/actor-init-sparql-link-traversal/^1.0.0/config/": "config/"
+  },
+  "main": "index.js",
+  "typings": "index",
+  "repository": "https://github.com/comunica/comunica-feature-link-traversal/tree/master/packages/actor-init-sparql-link-traversal",
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [
+    "comunica",
+    "actor",
+    "init",
+    "sparql",
+    "link-traversal"
+  ],
+  "license": "MIT",
+  "bin": {
+    "comunica-sparql-link-traversal": "./bin/query.js",
+    "comunica-sparql-link-traversal-http": "./bin/http.js",
+    "comunica-dynamic-sparql-link-traversal": "./bin/query-dynamic.js"
+  },
+  "bugs": {
+    "url": "https://github.com/comunica/comunica/issues"
+  },
+  "homepage": "https://github.com/comunica/comunica#readme",
+  "files": [
+    "config",
+    "bin/**/*.d.ts",
+    "bin/**/*.js",
+    "index.js",
+    "index.d.ts",
+    "index-browser.d.ts",
+    "index-browser.js",
+    "engine-default.js"
+  ],
+  "dependencies": {
+    "@comunica/actor-init-sparql": "^1.9.0",
+    "@comunica/runner": "^1.9.0",
+    "@comunica/runner-cli": "^1.9.0"
+  },
+  "scripts": {
+    "lint": "node \"../../node_modules/tslint/bin/tslint\" lib/**/*.ts test/**/*.ts --exclude '**/*.d.ts'",
+    "build": "node \"../../node_modules/typescript/bin/tsc\"",
+    "validate": "npm ls",
+    "prepare": "comunica-compile-config config/config-default.json > engine-default.js"
+  }
+}
