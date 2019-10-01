@@ -2,6 +2,9 @@
   "name": "@comunica/actor-init-sparql-link-traversal",
   "version": "1.0.0",
   "description": "A Comunica engine for link traversal-based query evaluation",
+  "lsd:contexts": {
+    "https://linkedsoftwaredependencies.org/bundles/npm/@comunica/actor-init-sparql-link-traversal/^1.0.0/components/context.jsonld": "components/context.jsonld"
+  },
   "lsd:importPaths": {
     "https://linkedsoftwaredependencies.org/bundles/npm/@comunica/actor-init-sparql-link-traversal/^1.0.0/config/": "config/"
   },
@@ -39,9 +42,10 @@
     "engine-default.js"
   ],
   "dependencies": {
-    "@comunica/actor-init-sparql": "^1.9.0",
-    "@comunica/runner": "^1.9.0",
-    "@comunica/runner-cli": "^1.9.0"
+    "@comunica/actor-init-sparql": "^1.9.2",
+    "@comunica/actor-rdf-resolve-hypermedia-links-traverse": "^1.0.0",
+    "@comunica/runner": "^1.9.2",
+    "@comunica/runner-cli": "^1.9.2"
   },
   "scripts": {
     "lint": "node \"../../node_modules/tslint/bin/tslint\" lib/**/*.ts test/**/*.ts --exclude '**/*.d.ts'",
