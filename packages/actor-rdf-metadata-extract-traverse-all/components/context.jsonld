@@ -1,0 +1,12 @@
+{
+  "@context": [
+    "https://linkedsoftwaredependencies.org/bundles/npm/@comunica/core/^1.0.0/components/context.jsonld",
+    {
+      "npmd": "https://linkedsoftwaredependencies.org/bundles/npm/",
+      "carmeta": "npmd:@comunica/actor-rdf-metadata-extract-traverse-all/",
+      "files-carmeta": "carmeta:^1.0.0/",
+
+      "ActorRdfMetadataExtractTraverseAll": "carmeta:Actor/RdfMetadataExtract/TraverseAll"
+    }
+  ]
+}

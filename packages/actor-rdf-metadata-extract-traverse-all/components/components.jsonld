@@ -1,0 +1,9 @@
+{
+  "@context": "https://linkedsoftwaredependencies.org/bundles/npm/@comunica/actor-rdf-metadata-extract-traverse-all/^1.0.0/components/context.jsonld",
+  "@id": "npmd:@comunica/actor-rdf-metadata-extract-traverse-all",
+  "@type": "Module",
+  "requireName": "@comunica/actor-rdf-metadata-extract-traverse-all",
+  "import": [
+    "files-carmeta:components/Actor/RdfMetadataExtract/TraverseAll.jsonld"
+  ]
+}
