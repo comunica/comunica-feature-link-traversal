@@ -45,6 +45,7 @@
     "@comunica/actor-init-sparql": "^1.9.2",
     "@comunica/actor-query-operation-bgp-traversal": "^1.0.0",
     "@comunica/actor-rdf-metadata-extract-traverse-all": "^1.0.0",
+    "@comunica/actor-rdf-metadata-extract-traverse-quad-pattern": "^1.0.0",
     "@comunica/actor-rdf-resolve-hypermedia-links-traverse": "^1.0.0",
     "@comunica/runner": "^1.9.2",
     "@comunica/runner-cli": "^1.9.2"

@@ -1,0 +1,12 @@
+{
+  "@context": [
+    "https://linkedsoftwaredependencies.org/bundles/npm/@comunica/core/^1.0.0/components/context.jsonld",
+    {
+      "npmd": "https://linkedsoftwaredependencies.org/bundles/npm/",
+      "carmetqp": "npmd:@comunica/actor-rdf-metadata-extract-traverse-quad-pattern/",
+      "files-carmetqp": "carmetqp:^1.0.0/",
+
+      "ActorRdfMetadataExtractTraverseQuadPattern": "carmetqp:Actor/RdfMetadataExtract/TraverseQuadPattern"
+    }
+  ]
+}

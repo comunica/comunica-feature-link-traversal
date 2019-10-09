@@ -4,14 +4,14 @@
     "https://linkedsoftwaredependencies.org/bundles/npm/@comunica/actor-init-sparql-link-traversal/^1.0.0/components/context.jsonld",
     "https://linkedsoftwaredependencies.org/bundles/npm/@comunica/runner/^1.0.0/components/context.jsonld",
 
-    "https://linkedsoftwaredependencies.org/bundles/npm/@comunica/bus-rdf-metadata-extract/^1.0.0/components/context.jsonld",
-    "https://linkedsoftwaredependencies.org/bundles/npm/@comunica/actor-rdf-metadata-extract-traverse-all/^1.0.0/components/context.jsonld"
+    "https://linkedsoftwaredependencies.org/bundles/npm/@comunica/bus-rdf-resolve-hypermedia-links/^1.0.0/components/context.jsonld",
+    "https://linkedsoftwaredependencies.org/bundles/npm/@comunica/actor-rdf-resolve-hypermedia-links-traverse/^1.0.0/components/context.jsonld"
   ],
   "@id": "urn:comunica:my",
   "actors": [
     {
-      "@id": "config-setsslt:traverse-links-all.json#myRdfMetadataExtractTraverseAll",
-      "@type": "ActorRdfMetadataExtractTraverseAll"
+      "@id": "config-setsslt:traverse-links-all.json#myHypermediaLinksTraverse",
+      "@type": "ActorRdfResolveHypermediaLinksTraverse"
     }
   ]
 }
