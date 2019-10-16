@@ -39,11 +39,11 @@
   },
   "peerDependencies": {
     "@comunica/core": "^1.9.2",
-    "@comunica/bus-rdf-metadata-extract": "^1.9.2"
+    "@comunica/bus-rdf-metadata-extract": "^1.9.3"
   },
   "devDependencies": {
     "@comunica/core": "^1.9.2",
-    "@comunica/bus-rdf-metadata-extract": "^1.9.2"
+    "@comunica/bus-rdf-metadata-extract": "^1.9.3"
   },
   "jest": {
     "globals": {
