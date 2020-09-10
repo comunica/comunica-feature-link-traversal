@@ -39,6 +39,11 @@ export class ActorQueryOperationBgpTraversal extends ActorQueryOperationTypedMed
     super(args, 'bgp');
   }
 
+  /**
+   * Obtain all IRIs from the given pattern that are not related to vocabularies.
+   * Concretely, predicates will be omitted, and objects if predicate is http://www.w3.org/1999/02/22-rdf-syntax-ns#type
+   * @param pattern A quad pattern.
+   */
   public static getPatternNonVocabUris(pattern: RDF.BaseQuad): RDF.NamedNode[] {
     let nonVocabTerms: RDF.Term[];
     if (pattern.predicate.termType === 'NamedNode' &&
@@ -50,12 +55,22 @@ export class ActorQueryOperationBgpTraversal extends ActorQueryOperationTypedMed
     return getNamedNodes(nonVocabTerms);
   }
 
+  /**
+   * Determine the source IRI of a given IRI without hash.
+   * @param namedNode An IRI.
+   */
   public static getSourceUri(namedNode: RDF.NamedNode): string {
     const value = namedNode.value;
     const hashPos = value.indexOf('#');
     return hashPos > 0 ? value.slice(0, hashPos) : value;
   }
 
+  /**
+   * Calculate a score for the given quad pattern based on a given set of sources.
+   * The more sources are present in the given pattern as non-vocab URIs, the higher the score.
+   * @param pattern A quad pattern.
+   * @param sources An array of sources.
+   */
   public static getScoreSeedNonVocab(pattern: RDF.BaseQuad, sources: string[]): number {
     return ActorQueryOperationBgpTraversal.getPatternNonVocabUris(pattern)
       .map(ActorQueryOperationBgpTraversal.getSourceUri)
@@ -63,10 +78,20 @@ export class ActorQueryOperationBgpTraversal extends ActorQueryOperationTypedMed
       .length;
   }
 
+  /**
+   * Determine a score for the selectivity of the given pattern.
+   * The fewer variables, the higher the score.
+   * @param pattern A quad pattern.
+   */
   public static getScoreSelectivity(pattern: RDF.BaseQuad): number {
     return QUAD_TERM_NAMES.length - getVariables(getTerms(pattern)).length;
   }
 
+  /**
+   * Obtain all variables in the given pattern.
+   * The returned variables array will be unique.
+   * @param patterns A quad pattern.
+   */
   public static getPatternVariables(patterns: RDF.BaseQuad[]): string[] {
     const hash: {[variable: string]: boolean} = {};
     for (const pattern of patterns) {
@@ -75,6 +100,25 @@ export class ActorQueryOperationBgpTraversal extends ActorQueryOperationTypedMed
       }
     }
     return Object.keys(hash);
+  }
+
+  /**
+   * Sort the patterns by the following priorities:
+   * 1. A source in S or O (not O if rdf:type) (seed rule, no vocab rule)
+   * 2. Most selective: fewest variables (filtering rule, dependency-respecting rule)
+   * @param patterns Quad patterns.
+   * @param sources The sources that are currently being queried.
+   */
+  public static sortPatterns(patterns: Algebra.Pattern[], sources: string[]): void {
+    patterns.sort((patternA: Algebra.Pattern, patternB: Algebra.Pattern) => {
+      const compSeedNonVocab = ActorQueryOperationBgpTraversal.getScoreSeedNonVocab(patternB, sources) -
+        ActorQueryOperationBgpTraversal.getScoreSeedNonVocab(patternA, sources);
+      if (compSeedNonVocab === 0) {
+        return ActorQueryOperationBgpTraversal.getScoreSelectivity(patternB) -
+          ActorQueryOperationBgpTraversal.getScoreSelectivity(patternA);
+      }
+      return compSeedNonVocab;
+    });
   }
 
   /**
@@ -112,10 +156,11 @@ export class ActorQueryOperationBgpTraversal extends ActorQueryOperationTypedMed
     return true;
   }
 
-  public async runOperation(pattern: Algebra.Bgp, context: ActionContext): Promise<IActorQueryOperationOutputBindings> {
+  public async runOperation(pattern: Algebra.Bgp, context?: ActionContext):
+  Promise<IActorQueryOperationOutputBindings> {
     // Determine all current sources
     const sources: string[] = [];
-    if (context.has(KEY_CONTEXT_SOURCES)) {
+    if (context && context.has(KEY_CONTEXT_SOURCES)) {
       const dataSources: DataSources = context.get(KEY_CONTEXT_SOURCES);
       let source: IDataSource | null;
       const it = dataSources.iterator();
@@ -128,21 +173,9 @@ export class ActorQueryOperationBgpTraversal extends ActorQueryOperationTypedMed
       }
     }
 
-    // Make a copy of the patterns to avoid modifying the original BGP
+    // Make a copy of the patterns to avoid modifying the original BGP, and sort them
     const patterns: Algebra.Pattern[] = pattern.patterns.slice();
-
-    // Sort the patterns by the following priorities:
-    // 1. A source in S or O (not O if rdf:type) (seed rule, no vocab rule)
-    // 2. Most selective: fewest variables (filtering rule, dependency-respecting rule)
-    patterns.sort((patternA: Algebra.Pattern, patternB: Algebra.Pattern) => {
-      const compSeedNonVocab = ActorQueryOperationBgpTraversal.getScoreSeedNonVocab(patternB, sources) -
-        ActorQueryOperationBgpTraversal.getScoreSeedNonVocab(patternA, sources);
-      if (compSeedNonVocab === 0) {
-        return ActorQueryOperationBgpTraversal.getScoreSelectivity(patternB) -
-          ActorQueryOperationBgpTraversal.getScoreSelectivity(patternA);
-      }
-      return compSeedNonVocab;
-    });
+    ActorQueryOperationBgpTraversal.sortPatterns(patterns, sources);
 
     // Determine the first pattern
     const bestPattern: Algebra.Pattern = patterns[0];

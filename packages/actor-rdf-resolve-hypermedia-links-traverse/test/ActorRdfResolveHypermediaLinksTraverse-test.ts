@@ -33,12 +33,18 @@ describe('ActorRdfResolveHypermediaLinksTraverse', () => {
       actor = new ActorRdfResolveHypermediaLinksTraverse({ name: 'actor', bus });
     });
 
-    it('should test', () => {
-      return expect(actor.test({ todo: true })).resolves.toEqual({ todo: true }); // TODO
+    it('should fail to test with empty metadata', () => {
+      return expect(actor.test({ metadata: {}})).rejects
+        .toThrow(new Error('Actor actor requires a \'traverse\' metadata entry.'));
+    });
+
+    it('should test with traverse in metadata', () => {
+      return expect(actor.test({ metadata: { traverse: true }})).resolves.toEqual(true);
     });
 
     it('should run', () => {
-      return expect(actor.run({ todo: true })).resolves.toMatchObject({ todo: true }); // TODO
+      return expect(actor.run({ metadata: { traverse: [ 'a', 'b' ]}})).resolves
+        .toMatchObject({ urls: [ 'a', 'b' ]});
     });
   });
 });

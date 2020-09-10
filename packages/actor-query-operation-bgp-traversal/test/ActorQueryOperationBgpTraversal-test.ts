@@ -1,8 +1,14 @@
-import { ActorQueryOperation, Bindings } from '@comunica/bus-query-operation';
-import { Bus } from '@comunica/core';
+import { ActorQueryOperation, Bindings, IActorQueryOperationOutputBindings } from '@comunica/bus-query-operation';
+import { KEY_CONTEXT_SOURCES } from '@comunica/bus-rdf-resolve-quad-pattern';
+import { IDataSource } from '@comunica/bus-rdf-resolve-quad-pattern/lib/ActorRdfResolveQuadPattern';
+import { ActionContext, Bus } from '@comunica/core';
 import { namedNode, quad, variable } from '@rdfjs/data-model';
-import { SingletonIterator } from 'asynciterator';
+import { ArrayIterator } from 'asynciterator';
+import { AsyncReiterableArray } from 'asyncreiterable/lib/AsyncReiterableArray';
+import { Algebra, Factory } from 'sparqlalgebrajs';
 import { ActorQueryOperationBgpTraversal } from '../lib/ActorQueryOperationBgpTraversal';
+const FACTORY = new Factory();
+const arrayifyStream = require('arrayify-stream');
 
 describe('ActorQueryOperationBgpTraversal', () => {
   let bus: any;
@@ -12,13 +18,16 @@ describe('ActorQueryOperationBgpTraversal', () => {
     bus = new Bus({ name: 'bus' });
     mediatorQueryOperation = {
       mediate: (arg: any) => Promise.resolve({
-        bindingsStream: new SingletonIterator(Bindings({
+        bindingsStream: new ArrayIterator([ Bindings({
           graph: arg.operation.graph,
           object: arg.operation.object,
           predicate: arg.operation.predicate,
           subject: arg.operation.subject,
-        })),
+        }) ], { autoStart: false }),
+        metadata: () => Promise.resolve({ totalItems: (arg.context || ActionContext({})).get('totalItems') }),
         type: 'bindings',
+        variables: (arg.context || ActionContext({})).get('variables') || [],
+        canContainUndefs: false,
       }),
     };
   });
@@ -181,28 +190,82 @@ describe('ActorQueryOperationBgpTraversal', () => {
   });
 
   describe('getScoreSelectivity', () => {
-    it('should be 0 for no variables', () => {
+    it('should be 4 for no variables', () => {
       return expect(ActorQueryOperationBgpTraversal.getScoreSelectivity(quad(
         namedNode('http://example.org/s'),
         namedNode('http://example.org/p'),
         namedNode('http://example.org/o'),
-      ))).toEqual(0);
+      ))).toEqual(4);
     });
 
-    it('should be 1 for 1 variable', () => {
+    it('should be 3 for 1 variable', () => {
       return expect(ActorQueryOperationBgpTraversal.getScoreSelectivity(quad(
         namedNode('http://example.org/s'),
         variable('p'),
         namedNode('http://example.org/o'),
-      ))).toEqual(1);
+      ))).toEqual(3);
     });
 
-    it('should be 3 for 3 variables', () => {
+    it('should be 1 for 3 variables', () => {
       return expect(ActorQueryOperationBgpTraversal.getScoreSelectivity(quad(
         variable('s'),
         variable('p'),
         variable('o'),
-      ))).toEqual(3);
+      ))).toEqual(1);
+    });
+  });
+
+  describe('sortPatterns', () => {
+    it('should handle an empty array', () => {
+      const patterns: Algebra.Pattern[] = [];
+      const sources: string[] = [];
+      ActorQueryOperationBgpTraversal.sortPatterns(patterns, sources);
+      return expect(patterns).toEqual([]);
+    });
+
+    it('should prioritize patterns with seed IRIs', () => {
+      const patterns: Algebra.Pattern[] = [
+        FACTORY.createPattern(namedNode('ex:s1'), namedNode('ex:p1'), namedNode('ex:o1')),
+        FACTORY.createPattern(namedNode('ex:seed'), namedNode('ex:p2'), namedNode('ex:o2')),
+        FACTORY.createPattern(namedNode('ex:s3'), namedNode('ex:seed'), namedNode('ex:o3')),
+      ];
+      const sources: string[] = [ 'ex:seed' ];
+      ActorQueryOperationBgpTraversal.sortPatterns(patterns, sources);
+      return expect(patterns).toEqual([
+        FACTORY.createPattern(namedNode('ex:seed'), namedNode('ex:p2'), namedNode('ex:o2')),
+        FACTORY.createPattern(namedNode('ex:s1'), namedNode('ex:p1'), namedNode('ex:o1')),
+        FACTORY.createPattern(namedNode('ex:s3'), namedNode('ex:seed'), namedNode('ex:o3')),
+      ]);
+    });
+
+    it('should prioritize patterns with the fewest variables', () => {
+      const patterns: Algebra.Pattern[] = [
+        FACTORY.createPattern(variable('ex:s1'), namedNode('ex:p1'), namedNode('ex:o1')),
+        FACTORY.createPattern(namedNode('ex:s2'), namedNode('ex:p2'), namedNode('ex:o2')),
+        FACTORY.createPattern(namedNode('ex:s3'), variable('ex:p3'), variable('ex:o3')),
+      ];
+      const sources: string[] = [ 'ex:seed' ];
+      ActorQueryOperationBgpTraversal.sortPatterns(patterns, sources);
+      return expect(patterns).toEqual([
+        FACTORY.createPattern(namedNode('ex:s2'), namedNode('ex:p2'), namedNode('ex:o2')),
+        FACTORY.createPattern(variable('ex:s1'), namedNode('ex:p1'), namedNode('ex:o1')),
+        FACTORY.createPattern(namedNode('ex:s3'), variable('ex:p3'), variable('ex:o3')),
+      ]);
+    });
+
+    it('should prioritize patterns with seed IRIs, and then by fewest variables', () => {
+      const patterns: Algebra.Pattern[] = [
+        FACTORY.createPattern(namedNode('ex:s1'), namedNode('ex:p1'), namedNode('ex:o1')),
+        FACTORY.createPattern(namedNode('ex:seed'), namedNode('ex:p2'), variable('ex:o2')),
+        FACTORY.createPattern(namedNode('ex:seed'), namedNode('ex:p3'), namedNode('ex:o3')),
+      ];
+      const sources: string[] = [ 'ex:seed' ];
+      ActorQueryOperationBgpTraversal.sortPatterns(patterns, sources);
+      return expect(patterns).toEqual([
+        FACTORY.createPattern(namedNode('ex:seed'), namedNode('ex:p3'), namedNode('ex:o3')),
+        FACTORY.createPattern(namedNode('ex:seed'), namedNode('ex:p2'), variable('ex:o2')),
+        FACTORY.createPattern(namedNode('ex:s1'), namedNode('ex:p1'), namedNode('ex:o1')),
+      ]);
     });
   });
 
@@ -226,6 +289,97 @@ describe('ActorQueryOperationBgpTraversal', () => {
     it('should test on BGPs with more than one pattern', () => {
       const op = { operation: { type: 'bgp', patterns: [ 'abc', 'def' ]}};
       return expect(actor.test(op)).resolves.toBeTruthy();
+    });
+
+    const pattern1 = quad(namedNode('1'), namedNode('1'), namedNode('1'), variable('a'));
+    const pattern2 = quad(variable('d'), namedNode('4'), namedNode('4'), namedNode('4'));
+    const patterns = [ pattern1, pattern2 ];
+
+    it('should run without a context and delegate the pattern to the mediator', () => {
+      const op = {
+        operation: { type: 'bgp', patterns },
+      };
+      return actor.run(op).then(async(output: IActorQueryOperationOutputBindings) => {
+        expect(output.variables).toEqual([ '?d' ]);
+        expect(output.type).toEqual('bindings');
+        expect(output.canContainUndefs).toEqual(false);
+        expect(await (<any> output).metadata).toBeUndefined();
+        expect(await arrayifyStream(output.bindingsStream)).toEqual([
+          Bindings({
+            subject: namedNode('1'),
+            predicate: namedNode('1'),
+            object: namedNode('1'),
+            graph: namedNode('a'),
+          }),
+        ]);
+      });
+    });
+
+    it('should run with an empty context and delegate the pattern to the mediator', () => {
+      const op = {
+        operation: { type: 'bgp', patterns },
+        context: ActionContext({}),
+      };
+      return actor.run(op).then(async(output: IActorQueryOperationOutputBindings) => {
+        expect(output.variables).toEqual([ '?d' ]);
+        expect(output.type).toEqual('bindings');
+        expect(output.canContainUndefs).toEqual(false);
+        expect(await (<any> output).metadata).toBeUndefined();
+        expect(await arrayifyStream(output.bindingsStream)).toEqual([
+          Bindings({
+            subject: namedNode('1'),
+            predicate: namedNode('1'),
+            object: namedNode('1'),
+            graph: namedNode('a'),
+          }),
+        ]);
+      });
+    });
+
+    it('should run with string sources and delegate the pattern to the mediator', () => {
+      const op = {
+        operation: { type: 'bgp', patterns },
+        context: ActionContext({
+          [KEY_CONTEXT_SOURCES]: AsyncReiterableArray.fromFixedData<IDataSource>([ 'a', 'b' ]),
+        }),
+      };
+      return actor.run(op).then(async(output: IActorQueryOperationOutputBindings) => {
+        expect(output.variables).toEqual([ '?d' ]);
+        expect(output.type).toEqual('bindings');
+        expect(output.canContainUndefs).toEqual(false);
+        expect(await (<any> output).metadata).toBeUndefined();
+        expect(await arrayifyStream(output.bindingsStream)).toEqual([
+          Bindings({
+            subject: namedNode('1'),
+            predicate: namedNode('1'),
+            object: namedNode('1'),
+            graph: namedNode('a'),
+          }),
+        ]);
+      });
+    });
+
+    it('should run with non-string sources and delegate the pattern to the mediator', () => {
+      const op = {
+        operation: { type: 'bgp', patterns },
+        context: ActionContext({
+          [KEY_CONTEXT_SOURCES]: AsyncReiterableArray.fromFixedData<IDataSource>([ 'a', <any> { value: {}} ]),
+        }),
+      };
+      return actor.run(op).then(async(output: IActorQueryOperationOutputBindings) => {
+        expect(output.variables).toEqual([ '?d' ]);
+        expect(output.type).toEqual('bindings');
+        expect(output.canContainUndefs).toEqual(false);
+        expect(await (<any> output).metadata).toBeUndefined();
+        expect(await arrayifyStream(output.bindingsStream)).toEqual([
+          Bindings({
+            subject: namedNode('1'),
+            predicate: namedNode('1'),
+            object: namedNode('1'),
+            graph: namedNode('a'),
+          }),
+        ]);
+      });
     });
   });
 });
