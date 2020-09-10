@@ -1,6 +1,7 @@
 # Comunica SPARQL Link Traversal Init Actor
 
 [![npm version](https://badge.fury.io/js/%40comunica%2Factor-init-sparql-link-traversal.svg)](https://www.npmjs.com/package/@comunica/actor-init-sparql-link-traversal)
+[![Docker Pulls](https://img.shields.io/docker/pulls/comunica/actor-init-sparql-link-traversal.svg)](https://hub.docker.com/r/comunica/actor-init-sparql-link-traversal/)
 
 Comunica SPARQL Link Traversal is a SPARQL query engine for JavaScript that follows links to detect new sources.
 
