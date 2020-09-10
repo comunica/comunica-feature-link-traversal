@@ -1,7 +1,7 @@
 FROM node:10
 
 # Install location
-ENV dir /var/www/@comunica/actor-init-sparql-smartkg/
+ENV dir /var/www/@comunica/actor-init-sparql-link-traversal/
 
 # Copy the engine files (generated from package.json!files)
 COPY config ${dir}/config/

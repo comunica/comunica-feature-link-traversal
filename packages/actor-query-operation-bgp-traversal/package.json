@@ -12,7 +12,11 @@
   },
   "main": "index.js",
   "typings": "index",
-  "repository": "https://github.com/comunica/comunica/tree/master/packages/actor-query-operation-bgp-traversal",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/comunica/comunica-feature-link-traversal.git",
+    "directory": "packages/actor-query-operation-bgp-traversal"
+  },
   "publishConfig": {
     "access": "public"
   },
@@ -24,9 +28,9 @@
   ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/comunica/comunica/issues"
+    "url": "https://github.com/comunica/comunica-feature-link-traversal/issues"
   },
-  "homepage": "https://github.com/comunica/comunica#readme",
+  "homepage": "https://comunica.dev/",
   "files": [
     "components",
     "lib/**/*.d.ts",
@@ -36,7 +40,12 @@
   ],
   "dependencies": {
     "@comunica/actor-query-operation-bgp-left-deep-smallest": "^1.16.0",
-    "@comunica/bus-rdf-resolve-quad-pattern": "^1.16.0"
+    "@comunica/bus-rdf-resolve-quad-pattern": "^1.16.0",
+    "@types/rdf-js": "^3.0.0",
+    "asynciterator": "^3.0.1",
+    "rdf-string": "^1.4.2",
+    "rdf-terms": "^1.4.0",
+    "sparqlalgebrajs": "^2.3.2"
   },
   "peerDependencies": {
     "@comunica/core": "^1.15.0",
@@ -49,7 +58,7 @@
   "jest": {
     "globals": {
       "ts-jest": {
-        "tsConfig": "test/tsconfig.json"
+        "tsConfig": "../../tsconfig.json"
       }
     },
     "transform": {
@@ -65,7 +74,6 @@
   "scripts": {
     "test": "node \"../../node_modules/jest/bin/jest.js\" ${1}",
     "test-watch": "node \"../../node_modules/jest/bin/jest.js\" ${1} --watch",
-    "lint": "node \"../../node_modules/tslint/bin/tslint\" lib/**/*.ts test/**/*.ts --exclude '**/*.d.ts'",
     "build": "node \"../../node_modules/typescript/bin/tsc\"",
     "validate": "npm ls"
   }

@@ -1,9 +1,9 @@
-import {ActorRdfMetadataExtract} from "@comunica/bus-rdf-metadata-extract";
-import {Bus} from "@comunica/core";
-import {ActorRdfMetadataExtractTraverseQuadPattern} from "../lib/ActorRdfMetadataExtractTraverseQuadPattern";
+import { ActorRdfMetadataExtract } from '@comunica/bus-rdf-metadata-extract';
+import { Bus } from '@comunica/core';
+import { ActorRdfMetadataExtractTraverseQuadPattern } from '../lib/ActorRdfMetadataExtractTraverseQuadPattern';
 
 describe('ActorRdfMetadataExtractTraverseQuadPattern', () => {
-  let bus;
+  let bus: any;
 
   beforeEach(() => {
     bus = new Bus({ name: 'bus' });
@@ -15,8 +15,10 @@ describe('ActorRdfMetadataExtractTraverseQuadPattern', () => {
     });
 
     it('should be a ActorRdfMetadataExtractTraverseQuadPattern constructor', () => {
-      expect(new (<any> ActorRdfMetadataExtractTraverseQuadPattern)({ name: 'actor', bus })).toBeInstanceOf(ActorRdfMetadataExtractTraverseQuadPattern);
-      expect(new (<any> ActorRdfMetadataExtractTraverseQuadPattern)({ name: 'actor', bus })).toBeInstanceOf(ActorRdfMetadataExtract);
+      expect(new (<any> ActorRdfMetadataExtractTraverseQuadPattern)({ name: 'actor', bus }))
+        .toBeInstanceOf(ActorRdfMetadataExtractTraverseQuadPattern);
+      expect(new (<any> ActorRdfMetadataExtractTraverseQuadPattern)({ name: 'actor', bus }))
+        .toBeInstanceOf(ActorRdfMetadataExtract);
     });
 
     it('should not be able to create new ActorRdfMetadataExtractTraverseQuadPattern objects without \'new\'', () => {

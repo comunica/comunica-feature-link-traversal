@@ -1,9 +1,9 @@
-import {ActorRdfResolveHypermediaLinks} from "@comunica/bus-rdf-resolve-hypermedia-links";
-import {Bus} from "@comunica/core";
-import {ActorRdfResolveHypermediaLinksTraverse} from "../lib/ActorRdfResolveHypermediaLinksTraverse";
+import { ActorRdfResolveHypermediaLinks } from '@comunica/bus-rdf-resolve-hypermedia-links';
+import { Bus } from '@comunica/core';
+import { ActorRdfResolveHypermediaLinksTraverse } from '../lib/ActorRdfResolveHypermediaLinksTraverse';
 
 describe('ActorRdfResolveHypermediaLinksTraverse', () => {
-  let bus;
+  let bus: any;
 
   beforeEach(() => {
     bus = new Bus({ name: 'bus' });

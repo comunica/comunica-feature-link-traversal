@@ -1,4 +1,4 @@
-import {ActorQueryOperationBgpLeftDeepSmallest} from "@comunica/actor-query-operation-bgp-left-deep-smallest";
+import { ActorQueryOperationBgpLeftDeepSmallest } from '@comunica/actor-query-operation-bgp-left-deep-smallest';
 import {
   ActorQueryOperation,
   ActorQueryOperationTypedMediated,
@@ -7,15 +7,15 @@ import {
   IActorQueryOperationOutputBindings,
   IActorQueryOperationTypedMediatedArgs,
   IPatternBindings,
-} from "@comunica/bus-query-operation";
-import {DataSources, getDataSourceValue, IDataSource,
-  KEY_CONTEXT_SOURCES} from "@comunica/bus-rdf-resolve-quad-pattern";
-import {ActionContext, IActorTest} from "@comunica/core";
-import {ArrayIterator, MultiTransformIterator, TransformIterator, UnionIterator} from 'asynciterator';
-import * as RDF from "rdf-js";
-import {termToString} from "rdf-string";
-import {getNamedNodes, getTerms, getVariables, QUAD_TERM_NAMES} from "rdf-terms";
-import {Algebra} from "sparqlalgebrajs";
+} from '@comunica/bus-query-operation';
+import { DataSources, getDataSourceValue, IDataSource,
+  KEY_CONTEXT_SOURCES } from '@comunica/bus-rdf-resolve-quad-pattern';
+import { ActionContext, IActorTest } from '@comunica/core';
+import { TransformIterator, UnionIterator } from 'asynciterator';
+import type * as RDF from 'rdf-js';
+import { termToString } from 'rdf-string';
+import { getNamedNodes, getTerms, getVariables, QUAD_TERM_NAMES } from 'rdf-terms';
+import { Algebra } from 'sparqlalgebrajs';
 
 /**
  * A comunica BGP Traversal Query Operation Actor.
@@ -35,15 +35,14 @@ import {Algebra} from "sparqlalgebrajs";
  * After that, the remaining BGP is evaluated recursively by this or another BGP actor.
  */
 export class ActorQueryOperationBgpTraversal extends ActorQueryOperationTypedMediated<Algebra.Bgp> {
-
-  constructor(args: IActorQueryOperationTypedMediatedArgs) {
+  public constructor(args: IActorQueryOperationTypedMediatedArgs) {
     super(args, 'bgp');
   }
 
   public static getPatternNonVocabUris(pattern: RDF.BaseQuad): RDF.NamedNode[] {
     let nonVocabTerms: RDF.Term[];
-    if (pattern.predicate.termType === 'NamedNode'
-      && pattern.predicate.value === 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type') {
+    if (pattern.predicate.termType === 'NamedNode' &&
+      pattern.predicate.value === 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type') {
       nonVocabTerms = [ pattern.subject, pattern.graph ];
     } else {
       nonVocabTerms = [ pattern.subject, pattern.object, pattern.graph ];
@@ -54,13 +53,13 @@ export class ActorQueryOperationBgpTraversal extends ActorQueryOperationTypedMed
   public static getSourceUri(namedNode: RDF.NamedNode): string {
     const value = namedNode.value;
     const hashPos = value.indexOf('#');
-    return hashPos > 0 ? value.substr(0, hashPos) : value;
+    return hashPos > 0 ? value.slice(0, hashPos) : value;
   }
 
   public static getScoreSeedNonVocab(pattern: RDF.BaseQuad, sources: string[]): number {
     return ActorQueryOperationBgpTraversal.getPatternNonVocabUris(pattern)
       .map(ActorQueryOperationBgpTraversal.getSourceUri)
-      .filter((uri) => sources.indexOf(uri) >= 0)
+      .filter(uri => sources.includes(uri))
       .length;
   }
 
@@ -94,20 +93,21 @@ export class ActorQueryOperationBgpTraversal extends ActorQueryOperationTypedMed
    * @return {BindingsStream}
    */
   public static createBreadthFirstStream(baseStream: BindingsStream, patterns: Algebra.Pattern[],
-                                         patternBinder:
-                                           (patterns: { pattern: Algebra.Pattern, bindings: IPatternBindings }[]) =>
-                                             Promise<BindingsStream>): BindingsStream {
+    patternBinder:
+    (patterns: { pattern: Algebra.Pattern; bindings: IPatternBindings }[]) =>
+    Promise<BindingsStream>): BindingsStream {
     return new UnionIterator(baseStream.map((bindings: Bindings) => {
-      const bindingsMerger = (subBindings: Bindings) => subBindings.merge(bindings);
+      const bindingsMerger = (subBindings: Bindings): Bindings => subBindings.merge(bindings);
       return new TransformIterator(
-        async () => (await patternBinder(ActorQueryOperationBgpLeftDeepSmallest.materializePatterns(patterns,
-          bindings))).map(bindingsMerger), { maxBufferSize: 128 });
+        async() => (await patternBinder(ActorQueryOperationBgpLeftDeepSmallest.materializePatterns(patterns,
+          bindings))).map(bindingsMerger), { maxBufferSize: 128 },
+      );
     }), { autoStart: false });
   }
 
   public async testOperation(pattern: Algebra.Bgp, context: ActionContext): Promise<IActorTest> {
     if (pattern.patterns.length < 2) {
-      throw new Error('Actor ' + this.name + ' can only operate on BGPs with at least two patterns.');
+      throw new Error(`Actor ${this.name} can only operate on BGPs with at least two patterns.`);
     }
     return true;
   }
@@ -117,9 +117,10 @@ export class ActorQueryOperationBgpTraversal extends ActorQueryOperationTypedMed
     const sources: string[] = [];
     if (context.has(KEY_CONTEXT_SOURCES)) {
       const dataSources: DataSources = context.get(KEY_CONTEXT_SOURCES);
-      let source: IDataSource;
+      let source: IDataSource | null;
       const it = dataSources.iterator();
-      while (source = it.read()) { // tslint:disable-line:no-conditional-assignment
+      // eslint-disable-next-line no-cond-assign
+      while (source = it.read()) {
         const sourceValue = getDataSourceValue(source);
         if (typeof sourceValue === 'string') {
           sources.push(sourceValue);
@@ -134,11 +135,11 @@ export class ActorQueryOperationBgpTraversal extends ActorQueryOperationTypedMed
     // 1. A source in S or O (not O if rdf:type) (seed rule, no vocab rule)
     // 2. Most selective: fewest variables (filtering rule, dependency-respecting rule)
     patterns.sort((patternA: Algebra.Pattern, patternB: Algebra.Pattern) => {
-      const compSeedNonVocab = ActorQueryOperationBgpTraversal.getScoreSeedNonVocab(patternB, sources)
-        - ActorQueryOperationBgpTraversal.getScoreSeedNonVocab(patternA, sources);
+      const compSeedNonVocab = ActorQueryOperationBgpTraversal.getScoreSeedNonVocab(patternB, sources) -
+        ActorQueryOperationBgpTraversal.getScoreSeedNonVocab(patternA, sources);
       if (compSeedNonVocab === 0) {
-        return ActorQueryOperationBgpTraversal.getScoreSelectivity(patternB)
-          - ActorQueryOperationBgpTraversal.getScoreSelectivity(patternA);
+        return ActorQueryOperationBgpTraversal.getScoreSelectivity(patternB) -
+          ActorQueryOperationBgpTraversal.getScoreSelectivity(patternA);
       }
       return compSeedNonVocab;
     });
@@ -155,19 +156,20 @@ export class ActorQueryOperationBgpTraversal extends ActorQueryOperationTypedMed
 
     // Materialize the remaining patterns for each binding in the stream.
     const bindingsStream: BindingsStream = ActorQueryOperationBgpTraversal.createBreadthFirstStream(
-      subOutput.bindingsStream, remainingPatterns,
-      async (subPatterns: { pattern: Algebra.Pattern, bindings: IPatternBindings }[]) => {
+      subOutput.bindingsStream,
+      remainingPatterns,
+      async(subPatterns: { pattern: Algebra.Pattern; bindings: IPatternBindings }[]) => {
         // Send the materialized patterns to the mediator for recursive BGP evaluation.
-        const operation: Algebra.Bgp = { type: 'bgp', patterns: subPatterns.map((p) => p.pattern) };
+        const operation: Algebra.Bgp = { type: 'bgp', patterns: subPatterns.map(subPattern => subPattern.pattern) };
 
         return ActorQueryOperation.getSafeBindings(await this.mediatorQueryOperation
           .mediate({ operation, context })).bindingsStream;
-      });
+      },
+    );
 
     // Prepare variables and metadata
     const variables: string[] = ActorQueryOperationBgpTraversal.getPatternVariables(remainingPatterns);
 
     return { type: 'bindings', bindingsStream, variables, canContainUndefs: false };
   }
-
 }

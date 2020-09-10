@@ -1,13 +1,13 @@
-import {ActorRdfMetadataExtract, IActionRdfMetadataExtract, IActorRdfMetadataExtractOutput} from "@comunica/bus-rdf-metadata-extract";
-import {IActorArgs, IActorTest} from "@comunica/core";
-import {getNamedNodes, getTerms} from "rdf-terms";
+import { ActorRdfMetadataExtract, IActionRdfMetadataExtract,
+  IActorRdfMetadataExtractOutput } from '@comunica/bus-rdf-metadata-extract';
+import { IActorArgs, IActorTest } from '@comunica/core';
+import { getNamedNodes, getTerms } from 'rdf-terms';
 
 /**
  * A comunica Traverse All RDF Metadata Extract Actor.
  */
 export class ActorRdfMetadataExtractTraverseAll extends ActorRdfMetadataExtract {
-
-  constructor(args: IActorArgs<IActionRdfMetadataExtract, IActorTest, IActorRdfMetadataExtractOutput>) {
+  public constructor(args: IActorArgs<IActionRdfMetadataExtract, IActorTest, IActorRdfMetadataExtractOutput>) {
     super(args);
   }
 
@@ -23,7 +23,7 @@ export class ActorRdfMetadataExtractTraverseAll extends ActorRdfMetadataExtract 
       action.metadata.on('error', reject);
 
       // Immediately resolve when a value has been found.
-      action.metadata.on('data', (quad) => {
+      action.metadata.on('data', quad => {
         for (const link of getNamedNodes(getTerms(quad))) {
           traverse.push(link.value);
         }
@@ -31,9 +31,8 @@ export class ActorRdfMetadataExtractTraverseAll extends ActorRdfMetadataExtract 
 
       // If no value has been found, assume infinity.
       action.metadata.on('end', () => {
-        resolve({ metadata: { traverse } });
+        resolve({ metadata: { traverse }});
       });
     });
   }
-
 }

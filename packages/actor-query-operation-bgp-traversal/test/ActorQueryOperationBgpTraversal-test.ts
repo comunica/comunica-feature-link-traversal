@@ -1,17 +1,17 @@
-import {ActorQueryOperation, Bindings} from "@comunica/bus-query-operation";
-import {Bus} from "@comunica/core";
-import {namedNode, quad, variable} from "@rdfjs/data-model";
-import {SingletonIterator} from "asynciterator";
-import {ActorQueryOperationBgpTraversal} from "../lib/ActorQueryOperationBgpTraversal";
+import { ActorQueryOperation, Bindings } from '@comunica/bus-query-operation';
+import { Bus } from '@comunica/core';
+import { namedNode, quad, variable } from '@rdfjs/data-model';
+import { SingletonIterator } from 'asynciterator';
+import { ActorQueryOperationBgpTraversal } from '../lib/ActorQueryOperationBgpTraversal';
 
 describe('ActorQueryOperationBgpTraversal', () => {
-  let bus;
-  let mediatorQueryOperation;
+  let bus: any;
+  let mediatorQueryOperation: any;
 
   beforeEach(() => {
     bus = new Bus({ name: 'bus' });
     mediatorQueryOperation = {
-      mediate: (arg) => Promise.resolve({
+      mediate: (arg: any) => Promise.resolve({
         bindingsStream: new SingletonIterator(Bindings({
           graph: arg.operation.graph,
           object: arg.operation.object,
@@ -214,17 +214,17 @@ describe('ActorQueryOperationBgpTraversal', () => {
     });
 
     it('should not test on empty BGPs', () => {
-      const op = { operation: { type: 'bgp', patterns: [] } };
+      const op = { operation: { type: 'bgp', patterns: []}};
       return expect(actor.test(op)).rejects.toBeTruthy();
     });
 
     it('should not test on BGPs with a single pattern', () => {
-      const op = { operation: { type: 'bgp', patterns: [ 'abc' ] } };
+      const op = { operation: { type: 'bgp', patterns: [ 'abc' ]}};
       return expect(actor.test(op)).rejects.toBeTruthy();
     });
 
     it('should test on BGPs with more than one pattern', () => {
-      const op = { operation: { type: 'bgp', patterns: [ 'abc', 'def' ] } };
+      const op = { operation: { type: 'bgp', patterns: [ 'abc', 'def' ]}};
       return expect(actor.test(op)).resolves.toBeTruthy();
     });
   });

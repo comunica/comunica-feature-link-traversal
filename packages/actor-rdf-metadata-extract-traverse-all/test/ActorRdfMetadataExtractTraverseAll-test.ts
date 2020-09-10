@@ -1,9 +1,9 @@
-import {ActorRdfMetadataExtract} from "@comunica/bus-rdf-metadata-extract";
-import {Bus} from "@comunica/core";
-import {ActorRdfMetadataExtractTraverseAll} from "../lib/ActorRdfMetadataExtractTraverseAll";
+import { ActorRdfMetadataExtract } from '@comunica/bus-rdf-metadata-extract';
+import { Bus } from '@comunica/core';
+import { ActorRdfMetadataExtractTraverseAll } from '../lib/ActorRdfMetadataExtractTraverseAll';
 
 describe('ActorRdfMetadataExtractTraverseAll', () => {
-  let bus;
+  let bus: any;
 
   beforeEach(() => {
     bus = new Bus({ name: 'bus' });

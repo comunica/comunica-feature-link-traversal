@@ -1,24 +1,24 @@
-import {ActorRdfMetadataExtract, IActionRdfMetadataExtract, IActorRdfMetadataExtractOutput} from "@comunica/bus-rdf-metadata-extract";
-import {ActionContext, IActorArgs, IActorTest} from "@comunica/core";
-import {getNamedNodes, getTerms, matchPatternComplete} from "rdf-terms";
-import {Algebra} from "sparqlalgebrajs";
+import { ActorRdfMetadataExtract, IActionRdfMetadataExtract,
+  IActorRdfMetadataExtractOutput } from '@comunica/bus-rdf-metadata-extract';
+import { ActionContext, IActorArgs, IActorTest } from '@comunica/core';
+import { getNamedNodes, getTerms, matchPatternComplete } from 'rdf-terms';
+import { Algebra } from 'sparqlalgebrajs';
 
 /**
  * A comunica Traverse Quad Pattern RDF Metadata Extract Actor.
  */
 export class ActorRdfMetadataExtractTraverseQuadPattern extends ActorRdfMetadataExtract {
-
-  constructor(args: IActorArgs<IActionRdfMetadataExtract, IActorTest, IActorRdfMetadataExtractOutput>) {
+  public constructor(args: IActorArgs<IActionRdfMetadataExtract, IActorTest, IActorRdfMetadataExtractOutput>) {
     super(args);
   }
 
-  public static getCurrentQuadPattern(context?: ActionContext): Algebra.Pattern {
+  public static getCurrentQuadPattern(context?: ActionContext): Algebra.Pattern | undefined {
     if (!context) {
-      return null;
+      return undefined;
     }
     const currentQueryOperation = context.get(KEY_CONTEXT_QUERYOPERATION);
     if (!currentQueryOperation || currentQueryOperation.type !== 'pattern') {
-      return null;
+      return undefined;
     }
     return currentQueryOperation;
   }
@@ -31,7 +31,8 @@ export class ActorRdfMetadataExtractTraverseQuadPattern extends ActorRdfMetadata
   }
 
   public async run(action: IActionRdfMetadataExtract): Promise<IActorRdfMetadataExtractOutput> {
-    const quadPattern = ActorRdfMetadataExtractTraverseQuadPattern.getCurrentQuadPattern(action.context);
+    const quadPattern: Algebra.Pattern = <Algebra.Pattern> ActorRdfMetadataExtractTraverseQuadPattern
+      .getCurrentQuadPattern(action.context);
     return new Promise((resolve, reject) => {
       const traverse: string[] = [];
 
@@ -39,7 +40,7 @@ export class ActorRdfMetadataExtractTraverseQuadPattern extends ActorRdfMetadata
       action.metadata.on('error', reject);
 
       // Immediately resolve when a value has been found.
-      action.metadata.on('data', (quad) => {
+      action.metadata.on('data', quad => {
         if (matchPatternComplete(quad, quadPattern)) {
           for (const link of getNamedNodes(getTerms(quad))) {
             traverse.push(link.value);
@@ -49,11 +50,10 @@ export class ActorRdfMetadataExtractTraverseQuadPattern extends ActorRdfMetadata
 
       // If no value has been found, assume infinity.
       action.metadata.on('end', () => {
-        resolve({ metadata: { traverse } });
+        resolve({ metadata: { traverse }});
       });
     });
   }
-
 }
 
 /**

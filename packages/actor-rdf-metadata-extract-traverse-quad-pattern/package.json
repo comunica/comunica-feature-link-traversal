@@ -12,7 +12,11 @@
   },
   "main": "index.js",
   "typings": "index",
-  "repository": "https://github.com/comunica/comunica/tree/master/packages/actor-rdf-metadata-extract-traverse-quad-pattern",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/comunica/comunica-feature-link-traversal.git",
+    "directory": "packages/actor-rdf-metadata-extract-traverse-quad-pattern"
+  },
   "publishConfig": {
     "access": "public"
   },
@@ -24,9 +28,9 @@
   ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/comunica/comunica/issues"
+    "url": "https://github.com/comunica/comunica-feature-link-traversal/issues"
   },
-  "homepage": "https://github.com/comunica/comunica#readme",
+  "homepage": "https://comunica.dev/",
   "files": [
     "components",
     "lib/**/*.d.ts",
@@ -35,7 +39,8 @@
     "index.js"
   ],
   "dependencies": {
-    "rdf-terms": "^1.5.1"
+    "rdf-terms": "^1.5.1",
+    "sparqlalgebrajs": "^2.3.2"
   },
   "peerDependencies": {
     "@comunica/core": "^1.15.0",
@@ -48,7 +53,7 @@
   "jest": {
     "globals": {
       "ts-jest": {
-        "tsConfig": "test/tsconfig.json"
+        "tsConfig": "../../tsconfig.json"
       }
     },
     "transform": {
@@ -64,7 +69,6 @@
   "scripts": {
     "test": "node \"../../node_modules/jest/bin/jest.js\" ${1}",
     "test-watch": "node \"../../node_modules/jest/bin/jest.js\" ${1} --watch",
-    "lint": "node \"../../node_modules/tslint/bin/tslint\" lib/**/*.ts test/**/*.ts --exclude '**/*.d.ts'",
     "build": "node \"../../node_modules/typescript/bin/tsc\"",
     "validate": "npm ls"
   }
