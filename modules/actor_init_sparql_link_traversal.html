@@ -72,22 +72,71 @@
 						<h1>Comunica SPARQL Link Traversal Init Actor</h1>
 					</a>
 					<p><a href="https://www.npmjs.com/package/@comunica/actor-init-sparql-link-traversal"><img src="https://badge.fury.io/js/%40comunica%2Factor-init-sparql-link-traversal.svg" alt="npm version"></a></p>
-					<p>A comunica SPARQL Link Traversal Init Actor.</p>
-					<p>This module is part of the <a href="https://github.com/comunica/comunica">Comunica framework</a>.</p>
+					<p>Comunica SPARQL Link Traversal is a SPARQL query engine for JavaScript that follows links to detect new sources.</p>
+					<p>This module is part of the <a href="https://comunica.dev/">Comunica framework</a>.</p>
 					<a href="#install" id="install" style="color: inherit; text-decoration: none;">
 						<h2>Install</h2>
 					</a>
 					<pre><code class="language-bash">$ yarn add @comunica/actor-init-sparql-link-traversal</code></pre>
+					<p>or</p>
+					<pre><code class="language-bash">$ npm install -g @comunica/actor-init-sparql-link-traversal</code></pre>
 					<a href="#usage" id="usage" style="color: inherit; text-decoration: none;">
 						<h2>Usage</h2>
 					</a>
 					<p>Show 100 triples from <a href="http://fragments.dbpedia.org/2015-10/en">http://fragments.dbpedia.org/2015-10/en</a>:</p>
-					<pre><code class="language-bash">$ comunica-sparql-link-traversal http://fragments.dbpedia.org/2015-10/en <span class="hljs-string">&quot;CONSTRUCT WHERE { ?s ?p ?o } LIMIT 100&quot;</span></code></pre>
+					<pre><code class="language-bash">$ comunica-sparql-link-traversal https://www.rubensworks.net/ \
+  <span class="hljs-string">&quot;SELECT DISTINCT * WHERE {
+       &lt;https://www.rubensworks.net/#me&gt; &lt;http://xmlns.com/foaf/0.1/knows&gt; ?p.
+       &lt;https://ruben.verborgh.org/profile/#me&gt; &lt;http://xmlns.com/foaf/0.1/knows&gt; ?p.
+       ?p &lt;http://xmlns.com/foaf/0.1/name&gt; ?name.
+   }&quot;</span></code></pre>
 					<p>Show the help with all options:</p>
-					<pre><code class="language-bash">$ comunica-sparql-amf --<span class="hljs-built_in">help</span></code></pre>
+					<pre><code class="language-bash">$ comunica-sparql-link-traversal --<span class="hljs-built_in">help</span></code></pre>
 					<p>Just like <a href="https://github.com/comunica/comunica/tree/master/packages/actor-init-sparql">Comunica SPARQL</a>,
-						a <a href="https://github.com/comunica/comunica/tree/master/packages/actor-init-sparql#usage-from-the-command-line">dynamic variant</a> (<code>comunica-dynamic-sparql-link-traversal</code>) also exists,
-					and <a href="https://github.com/comunica/comunica/tree/master/packages/actor-init-sparql#usage-from-http">a script for starting a HTTP service</a> (<code>comunica-sparql-link-traversal-http</code>).</p>
+					a <a href="https://github.com/comunica/comunica/tree/master/packages/actor-init-sparql#usage-from-the-command-line">dynamic variant</a> (<code>comunica-dynamic-sparql-link-traversal</code>) also exists.</p>
+					<p><em><a href="https://comunica.dev/docs/query/getting_started/query_cli/"><strong>Read more</strong> about querying from the command line</a>.</em></p>
+					<a href="#usage-within-application" id="usage-within-application" style="color: inherit; text-decoration: none;">
+						<h3>Usage within application</h3>
+					</a>
+					<p>This engine can be used in JavaScript/TypeScript applications as follows:</p>
+					<pre><code class="language-javascript"><span class="hljs-keyword">const</span> newEngine = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;@comunica/actor-init-sparql-link-traversal&#x27;</span>).newEngine;
+<span class="hljs-keyword">const</span> myEngine = newEngine();
+
+<span class="hljs-keyword">const</span> result = <span class="hljs-keyword">await</span> myEngine.query(<span class="hljs-string">`
+  SELECT DISTINCT * WHERE {
+      &lt;https://www.rubensworks.net/#me&gt; &lt;http://xmlns.com/foaf/0.1/knows&gt; ?p.
+      &lt;https://ruben.verborgh.org/profile/#me&gt; &lt;http://xmlns.com/foaf/0.1/knows&gt; ?p.
+      ?p &lt;http://xmlns.com/foaf/0.1/name&gt; ?name.
+  }`</span>, {
+  <span class="hljs-attr">sources</span>: [<span class="hljs-string">&#x27;https://www.rubensworks.net/&#x27;</span>],
+});
+
+<span class="hljs-comment">// Consume results as a stream (best performance)</span>
+result.bindingsStream.on(<span class="hljs-string">&#x27;data&#x27;</span>, <span class="hljs-function">(<span class="hljs-params">binding</span>) =&gt;</span> {
+    <span class="hljs-built_in">console</span>.log(binding.get(<span class="hljs-string">&#x27;?s&#x27;</span>).value);
+    <span class="hljs-built_in">console</span>.log(binding.get(<span class="hljs-string">&#x27;?s&#x27;</span>).termType);
+
+    <span class="hljs-built_in">console</span>.log(binding.get(<span class="hljs-string">&#x27;?p&#x27;</span>).value);
+
+    <span class="hljs-built_in">console</span>.log(binding.get(<span class="hljs-string">&#x27;?o&#x27;</span>).value);
+});
+
+<span class="hljs-comment">// Consume results as an array (easier)</span>
+<span class="hljs-keyword">const</span> bindings = <span class="hljs-keyword">await</span> result.bindings();
+<span class="hljs-built_in">console</span>.log(bindings[<span class="hljs-number">0</span>].get(<span class="hljs-string">&#x27;?s&#x27;</span>).value);
+<span class="hljs-built_in">console</span>.log(bindings[<span class="hljs-number">0</span>].get(<span class="hljs-string">&#x27;?s&#x27;</span>).termType);</code></pre>
+					<p><em><a href="https://comunica.dev/docs/query/getting_started/query_app/"><strong>Read more</strong> about querying an application</a>.</em></p>
+					<a href="#usage-as-a-sparql-endpoint" id="usage-as-a-sparql-endpoint" style="color: inherit; text-decoration: none;">
+						<h3>Usage as a SPARQL endpoint</h3>
+					</a>
+					<p>Start a webservice exposing <a href="http://fragments.dbpedia.org/2015-10/en">http://fragments.dbpedia.org/2015-10/en</a> via the SPARQL protocol, i.e., a <em>SPARQL endpoint</em>.</p>
+					<pre><code class="language-bash">$ comunica-sparql-link-traversal-http https://www.rubensworks.net/</code></pre>
+					<p>Show the help with all options:</p>
+					<pre><code class="language-bash">$ comunica-sparql-link-traversal-http --<span class="hljs-built_in">help</span></code></pre>
+					<p>The SPARQL endpoint can only be started dynamically.
+					An alternative config file can be passed via the <code>COMUNICA_CONFIG</code> environment variable.</p>
+					<p>Use <code>bin/http.js</code> when running in the Comunica monorepo development environment.</p>
+					<p><em><a href="https://comunica.dev/docs/query/getting_started/setup_endpoint/"><strong>Read more</strong> about setting up a SPARQL endpoint</a>.</em></p>
 				</div>
 			</section>
 			<section class="tsd-panel-group tsd-index-group">
@@ -119,7 +168,7 @@
 					<div class="tsd-signature tsd-kind-icon">default<wbr>Config<wbr>Path<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> = &#x60;${__dirname}/../config/config-default.json&#x60;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/comunica/comunica-feature-link-traversal/blob/22bd545/packages/actor-init-sparql-link-traversal/bin/http.ts#L4">packages/actor-init-sparql-link-traversal/bin/http.ts:4</a></li>
+							<li>Defined in <a href="https://github.com/comunica/comunica-feature-link-traversal/blob/f97ada8/packages/actor-init-sparql-link-traversal/bin/http.ts#L4">packages/actor-init-sparql-link-traversal/bin/http.ts:4</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -136,7 +185,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/comunica/comunica-feature-link-traversal/blob/22bd545/packages/actor-init-sparql-link-traversal/index.ts#L8">packages/actor-init-sparql-link-traversal/index.ts:8</a></li>
+									<li>Defined in <a href="https://github.com/comunica/comunica-feature-link-traversal/blob/f97ada8/packages/actor-init-sparql-link-traversal/index.ts#L8">packages/actor-init-sparql-link-traversal/index.ts:8</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -159,7 +208,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/comunica/comunica-feature-link-traversal/blob/22bd545/packages/actor-init-sparql-link-traversal/index-browser.ts#L8">packages/actor-init-sparql-link-traversal/index-browser.ts:8</a></li>
+									<li>Defined in <a href="https://github.com/comunica/comunica-feature-link-traversal/blob/f97ada8/packages/actor-init-sparql-link-traversal/index-browser.ts#L8">packages/actor-init-sparql-link-traversal/index-browser.ts:8</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -182,7 +231,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/comunica/comunica-feature-link-traversal/blob/22bd545/packages/actor-init-sparql-link-traversal/index.ts#L17">packages/actor-init-sparql-link-traversal/index.ts:17</a></li>
+									<li>Defined in <a href="https://github.com/comunica/comunica-feature-link-traversal/blob/f97ada8/packages/actor-init-sparql-link-traversal/index.ts#L17">packages/actor-init-sparql-link-traversal/index.ts:17</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
