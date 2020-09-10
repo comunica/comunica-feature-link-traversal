@@ -35,18 +35,16 @@
     "index.js"
   ],
   "dependencies": {
-    "asynciterator-promiseproxy": "^2.0.0",
-    "asynciterator-union": "^2.1.1",
-    "@comunica/actor-query-operation-bgp-left-deep-smallest": "^1.9.3",
-    "@comunica/bus-rdf-resolve-quad-pattern": "^1.9.2"
+    "@comunica/actor-query-operation-bgp-left-deep-smallest": "^1.16.0",
+    "@comunica/bus-rdf-resolve-quad-pattern": "^1.16.0"
   },
   "peerDependencies": {
-    "@comunica/core": "^1.9.2",
-    "@comunica/bus-query-operation": "^1.9.3"
+    "@comunica/core": "^1.15.0",
+    "@comunica/bus-query-operation": "^1.16.0"
   },
   "devDependencies": {
-    "@comunica/core": "^1.9.2",
-    "@comunica/bus-query-operation": "^1.9.3"
+    "@comunica/core": "^1.15.0",
+    "@comunica/bus-query-operation": "^1.16.0"
   },
   "jest": {
     "globals": {

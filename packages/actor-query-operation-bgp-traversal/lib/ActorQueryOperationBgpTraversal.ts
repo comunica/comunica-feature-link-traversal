@@ -11,8 +11,7 @@ import {
 import {DataSources, getDataSourceValue, IDataSource,
   KEY_CONTEXT_SOURCES} from "@comunica/bus-rdf-resolve-quad-pattern";
 import {ActionContext, IActorTest} from "@comunica/core";
-import {PromiseProxyIterator} from "asynciterator-promiseproxy";
-import {RoundRobinUnionIterator} from "asynciterator-union";
+import {ArrayIterator, MultiTransformIterator, TransformIterator, UnionIterator} from 'asynciterator';
 import * as RDF from "rdf-js";
 import {termToString} from "rdf-string";
 import {getNamedNodes, getTerms, getVariables, QUAD_TERM_NAMES} from "rdf-terms";
@@ -98,12 +97,12 @@ export class ActorQueryOperationBgpTraversal extends ActorQueryOperationTypedMed
                                          patternBinder:
                                            (patterns: { pattern: Algebra.Pattern, bindings: IPatternBindings }[]) =>
                                              Promise<BindingsStream>): BindingsStream {
-    return new RoundRobinUnionIterator(baseStream.map((bindings: Bindings) => {
+    return new UnionIterator(baseStream.map((bindings: Bindings) => {
       const bindingsMerger = (subBindings: Bindings) => subBindings.merge(bindings);
-      return new PromiseProxyIterator(
+      return new TransformIterator(
         async () => (await patternBinder(ActorQueryOperationBgpLeftDeepSmallest.materializePatterns(patterns,
-          bindings))).map(bindingsMerger), { autoStart: true, maxBufferSize: 128 });
-    }));
+          bindings))).map(bindingsMerger), { maxBufferSize: 128 });
+    }), { autoStart: false });
   }
 
   public async testOperation(pattern: Algebra.Bgp, context: ActionContext): Promise<IActorTest> {
@@ -168,7 +167,7 @@ export class ActorQueryOperationBgpTraversal extends ActorQueryOperationTypedMed
     // Prepare variables and metadata
     const variables: string[] = ActorQueryOperationBgpTraversal.getPatternVariables(remainingPatterns);
 
-    return { type: 'bindings', bindingsStream, variables };
+    return { type: 'bindings', bindingsStream, variables, canContainUndefs: false };
   }
 
 }

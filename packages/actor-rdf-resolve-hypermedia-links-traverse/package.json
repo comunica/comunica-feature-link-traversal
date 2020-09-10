@@ -35,12 +35,12 @@
     "index.js"
   ],
   "peerDependencies": {
-    "@comunica/core": "^1.9.2",
-    "@comunica/bus-rdf-resolve-hypermedia-links": "^1.9.3"
+    "@comunica/core": "^1.15.0",
+    "@comunica/bus-rdf-resolve-hypermedia-links": "^1.15.0"
   },
   "devDependencies": {
-    "@comunica/core": "^1.9.2",
-    "@comunica/bus-rdf-resolve-hypermedia-links": "^1.9.3"
+    "@comunica/core": "^1.15.0",
+    "@comunica/bus-rdf-resolve-hypermedia-links": "^1.15.0"
   },
   "jest": {
     "globals": {

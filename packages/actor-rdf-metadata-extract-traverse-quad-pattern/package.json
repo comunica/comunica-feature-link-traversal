@@ -38,12 +38,12 @@
     "rdf-terms": "^1.5.1"
   },
   "peerDependencies": {
-    "@comunica/core": "^1.9.2",
-    "@comunica/bus-rdf-metadata-extract": "^1.9.3"
+    "@comunica/core": "^1.15.0",
+    "@comunica/bus-rdf-metadata-extract": "^1.15.0"
   },
   "devDependencies": {
-    "@comunica/core": "^1.9.2",
-    "@comunica/bus-rdf-metadata-extract": "^1.9.3"
+    "@comunica/core": "^1.15.0",
+    "@comunica/bus-rdf-metadata-extract": "^1.15.0"
   },
   "jest": {
     "globals": {
