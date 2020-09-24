@@ -1,0 +1,37 @@
+{
+  "@context": [
+    "https://linkedsoftwaredependencies.org/bundles/npm/@comunica/actor-rdf-metadata-extract-traverse-content-policies/^1.0.0/components/context.jsonld",
+    "https://linkedsoftwaredependencies.org/bundles/npm/@comunica/bus-rdf-metadata-extract/^1.0.0/components/context.jsonld"
+  ],
+  "@id": "npmd:@comunica/actor-rdf-metadata-extract-traverse-content-policies",
+  "components": [
+    {
+      "@id": "carmetcp:Actor/RdfMetadataExtract/TraverseContentPolicies",
+      "@type": "Class",
+      "extends": "cbrme:Actor/RdfMetadataExtract",
+      "requireElement": "ActorRdfMetadataExtractTraverseContentPolicies",
+      "comment": "A comunica Traverse Content Policies RDF Metadata Extract Actor.",
+      "parameters": [
+        {
+          "@id": "cbrme:Actor/RdfMetadataExtract/TraverseContentPolicies#queryEngine",
+          "comment": "A SPARQL engine that is used to query all links to follow from a stream",
+          "default": { "@id": "urn:comunica:sparqlinit" },
+          "required": true,
+          "unique": true
+        }
+      ],
+      "constructorArguments": [
+        {
+          "@id": "cbrme:Actor/RdfMetadataExtract/TraverseContentPolicies#constructorArgumentsObject",
+          "extends": "cbrme:Actor/RdfMetadataExtract/constructorArgumentsObject",
+          "fields": [
+            {
+              "keyRaw": "queryEngine",
+              "value": "cbrme:Actor/RdfMetadataExtract/TraverseContentPolicies#queryEngine"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

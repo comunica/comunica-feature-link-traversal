@@ -1,0 +1,12 @@
+{
+  "@context": [
+    "https://linkedsoftwaredependencies.org/bundles/npm/@comunica/core/^1.0.0/components/context.jsonld",
+    {
+      "npmd": "https://linkedsoftwaredependencies.org/bundles/npm/",
+      "carmetcp": "npmd:@comunica/actor-rdf-metadata-extract-traverse-content-policies/",
+      "files-carmetcp": "carmetcp:^1.0.0/",
+
+      "ActorRdfMetadataExtractTraverseContentPolicies": "carmetcp:Actor/RdfMetadataExtract/TraverseContentPolicies"
+    }
+  ]
+}
