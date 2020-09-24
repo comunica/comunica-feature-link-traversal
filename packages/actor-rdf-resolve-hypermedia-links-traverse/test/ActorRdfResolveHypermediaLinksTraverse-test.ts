@@ -46,5 +46,10 @@ describe('ActorRdfResolveHypermediaLinksTraverse', () => {
       return expect(actor.run({ metadata: { traverse: [ 'a', 'b' ]}})).resolves
         .toMatchObject({ urls: [ 'a', 'b' ]});
     });
+
+    it('should run and remove hashes from URLs', () => {
+      return expect(actor.run({ metadata: { traverse: [ 'http://example.org?abc', 'http://example.org#abc' ]}}))
+        .resolves.toMatchObject({ urls: [ 'http://example.org?abc', 'http://example.org' ]});
+    });
   });
 });

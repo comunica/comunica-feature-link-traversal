@@ -20,6 +20,14 @@ export class ActorRdfResolveHypermediaLinksTraverse extends ActorRdfResolveHyper
   }
 
   public async run(action: IActionRdfResolveHypermediaLinks): Promise<IActorRdfResolveHypermediaLinksOutput> {
-    return { urls: action.metadata.traverse };
+    return {
+      urls: action.metadata.traverse.map((fileUrl: string) => {
+        const hashPosition = fileUrl.indexOf('#');
+        if (hashPosition >= 0) {
+          fileUrl = fileUrl.slice(0, hashPosition);
+        }
+        return fileUrl;
+      }),
+    };
   }
 }
