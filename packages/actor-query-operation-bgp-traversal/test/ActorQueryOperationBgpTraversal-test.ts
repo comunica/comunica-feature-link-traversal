@@ -300,7 +300,7 @@ describe('ActorQueryOperationBgpTraversal', () => {
         operation: { type: 'bgp', patterns },
       };
       return actor.run(op).then(async(output: IActorQueryOperationOutputBindings) => {
-        expect(output.variables).toEqual([ '?d' ]);
+        expect(output.variables).toEqual([ '?a', '?d' ]);
         expect(output.type).toEqual('bindings');
         expect(output.canContainUndefs).toEqual(false);
         expect(await (<any> output).metadata).toBeUndefined();
@@ -321,7 +321,7 @@ describe('ActorQueryOperationBgpTraversal', () => {
         context: ActionContext({}),
       };
       return actor.run(op).then(async(output: IActorQueryOperationOutputBindings) => {
-        expect(output.variables).toEqual([ '?d' ]);
+        expect(output.variables).toEqual([ '?a', '?d' ]);
         expect(output.type).toEqual('bindings');
         expect(output.canContainUndefs).toEqual(false);
         expect(await (<any> output).metadata).toBeUndefined();
@@ -344,7 +344,7 @@ describe('ActorQueryOperationBgpTraversal', () => {
         }),
       };
       return actor.run(op).then(async(output: IActorQueryOperationOutputBindings) => {
-        expect(output.variables).toEqual([ '?d' ]);
+        expect(output.variables).toEqual([ '?a', '?d' ]);
         expect(output.type).toEqual('bindings');
         expect(output.canContainUndefs).toEqual(false);
         expect(await (<any> output).metadata).toBeUndefined();
@@ -367,7 +367,7 @@ describe('ActorQueryOperationBgpTraversal', () => {
         }),
       };
       return actor.run(op).then(async(output: IActorQueryOperationOutputBindings) => {
-        expect(output.variables).toEqual([ '?d' ]);
+        expect(output.variables).toEqual([ '?a', '?d' ]);
         expect(output.type).toEqual('bindings');
         expect(output.canContainUndefs).toEqual(false);
         expect(await (<any> output).metadata).toBeUndefined();

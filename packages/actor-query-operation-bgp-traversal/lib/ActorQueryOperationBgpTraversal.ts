@@ -201,7 +201,7 @@ export class ActorQueryOperationBgpTraversal extends ActorQueryOperationTypedMed
     );
 
     // Prepare variables and metadata
-    const variables: string[] = ActorQueryOperationBgpTraversal.getPatternVariables(remainingPatterns);
+    const variables: string[] = ActorQueryOperationBgpTraversal.getPatternVariables(patterns);
 
     return { type: 'bindings', bindingsStream, variables, canContainUndefs: false };
   }
