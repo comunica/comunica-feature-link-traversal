@@ -1,12 +1,13 @@
-import { Readable } from 'stream';
+import type { Readable } from 'stream';
 import { Bindings } from '@comunica/bus-query-operation';
 import { ActionContext, Bus } from '@comunica/core';
-import { blankNode, namedNode, variable } from '@rdfjs/data-model';
+import { DataFactory } from 'rdf-data-factory';
 import { Factory } from 'sparqlalgebrajs';
 import { ActorRdfMetadataExtractTraverseContentPolicies, ContentPolicy } from '..';
 const quad = require('rdf-quad');
 const stream = require('streamify-array');
 const factory = new Factory();
+const DF = new DataFactory();
 
 describe('ActorRdfMetadataExtractTraverseContentPolicies', () => {
   let bus: any;
@@ -24,9 +25,9 @@ describe('ActorRdfMetadataExtractTraverseContentPolicies', () => {
       queryEngine = {
         query: jest.fn(() => ({
           bindings: () => [
-            Bindings({ '?varA': namedNode('ex:match1') }),
-            Bindings({ '?varA': blankNode('ex:match2'), '?varB': namedNode('ex:match2Bis') }),
-            Bindings({ '?varA': namedNode('ex:match3') }),
+            Bindings({ '?varA': DF.namedNode('ex:match1') }),
+            Bindings({ '?varA': DF.blankNode('ex:match2'), '?varB': DF.namedNode('ex:match2Bis') }),
+            Bindings({ '?varA': DF.namedNode('ex:match3') }),
           ],
         })),
       };
@@ -67,9 +68,9 @@ describe('ActorRdfMetadataExtractTraverseContentPolicies', () => {
           new ContentPolicy(
             factory.createBgp([
               factory.createPattern(
-                namedNode('ex:s'),
-                namedNode('ex:p'),
-                variable('varUnknown'),
+                DF.namedNode('ex:s'),
+                DF.namedNode('ex:p'),
+                DF.variable('varUnknown'),
               ),
             ]),
             [{ name: 'varUnknown', withPolicies: false }],
@@ -89,9 +90,9 @@ describe('ActorRdfMetadataExtractTraverseContentPolicies', () => {
           new ContentPolicy(
             factory.createBgp([
               factory.createPattern(
-                namedNode('ex:s'),
-                namedNode('ex:p'),
-                variable('varA'),
+                DF.namedNode('ex:s'),
+                DF.namedNode('ex:p'),
+                DF.variable('varA'),
               ),
             ]),
             [{ name: 'varA', withPolicies: false }],
@@ -114,9 +115,9 @@ describe('ActorRdfMetadataExtractTraverseContentPolicies', () => {
           new ContentPolicy(
             factory.createBgp([
               factory.createPattern(
-                namedNode('ex:s'),
-                namedNode('ex:p'),
-                variable('varA'),
+                DF.namedNode('ex:s'),
+                DF.namedNode('ex:p'),
+                DF.variable('varA'),
               ),
             ]),
             [{ name: 'varA', withPolicies: false }],
@@ -124,9 +125,9 @@ describe('ActorRdfMetadataExtractTraverseContentPolicies', () => {
           new ContentPolicy(
             factory.createBgp([
               factory.createPattern(
-                namedNode('ex:s'),
-                namedNode('ex:p'),
-                variable('varB'),
+                DF.namedNode('ex:s'),
+                DF.namedNode('ex:p'),
+                DF.variable('varB'),
               ),
             ]),
             [{ name: 'varB', withPolicies: false }],

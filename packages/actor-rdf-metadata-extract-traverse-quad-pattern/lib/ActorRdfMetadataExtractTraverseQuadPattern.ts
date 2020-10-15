@@ -1,8 +1,9 @@
-import { ActorRdfMetadataExtract, IActionRdfMetadataExtract,
+import type { IActionRdfMetadataExtract,
   IActorRdfMetadataExtractOutput } from '@comunica/bus-rdf-metadata-extract';
-import { ActionContext, IActorArgs, IActorTest } from '@comunica/core';
+import { ActorRdfMetadataExtract } from '@comunica/bus-rdf-metadata-extract';
+import type { ActionContext, IActorArgs, IActorTest } from '@comunica/core';
 import { getNamedNodes, getTerms, matchPatternComplete } from 'rdf-terms';
-import { Algebra } from 'sparqlalgebrajs';
+import type { Algebra } from 'sparqlalgebrajs';
 
 /**
  * A comunica Traverse Quad Pattern RDF Metadata Extract Actor.
@@ -14,11 +15,11 @@ export class ActorRdfMetadataExtractTraverseQuadPattern extends ActorRdfMetadata
 
   public static getCurrentQuadPattern(context?: ActionContext): Algebra.Pattern | undefined {
     if (!context) {
-      return undefined;
+      return;
     }
     const currentQueryOperation = context.get(KEY_CONTEXT_QUERYOPERATION);
     if (!currentQueryOperation || currentQueryOperation.type !== 'pattern') {
-      return undefined;
+      return;
     }
     return currentQueryOperation;
   }

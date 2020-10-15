@@ -1,4 +1,4 @@
-import { Algebra } from 'sparqlalgebrajs';
+import type { Algebra } from 'sparqlalgebrajs';
 
 /**
  * A content policies represents a function from graph pattern to matching variables.

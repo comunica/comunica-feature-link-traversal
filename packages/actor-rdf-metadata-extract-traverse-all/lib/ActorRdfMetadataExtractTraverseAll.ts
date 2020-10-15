@@ -1,6 +1,7 @@
-import { ActorRdfMetadataExtract, IActionRdfMetadataExtract,
+import type { IActionRdfMetadataExtract,
   IActorRdfMetadataExtractOutput } from '@comunica/bus-rdf-metadata-extract';
-import { IActorArgs, IActorTest } from '@comunica/core';
+import { ActorRdfMetadataExtract } from '@comunica/bus-rdf-metadata-extract';
+import type { IActorArgs, IActorTest } from '@comunica/core';
 import { getNamedNodes, getTerms } from 'rdf-terms';
 
 /**

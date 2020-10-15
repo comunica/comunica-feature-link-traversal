@@ -1,7 +1,7 @@
-import { Readable } from 'stream';
+import type { Readable } from 'stream';
 import { ActorRdfMetadataExtract } from '@comunica/bus-rdf-metadata-extract';
 import { ActionContext, Bus } from '@comunica/core';
-import { namedNode, variable } from '@rdfjs/data-model';
+import { DataFactory } from 'rdf-data-factory';
 import { Factory } from 'sparqlalgebrajs';
 import {
   ActorRdfMetadataExtractTraverseQuadPattern,
@@ -11,6 +11,7 @@ const quad = require('rdf-quad');
 const stream = require('streamify-array');
 
 const FACTORY = new Factory();
+const DF = new DataFactory();
 
 describe('ActorRdfMetadataExtractTraverseQuadPattern', () => {
   let bus: any;
@@ -52,10 +53,10 @@ describe('ActorRdfMetadataExtractTraverseQuadPattern', () => {
         quad('ex:s5', 'ex:p', 'ex:o5', 'ex:gx'),
       ]);
       pattern = FACTORY.createPattern(
-        variable('s'),
-        namedNode('ex:p'),
-        variable('o'),
-        namedNode('ex:g'),
+        DF.variable('s'),
+        DF.namedNode('ex:p'),
+        DF.variable('o'),
+        DF.namedNode('ex:g'),
       );
       context = ActionContext({ [KEY_CONTEXT_QUERYOPERATION]: pattern });
     });

@@ -1,14 +1,16 @@
-import { ActorQueryOperation, Bindings, IActorQueryOperationOutputBindings } from '@comunica/bus-query-operation';
+import type { IActorQueryOperationOutputBindings } from '@comunica/bus-query-operation';
+import { ActorQueryOperation, Bindings } from '@comunica/bus-query-operation';
 import { KEY_CONTEXT_SOURCES } from '@comunica/bus-rdf-resolve-quad-pattern';
-import { IDataSource } from '@comunica/bus-rdf-resolve-quad-pattern/lib/ActorRdfResolveQuadPattern';
-import { ActionContext, Bus } from '@comunica/core';
-import { namedNode, quad, variable } from '@rdfjs/data-model';
+import { ActionContext, Bus, KEY_CONTEXT_LOG } from '@comunica/core';
+import { LoggerVoid } from '@comunica/logger-void';
 import { ArrayIterator } from 'asynciterator';
-import { AsyncReiterableArray } from 'asyncreiterable/lib/AsyncReiterableArray';
-import { Algebra, Factory } from 'sparqlalgebrajs';
+import { DataFactory } from 'rdf-data-factory';
+import type { Algebra } from 'sparqlalgebrajs';
+import { Factory } from 'sparqlalgebrajs';
 import { ActorQueryOperationBgpTraversal } from '../lib/ActorQueryOperationBgpTraversal';
 const FACTORY = new Factory();
 const arrayifyStream = require('arrayify-stream');
+const DF = new DataFactory();
 
 describe('ActorQueryOperationBgpTraversal', () => {
   let bus: any;
@@ -51,166 +53,166 @@ describe('ActorQueryOperationBgpTraversal', () => {
 
   describe('getPatternNonVocabUris', () => {
     it('return named nodes in regular patterns', () => {
-      expect(ActorQueryOperationBgpTraversal.getPatternNonVocabUris(quad(
-        namedNode('http://example.org/s'),
-        namedNode('http://example.org/p'),
-        namedNode('http://example.org/o'),
+      expect(ActorQueryOperationBgpTraversal.getPatternNonVocabUris(DF.quad(
+        DF.namedNode('http://example.org/s'),
+        DF.namedNode('http://example.org/p'),
+        DF.namedNode('http://example.org/o'),
       ))).toEqual([
-        namedNode('http://example.org/s'),
-        namedNode('http://example.org/o'),
+        DF.namedNode('http://example.org/s'),
+        DF.namedNode('http://example.org/o'),
       ]);
-      expect(ActorQueryOperationBgpTraversal.getPatternNonVocabUris(quad(
-        namedNode('http://example.org/s'),
-        namedNode('http://example.org/p'),
-        namedNode('http://example.org/o'),
-        namedNode('http://example.org/g'),
+      expect(ActorQueryOperationBgpTraversal.getPatternNonVocabUris(DF.quad(
+        DF.namedNode('http://example.org/s'),
+        DF.namedNode('http://example.org/p'),
+        DF.namedNode('http://example.org/o'),
+        DF.namedNode('http://example.org/g'),
       ))).toEqual([
-        namedNode('http://example.org/s'),
-        namedNode('http://example.org/o'),
-        namedNode('http://example.org/g'),
+        DF.namedNode('http://example.org/s'),
+        DF.namedNode('http://example.org/o'),
+        DF.namedNode('http://example.org/g'),
       ]);
     });
 
     it('return named nodes in regular patterns with variables', () => {
-      expect(ActorQueryOperationBgpTraversal.getPatternNonVocabUris(quad(
-        variable('s'),
-        namedNode('http://example.org/p'),
-        namedNode('http://example.org/o'),
+      expect(ActorQueryOperationBgpTraversal.getPatternNonVocabUris(DF.quad(
+        DF.variable('s'),
+        DF.namedNode('http://example.org/p'),
+        DF.namedNode('http://example.org/o'),
       ))).toEqual([
-        namedNode('http://example.org/o'),
+        DF.namedNode('http://example.org/o'),
       ]);
-      expect(ActorQueryOperationBgpTraversal.getPatternNonVocabUris(quad(
-        namedNode('http://example.org/s'),
-        namedNode('http://example.org/p'),
-        variable('o'),
-        namedNode('http://example.org/g'),
+      expect(ActorQueryOperationBgpTraversal.getPatternNonVocabUris(DF.quad(
+        DF.namedNode('http://example.org/s'),
+        DF.namedNode('http://example.org/p'),
+        DF.variable('o'),
+        DF.namedNode('http://example.org/g'),
       ))).toEqual([
-        namedNode('http://example.org/s'),
-        namedNode('http://example.org/g'),
+        DF.namedNode('http://example.org/s'),
+        DF.namedNode('http://example.org/g'),
       ]);
     });
 
     it('return named nodes in rdf:type patterns', () => {
-      expect(ActorQueryOperationBgpTraversal.getPatternNonVocabUris(quad(
-        namedNode('http://example.org/s'),
-        namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
-        namedNode('http://example.org/o'),
+      expect(ActorQueryOperationBgpTraversal.getPatternNonVocabUris(DF.quad(
+        DF.namedNode('http://example.org/s'),
+        DF.namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
+        DF.namedNode('http://example.org/o'),
       ))).toEqual([
-        namedNode('http://example.org/s'),
+        DF.namedNode('http://example.org/s'),
       ]);
-      expect(ActorQueryOperationBgpTraversal.getPatternNonVocabUris(quad(
-        namedNode('http://example.org/s'),
-        namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
-        namedNode('http://example.org/o'),
-        namedNode('http://example.org/g'),
+      expect(ActorQueryOperationBgpTraversal.getPatternNonVocabUris(DF.quad(
+        DF.namedNode('http://example.org/s'),
+        DF.namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
+        DF.namedNode('http://example.org/o'),
+        DF.namedNode('http://example.org/g'),
       ))).toEqual([
-        namedNode('http://example.org/s'),
-        namedNode('http://example.org/g'),
+        DF.namedNode('http://example.org/s'),
+        DF.namedNode('http://example.org/g'),
       ]);
     });
 
     it('return named nodes in rdf:type patterns with variables', () => {
-      expect(ActorQueryOperationBgpTraversal.getPatternNonVocabUris(quad(
-        namedNode('http://example.org/s'),
-        namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
-        variable('http://example.org/o'),
+      expect(ActorQueryOperationBgpTraversal.getPatternNonVocabUris(DF.quad(
+        DF.namedNode('http://example.org/s'),
+        DF.namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
+        DF.variable('http://example.org/o'),
       ))).toEqual([
-        namedNode('http://example.org/s'),
+        DF.namedNode('http://example.org/s'),
       ]);
-      expect(ActorQueryOperationBgpTraversal.getPatternNonVocabUris(quad(
-        namedNode('http://example.org/s'),
-        namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
-        namedNode('http://example.org/o'),
-        variable('http://example.org/g'),
+      expect(ActorQueryOperationBgpTraversal.getPatternNonVocabUris(DF.quad(
+        DF.namedNode('http://example.org/s'),
+        DF.namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
+        DF.namedNode('http://example.org/o'),
+        DF.variable('http://example.org/g'),
       ))).toEqual([
-        namedNode('http://example.org/s'),
+        DF.namedNode('http://example.org/s'),
       ]);
     });
   });
 
   describe('getSourceUri', () => {
     it('should handle URIs without hashes', () => {
-      return expect(ActorQueryOperationBgpTraversal.getSourceUri(namedNode('http://example.org/')))
+      return expect(ActorQueryOperationBgpTraversal.getSourceUri(DF.namedNode('http://example.org/')))
         .toEqual('http://example.org/');
     });
 
     it('should handle URIs with hashes', () => {
-      return expect(ActorQueryOperationBgpTraversal.getSourceUri(namedNode('http://example.org/page.html#somehash')))
+      return expect(ActorQueryOperationBgpTraversal.getSourceUri(DF.namedNode('http://example.org/page.html#somehash')))
         .toEqual('http://example.org/page.html');
     });
   });
 
   describe('getScoreSeedNonVocab', () => {
     it('should be 0 for no sources', () => {
-      return expect(ActorQueryOperationBgpTraversal.getScoreSeedNonVocab(quad(
-        namedNode('http://example.org/s'),
-        namedNode('http://example.org/p'),
-        namedNode('http://example.org/o'),
+      return expect(ActorQueryOperationBgpTraversal.getScoreSeedNonVocab(DF.quad(
+        DF.namedNode('http://example.org/s'),
+        DF.namedNode('http://example.org/p'),
+        DF.namedNode('http://example.org/o'),
       ), [])).toEqual(0);
     });
 
     it('should be 1 for one applicable sources', () => {
-      expect(ActorQueryOperationBgpTraversal.getScoreSeedNonVocab(quad(
-        namedNode('http://example.org/s'),
-        namedNode('http://example.org/p'),
-        namedNode('http://example.org/o'),
+      expect(ActorQueryOperationBgpTraversal.getScoreSeedNonVocab(DF.quad(
+        DF.namedNode('http://example.org/s'),
+        DF.namedNode('http://example.org/p'),
+        DF.namedNode('http://example.org/o'),
       ), [ 'http://example.org/s' ])).toEqual(1);
-      expect(ActorQueryOperationBgpTraversal.getScoreSeedNonVocab(quad(
-        namedNode('http://example.org/s'),
-        namedNode('http://example.org/p'),
-        namedNode('http://example.org/o'),
+      expect(ActorQueryOperationBgpTraversal.getScoreSeedNonVocab(DF.quad(
+        DF.namedNode('http://example.org/s'),
+        DF.namedNode('http://example.org/p'),
+        DF.namedNode('http://example.org/o'),
       ), [ 'http://example.org/o' ])).toEqual(1);
-      expect(ActorQueryOperationBgpTraversal.getScoreSeedNonVocab(quad(
-        namedNode('http://example.org/s'),
-        namedNode('http://example.org/p'),
-        namedNode('http://example.org/o'),
+      expect(ActorQueryOperationBgpTraversal.getScoreSeedNonVocab(DF.quad(
+        DF.namedNode('http://example.org/s'),
+        DF.namedNode('http://example.org/p'),
+        DF.namedNode('http://example.org/o'),
       ), [ 'http://example.org/o', 'http://example.org/p' ])).toEqual(1);
     });
 
     it('should be 2 for two applicable sources', () => {
-      expect(ActorQueryOperationBgpTraversal.getScoreSeedNonVocab(quad(
-        namedNode('http://example.org/s'),
-        namedNode('http://example.org/p'),
-        namedNode('http://example.org/o'),
+      expect(ActorQueryOperationBgpTraversal.getScoreSeedNonVocab(DF.quad(
+        DF.namedNode('http://example.org/s'),
+        DF.namedNode('http://example.org/p'),
+        DF.namedNode('http://example.org/o'),
       ), [ 'http://example.org/s', 'http://example.org/o' ])).toEqual(2);
-      expect(ActorQueryOperationBgpTraversal.getScoreSeedNonVocab(quad(
-        namedNode('http://example.org/s'),
-        namedNode('http://example.org/p'),
-        namedNode('http://example.org/o'),
+      expect(ActorQueryOperationBgpTraversal.getScoreSeedNonVocab(DF.quad(
+        DF.namedNode('http://example.org/s'),
+        DF.namedNode('http://example.org/p'),
+        DF.namedNode('http://example.org/o'),
       ), [ 'http://example.org/s', 'http://example.org/o', 'http://example.org/p' ])).toEqual(2);
     });
 
     it('should be 2 for repeated source presence', () => {
-      expect(ActorQueryOperationBgpTraversal.getScoreSeedNonVocab(quad(
-        namedNode('http://example.org/s'),
-        namedNode('http://example.org/p'),
-        namedNode('http://example.org/s#hash'),
+      expect(ActorQueryOperationBgpTraversal.getScoreSeedNonVocab(DF.quad(
+        DF.namedNode('http://example.org/s'),
+        DF.namedNode('http://example.org/p'),
+        DF.namedNode('http://example.org/s#hash'),
       ), [ 'http://example.org/s' ])).toEqual(2);
     });
   });
 
   describe('getScoreSelectivity', () => {
     it('should be 4 for no variables', () => {
-      return expect(ActorQueryOperationBgpTraversal.getScoreSelectivity(quad(
-        namedNode('http://example.org/s'),
-        namedNode('http://example.org/p'),
-        namedNode('http://example.org/o'),
+      return expect(ActorQueryOperationBgpTraversal.getScoreSelectivity(DF.quad(
+        DF.namedNode('http://example.org/s'),
+        DF.namedNode('http://example.org/p'),
+        DF.namedNode('http://example.org/o'),
       ))).toEqual(4);
     });
 
     it('should be 3 for 1 variable', () => {
-      return expect(ActorQueryOperationBgpTraversal.getScoreSelectivity(quad(
-        namedNode('http://example.org/s'),
-        variable('p'),
-        namedNode('http://example.org/o'),
+      return expect(ActorQueryOperationBgpTraversal.getScoreSelectivity(DF.quad(
+        DF.namedNode('http://example.org/s'),
+        DF.variable('p'),
+        DF.namedNode('http://example.org/o'),
       ))).toEqual(3);
     });
 
     it('should be 1 for 3 variables', () => {
-      return expect(ActorQueryOperationBgpTraversal.getScoreSelectivity(quad(
-        variable('s'),
-        variable('p'),
-        variable('o'),
+      return expect(ActorQueryOperationBgpTraversal.getScoreSelectivity(DF.quad(
+        DF.variable('s'),
+        DF.variable('p'),
+        DF.variable('o'),
       ))).toEqual(1);
     });
   });
@@ -225,46 +227,46 @@ describe('ActorQueryOperationBgpTraversal', () => {
 
     it('should prioritize patterns with seed IRIs', () => {
       const patterns: Algebra.Pattern[] = [
-        FACTORY.createPattern(namedNode('ex:s1'), namedNode('ex:p1'), namedNode('ex:o1')),
-        FACTORY.createPattern(namedNode('ex:seed'), namedNode('ex:p2'), namedNode('ex:o2')),
-        FACTORY.createPattern(namedNode('ex:s3'), namedNode('ex:seed'), namedNode('ex:o3')),
+        FACTORY.createPattern(DF.namedNode('ex:s1'), DF.namedNode('ex:p1'), DF.namedNode('ex:o1')),
+        FACTORY.createPattern(DF.namedNode('ex:seed'), DF.namedNode('ex:p2'), DF.namedNode('ex:o2')),
+        FACTORY.createPattern(DF.namedNode('ex:s3'), DF.namedNode('ex:seed'), DF.namedNode('ex:o3')),
       ];
       const sources: string[] = [ 'ex:seed' ];
       ActorQueryOperationBgpTraversal.sortPatterns(patterns, sources);
       return expect(patterns).toEqual([
-        FACTORY.createPattern(namedNode('ex:seed'), namedNode('ex:p2'), namedNode('ex:o2')),
-        FACTORY.createPattern(namedNode('ex:s1'), namedNode('ex:p1'), namedNode('ex:o1')),
-        FACTORY.createPattern(namedNode('ex:s3'), namedNode('ex:seed'), namedNode('ex:o3')),
+        FACTORY.createPattern(DF.namedNode('ex:seed'), DF.namedNode('ex:p2'), DF.namedNode('ex:o2')),
+        FACTORY.createPattern(DF.namedNode('ex:s1'), DF.namedNode('ex:p1'), DF.namedNode('ex:o1')),
+        FACTORY.createPattern(DF.namedNode('ex:s3'), DF.namedNode('ex:seed'), DF.namedNode('ex:o3')),
       ]);
     });
 
     it('should prioritize patterns with the fewest variables', () => {
       const patterns: Algebra.Pattern[] = [
-        FACTORY.createPattern(variable('ex:s1'), namedNode('ex:p1'), namedNode('ex:o1')),
-        FACTORY.createPattern(namedNode('ex:s2'), namedNode('ex:p2'), namedNode('ex:o2')),
-        FACTORY.createPattern(namedNode('ex:s3'), variable('ex:p3'), variable('ex:o3')),
+        FACTORY.createPattern(DF.variable('ex:s1'), DF.namedNode('ex:p1'), DF.namedNode('ex:o1')),
+        FACTORY.createPattern(DF.namedNode('ex:s2'), DF.namedNode('ex:p2'), DF.namedNode('ex:o2')),
+        FACTORY.createPattern(DF.namedNode('ex:s3'), DF.variable('ex:p3'), DF.variable('ex:o3')),
       ];
       const sources: string[] = [ 'ex:seed' ];
       ActorQueryOperationBgpTraversal.sortPatterns(patterns, sources);
       return expect(patterns).toEqual([
-        FACTORY.createPattern(namedNode('ex:s2'), namedNode('ex:p2'), namedNode('ex:o2')),
-        FACTORY.createPattern(variable('ex:s1'), namedNode('ex:p1'), namedNode('ex:o1')),
-        FACTORY.createPattern(namedNode('ex:s3'), variable('ex:p3'), variable('ex:o3')),
+        FACTORY.createPattern(DF.namedNode('ex:s2'), DF.namedNode('ex:p2'), DF.namedNode('ex:o2')),
+        FACTORY.createPattern(DF.variable('ex:s1'), DF.namedNode('ex:p1'), DF.namedNode('ex:o1')),
+        FACTORY.createPattern(DF.namedNode('ex:s3'), DF.variable('ex:p3'), DF.variable('ex:o3')),
       ]);
     });
 
     it('should prioritize patterns with seed IRIs, and then by fewest variables', () => {
       const patterns: Algebra.Pattern[] = [
-        FACTORY.createPattern(namedNode('ex:s1'), namedNode('ex:p1'), namedNode('ex:o1')),
-        FACTORY.createPattern(namedNode('ex:seed'), namedNode('ex:p2'), variable('ex:o2')),
-        FACTORY.createPattern(namedNode('ex:seed'), namedNode('ex:p3'), namedNode('ex:o3')),
+        FACTORY.createPattern(DF.namedNode('ex:s1'), DF.namedNode('ex:p1'), DF.namedNode('ex:o1')),
+        FACTORY.createPattern(DF.namedNode('ex:seed'), DF.namedNode('ex:p2'), DF.variable('ex:o2')),
+        FACTORY.createPattern(DF.namedNode('ex:seed'), DF.namedNode('ex:p3'), DF.namedNode('ex:o3')),
       ];
       const sources: string[] = [ 'ex:seed' ];
       ActorQueryOperationBgpTraversal.sortPatterns(patterns, sources);
       return expect(patterns).toEqual([
-        FACTORY.createPattern(namedNode('ex:seed'), namedNode('ex:p3'), namedNode('ex:o3')),
-        FACTORY.createPattern(namedNode('ex:seed'), namedNode('ex:p2'), variable('ex:o2')),
-        FACTORY.createPattern(namedNode('ex:s1'), namedNode('ex:p1'), namedNode('ex:o1')),
+        FACTORY.createPattern(DF.namedNode('ex:seed'), DF.namedNode('ex:p3'), DF.namedNode('ex:o3')),
+        FACTORY.createPattern(DF.namedNode('ex:seed'), DF.namedNode('ex:p2'), DF.variable('ex:o2')),
+        FACTORY.createPattern(DF.namedNode('ex:s1'), DF.namedNode('ex:p1'), DF.namedNode('ex:o1')),
       ]);
     });
   });
@@ -291,8 +293,8 @@ describe('ActorQueryOperationBgpTraversal', () => {
       return expect(actor.test(op)).resolves.toBeTruthy();
     });
 
-    const pattern1 = quad(namedNode('1'), namedNode('1'), namedNode('1'), variable('a'));
-    const pattern2 = quad(variable('d'), namedNode('4'), namedNode('4'), namedNode('4'));
+    const pattern1 = DF.quad(DF.namedNode('1'), DF.namedNode('1'), DF.namedNode('1'), DF.variable('a'));
+    const pattern2 = DF.quad(DF.variable('d'), DF.namedNode('4'), DF.namedNode('4'), DF.namedNode('4'));
     const patterns = [ pattern1, pattern2 ];
 
     it('should run without a context and delegate the pattern to the mediator', () => {
@@ -306,10 +308,10 @@ describe('ActorQueryOperationBgpTraversal', () => {
         expect(await (<any> output).metadata).toBeUndefined();
         expect(await arrayifyStream(output.bindingsStream)).toEqual([
           Bindings({
-            subject: namedNode('1'),
-            predicate: namedNode('1'),
-            object: namedNode('1'),
-            graph: namedNode('a'),
+            subject: DF.namedNode('1'),
+            predicate: DF.namedNode('1'),
+            object: DF.namedNode('1'),
+            graph: DF.variable('a'),
           }),
         ]);
       });
@@ -327,10 +329,10 @@ describe('ActorQueryOperationBgpTraversal', () => {
         expect(await (<any> output).metadata).toBeUndefined();
         expect(await arrayifyStream(output.bindingsStream)).toEqual([
           Bindings({
-            subject: namedNode('1'),
-            predicate: namedNode('1'),
-            object: namedNode('1'),
-            graph: namedNode('a'),
+            subject: DF.namedNode('1'),
+            predicate: DF.namedNode('1'),
+            object: DF.namedNode('1'),
+            graph: DF.variable('a'),
           }),
         ]);
       });
@@ -340,7 +342,7 @@ describe('ActorQueryOperationBgpTraversal', () => {
       const op = {
         operation: { type: 'bgp', patterns },
         context: ActionContext({
-          [KEY_CONTEXT_SOURCES]: AsyncReiterableArray.fromFixedData<IDataSource>([ 'a', 'b' ]),
+          [KEY_CONTEXT_SOURCES]: [ 'a', 'b' ],
         }),
       };
       return actor.run(op).then(async(output: IActorQueryOperationOutputBindings) => {
@@ -350,10 +352,10 @@ describe('ActorQueryOperationBgpTraversal', () => {
         expect(await (<any> output).metadata).toBeUndefined();
         expect(await arrayifyStream(output.bindingsStream)).toEqual([
           Bindings({
-            subject: namedNode('1'),
-            predicate: namedNode('1'),
-            object: namedNode('1'),
-            graph: namedNode('a'),
+            subject: DF.namedNode('1'),
+            predicate: DF.namedNode('1'),
+            object: DF.namedNode('1'),
+            graph: DF.variable('a'),
           }),
         ]);
       });
@@ -363,7 +365,7 @@ describe('ActorQueryOperationBgpTraversal', () => {
       const op = {
         operation: { type: 'bgp', patterns },
         context: ActionContext({
-          [KEY_CONTEXT_SOURCES]: AsyncReiterableArray.fromFixedData<IDataSource>([ 'a', <any> { value: {}} ]),
+          [KEY_CONTEXT_SOURCES]: [ 'a', <any> { value: {}} ],
         }),
       };
       return actor.run(op).then(async(output: IActorQueryOperationOutputBindings) => {
@@ -373,12 +375,26 @@ describe('ActorQueryOperationBgpTraversal', () => {
         expect(await (<any> output).metadata).toBeUndefined();
         expect(await arrayifyStream(output.bindingsStream)).toEqual([
           Bindings({
-            subject: namedNode('1'),
-            predicate: namedNode('1'),
-            object: namedNode('1'),
-            graph: namedNode('a'),
+            subject: DF.namedNode('1'),
+            predicate: DF.namedNode('1'),
+            object: DF.namedNode('1'),
+            graph: DF.variable('a'),
           }),
         ]);
+      });
+    });
+
+    it('should run with a logger', async() => {
+      const logger = new LoggerVoid();
+      const spy = spyOn(logger, 'debug');
+      const op = {
+        operation: { type: 'bgp', patterns },
+        context: ActionContext({ [KEY_CONTEXT_LOG]: logger }),
+      };
+      await actor.run(op);
+      expect(spy).toHaveBeenCalledWith('Best traversal pattern: ', {
+        actor: 'actor',
+        pattern: patterns[0],
       });
     });
   });

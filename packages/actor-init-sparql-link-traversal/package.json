@@ -42,7 +42,7 @@
     "engine-default.js"
   ],
   "dependencies": {
-    "@comunica/actor-init-sparql": "^1.16.2",
+    "@comunica/actor-init-sparql": "^1.17.0",
     "@comunica/actor-query-operation-bgp-traversal": "^1.0.0",
     "@comunica/actor-rdf-metadata-extract-traverse-all": "^1.0.0",
     "@comunica/actor-rdf-metadata-extract-traverse-content-policies": "^1.0.0",

@@ -1,21 +1,22 @@
 import { ActorQueryOperationBgpLeftDeepSmallest } from '@comunica/actor-query-operation-bgp-left-deep-smallest';
-import {
-  ActorQueryOperation,
-  ActorQueryOperationTypedMediated,
-  Bindings,
+import type { Bindings,
   BindingsStream,
   IActorQueryOperationOutputBindings,
   IActorQueryOperationTypedMediatedArgs,
-  IPatternBindings,
+  IPatternBindings } from '@comunica/bus-query-operation';
+import {
+  ActorQueryOperation,
+  ActorQueryOperationTypedMediated,
 } from '@comunica/bus-query-operation';
-import { DataSources, getDataSourceValue, IDataSource,
+import type { DataSources } from '@comunica/bus-rdf-resolve-quad-pattern';
+import { getDataSourceValue,
   KEY_CONTEXT_SOURCES } from '@comunica/bus-rdf-resolve-quad-pattern';
-import { ActionContext, IActorTest } from '@comunica/core';
+import type { ActionContext, IActorTest } from '@comunica/core';
 import { TransformIterator, UnionIterator } from 'asynciterator';
 import type * as RDF from 'rdf-js';
 import { termToString } from 'rdf-string';
 import { getNamedNodes, getTerms, getVariables, QUAD_TERM_NAMES } from 'rdf-terms';
-import { Algebra } from 'sparqlalgebrajs';
+import type { Algebra } from 'sparqlalgebrajs';
 
 /**
  * A comunica BGP Traversal Query Operation Actor.
@@ -93,7 +94,7 @@ export class ActorQueryOperationBgpTraversal extends ActorQueryOperationTypedMed
    * @param patterns A quad pattern.
    */
   public static getPatternVariables(patterns: RDF.BaseQuad[]): string[] {
-    const hash: {[variable: string]: boolean} = {};
+    const hash: Record<string, boolean> = {};
     for (const pattern of patterns) {
       for (const variable of getVariables(getTerms(pattern))) {
         hash[termToString(variable)] = true;
@@ -138,7 +139,7 @@ export class ActorQueryOperationBgpTraversal extends ActorQueryOperationTypedMed
    */
   public static createBreadthFirstStream(baseStream: BindingsStream, patterns: Algebra.Pattern[],
     patternBinder:
-    (patterns: { pattern: Algebra.Pattern; bindings: IPatternBindings }[]) =>
+    (subPatterns: { pattern: Algebra.Pattern; bindings: IPatternBindings }[]) =>
     Promise<BindingsStream>): BindingsStream {
     return new UnionIterator(baseStream.map((bindings: Bindings) => {
       const bindingsMerger = (subBindings: Bindings): Bindings => subBindings.merge(bindings);
@@ -162,10 +163,7 @@ export class ActorQueryOperationBgpTraversal extends ActorQueryOperationTypedMed
     const sources: string[] = [];
     if (context && context.has(KEY_CONTEXT_SOURCES)) {
       const dataSources: DataSources = context.get(KEY_CONTEXT_SOURCES);
-      let source: IDataSource | null;
-      const it = dataSources.iterator();
-      // eslint-disable-next-line no-cond-assign
-      while (source = it.read()) {
+      for (const source of dataSources) {
         const sourceValue = getDataSourceValue(source);
         if (typeof sourceValue === 'string') {
           sources.push(sourceValue);
@@ -181,7 +179,7 @@ export class ActorQueryOperationBgpTraversal extends ActorQueryOperationTypedMed
     const bestPattern: Algebra.Pattern = patterns[0];
     const remainingPatterns: Algebra.Pattern[] = patterns.slice(1);
 
-    this.logDebug(context, 'Best traversal pattern: ', { pattern: bestPattern });
+    this.logDebug(context, 'Best traversal pattern: ', () => ({ pattern: bestPattern }));
 
     // Evaluate the first pattern
     const subOutput: IActorQueryOperationOutputBindings = ActorQueryOperation

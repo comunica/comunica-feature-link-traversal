@@ -1,16 +1,16 @@
-import { ActorInitSparql } from '@comunica/actor-init-sparql';
+import type { ActorInitSparql } from '@comunica/actor-init-sparql';
 // TODO: fix export in Comunica
-import { IQueryResultBindings } from '@comunica/actor-init-sparql/index-browser';
-import { Bindings } from '@comunica/bus-query-operation';
+import type { IQueryResultBindings } from '@comunica/actor-init-sparql/index-browser';
+import type { Bindings } from '@comunica/bus-query-operation';
+import type { IActionRdfMetadataExtract,
+  IActorRdfMetadataExtractOutput } from '@comunica/bus-rdf-metadata-extract';
 import {
   ActorRdfMetadataExtract,
-  IActionRdfMetadataExtract,
-  IActorRdfMetadataExtractOutput,
 } from '@comunica/bus-rdf-metadata-extract';
-import { ActionContext, IActorArgs, IActorTest } from '@comunica/core';
+import type { ActionContext, IActorArgs, IActorTest } from '@comunica/core';
 import type * as RDF from 'rdf-js';
 import { storeStream } from 'rdf-store-stream';
-import { ContentPolicy } from './ContentPolicy';
+import type { ContentPolicy } from './ContentPolicy';
 
 /**
  * A comunica Traverse Content Policies RDF Metadata Extract Actor.

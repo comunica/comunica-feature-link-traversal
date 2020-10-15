@@ -1,6 +1,7 @@
-import { ActorRdfResolveHypermediaLinks, IActionRdfResolveHypermediaLinks,
+import type { IActionRdfResolveHypermediaLinks,
   IActorRdfResolveHypermediaLinksOutput } from '@comunica/bus-rdf-resolve-hypermedia-links';
-import { IActorArgs, IActorTest } from '@comunica/core';
+import { ActorRdfResolveHypermediaLinks } from '@comunica/bus-rdf-resolve-hypermedia-links';
+import type { IActorArgs, IActorTest } from '@comunica/core';
 
 /**
  * A comunica Traverse RDF Resolve Hypermedia Links Actor.
