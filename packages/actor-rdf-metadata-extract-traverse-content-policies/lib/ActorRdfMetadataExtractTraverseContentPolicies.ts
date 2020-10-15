@@ -1,6 +1,4 @@
-import type { ActorInitSparql } from '@comunica/actor-init-sparql';
-// TODO: fix export in Comunica
-import type { IQueryResultBindings } from '@comunica/actor-init-sparql/index-browser';
+import type { ActorInitSparql, IQueryResultBindings } from '@comunica/actor-init-sparql';
 import type { Bindings } from '@comunica/bus-query-operation';
 import type { IActionRdfMetadataExtract,
   IActorRdfMetadataExtractOutput } from '@comunica/bus-rdf-metadata-extract';
@@ -51,8 +49,7 @@ export class ActorRdfMetadataExtractTraverseContentPolicies extends ActorRdfMeta
         .query(contentPolicy.graphPattern, { sources: [ store ]});
 
       // Extract all bound named nodes from the policy's variables
-      // TODO: fix incorrect typings in Comunica
-      const bindings: Bindings[] = <Bindings[]><any> await result.bindings();
+      const bindings: Bindings[] = await result.bindings();
       for (const binding of bindings) {
         for (const variable of contentPolicy.variables) {
           const term = binding.get(`?${variable.name}`);
