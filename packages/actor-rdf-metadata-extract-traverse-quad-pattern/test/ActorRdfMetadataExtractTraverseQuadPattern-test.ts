@@ -86,7 +86,15 @@ describe('ActorRdfMetadataExtractTraverseQuadPattern', () => {
       return expect(actor.run({ url: '', metadata: input, context })).resolves
         .toEqual({
           metadata: {
-            traverse: [ 'ex:s2', 'ex:p', 'ex:g', 'ex:s4', 'ex:p', 'ex:o4', 'ex:g' ],
+            traverse: [
+              { url: 'ex:s2' },
+              { url: 'ex:p' },
+              { url: 'ex:g' },
+              { url: 'ex:s4' },
+              { url: 'ex:p' },
+              { url: 'ex:o4' },
+              { url: 'ex:g' },
+            ],
           },
         });
     });

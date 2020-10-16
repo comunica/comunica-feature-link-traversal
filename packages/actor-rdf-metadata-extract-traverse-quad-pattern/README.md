@@ -21,7 +21,7 @@ $ yarn add @comunica/actor-rdf-metadata-extract-traverse-quad-pattern
 
 This actor adds the following entries to the metadata object.
 
-* `traverse`: Array of URLs to traverse.
+* `traverse`: Array of ILink to traverse.
 
 ## Configure
 

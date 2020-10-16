@@ -6,13 +6,14 @@ import type { Algebra } from 'sparqlalgebrajs';
  *
  * Additionally, an optional filter can be defined to indicate what triples
  * inside the documents of the followed URLs should be considered.
+ * This filter is represented as a construct query.
  */
 export class ContentPolicy {
   public readonly graphPattern: Algebra.Operation;
   public readonly variables: IVariable[];
-  public readonly filter?: Algebra.Operation;
+  public readonly filter?: Algebra.Construct;
 
-  public constructor(graphPattern: Algebra.Operation, variables: IVariable[], filter?: Algebra.Operation) {
+  public constructor(graphPattern: Algebra.Operation, variables: IVariable[], filter?: Algebra.Construct) {
     this.graphPattern = graphPattern;
     this.variables = variables;
     this.filter = filter;

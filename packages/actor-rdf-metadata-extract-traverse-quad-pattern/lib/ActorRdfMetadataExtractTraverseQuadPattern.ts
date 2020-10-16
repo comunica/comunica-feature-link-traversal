@@ -1,6 +1,7 @@
 import type { IActionRdfMetadataExtract,
   IActorRdfMetadataExtractOutput } from '@comunica/bus-rdf-metadata-extract';
 import { ActorRdfMetadataExtract } from '@comunica/bus-rdf-metadata-extract';
+import type { ILink } from '@comunica/bus-rdf-resolve-hypermedia-links';
 import type { ActionContext, IActorArgs, IActorTest } from '@comunica/core';
 import { getNamedNodes, getTerms, matchPatternComplete } from 'rdf-terms';
 import type { Algebra } from 'sparqlalgebrajs';
@@ -35,7 +36,7 @@ export class ActorRdfMetadataExtractTraverseQuadPattern extends ActorRdfMetadata
     const quadPattern: Algebra.Pattern = <Algebra.Pattern> ActorRdfMetadataExtractTraverseQuadPattern
       .getCurrentQuadPattern(action.context);
     return new Promise((resolve, reject) => {
-      const traverse: string[] = [];
+      const traverse: ILink[] = [];
 
       // Forward errors
       action.metadata.on('error', reject);
@@ -44,7 +45,7 @@ export class ActorRdfMetadataExtractTraverseQuadPattern extends ActorRdfMetadata
       action.metadata.on('data', quad => {
         if (matchPatternComplete(quad, quadPattern)) {
           for (const link of getNamedNodes(getTerms(quad))) {
-            traverse.push(link.value);
+            traverse.push({ url: link.value });
           }
         }
       });

@@ -1,7 +1,9 @@
 import type { IActionRdfMetadataExtract,
   IActorRdfMetadataExtractOutput } from '@comunica/bus-rdf-metadata-extract';
 import { ActorRdfMetadataExtract } from '@comunica/bus-rdf-metadata-extract';
+import type { ILink } from '@comunica/bus-rdf-resolve-hypermedia-links';
 import type { IActorArgs, IActorTest } from '@comunica/core';
+
 import { getNamedNodes, getTerms } from 'rdf-terms';
 
 /**
@@ -18,7 +20,7 @@ export class ActorRdfMetadataExtractTraverseAll extends ActorRdfMetadataExtract 
 
   public async run(action: IActionRdfMetadataExtract): Promise<IActorRdfMetadataExtractOutput> {
     return new Promise((resolve, reject) => {
-      const traverse: string[] = [];
+      const traverse: ILink[] = [];
 
       // Forward errors
       action.metadata.on('error', reject);
@@ -26,7 +28,7 @@ export class ActorRdfMetadataExtractTraverseAll extends ActorRdfMetadataExtract 
       // Immediately resolve when a value has been found.
       action.metadata.on('data', quad => {
         for (const link of getNamedNodes(getTerms(quad))) {
-          traverse.push(link.value);
+          traverse.push({ url: link.value });
         }
       });
 

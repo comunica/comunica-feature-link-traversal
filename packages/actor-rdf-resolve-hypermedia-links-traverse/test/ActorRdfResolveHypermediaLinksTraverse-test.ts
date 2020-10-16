@@ -43,13 +43,19 @@ describe('ActorRdfResolveHypermediaLinksTraverse', () => {
     });
 
     it('should run', () => {
-      return expect(actor.run({ metadata: { traverse: [ 'a', 'b' ]}})).resolves
-        .toMatchObject({ urls: [ 'a', 'b' ]});
+      return expect(actor.run({ metadata: { traverse: [{ url: 'a' }, { url: 'b' }]}})).resolves
+        .toMatchObject({ urls: [{ url: 'a' }, { url: 'b' }]});
     });
 
     it('should run and remove hashes from URLs', () => {
-      return expect(actor.run({ metadata: { traverse: [ 'http://example.org?abc', 'http://example.org#abc' ]}}))
-        .resolves.toMatchObject({ urls: [ 'http://example.org?abc', 'http://example.org' ]});
+      return expect(actor.run({ metadata: { traverse: [
+        { url: 'http://example.org?abc' },
+        { url: 'http://example.org#abc' },
+      ]}}))
+        .resolves.toMatchObject({ urls: [
+          { url: 'http://example.org?abc' },
+          { url: 'http://example.org' },
+        ]});
     });
   });
 });
