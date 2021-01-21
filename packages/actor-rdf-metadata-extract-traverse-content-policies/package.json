@@ -34,11 +34,9 @@
   "dependencies": {
     "@comunica/actor-init-sparql": "^1.19.0",
     "@comunica/bus-query-operation": "^1.19.0",
-    "@types/sparqljs": "^3.1.1",
     "rdf-data-factory": "^1.0.4",
     "rdf-store-stream": "^1.1.0",
-    "sparqlalgebrajs": "^2.4.0",
-    "sparqljs": "^3.2.0"
+    "sparqlalgebrajs": "^2.4.0"
   },
   "peerDependencies": {
     "@comunica/core": "^1.19.0",

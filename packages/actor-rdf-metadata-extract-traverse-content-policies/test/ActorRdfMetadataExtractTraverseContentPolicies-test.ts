@@ -4,7 +4,12 @@ import { ActionContext, Bus } from '@comunica/core';
 import { ArrayIterator } from 'asynciterator';
 import { DataFactory } from 'rdf-data-factory';
 import { Factory } from 'sparqlalgebrajs';
-import { ActorRdfMetadataExtractTraverseContentPolicies, ContentPolicy } from '..';
+import {
+  ActorRdfMetadataExtractTraverseContentPolicies,
+  ContentPolicy,
+  KEY_CONTEXT_POLICIES,
+  KEY_CONTEXT_WITHPOLICIES,
+} from '..';
 const arrayifyStream = require('arrayify-stream');
 const quad = require('rdf-quad');
 const stream = require('streamify-array');
@@ -26,13 +31,43 @@ describe('ActorRdfMetadataExtractTraverseContentPolicies', () => {
     beforeEach(() => {
       queryEngine = {
         query: jest.fn(pattern => {
+          if (typeof pattern === 'string') {
+            // Query in getContentPoliciesFromDocument
+            return {
+              bindings() {
+                if (pattern.includes('one_policy')) {
+                  return Promise.resolve([
+                    Bindings({ '?scope': DF.literal(`
+      FOLLOW (?varA WITH POLICIES) {
+        <ex:s> <ex:p> ?varA.
+      }`) }),
+                  ]);
+                }
+                if (pattern.includes('two_policies')) {
+                  return Promise.resolve([
+                    Bindings({ '?scope': DF.literal(`
+      FOLLOW (?varA WITH POLICIES) {
+        <ex:s> <ex:p> ?varA.
+      }`) }),
+                    Bindings({ '?scope': DF.literal(`
+      FOLLOW ?varB {
+        <ex:s> <ex:p> ?varB.
+      }`) }),
+                  ]);
+                }
+                return Promise.resolve([]);
+              },
+            };
+          }
           if (pattern.type === 'construct') {
+            // INCLUDE filter
             return {
               quadStream: new ArrayIterator([
                 DF.quad(DF.namedNode('ex:s'), DF.namedNode('ex:p'), DF.namedNode('ex:o')),
               ]),
             };
           }
+          // FOLLOW clause
           return {
             bindings: () => [
               Bindings({ '?varA': DF.namedNode('ex:match1') }),
@@ -75,7 +110,7 @@ describe('ActorRdfMetadataExtractTraverseContentPolicies', () => {
 
     it('should run with one content policy that produces no matches', () => {
       const context = ActionContext({
-        contentPolicies: [
+        [KEY_CONTEXT_POLICIES]: [
           new ContentPolicy(
             factory.createBgp([
               factory.createPattern(
@@ -97,7 +132,7 @@ describe('ActorRdfMetadataExtractTraverseContentPolicies', () => {
 
     it('should run with one content policy that produces matches', () => {
       const context = ActionContext({
-        contentPolicies: [
+        [KEY_CONTEXT_POLICIES]: [
           new ContentPolicy(
             factory.createBgp([
               factory.createPattern(
@@ -122,7 +157,7 @@ describe('ActorRdfMetadataExtractTraverseContentPolicies', () => {
 
     it('should run with two content policies that produce matches', () => {
       const context = ActionContext({
-        contentPolicies: [
+        [KEY_CONTEXT_POLICIES]: [
           new ContentPolicy(
             factory.createBgp([
               factory.createPattern(
@@ -174,7 +209,7 @@ describe('ActorRdfMetadataExtractTraverseContentPolicies', () => {
         ],
       );
       const context = ActionContext({
-        contentPolicies: [
+        [KEY_CONTEXT_POLICIES]: [
           new ContentPolicy(
             factory.createBgp([
               factory.createPattern(
@@ -212,6 +247,98 @@ describe('ActorRdfMetadataExtractTraverseContentPolicies', () => {
       ]);
       expect(queryEngine.query).toHaveBeenCalledTimes(3);
       expect(queryEngine.query).toHaveBeenNthCalledWith(3, filter, { sources: [ expect.anything() ]});
+    });
+
+    it('should run with one content policy that produces withPolicies matches', () => {
+      const context = ActionContext({
+        [KEY_CONTEXT_POLICIES]: [
+          new ContentPolicy(
+            factory.createBgp([
+              factory.createPattern(
+                DF.namedNode('ex:s'),
+                DF.namedNode('ex:p'),
+                DF.variable('varA'),
+              ),
+            ]),
+            [{ name: 'varA', withPolicies: true }],
+          ),
+        ],
+      });
+      return expect(actor.run({ url: '', metadata: input, context })).resolves.toEqual({
+        metadata: {
+          traverse: [
+            { url: 'ex:match1', context: ActionContext({ [KEY_CONTEXT_WITHPOLICIES]: true }) },
+            { url: 'ex:match3', context: ActionContext({ [KEY_CONTEXT_WITHPOLICIES]: true }) },
+          ],
+        },
+      });
+    });
+
+    it('should run withPolicies with one content policy over a doc without policies', () => {
+      const context = ActionContext({
+        [KEY_CONTEXT_WITHPOLICIES]: true,
+      });
+      return expect(actor.run({ url: 'no_policies', metadata: input, context })).resolves.toEqual({
+        metadata: {
+          traverse: [],
+        },
+      });
+    });
+
+    it('should run withPolicies with one content policy over a doc with one policy', () => {
+      const context = ActionContext({
+        [KEY_CONTEXT_WITHPOLICIES]: true,
+      });
+      return expect(actor.run({ url: 'one_policy', metadata: input, context })).resolves.toEqual({
+        metadata: {
+          traverse: [
+            { url: 'ex:match1', context: ActionContext({ [KEY_CONTEXT_WITHPOLICIES]: true }) },
+            { url: 'ex:match3', context: ActionContext({ [KEY_CONTEXT_WITHPOLICIES]: true }) },
+          ],
+        },
+      });
+    });
+
+    it('should run withPolicies with one content policy over a doc with two policies', () => {
+      const context = ActionContext({
+        [KEY_CONTEXT_WITHPOLICIES]: true,
+      });
+      return expect(actor.run({ url: 'two_policies', metadata: input, context })).resolves.toEqual({
+        metadata: {
+          traverse: [
+            { url: 'ex:match1', context: ActionContext({ [KEY_CONTEXT_WITHPOLICIES]: true }) },
+            { url: 'ex:match3', context: ActionContext({ [KEY_CONTEXT_WITHPOLICIES]: true }) },
+            { url: 'ex:match2Bis' },
+          ],
+        },
+      });
+    });
+
+    it('should run withPolicies with one content policy over a doc with one policy and an input policy', () => {
+      const context = ActionContext({
+        [KEY_CONTEXT_WITHPOLICIES]: true,
+        [KEY_CONTEXT_POLICIES]: [
+          new ContentPolicy(
+            factory.createBgp([
+              factory.createPattern(
+                DF.namedNode('ex:s'),
+                DF.namedNode('ex:p'),
+                DF.variable('varA'),
+              ),
+            ]),
+            [{ name: 'varB', withPolicies: false }],
+          ),
+        ],
+      });
+      return expect(actor.run({ url: 'one_policy', metadata: input, context })).resolves.toEqual({
+        metadata: {
+          traverse: [
+            { url: 'ex:match2Bis' },
+            { url: 'ex:match1', context: ActionContext({ [KEY_CONTEXT_WITHPOLICIES]: true }) },
+            { url: 'ex:match3', context: ActionContext({ [KEY_CONTEXT_WITHPOLICIES]: true }) },
+          ],
+        },
+      });
     });
   });
 });
