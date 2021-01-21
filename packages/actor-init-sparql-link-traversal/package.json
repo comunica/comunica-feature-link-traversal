@@ -2,12 +2,7 @@
   "name": "@comunica/actor-init-sparql-link-traversal",
   "version": "1.0.0",
   "description": "A Comunica engine for link traversal-based query evaluation",
-  "lsd:contexts": {
-    "https://linkedsoftwaredependencies.org/bundles/npm/@comunica/actor-init-sparql-link-traversal/^1.0.0/components/context.jsonld": "components/context.jsonld"
-  },
-  "lsd:importPaths": {
-    "https://linkedsoftwaredependencies.org/bundles/npm/@comunica/actor-init-sparql-link-traversal/^1.0.0/config/": "config/"
-  },
+  "lsd:module": true,
   "main": "index.js",
   "typings": "index",
   "repository": "https://github.com/comunica/comunica-feature-link-traversal/tree/master/packages/actor-init-sparql-link-traversal",
@@ -42,14 +37,14 @@
     "engine-default.js"
   ],
   "dependencies": {
-    "@comunica/actor-init-sparql": "^1.17.0",
+    "@comunica/actor-init-sparql": "^1.19.0",
     "@comunica/actor-query-operation-bgp-traversal": "^1.0.0",
     "@comunica/actor-rdf-metadata-extract-traverse-all": "^1.0.0",
     "@comunica/actor-rdf-metadata-extract-traverse-content-policies": "^1.0.0",
     "@comunica/actor-rdf-metadata-extract-traverse-quad-pattern": "^1.0.0",
     "@comunica/actor-rdf-resolve-hypermedia-links-traverse": "^1.0.0",
-    "@comunica/runner": "^1.16.0",
-    "@comunica/runner-cli": "^1.16.0"
+    "@comunica/runner": "^1.19.0",
+    "@comunica/runner-cli": "^1.19.0"
   },
   "scripts": {
     "lint": "node \"../../node_modules/tslint/bin/tslint\" lib/**/*.ts test/**/*.ts --exclude '**/*.d.ts'",
