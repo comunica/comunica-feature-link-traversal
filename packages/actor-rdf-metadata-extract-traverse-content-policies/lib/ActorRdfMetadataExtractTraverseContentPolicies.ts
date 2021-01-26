@@ -44,9 +44,9 @@ export class ActorRdfMetadataExtractTraverseContentPolicies extends ActorRdfMeta
     // Query the content policies that apply to the current document
     const result = <IQueryResultBindings> await this.queryEngine
       .query(`
-        @prefix scl: <http://example.org/scl#>.
+        PREFIX scl: <https://w3id.org/scl/vocab#>
         SELECT ?scope WHERE {
-          ?policy scl:appliesTo <${documentIri}>.
+          ?policy scl:appliesTo <${documentIri}>;
                   scl:scope ?scope.
         }`, { sources: [ store ]});
 
