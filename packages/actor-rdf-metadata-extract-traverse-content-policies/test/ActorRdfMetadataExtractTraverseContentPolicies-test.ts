@@ -39,7 +39,7 @@ describe('ActorRdfMetadataExtractTraverseContentPolicies', () => {
                   return Promise.resolve([
                     Bindings({ '?scope': DF.literal(`
       FOLLOW (?varA WITH POLICIES) {
-        <ex:s> <ex:p> ?varA.
+        <> <ex:p> ?varA.
       }`) }),
                   ]);
                 }
@@ -47,11 +47,11 @@ describe('ActorRdfMetadataExtractTraverseContentPolicies', () => {
                   return Promise.resolve([
                     Bindings({ '?scope': DF.literal(`
       FOLLOW (?varA WITH POLICIES) {
-        <ex:s> <ex:p> ?varA.
+        <> <ex:p> ?varA.
       }`) }),
                     Bindings({ '?scope': DF.literal(`
       FOLLOW ?varB {
-        <ex:s> <ex:p> ?varB.
+        <> <ex:p> ?varB.
       }`) }),
                   ]);
                 }

@@ -52,7 +52,7 @@ export class ActorRdfMetadataExtractTraverseContentPolicies extends ActorRdfMeta
 
     // Parse all found content policies
     return (await result.bindings())
-      .map(binding => this.sclParser.parse(binding.get('?scope').value));
+      .map(binding => this.sclParser.parse(binding.get('?scope').value, documentIri));
   }
 
   public async run(action: IActionRdfMetadataExtract): Promise<IActorRdfMetadataExtractOutput> {

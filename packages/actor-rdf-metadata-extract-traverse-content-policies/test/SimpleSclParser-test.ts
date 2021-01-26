@@ -159,6 +159,22 @@ describe('SimpleSclParser', () => {
           ])),
         );
       });
+
+      it('should handle a policy with IRI relative to baseIRI', () => {
+        expect(parser.parse(`FOLLOW ?uri {
+        <> <#p> ?uri.
+      }`, 'http://example.org/base')).toMatchObject(
+          new ContentPolicy(factory.createBgp([
+            factory.createPattern(
+              DF.namedNode('http://example.org/base'),
+              DF.namedNode('http://example.org/base#p'),
+              DF.variable('uri'),
+            ),
+          ]), [
+            { name: 'uri', withPolicies: false },
+          ]),
+        );
+      });
     });
 
     describe('invalid policies', () => {
@@ -234,6 +250,12 @@ describe('SimpleSclParser', () => {
       } INCLUDE {
         ?s <ex:p>>>>>> ?uri.
       }`)).toThrow(/^Parse error on line 2/u);
+      });
+
+      it('should throw on a policy with IRI relative but no baseIRI', () => {
+        expect(() => parser.parse(`FOLLOW ?uri {
+        <> <#p> ?uri.
+      }`)).toThrow(new Error('Cannot resolve relative IRI  because no base IRI was set.'));
       });
     });
   });

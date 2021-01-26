@@ -12,7 +12,7 @@ import { ContentPolicy } from './ContentPolicy';
 export class SimpleSclParser {
   protected cursor: number;
 
-  public parse(contentPolicy: string): ContentPolicy {
+  public parse(contentPolicy: string, baseIRI?: string): ContentPolicy {
     this.cursor = 0;
 
     // Parse FOLLOW and variables
@@ -25,7 +25,7 @@ export class SimpleSclParser {
     if (includePos >= 0) {
       // Simulate a SPARQL CONSTRUCT query around our include clause for easy parsing
       const constructQuery = `CONSTRUCT WHERE ${contentPolicy.slice(includePos + 7)}`;
-      filter = <Algebra.Construct> translate(constructQuery, { quads: true });
+      filter = <Algebra.Construct> translate(constructQuery, { quads: true, baseIRI });
 
       // Chop off the include clause for further processing
       contentPolicy = contentPolicy.slice(0, includePos);
@@ -40,7 +40,7 @@ export class SimpleSclParser {
 
     // Simulate a SPARQL SELECT query around our graph pattern for easy parsing.
     const sparqlQuery = `SELECT * WHERE { ${graphPatternString} }`;
-    const graphPattern = (<Algebra.Project> translate(sparqlQuery, { quads: true })).input;
+    const graphPattern = (<Algebra.Project> translate(sparqlQuery, { quads: true, baseIRI })).input;
 
     return new ContentPolicy(graphPattern, variables, filter);
   }
