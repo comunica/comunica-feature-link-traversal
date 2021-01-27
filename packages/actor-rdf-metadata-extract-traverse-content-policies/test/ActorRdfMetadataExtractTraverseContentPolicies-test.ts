@@ -148,8 +148,8 @@ describe('ActorRdfMetadataExtractTraverseContentPolicies', () => {
       return expect(actor.run({ url: '', metadata: input, context })).resolves.toEqual({
         metadata: {
           traverse: [
-            { url: 'ex:match1' },
-            { url: 'ex:match3' },
+            { url: 'ex:match1', context: ActionContext({ [KEY_CONTEXT_WITHPOLICIES]: false }) },
+            { url: 'ex:match3', context: ActionContext({ [KEY_CONTEXT_WITHPOLICIES]: false }) },
           ],
         },
       });
@@ -183,9 +183,9 @@ describe('ActorRdfMetadataExtractTraverseContentPolicies', () => {
       return expect(actor.run({ url: '', metadata: input, context })).resolves.toEqual({
         metadata: {
           traverse: [
-            { url: 'ex:match1' },
-            { url: 'ex:match3' },
-            { url: 'ex:match2Bis' },
+            { url: 'ex:match1', context: ActionContext({ [KEY_CONTEXT_WITHPOLICIES]: false }) },
+            { url: 'ex:match3', context: ActionContext({ [KEY_CONTEXT_WITHPOLICIES]: false }) },
+            { url: 'ex:match2Bis', context: ActionContext({ [KEY_CONTEXT_WITHPOLICIES]: false }) },
           ],
         },
       });
@@ -228,8 +228,12 @@ describe('ActorRdfMetadataExtractTraverseContentPolicies', () => {
       expect(result).toEqual({
         metadata: {
           traverse: [
-            { url: 'ex:match1', transform: expect.anything() },
-            { url: 'ex:match3', transform: expect.anything() },
+            { url: 'ex:match1',
+              transform: expect.anything(),
+              context: ActionContext({ [KEY_CONTEXT_WITHPOLICIES]: false }) },
+            { url: 'ex:match3',
+              transform: expect.anything(),
+              context: ActionContext({ [KEY_CONTEXT_WITHPOLICIES]: false }) },
           ],
         },
       });
@@ -308,7 +312,7 @@ describe('ActorRdfMetadataExtractTraverseContentPolicies', () => {
           traverse: [
             { url: 'ex:match1', context: ActionContext({ [KEY_CONTEXT_WITHPOLICIES]: true }) },
             { url: 'ex:match3', context: ActionContext({ [KEY_CONTEXT_WITHPOLICIES]: true }) },
-            { url: 'ex:match2Bis' },
+            { url: 'ex:match2Bis', context: ActionContext({ [KEY_CONTEXT_WITHPOLICIES]: false }) },
           ],
         },
       });
@@ -333,7 +337,7 @@ describe('ActorRdfMetadataExtractTraverseContentPolicies', () => {
       return expect(actor.run({ url: 'one_policy', metadata: input, context })).resolves.toEqual({
         metadata: {
           traverse: [
-            { url: 'ex:match2Bis' },
+            { url: 'ex:match2Bis', context: ActionContext({ [KEY_CONTEXT_WITHPOLICIES]: false }) },
             { url: 'ex:match1', context: ActionContext({ [KEY_CONTEXT_WITHPOLICIES]: true }) },
             { url: 'ex:match3', context: ActionContext({ [KEY_CONTEXT_WITHPOLICIES]: true }) },
           ],

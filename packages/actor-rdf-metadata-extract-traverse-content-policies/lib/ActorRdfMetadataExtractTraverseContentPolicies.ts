@@ -97,10 +97,8 @@ export class ActorRdfMetadataExtractTraverseContentPolicies extends ActorRdfMeta
           if (term && term.termType === 'NamedNode') {
             const link: ILink = { url: term.value, transform };
 
-            // If the variable is marked to included policies for matched documents, set it in the context
-            if (variable.withPolicies) {
-              link.context = ActionContext({ [KEY_CONTEXT_WITHPOLICIES]: true });
-            }
+            // Mark in the context if the linked document's policies should be considered
+            link.context = ActionContext({ [KEY_CONTEXT_WITHPOLICIES]: variable.withPolicies });
 
             traverse.push(link);
           }
