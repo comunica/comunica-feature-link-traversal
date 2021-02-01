@@ -36,6 +36,7 @@
     "@comunica/bus-query-operation": "^1.19.0",
     "rdf-data-factory": "^1.0.4",
     "rdf-store-stream": "^1.1.0",
+    "rdf-terms": "^1.6.2",
     "sparqlalgebrajs": "^2.4.0"
   },
   "peerDependencies": {

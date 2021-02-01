@@ -1,4 +1,5 @@
 import type { Readable } from 'stream';
+import { KEY_CONTEXT_QUERYOPERATION } from '@comunica/actor-rdf-metadata-extract-traverse-quad-pattern';
 import { Bindings } from '@comunica/bus-query-operation';
 import { ActionContext, Bus } from '@comunica/core';
 import { ArrayIterator } from 'asynciterator';
@@ -52,6 +53,22 @@ describe('ActorRdfMetadataExtractTraverseContentPolicies', () => {
                     Bindings({ '?scope': DF.literal(`
       FOLLOW ?varB {
         <> <ex:p> ?varB.
+      }`) }),
+                  ]);
+                }
+                if (pattern.includes('two_includes')) {
+                  return Promise.resolve([
+                    Bindings({ '?scope': DF.literal(`
+      FOLLOW (?varA WITH POLICIES) {
+        <> <ex:p> ?varA.
+      } INCLUDE WHERE {
+        <> <ex:p1> ?varA.
+      }`) }),
+                    Bindings({ '?scope': DF.literal(`
+      FOLLOW ?varB {
+        <> <ex:p> ?varB.
+      } INCLUDE WHERE {
+        <> <ex:p2> ?varA.
       }`) }),
                   ]);
                 }
@@ -342,6 +359,154 @@ describe('ActorRdfMetadataExtractTraverseContentPolicies', () => {
             { url: 'ex:match3', context: ActionContext({ [KEY_CONTEXT_WITHPOLICIES]: true }) },
           ],
         },
+      });
+    });
+
+    it('should run over a doc with two policies with include', () => {
+      const context = ActionContext({
+        [KEY_CONTEXT_WITHPOLICIES]: true,
+      });
+      return expect(actor.run({ url: 'two_policies_include', metadata: input, context })).resolves.toEqual({
+        metadata: {
+          traverse: [
+            { url: 'ex:match1', context: ActionContext({ [KEY_CONTEXT_WITHPOLICIES]: true }) },
+            { url: 'ex:match3', context: ActionContext({ [KEY_CONTEXT_WITHPOLICIES]: true }) },
+            { url: 'ex:match2Bis', context: ActionContext({ [KEY_CONTEXT_WITHPOLICIES]: false }) },
+          ],
+        },
+      });
+    });
+
+    it('should run with current quad pattern over a doc with two policies and match include', () => {
+      const context = ActionContext({
+        [KEY_CONTEXT_WITHPOLICIES]: true,
+        [KEY_CONTEXT_QUERYOPERATION]: factory.createPattern(
+          DF.variable('s'),
+          DF.namedNode('ex:p1'),
+          DF.variable('o'),
+        ),
+      });
+      return expect(actor.run({ url: 'two_includes', metadata: input, context })).resolves.toEqual({
+        metadata: {
+          traverse: [
+            {
+              url: 'ex:match1',
+              context: ActionContext({ [KEY_CONTEXT_WITHPOLICIES]: true }),
+              transform: expect.anything(),
+            },
+            {
+              url: 'ex:match3',
+              context: ActionContext({ [KEY_CONTEXT_WITHPOLICIES]: true }),
+              transform: expect.anything(),
+            },
+            // URL match2Bis will not match the query operation pattern
+            // { url: 'ex:match2Bis', context: ActionContext({ [KEY_CONTEXT_WITHPOLICIES]: false }) },
+          ],
+        },
+      });
+    });
+
+    describe('isContentPolicyApplicableForPattern', () => {
+      it('should be true for no filter', () => {
+        expect(ActorRdfMetadataExtractTraverseContentPolicies.isContentPolicyApplicableForPattern(
+          new ContentPolicy(
+            factory.createBgp([]),
+            [{ name: 'varUnknown', withPolicies: false }],
+          ),
+          factory.createPattern(
+            DF.namedNode('ex:s'),
+            DF.namedNode('ex:p'),
+            DF.variable('varUnknown'),
+          ),
+        )).toBeTruthy();
+      });
+
+      it('should be true for no query pattern', () => {
+        expect(ActorRdfMetadataExtractTraverseContentPolicies.isContentPolicyApplicableForPattern(
+          new ContentPolicy(
+            factory.createBgp([]),
+            [{ name: 'varUnknown', withPolicies: false }],
+            factory.createConstruct(<any> undefined, <any> undefined),
+          ),
+        )).toBeTruthy();
+      });
+
+      it('should be false for no policy patterns matching query pattern', () => {
+        expect(ActorRdfMetadataExtractTraverseContentPolicies.isContentPolicyApplicableForPattern(
+          new ContentPolicy(
+            factory.createBgp([]),
+            [{ name: 'varUnknown', withPolicies: false }],
+            factory.createConstruct(<any> undefined, [
+              factory.createPattern(
+                DF.namedNode('ex:s1'),
+                DF.namedNode('ex:p1'),
+                DF.variable('varUnknown'),
+              ),
+              factory.createPattern(
+                DF.namedNode('ex:s2'),
+                DF.namedNode('ex:p2'),
+                DF.variable('varUnknown'),
+              ),
+            ]),
+          ),
+          factory.createPattern(
+            DF.variable('varS'),
+            DF.namedNode('ex:p3'),
+            DF.variable('varUnknown'),
+          ),
+        )).toBeFalsy();
+      });
+
+      it('should be true for policy pattern matching query pattern', () => {
+        expect(ActorRdfMetadataExtractTraverseContentPolicies.isContentPolicyApplicableForPattern(
+          new ContentPolicy(
+            factory.createBgp([]),
+            [{ name: 'varUnknown', withPolicies: false }],
+            factory.createConstruct(<any> undefined, [
+              factory.createPattern(
+                DF.namedNode('ex:s1'),
+                DF.namedNode('ex:p1'),
+                DF.variable('varUnknown'),
+              ),
+              factory.createPattern(
+                DF.namedNode('ex:s2'),
+                DF.namedNode('ex:p2'),
+                DF.variable('varUnknown'),
+              ),
+            ]),
+          ),
+          factory.createPattern(
+            DF.variable('varS'),
+            DF.namedNode('ex:p1'),
+            DF.variable('varUnknown'),
+          ),
+        )).toBeTruthy();
+      });
+
+      it('should be true for query pattern matching policy pattern', () => {
+        expect(ActorRdfMetadataExtractTraverseContentPolicies.isContentPolicyApplicableForPattern(
+          new ContentPolicy(
+            factory.createBgp([]),
+            [{ name: 'varUnknown', withPolicies: false }],
+            factory.createConstruct(<any> undefined, [
+              factory.createPattern(
+                DF.variable('varS'),
+                DF.namedNode('ex:p1'),
+                DF.variable('varUnknown'),
+              ),
+              factory.createPattern(
+                DF.variable('varS'),
+                DF.namedNode('ex:p2'),
+                DF.variable('varUnknown'),
+              ),
+            ]),
+          ),
+          factory.createPattern(
+            DF.namedNode('ex:s1'),
+            DF.namedNode('ex:p2'),
+            DF.variable('varUnknown'),
+          ),
+        )).toBeTruthy();
       });
     });
   });

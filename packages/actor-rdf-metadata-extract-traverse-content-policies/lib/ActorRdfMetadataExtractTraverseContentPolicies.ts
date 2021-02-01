@@ -11,6 +11,7 @@ import type { IActorArgs, IActorTest } from '@comunica/core';
 import { ActionContext } from '@comunica/core';
 import type * as RDF from 'rdf-js';
 import { storeStream } from 'rdf-store-stream';
+import { matchPatternComplete } from 'rdf-terms';
 import type { Algebra } from 'sparqlalgebrajs';
 import type { ContentPolicy } from './ContentPolicy';
 import { SimpleSclParser } from './SimpleSclParser';
@@ -33,7 +34,7 @@ export class ActorRdfMetadataExtractTraverseContentPolicies extends ActorRdfMeta
     return true;
   }
 
-  protected getContentPolicies(context?: ActionContext): ContentPolicy[] {
+  public static getContentPolicies(context?: ActionContext): ContentPolicy[] {
     if (!context || !context.has(KEY_CONTEXT_POLICIES)) {
       return [];
     }
@@ -55,8 +56,34 @@ export class ActorRdfMetadataExtractTraverseContentPolicies extends ActorRdfMeta
       .map(binding => this.sclParser.parse(binding.get('?scope').value, documentIri));
   }
 
+  public static getCurrentQuadPattern(context?: ActionContext): Algebra.Pattern | undefined {
+    if (!context) {
+      return;
+    }
+    const currentQueryOperation = context.get(KEY_CONTEXT_QUERYOPERATION);
+    if (!currentQueryOperation || currentQueryOperation.type !== 'pattern') {
+      return;
+    }
+    return currentQueryOperation;
+  }
+
+  public static isContentPolicyApplicableForPattern(policy: ContentPolicy, queryingPattern?: Algebra.Pattern): boolean {
+    if (!policy.filter || !queryingPattern) {
+      return true;
+    }
+    for (const policyPattern of policy.filter.template) {
+      if (matchPatternComplete(policyPattern, queryingPattern) ||
+        matchPatternComplete(queryingPattern, policyPattern)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   public async run(action: IActionRdfMetadataExtract): Promise<IActorRdfMetadataExtractOutput> {
-    const contentPolicies: ContentPolicy[] = this.getContentPolicies(action.context);
+    const contentPolicies: ContentPolicy[] = ActorRdfMetadataExtractTraverseContentPolicies
+      .getContentPolicies(action.context);
+    const currentQuadPattern = ActorRdfMetadataExtractTraverseContentPolicies.getCurrentQuadPattern(action.context);
     const traverse: ILink[] = [];
     let store: RDF.Store | undefined;
 
@@ -64,7 +91,11 @@ export class ActorRdfMetadataExtractTraverseContentPolicies extends ActorRdfMeta
     if (action.context && action.context.get(KEY_CONTEXT_WITHPOLICIES)) {
       store = await storeStream(action.metadata);
       for (const docPolicy of await this.getContentPoliciesFromDocument(action.url, store)) {
-        contentPolicies.push(docPolicy);
+        // Only add policies that produce quads matching the currently querying quad pattern
+        if (ActorRdfMetadataExtractTraverseContentPolicies
+          .isContentPolicyApplicableForPattern(docPolicy, currentQuadPattern)) {
+          contentPolicies.push(docPolicy);
+        }
       }
     }
 
@@ -116,3 +147,7 @@ export interface IActorRdfMetadataExtractTraverseContentPoliciesArgs
 
 export const KEY_CONTEXT_POLICIES = '@comunica/actor-rdf-metadata-extract-traverse-content-policies:policies';
 export const KEY_CONTEXT_WITHPOLICIES = '@comunica/actor-rdf-metadata-extract-traverse-content-policies:withPolicies';
+/**
+ * @type {string} Context entry for the current query operation.
+ */
+export const KEY_CONTEXT_QUERYOPERATION = '@comunica/bus-query-operation:operation';
