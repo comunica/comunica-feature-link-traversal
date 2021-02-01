@@ -24,7 +24,7 @@ export class SimpleSclParser {
     let filter: Algebra.Construct | undefined;
     if (includePos >= 0) {
       // Simulate a SPARQL CONSTRUCT query around our include clause for easy parsing
-      const constructQuery = `CONSTRUCT WHERE ${contentPolicy.slice(includePos + 7)}`;
+      const constructQuery = `CONSTRUCT ${contentPolicy.slice(includePos + 7)}`;
       filter = <Algebra.Construct> translate(constructQuery, { quads: true, baseIRI });
 
       // Chop off the include clause for further processing

@@ -124,10 +124,10 @@ describe('SimpleSclParser', () => {
         );
       });
 
-      it('should handle a policy with an INCLUDE clause', () => {
+      it('should handle a policy with an INCLUDE WHERE clause', () => {
         expect(parser.parse(`FOLLOW ?uri {
         ?s <ex:p> ?uri.
-      } INCLUDE {
+      } INCLUDE WHERE {
         ?a <ex:b> ?c.
       }`)).toMatchObject(
           new ContentPolicy(factory.createBgp([
@@ -140,10 +140,10 @@ describe('SimpleSclParser', () => {
         );
       });
 
-      it('should handle a policy with an INCLUDE clause with three triple patterns', () => {
+      it('should handle a policy with an INCLUDE WHERE clause with three triple patterns', () => {
         expect(parser.parse(`FOLLOW ?uri {
         ?s <ex:p> ?uri.
-      } INCLUDE {
+      } INCLUDE WHERE {
         ?a1 <ex:b> ?c.
         ?a2 <ex:b> ?c.
         ?a3 <ex:b> ?c.
@@ -156,6 +156,49 @@ describe('SimpleSclParser', () => {
             factory.createPattern(DF.variable('a1'), DF.namedNode('ex:b'), DF.variable('c')),
             factory.createPattern(DF.variable('a2'), DF.namedNode('ex:b'), DF.variable('c')),
             factory.createPattern(DF.variable('a3'), DF.namedNode('ex:b'), DF.variable('c')),
+          ])),
+        );
+      });
+
+      it('should handle a policy with an INCLUDE WHERE clause in expanded form', () => {
+        expect(parser.parse(`FOLLOW ?uri {
+        ?s <ex:p> ?uri.
+      } INCLUDE {
+        ?a <ex:b> ?c.
+      } WHERE {
+        ?a <ex:b> ?c.
+      }`)).toMatchObject(
+          new ContentPolicy(factory.createBgp([
+            factory.createPattern(DF.variable('s'), DF.namedNode('ex:p'), DF.variable('uri')),
+          ]), [
+            { name: 'uri', withPolicies: false },
+          ], makeIncludeClause([
+            factory.createPattern(DF.variable('a'), DF.namedNode('ex:b'), DF.variable('c')),
+          ])),
+        );
+      });
+
+      it('should handle a policy with an INCLUDE WHERE clause in expanded form with complex operators', () => {
+        expect(parser.parse(`FOLLOW ?uri {
+        ?s <ex:p> ?uri.
+      } INCLUDE {
+        ?a <ex:b> ?c.
+      } WHERE {
+        { ?a <ex:b> ?c } UNION { ?a <ex:c> ?c. }
+      }`)).toMatchObject(
+          new ContentPolicy(factory.createBgp([
+            factory.createPattern(DF.variable('s'), DF.namedNode('ex:p'), DF.variable('uri')),
+          ]), [
+            { name: 'uri', withPolicies: false },
+          ], factory.createConstruct(factory.createUnion(
+            factory.createBgp([
+              factory.createPattern(DF.variable('a'), DF.namedNode('ex:b'), DF.variable('c')),
+            ]),
+            factory.createBgp([
+              factory.createPattern(DF.variable('a'), DF.namedNode('ex:c'), DF.variable('c')),
+            ]),
+          ), [
+            factory.createPattern(DF.variable('a'), DF.namedNode('ex:b'), DF.variable('c')),
           ])),
         );
       });
@@ -244,10 +287,10 @@ describe('SimpleSclParser', () => {
       }`)).toThrow(/^Parse error on line 2/u);
       });
 
-      it('should throw for an invalid INCLUDE clause', () => {
+      it('should throw for an invalid INCLUDE WHERE clause', () => {
         expect(() => parser.parse(`FOLLOW ?var {
         ?s <ex:p> ?uri.
-      } INCLUDE {
+      } INCLUDE WHERE {
         ?s <ex:p>>>>>> ?uri.
       }`)).toThrow(/^Parse error on line 2/u);
       });
