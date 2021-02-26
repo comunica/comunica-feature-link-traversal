@@ -4,7 +4,9 @@
 
 An [RDF Metadata Extract](https://github.com/comunica/comunica/tree/master/packages/bus-rdf-metadata-extract) actor that
 collects all URIs in a page
-and stores it inside the metadata under the `traverse` key
+and stores it inside the metadata under the `traverse` key.
+
+This corresponds to the `cAll` reachability criterion as defined in "Hartig, Olaf, and Johann-Christoph Freytag. "Foundations of traversal based query execution over linked data." Proceedings of the 23rd ACM conference on Hypertext and social media. 2012.".
 
 This module is part of the [Comunica framework](https://github.com/comunica/comunica),
 and should only be used by [developers that want to build their own query engine](https://comunica.dev/docs/modify/).

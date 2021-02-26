@@ -1,0 +1,69 @@
+{
+  "name": "@comunica/actor-rdf-metadata-extract-traverse-quad-pattern-query",
+  "version": "1.0.0",
+  "description": "A traverse-quad-pattern-query rdf-metadata-extract actor",
+  "lsd:module": true,
+  "main": "index.js",
+  "typings": "index",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/comunica/comunica.git",
+    "directory": "packages/actor-rdf-metadata-extract-traverse-quad-pattern-query"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [
+    "comunica",
+    "actor",
+    "rdf-metadata-extract",
+    "traverse-quad-pattern-query"
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/comunica/comunica/issues"
+  },
+  "homepage": "https://comunica.dev/",
+  "files": [
+    "components",
+    "lib/**/*.d.ts",
+    "lib/**/*.js",
+    "index.d.ts",
+    "index.js"
+  ],
+  "dependencies": {
+    "@types/rdf-js": "*",
+    "rdf-terms": "^1.6.2",
+    "sparqlalgebrajs": "^2.4.0"
+  },
+  "peerDependencies": {
+    "@comunica/core": "^1.19.0",
+    "@comunica/bus-rdf-metadata-extract": "^1.19.0"
+  },
+  "devDependencies": {
+    "@comunica/core": "^1.19.0",
+    "@comunica/bus-rdf-metadata-extract": "^1.19.0"
+  },
+  "jest": {
+    "globals": {
+      "ts-jest": {
+        "tsConfig": "../../tsconfig.json"
+      }
+    },
+    "transform": {
+      "^.+\\.ts$": "ts-jest"
+    },
+    "testRegex": "(/test/.*|(\\.|/)(test|spec))\\.ts$",
+    "moduleFileExtensions": [
+      "ts",
+      "js"
+    ],
+    "collectCoverage": true
+  },
+  "scripts": {
+    "test": "node \"../../node_modules/jest/bin/jest.js\" ${1}",
+    "test-watch": "node \"../../node_modules/jest/bin/jest.js\" ${1} --watch",
+    "build": "node \"../../node_modules/typescript/bin/tsc\"",
+    "validate": "npm ls"
+  }
+}

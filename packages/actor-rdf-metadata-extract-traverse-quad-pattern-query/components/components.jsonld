@@ -1,0 +1,9 @@
+{
+  "@context": "https://linkedsoftwaredependencies.org/bundles/npm/@comunica/actor-rdf-metadata-extract-traverse-quad-pattern-query/^1.0.0/components/context.jsonld",
+  "@id": "npmd:@comunica/actor-rdf-metadata-extract-traverse-quad-pattern-query",
+  "@type": "Module",
+  "requireName": "@comunica/actor-rdf-metadata-extract-traverse-quad-pattern-query",
+  "import": [
+    "files-carmetqpq:components/Actor/RdfMetadataExtract/TraverseQuadPatternQuery.jsonld"
+  ]
+}
