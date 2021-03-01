@@ -1,0 +1,34 @@
+{
+  "@context": [
+    "https://linkedsoftwaredependencies.org/bundles/npm/@comunica/actor-rdf-resolve-hypermedia-links-traverse-replace-conditional/^1.0.0/components/context.jsonld",
+    "https://linkedsoftwaredependencies.org/bundles/npm/@comunica/bus-rdf-resolve-hypermedia-links/^1.0.0/components/context.jsonld"
+  ],
+  "@id": "npmd:@comunica/actor-rdf-resolve-hypermedia-links-traverse-replace-conditional",
+  "components": [
+    {
+      "@id": "carrhltrc:Actor/RdfResolveHypermediaLinks/TraverseReplaceConditional",
+      "@type": "Class",
+      "extends": "cbrrhl:Actor/RdfResolveHypermediaLinks",
+      "requireElement": "ActorRdfResolveHypermediaLinksTraverseReplaceConditional",
+      "comment": "A comunica Traverse Replace Conditional RDF Resolve Hypermedia Links Actor.",
+      "parameters": [
+        {
+          "@id": "carrhltrc:Actor/RdfResolveHypermediaLinks/TraverseReplaceConditional#mediatorRdfResolveHypermediaLinks",
+          "comment": "The RDF Resolve Hypermedia Links mediator",
+          "required": true,
+          "unique": true
+        }
+      ],
+      "constructorArguments": [
+        {
+          "@id": "carrhltrc:Actor/RdfResolveHypermediaLinks/TraverseReplaceConditional#constructorArgumentsObject",
+          "extends": "cbrrhl:Actor/RdfResolveHypermediaLinks/constructorArgumentsObject",
+          "fields": {
+            "keyRaw": "mediatorRdfResolveHypermediaLinks",
+            "value": "carrhltrc:Actor/RdfResolveHypermediaLinks/TraverseReplaceConditional#mediatorRdfResolveHypermediaLinks"
+          }
+        }
+      ]
+    }
+  ]
+}
