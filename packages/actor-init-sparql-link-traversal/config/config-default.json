@@ -25,7 +25,8 @@
     "config-setsslt:sparql-queryoperators.json",
     "files-cais:config/sets/sparql-queryoperators-path.json",
     "files-cais:config/sets/sparql-serializers.json",
-    "config-setsslt:traverse-links.json",
-    "config-setsslt:traverse-links-content-policies.json"
+    "config-setsslt:extract-links-quad-pattern.json",
+    "config-setsslt:extract-links-content-policies-conditional.json",
+    "config-setsslt:resolve-traverse-links.json"
   ]
 }

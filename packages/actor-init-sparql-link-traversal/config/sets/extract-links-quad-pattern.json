@@ -10,7 +10,7 @@
   "@id": "urn:comunica:my",
   "actors": [
     {
-      "@id": "config-setsslt:traverse-links-all.json#myRdfMetadataExtractTraverseQuadPattern",
+      "@id": "config-setsslt:extract-links-all.json#myRdfMetadataExtractTraverseQuadPattern",
       "@type": "ActorRdfMetadataExtractTraverseQuadPattern"
     }
   ]
