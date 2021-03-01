@@ -24,6 +24,7 @@ export class ActorRdfMetadataExtractTraverseContentPolicies extends ActorRdfMeta
   private readonly sclParser: SimpleSclParser;
 
   public readonly queryEngine: ActorInitSparql;
+  public readonly traverseConditional: boolean;
 
   public constructor(args: IActorRdfMetadataExtractTraverseContentPoliciesArgs) {
     super(args);
@@ -136,13 +137,14 @@ export class ActorRdfMetadataExtractTraverseContentPolicies extends ActorRdfMeta
         }
       }
     }
-    return { metadata: { traverse }};
+    return { metadata: this.traverseConditional ? { traverseConditional: traverse } : { traverse }};
   }
 }
 
 export interface IActorRdfMetadataExtractTraverseContentPoliciesArgs
   extends IActorArgs<IActionRdfMetadataExtract, IActorTest, IActorRdfMetadataExtractOutput>{
   queryEngine: ActorInitSparql;
+  traverseConditional: boolean;
 }
 
 export const KEY_CONTEXT_POLICIES = '@comunica/actor-rdf-metadata-extract-traverse-content-policies:policies';

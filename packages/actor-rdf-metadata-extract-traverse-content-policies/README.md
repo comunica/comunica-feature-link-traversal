@@ -15,6 +15,13 @@ and should only be used by [developers that want to build their own query engine
 $ yarn add @comunica/actor-rdf-metadata-extract-traverse-content-policies
 ```
 
+## Metadata entries
+
+This actor adds the following entries to the metadata object.
+
+* `traverse`: Array of URLs to traverse. _(if `traverseConditional: false`)_
+* `traverseConditional`: Array of URLs to conditionally traverse. _(if `traverseConditional: true`)_
+
 ## Configure
 
 After installing, this package can be added to your engine's configuration as follows:
@@ -33,3 +40,8 @@ After installing, this package can be added to your engine's configuration as fo
   ]
 }
 ```
+
+### Config Parameters
+
+* `cbrme:Actor/RdfMetadataExtract/TraverseContentPolicies#queryEngine`: An instance of ActorInitSparql.
+* `cbrme:Actor/RdfMetadataExtract/TraverseContentPolicies#traverseConditional`: A flag indicating if links should only be follow IF it has been defined by some other link extractor. _(default: `true`)_

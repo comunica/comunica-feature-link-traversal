@@ -94,7 +94,12 @@ describe('ActorRdfMetadataExtractTraverseContentPolicies', () => {
           };
         }),
       };
-      actor = new ActorRdfMetadataExtractTraverseContentPolicies({ name: 'actor', bus, queryEngine });
+      actor = new ActorRdfMetadataExtractTraverseContentPolicies({
+        name: 'actor',
+        bus,
+        queryEngine,
+        traverseConditional: false,
+      });
       input = stream([
         quad('ex:s1', 'ex:px', 'ex:o1', 'ex:gx'),
         quad('ex:s2', 'ex:p', '"o"', 'ex:g'),
@@ -165,6 +170,37 @@ describe('ActorRdfMetadataExtractTraverseContentPolicies', () => {
       return expect(actor.run({ url: '', metadata: input, context })).resolves.toEqual({
         metadata: {
           traverse: [
+            { url: 'ex:match1', context: ActionContext({ [KEY_CONTEXT_WITHPOLICIES]: false }) },
+            { url: 'ex:match3', context: ActionContext({ [KEY_CONTEXT_WITHPOLICIES]: false }) },
+          ],
+        },
+      });
+    });
+
+    it('should run with one content policy that produces matches and traverseConditional', () => {
+      actor = new ActorRdfMetadataExtractTraverseContentPolicies({
+        name: 'actor',
+        bus,
+        queryEngine,
+        traverseConditional: true,
+      });
+      const context = ActionContext({
+        [KEY_CONTEXT_POLICIES]: [
+          new ContentPolicy(
+            factory.createBgp([
+              factory.createPattern(
+                DF.namedNode('ex:s'),
+                DF.namedNode('ex:p'),
+                DF.variable('varA'),
+              ),
+            ]),
+            [{ name: 'varA', withPolicies: false }],
+          ),
+        ],
+      });
+      return expect(actor.run({ url: '', metadata: input, context })).resolves.toEqual({
+        metadata: {
+          traverseConditional: [
             { url: 'ex:match1', context: ActionContext({ [KEY_CONTEXT_WITHPOLICIES]: false }) },
             { url: 'ex:match3', context: ActionContext({ [KEY_CONTEXT_WITHPOLICIES]: false }) },
           ],

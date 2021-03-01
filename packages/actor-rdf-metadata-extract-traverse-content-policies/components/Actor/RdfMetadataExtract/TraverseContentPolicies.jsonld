@@ -18,6 +18,14 @@
           "default": { "@id": "urn:comunica:sparqlinit" },
           "required": true,
           "unique": true
+        },
+        {
+          "@id": "cbrme:Actor/RdfMetadataExtract/TraverseContentPolicies#traverseConditional",
+          "comment": "If true (default), then content policies will be applied on links that are being detected by some other actor, if false, then links detected by content policies will forcefully be added to the link queue.",
+          "default": true,
+          "required": true,
+          "unique": true,
+          "range": "xsd:boolean"
         }
       ],
       "constructorArguments": [
@@ -28,6 +36,10 @@
             {
               "keyRaw": "queryEngine",
               "value": "cbrme:Actor/RdfMetadataExtract/TraverseContentPolicies#queryEngine"
+            },
+            {
+              "keyRaw": "traverseConditional",
+              "value": "cbrme:Actor/RdfMetadataExtract/TraverseContentPolicies#traverseConditional"
             }
           ]
         }
