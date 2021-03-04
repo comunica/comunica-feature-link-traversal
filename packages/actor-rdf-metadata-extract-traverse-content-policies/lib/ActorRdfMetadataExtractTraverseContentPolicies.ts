@@ -107,23 +107,29 @@ export class ActorRdfMetadataExtractTraverseContentPolicies extends ActorRdfMeta
         store = await storeStream(action.metadata);
       }
 
+      // Find all matching results
       const result = <IQueryResultBindings> await this.queryEngine
         .query(contentPolicy.graphPattern, { sources: [ store ]});
-
-      // If the content policy has a filter, apply it on the links to traverse
-      let transform: ((input: RDF.Stream) => Promise<RDF.Stream>) | undefined;
-      if (contentPolicy.filter) {
-        transform = async(input: RDF.Stream) => {
-          const subStore = await storeStream(input);
-          const subResult = <IQueryResultQuads> await this.queryEngine
-            .query(<Algebra.Construct> contentPolicy.filter, { sources: [ subStore ]});
-          return subResult.quadStream;
-        };
-      }
 
       // Extract all bound named nodes from the policy's variables
       const bindings: Bindings[] = await result.bindings();
       for (const binding of bindings) {
+        // If the content policy has a filter, apply it on the links to traverse
+        let transform: ((input: RDF.Stream) => Promise<RDF.Stream>) | undefined;
+        if (contentPolicy.filter) {
+          transform = async(input: RDF.Stream) => {
+            const subStore = await storeStream(input);
+            const subResult = <IQueryResultQuads> await this.queryEngine
+              .query(<Algebra.Construct> contentPolicy.filter, {
+                sources: [ subStore ],
+                // Apply the bindings to the INCLUDE WHERE clause
+                initialBindings: binding,
+              });
+            return subResult.quadStream;
+          };
+        }
+
+        // Create a separate link for each followed variable
         for (const variable of contentPolicy.variables) {
           const term = binding.get(`?${variable.name}`);
           if (term && term.termType === 'NamedNode') {

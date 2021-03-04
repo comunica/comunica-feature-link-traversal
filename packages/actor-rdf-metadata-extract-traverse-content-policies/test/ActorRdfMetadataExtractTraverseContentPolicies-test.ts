@@ -298,12 +298,22 @@ describe('ActorRdfMetadataExtractTraverseContentPolicies', () => {
         DF.quad(DF.namedNode('ex:s'), DF.namedNode('ex:p'), DF.namedNode('ex:o')),
       ]);
       expect(queryEngine.query).toHaveBeenCalledTimes(2);
-      expect(queryEngine.query).toHaveBeenNthCalledWith(2, filter, { sources: [ expect.anything() ]});
+      expect(queryEngine.query).toHaveBeenNthCalledWith(2, filter, {
+        sources: [ expect.anything() ],
+        initialBindings: Bindings({
+          '?varA': DF.namedNode('ex:match1'),
+        }),
+      });
       expect(await arrayifyStream(await result.metadata.traverse[1].transform(new ArrayIterator()))).toEqual([
         DF.quad(DF.namedNode('ex:s'), DF.namedNode('ex:p'), DF.namedNode('ex:o')),
       ]);
       expect(queryEngine.query).toHaveBeenCalledTimes(3);
-      expect(queryEngine.query).toHaveBeenNthCalledWith(3, filter, { sources: [ expect.anything() ]});
+      expect(queryEngine.query).toHaveBeenNthCalledWith(3, filter, {
+        sources: [ expect.anything() ],
+        initialBindings: Bindings({
+          '?varA': DF.namedNode('ex:match3'),
+        }),
+      });
     });
 
     it('should run with one content policy that produces withPolicies matches', () => {
