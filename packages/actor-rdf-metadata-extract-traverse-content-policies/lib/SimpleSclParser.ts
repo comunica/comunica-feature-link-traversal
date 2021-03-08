@@ -15,6 +15,8 @@ export class SimpleSclParser {
   public parse(contentPolicy: string, baseIRI?: string): ContentPolicy {
     this.cursor = 0;
 
+    const translateOptions = { quads: true, baseIRI, blankToVariable: true };
+
     // Parse FOLLOW and variables
     this.readFollowClause(contentPolicy);
     const variables = this.readVariables(contentPolicy);
@@ -25,7 +27,7 @@ export class SimpleSclParser {
     if (includePos >= 0) {
       // Simulate a SPARQL CONSTRUCT query around our include clause for easy parsing
       const constructQuery = `CONSTRUCT ${contentPolicy.slice(includePos + 7)}`;
-      filter = <Algebra.Construct> translate(constructQuery, { quads: true, baseIRI });
+      filter = <Algebra.Construct> translate(constructQuery, translateOptions);
 
       // Chop off the include clause for further processing
       contentPolicy = contentPolicy.slice(0, includePos);
@@ -40,7 +42,7 @@ export class SimpleSclParser {
 
     // Simulate a SPARQL SELECT query around our graph pattern for easy parsing.
     const sparqlQuery = `SELECT * WHERE { ${graphPatternString} }`;
-    const graphPattern = (<Algebra.Project> translate(sparqlQuery, { quads: true, baseIRI })).input;
+    const graphPattern = (<Algebra.Project> translate(sparqlQuery, translateOptions)).input;
 
     return new ContentPolicy(graphPattern, variables, filter);
   }

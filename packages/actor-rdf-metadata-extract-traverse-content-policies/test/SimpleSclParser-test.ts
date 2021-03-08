@@ -218,6 +218,24 @@ describe('SimpleSclParser', () => {
           ]),
         );
       });
+
+      it('should handle a policy with blank nodes', () => {
+        expect(parser.parse(`FOLLOW ?uri {
+        _:s <ex:p> ?uri.
+      } INCLUDE WHERE {
+        _:a <ex:b> ?c.
+      }`)).toMatchObject(
+          new ContentPolicy(factory.createBgp([
+            factory.createPattern(DF.variable('e_s'), DF.namedNode('ex:p'), DF.variable('uri')),
+          ]), [
+            { name: 'uri', withPolicies: false },
+          ], factory.createConstruct(factory.createBgp([
+            factory.createPattern(DF.variable('e_a'), DF.namedNode('ex:b'), DF.variable('c')),
+          ]), [
+            factory.createPattern(DF.blankNode('e_a'), DF.namedNode('ex:b'), DF.variable('c')),
+          ])),
+        );
+      });
     });
 
     describe('invalid policies', () => {
