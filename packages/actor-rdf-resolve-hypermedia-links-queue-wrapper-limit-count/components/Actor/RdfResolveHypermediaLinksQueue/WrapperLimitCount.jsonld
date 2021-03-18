@@ -1,0 +1,47 @@
+{
+  "@context": [
+    "https://linkedsoftwaredependencies.org/bundles/npm/@comunica/actor-rdf-resolve-hypermedia-links-queue-wrapper-limit-count/^1.0.0/components/context.jsonld",
+    "https://linkedsoftwaredependencies.org/bundles/npm/@comunica/bus-rdf-resolve-hypermedia-links-queue/^1.0.0/components/context.jsonld"
+  ],
+  "@id": "npmd:@comunica/actor-rdf-resolve-hypermedia-links-queue-wrapper-limit-count",
+  "components": [
+    {
+      "@id": "carrhlqwlc:Actor/RdfResolveHypermediaLinksQueue/WrapperLimitCount",
+      "@type": "Class",
+      "extends": "cbrrhlq:Actor/RdfResolveHypermediaLinksQueue",
+      "requireElement": "ActorRdfResolveHypermediaLinksQueueWrapperLimitCount",
+      "comment": "A comunica Wrapper Limit Count RDF Resolve Hypermedia Links Queue Actor.",
+      "parameters": [
+        {
+          "@id": "carrhlqwlc:Actor/RdfResolveHypermediaLinksQueue/WrapperLimitCount#limit",
+          "comment": "The maximum number of links can can be followed per source",
+          "required": true,
+          "unique": true,
+          "range": "xsd:integer"
+        },
+        {
+          "@id": "carrhlqwlc:Actor/RdfResolveHypermediaLinksQueue/WrapperLimitCount#mediatorRdfResolveHypermediaLinksQueue",
+          "comment": "The RDF Resolve Hypermedia Links Queue mediator",
+          "required": true,
+          "unique": true
+        }
+      ],
+      "constructorArguments": [
+        {
+          "@id": "carrhlqwlc:Actor/RdfResolveHypermediaLinksQueue/WrapperLimitCount#constructorArgumentsObject",
+          "extends": "cbrrhlq:Actor/RdfResolveHypermediaLinksQueue/constructorArgumentsObject",
+          "fields": [
+            {
+              "keyRaw": "limit",
+              "value": "carrhlqwlc:Actor/RdfResolveHypermediaLinksQueue/WrapperLimitCount#limit"
+            },
+            {
+              "keyRaw": "mediatorRdfResolveHypermediaLinksQueue",
+              "value": "carrhlqwlc:Actor/RdfResolveHypermediaLinksQueue/WrapperLimitCount#mediatorRdfResolveHypermediaLinksQueue"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "@context": [
+    "https://linkedsoftwaredependencies.org/bundles/npm/@comunica/actor-init-sparql/^1.0.0/components/context.jsonld",
+    "https://linkedsoftwaredependencies.org/bundles/npm/@comunica/actor-init-sparql-link-traversal/^1.0.0/components/context.jsonld",
+    "https://linkedsoftwaredependencies.org/bundles/npm/@comunica/runner/^1.0.0/components/context.jsonld",
+
+    "https://linkedsoftwaredependencies.org/bundles/npm/@comunica/bus-rdf-resolve-hypermedia-links-queue/^1.0.0/components/context.jsonld",
+    "https://linkedsoftwaredependencies.org/bundles/npm/@comunica/actor-rdf-resolve-hypermedia-links-queue-wrapper-limit-count/^1.0.0/components/context.jsonld",
+    "https://linkedsoftwaredependencies.org/bundles/npm/@comunica/actor-rdf-resolve-hypermedia-links-queue-wrapper-limit-depth/^1.0.0/components/context.jsonld"
+  ],
+  "@id": "urn:comunica:my",
+  "actors": [
+    {
+      "@id": "config-setsslt:link-queue-limit.json#myActorRdfResolveHypermediaLinksQueueWrapperLimitCount",
+      "@type": "ActorRdfResolveHypermediaLinksQueueWrapperLimitCount",
+      "beforeActor": "config-sets:resolve-hypermedia.json#myHypermediaLinksQueue",
+      "carrhlqwlc:Actor/RdfResolveHypermediaLinksQueue/WrapperLimitCount#limit": 1000,
+      "carrhlqwlc:Actor/RdfResolveHypermediaLinksQueue/WrapperLimitCount#mediatorRdfResolveHypermediaLinksQueue": {
+        "@id": "config-sets:resolve-hypermedia.json#mediatorRdfResolveHypermediaLinksQueue"
+      }
+    }
+  ]
+}
