@@ -1,0 +1,70 @@
+{
+  "@context": [
+    "https://linkedsoftwaredependencies.org/bundles/npm/@comunica/actor-context-preprocess-set-seed-sources-quadpattern-iris/^1.0.0/components/context.jsonld",
+    "https://linkedsoftwaredependencies.org/bundles/npm/@comunica/bus-context-preprocess/^1.0.0/components/context.jsonld"
+  ],
+  "@id": "npmd:@comunica/actor-context-preprocess-set-seed-sources-quadpattern-iris",
+  "components": [
+    {
+      "@id": "cacpsssqi:Actor/ContextPreprocess/SetSeedSourcesQuadpatternIris",
+      "@type": "Class",
+      "extends": "cbcp:Actor/ContextPreprocess",
+      "requireElement": "ActorContextPreprocessSetSeedSourcesQuadpatternIris",
+      "comment": "A comunica Set Seed Sources Quadpattern IRIs Context Preprocess Actor.",
+      "parameters": [
+        {
+          "@id": "cacpsssqi:Actor/ContextPreprocess/SetSeedSourcesQuadpatternIris#extractSubjects",
+          "comment": "If IRIs should be extracted from subject positions.",
+          "default": true,
+          "required": true,
+          "unique": true
+        },
+        {
+          "@id": "cacpsssqi:Actor/ContextPreprocess/SetSeedSourcesQuadpatternIris#extractPredicates",
+          "comment": "If IRIs should be extracted from predicate positions.",
+          "default": false,
+          "required": true,
+          "unique": true
+        },
+        {
+          "@id": "cacpsssqi:Actor/ContextPreprocess/SetSeedSourcesQuadpatternIris#extractObjects",
+          "comment": "If IRIs should be extracted from object positions.",
+          "default": true,
+          "required": true,
+          "unique": true
+        },
+        {
+          "@id": "cacpsssqi:Actor/ContextPreprocess/SetSeedSourcesQuadpatternIris#extractGraphs",
+          "comment": "If IRIs should be extracted from graph positions.",
+          "default": true,
+          "required": true,
+          "unique": true
+        }
+      ],
+      "constructorArguments": [
+        {
+          "@id": "cacpsssqi:Actor/ContextPreprocess/SetSeedSourcesQuadpatternIris#constructorArgumentsObject",
+          "extends": "cbcp:Actor/ContextPreprocess/constructorArgumentsObject",
+          "fields": [
+            {
+              "keyRaw": "extractSubjects",
+              "value": "cacpsssqi:Actor/ContextPreprocess/SetSeedSourcesQuadpatternIris#extractSubjects"
+            },
+            {
+              "keyRaw": "extractPredicates",
+              "value": "cacpsssqi:Actor/ContextPreprocess/SetSeedSourcesQuadpatternIris#extractPredicates"
+            },
+            {
+              "keyRaw": "extractObjects",
+              "value": "cacpsssqi:Actor/ContextPreprocess/SetSeedSourcesQuadpatternIris#extractObjects"
+            },
+            {
+              "keyRaw": "extractGraphs",
+              "value": "cacpsssqi:Actor/ContextPreprocess/SetSeedSourcesQuadpatternIris#extractGraphs"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

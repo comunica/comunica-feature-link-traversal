@@ -37,6 +37,7 @@
     "engine-default.js"
   ],
   "dependencies": {
+    "@comunica/actor-context-preprocess-set-seed-sources-quadpattern-iris": "^1.0.0",
     "@comunica/actor-init-sparql": "^1.20.0",
     "@comunica/actor-query-operation-bgp-traversal": "^1.0.0",
     "@comunica/actor-rdf-metadata-extract-traverse-all": "^1.0.0",
