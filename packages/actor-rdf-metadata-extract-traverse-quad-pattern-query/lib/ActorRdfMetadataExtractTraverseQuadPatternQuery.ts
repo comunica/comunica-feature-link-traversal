@@ -1,7 +1,9 @@
 import type { IActionRdfMetadataExtract, IActorRdfMetadataExtractOutput } from '@comunica/bus-rdf-metadata-extract';
 import { ActorRdfMetadataExtract } from '@comunica/bus-rdf-metadata-extract';
 import type { ILink } from '@comunica/bus-rdf-resolve-hypermedia-links';
-import type { IActorArgs, IActorTest, ActionContext } from '@comunica/core';
+import { KeysInitSparql } from '@comunica/context-entries';
+import type { IActorArgs, IActorTest } from '@comunica/core';
+import type { ActionContext } from '@comunica/types';
 import type * as RDF from 'rdf-js';
 import { getNamedNodes, getTerms, matchPatternComplete } from 'rdf-terms';
 import type { Algebra } from 'sparqlalgebrajs';
@@ -19,7 +21,7 @@ export class ActorRdfMetadataExtractTraverseQuadPatternQuery extends ActorRdfMet
     if (!context) {
       return;
     }
-    const currentQueryOperation = context.get(KEY_CONTEXT_QUERY);
+    const currentQueryOperation = context.get(KeysInitSparql.query);
     if (!currentQueryOperation) {
       return;
     }
@@ -71,5 +73,3 @@ export class ActorRdfMetadataExtractTraverseQuadPatternQuery extends ActorRdfMet
     });
   }
 }
-
-export const KEY_CONTEXT_QUERY = '@comunica/actor-init-sparql:query';

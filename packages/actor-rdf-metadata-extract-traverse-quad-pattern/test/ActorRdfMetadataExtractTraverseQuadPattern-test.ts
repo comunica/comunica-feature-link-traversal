@@ -1,12 +1,10 @@
 import type { Readable } from 'stream';
 import { ActorRdfMetadataExtract } from '@comunica/bus-rdf-metadata-extract';
+import { KeysQueryOperation } from '@comunica/context-entries';
 import { ActionContext, Bus } from '@comunica/core';
 import { DataFactory } from 'rdf-data-factory';
 import { Factory } from 'sparqlalgebrajs';
-import {
-  ActorRdfMetadataExtractTraverseQuadPattern,
-  KEY_CONTEXT_QUERYOPERATION,
-} from '../lib/ActorRdfMetadataExtractTraverseQuadPattern';
+import { ActorRdfMetadataExtractTraverseQuadPattern } from '../lib/ActorRdfMetadataExtractTraverseQuadPattern';
 const quad = require('rdf-quad');
 const stream = require('streamify-array');
 
@@ -58,7 +56,7 @@ describe('ActorRdfMetadataExtractTraverseQuadPattern', () => {
         DF.variable('o'),
         DF.namedNode('ex:g'),
       );
-      context = ActionContext({ [KEY_CONTEXT_QUERYOPERATION]: pattern });
+      context = ActionContext({ [KeysQueryOperation.operation]: pattern });
     });
 
     it('should fail to test with undefined context', () => {
@@ -73,7 +71,7 @@ describe('ActorRdfMetadataExtractTraverseQuadPattern', () => {
     });
 
     it('should fail to test with query operation of wrong type in context', () => {
-      context = ActionContext({ [KEY_CONTEXT_QUERYOPERATION]: FACTORY.createBgp([]) });
+      context = ActionContext({ [KeysQueryOperation.operation]: FACTORY.createBgp([]) });
       return expect(actor.test({ url: '', metadata: input, context })).rejects
         .toThrow(new Error('Actor actor can only work in the context of a quad pattern.'));
     });

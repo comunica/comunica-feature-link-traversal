@@ -1,11 +1,11 @@
 import type { Readable } from 'stream';
 import { ActorRdfMetadataExtract } from '@comunica/bus-rdf-metadata-extract';
+import { KeysInitSparql } from '@comunica/context-entries';
 import { ActionContext, Bus } from '@comunica/core';
 import { DataFactory } from 'rdf-data-factory';
 import { Factory } from 'sparqlalgebrajs';
 import {
   ActorRdfMetadataExtractTraverseQuadPatternQuery,
-  KEY_CONTEXT_QUERY,
 } from '../lib/ActorRdfMetadataExtractTraverseQuadPatternQuery';
 const quad = require('rdf-quad');
 const stream = require('streamify-array');
@@ -63,7 +63,7 @@ describe('ActorRdfMetadataExtractTraverseQuadPatternQuery', () => {
           DF.namedNode('ex:g'),
         ),
       ]);
-      context = ActionContext({ [KEY_CONTEXT_QUERY]: operation });
+      context = ActionContext({ [KeysInitSparql.query]: operation });
     });
 
     it('should fail to test with undefined context', () => {
@@ -119,7 +119,7 @@ describe('ActorRdfMetadataExtractTraverseQuadPatternQuery', () => {
           DF.namedNode('ex:g'),
         ),
       ]);
-      context = ActionContext({ [KEY_CONTEXT_QUERY]: operation });
+      context = ActionContext({ [KeysInitSparql.query]: operation });
       return expect(actor.run({ url: '', metadata: input, context })).resolves
         .toEqual({
           metadata: {
@@ -144,7 +144,7 @@ describe('ActorRdfMetadataExtractTraverseQuadPatternQuery', () => {
         ]),
         [],
       );
-      context = ActionContext({ [KEY_CONTEXT_QUERY]: operation });
+      context = ActionContext({ [KeysInitSparql.query]: operation });
       return expect(actor.run({ url: '', metadata: input, context })).resolves
         .toEqual({
           metadata: {

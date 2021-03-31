@@ -1,6 +1,6 @@
 import type { Readable } from 'stream';
-import { KEY_CONTEXT_QUERYOPERATION } from '@comunica/actor-rdf-metadata-extract-traverse-quad-pattern';
 import { Bindings } from '@comunica/bus-query-operation';
+import { KeysQueryOperation } from '@comunica/context-entries';
 import { ActionContext, Bus } from '@comunica/core';
 import { ArrayIterator } from 'asynciterator';
 import { DataFactory } from 'rdf-data-factory';
@@ -426,7 +426,7 @@ describe('ActorRdfMetadataExtractTraverseContentPolicies', () => {
     it('should run with current quad pattern over a doc with two policies and match include', () => {
       const context = ActionContext({
         [KEY_CONTEXT_WITHPOLICIES]: true,
-        [KEY_CONTEXT_QUERYOPERATION]: factory.createPattern(
+        [KeysQueryOperation.operation]: factory.createPattern(
           DF.variable('s'),
           DF.namedNode('ex:p1'),
           DF.variable('o'),

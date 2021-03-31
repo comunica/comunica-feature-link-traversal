@@ -9,9 +9,10 @@ import {
   ActorQueryOperationTypedMediated,
 } from '@comunica/bus-query-operation';
 import type { DataSources } from '@comunica/bus-rdf-resolve-quad-pattern';
-import { getDataSourceValue,
-  KEY_CONTEXT_SOURCES } from '@comunica/bus-rdf-resolve-quad-pattern';
-import type { ActionContext, IActorTest } from '@comunica/core';
+import { getDataSourceValue } from '@comunica/bus-rdf-resolve-quad-pattern';
+import { KeysRdfResolveQuadPattern } from '@comunica/context-entries';
+import type { IActorTest } from '@comunica/core';
+import type { ActionContext } from '@comunica/types';
 import { TransformIterator, UnionIterator } from 'asynciterator';
 import type * as RDF from 'rdf-js';
 import { termToString } from 'rdf-string';
@@ -161,8 +162,8 @@ export class ActorQueryOperationBgpTraversal extends ActorQueryOperationTypedMed
   Promise<IActorQueryOperationOutputBindings> {
     // Determine all current sources
     const sources: string[] = [];
-    if (context && context.has(KEY_CONTEXT_SOURCES)) {
-      const dataSources: DataSources = context.get(KEY_CONTEXT_SOURCES);
+    if (context && context.has(KeysRdfResolveQuadPattern.sources)) {
+      const dataSources: DataSources = context.get(KeysRdfResolveQuadPattern.sources);
       for (const source of dataSources) {
         const sourceValue = getDataSourceValue(source);
         if (typeof sourceValue === 'string') {

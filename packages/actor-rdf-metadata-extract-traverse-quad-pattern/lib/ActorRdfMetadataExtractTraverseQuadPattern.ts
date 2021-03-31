@@ -2,7 +2,9 @@ import type { IActionRdfMetadataExtract,
   IActorRdfMetadataExtractOutput } from '@comunica/bus-rdf-metadata-extract';
 import { ActorRdfMetadataExtract } from '@comunica/bus-rdf-metadata-extract';
 import type { ILink } from '@comunica/bus-rdf-resolve-hypermedia-links';
-import type { ActionContext, IActorArgs, IActorTest } from '@comunica/core';
+import { KeysQueryOperation } from '@comunica/context-entries';
+import type { IActorArgs, IActorTest } from '@comunica/core';
+import type { ActionContext } from '@comunica/types';
 import { getNamedNodes, getTerms, matchPatternComplete } from 'rdf-terms';
 import type { Algebra } from 'sparqlalgebrajs';
 
@@ -18,7 +20,7 @@ export class ActorRdfMetadataExtractTraverseQuadPattern extends ActorRdfMetadata
     if (!context) {
       return;
     }
-    const currentQueryOperation = context.get(KEY_CONTEXT_QUERYOPERATION);
+    const currentQueryOperation = context.get(KeysQueryOperation.operation);
     if (!currentQueryOperation || currentQueryOperation.type !== 'pattern') {
       return;
     }
@@ -57,8 +59,3 @@ export class ActorRdfMetadataExtractTraverseQuadPattern extends ActorRdfMetadata
     });
   }
 }
-
-/**
- * @type {string} Context entry for the current query operation.
- */
-export const KEY_CONTEXT_QUERYOPERATION = '@comunica/bus-query-operation:operation';

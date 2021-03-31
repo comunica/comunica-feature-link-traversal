@@ -7,6 +7,7 @@ import {
   ActorRdfMetadataExtract,
 } from '@comunica/bus-rdf-metadata-extract';
 import type { ILink } from '@comunica/bus-rdf-resolve-hypermedia-links';
+import { KeysQueryOperation } from '@comunica/context-entries';
 import type { IActorArgs, IActorTest } from '@comunica/core';
 import { ActionContext } from '@comunica/core';
 import type * as RDF from 'rdf-js';
@@ -61,7 +62,7 @@ export class ActorRdfMetadataExtractTraverseContentPolicies extends ActorRdfMeta
     if (!context) {
       return;
     }
-    const currentQueryOperation = context.get(KEY_CONTEXT_QUERYOPERATION);
+    const currentQueryOperation = context.get(KeysQueryOperation.operation);
     if (!currentQueryOperation || currentQueryOperation.type !== 'pattern') {
       return;
     }
@@ -155,7 +156,3 @@ export interface IActorRdfMetadataExtractTraverseContentPoliciesArgs
 
 export const KEY_CONTEXT_POLICIES = '@comunica/actor-rdf-metadata-extract-traverse-content-policies:policies';
 export const KEY_CONTEXT_WITHPOLICIES = '@comunica/actor-rdf-metadata-extract-traverse-content-policies:withPolicies';
-/**
- * @type {string} Context entry for the current query operation.
- */
-export const KEY_CONTEXT_QUERYOPERATION = '@comunica/bus-query-operation:operation';
