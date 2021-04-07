@@ -1,5 +1,5 @@
 {
-  "@context": "https://linkedsoftwaredependencies.org/bundles/npm/@comunica/actor-rdf-resolve-hypermedia-links-queue-wrapper-limit-depth/^1.0.0/components/context.jsonld",
+  "@context": "https://linkedsoftwaredependencies.org/bundles/npm/@comunica/actor-rdf-resolve-hypermedia-links-queue-wrapper-limit-depth/^0.0.0/components/context.jsonld",
   "@id": "npmd:@comunica/actor-rdf-resolve-hypermedia-links-queue-wrapper-limit-depth",
   "@type": "Module",
   "requireName": "@comunica/actor-rdf-resolve-hypermedia-links-queue-wrapper-limit-depth",

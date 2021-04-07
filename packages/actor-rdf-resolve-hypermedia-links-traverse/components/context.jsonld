@@ -4,7 +4,7 @@
     {
       "npmd": "https://linkedsoftwaredependencies.org/bundles/npm/",
       "carrhlt": "npmd:@comunica/actor-rdf-resolve-hypermedia-links-traverse/",
-      "files-carrhlt": "carrhlt:^1.0.0/",
+      "files-carrhlt": "carrhlt:^0.0.0/",
 
       "ActorRdfResolveHypermediaLinksTraverse": "carrhlt:Actor/RdfResolveHypermediaLinks/Traverse"
     }

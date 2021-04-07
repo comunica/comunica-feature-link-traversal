@@ -1,5 +1,5 @@
 {
-  "@context": "https://linkedsoftwaredependencies.org/bundles/npm/@comunica/actor-rdf-metadata-extract-traverse-content-policies/^1.0.0/components/context.jsonld",
+  "@context": "https://linkedsoftwaredependencies.org/bundles/npm/@comunica/actor-rdf-metadata-extract-traverse-content-policies/^0.0.0/components/context.jsonld",
   "@id": "npmd:@comunica/actor-rdf-metadata-extract-traverse-content-policies",
   "@type": "Module",
   "requireName": "@comunica/actor-rdf-metadata-extract-traverse-content-policies",

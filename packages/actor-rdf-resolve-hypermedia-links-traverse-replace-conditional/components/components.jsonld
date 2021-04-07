@@ -1,5 +1,5 @@
 {
-  "@context": "https://linkedsoftwaredependencies.org/bundles/npm/@comunica/actor-rdf-resolve-hypermedia-links-traverse-replace-conditional/^1.0.0/components/context.jsonld",
+  "@context": "https://linkedsoftwaredependencies.org/bundles/npm/@comunica/actor-rdf-resolve-hypermedia-links-traverse-replace-conditional/^0.0.0/components/context.jsonld",
   "@id": "npmd:@comunica/actor-rdf-resolve-hypermedia-links-traverse-replace-conditional",
   "@type": "Module",
   "requireName": "@comunica/actor-rdf-resolve-hypermedia-links-traverse-replace-conditional",

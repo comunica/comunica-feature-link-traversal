@@ -4,7 +4,7 @@
     {
       "npmd": "https://linkedsoftwaredependencies.org/bundles/npm/",
       "carrhlqwld": "npmd:@comunica/actor-rdf-resolve-hypermedia-links-queue-wrapper-limit-depth/",
-      "files-carrhlqwld": "carrhlqwld:^1.0.0/",
+      "files-carrhlqwld": "carrhlqwld:^0.0.0/",
 
       "ActorRdfResolveHypermediaLinksQueueWrapperLimitDepth": "carrhlqwld:Actor/RdfResolveHypermediaLinksQueue/WrapperLimitDepth"
     }

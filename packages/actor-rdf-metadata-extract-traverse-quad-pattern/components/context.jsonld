@@ -4,7 +4,7 @@
     {
       "npmd": "https://linkedsoftwaredependencies.org/bundles/npm/",
       "carmetqp": "npmd:@comunica/actor-rdf-metadata-extract-traverse-quad-pattern/",
-      "files-carmetqp": "carmetqp:^1.0.0/",
+      "files-carmetqp": "carmetqp:^0.0.0/",
 
       "ActorRdfMetadataExtractTraverseQuadPattern": "carmetqp:Actor/RdfMetadataExtract/TraverseQuadPattern"
     }

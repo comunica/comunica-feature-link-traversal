@@ -4,7 +4,7 @@
     {
       "npmd": "https://linkedsoftwaredependencies.org/bundles/npm/",
       "carmetcp": "npmd:@comunica/actor-rdf-metadata-extract-traverse-content-policies/",
-      "files-carmetcp": "carmetcp:^1.0.0/",
+      "files-carmetcp": "carmetcp:^0.0.0/",
 
       "ActorRdfMetadataExtractTraverseContentPolicies": "carmetcp:Actor/RdfMetadataExtract/TraverseContentPolicies",
       "traverseConditional": "cbrme:Actor/RdfMetadataExtract/TraverseContentPolicies#traverseConditional"

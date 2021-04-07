@@ -4,7 +4,7 @@
     {
       "npmd": "https://linkedsoftwaredependencies.org/bundles/npm/",
       "caqobt": "npmd:@comunica/actor-query-operation-bgp-traversal/",
-      "files-caqobt": "caqobt:^1.0.0/",
+      "files-caqobt": "caqobt:^0.0.0/",
 
       "ActorQueryOperationBgpTraversal": "caqobt:Actor/QueryOperation/BgpTraversal"
     }

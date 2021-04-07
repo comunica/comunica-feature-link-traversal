@@ -1,5 +1,5 @@
 {
-  "@context": "https://linkedsoftwaredependencies.org/bundles/npm/@comunica/actor-rdf-metadata-extract-traverse-quad-pattern/^1.0.0/components/context.jsonld",
+  "@context": "https://linkedsoftwaredependencies.org/bundles/npm/@comunica/actor-rdf-metadata-extract-traverse-quad-pattern/^0.0.0/components/context.jsonld",
   "@id": "npmd:@comunica/actor-rdf-metadata-extract-traverse-quad-pattern",
   "@type": "Module",
   "requireName": "@comunica/actor-rdf-metadata-extract-traverse-quad-pattern",

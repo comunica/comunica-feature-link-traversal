@@ -4,7 +4,7 @@
     {
       "npmd": "https://linkedsoftwaredependencies.org/bundles/npm/",
       "carrhltrc": "npmd:@comunica/actor-rdf-resolve-hypermedia-links-traverse-replace-conditional/",
-      "files-carrhltrc": "carrhltrc:^1.0.0/",
+      "files-carrhltrc": "carrhltrc:^0.0.0/",
 
       "ActorRdfResolveHypermediaLinksTraverseReplaceConditional": "carrhltrc:Actor/RdfResolveHypermediaLinks/TraverseReplaceConditional",
       "mediatorRdfResolveHypermediaLinks": "carrhltrc:Actor/RdfResolveHypermediaLinks/TraverseReplaceConditional#mediatorRdfResolveHypermediaLinks"

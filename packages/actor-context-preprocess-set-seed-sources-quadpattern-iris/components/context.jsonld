@@ -4,7 +4,7 @@
     {
       "npmd": "https://linkedsoftwaredependencies.org/bundles/npm/",
       "cacpsssqi": "npmd:@comunica/actor-context-preprocess-set-seed-sources-quadpattern-iris/",
-      "files-cacpsssqi": "cacpsssqi:^1.0.0/",
+      "files-cacpsssqi": "cacpsssqi:^0.0.0/",
 
       "ActorContextPreprocessSetSeedSourcesQuadpatternIris": "cacpsssqi:Actor/ContextPreprocess/SetSeedSourcesQuadpatternIris"
     }
