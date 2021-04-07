@@ -64,76 +64,46 @@
 	<div class="row">
 		<div class="col-8 col-content">
 			<div class="tsd-panel tsd-typography">
-				<a href="#comunica-sparql-link-traversal-init-actor" id="comunica-sparql-link-traversal-init-actor" style="color: inherit; text-decoration: none;">
-					<h1>Comunica SPARQL Link Traversal Init Actor</h1>
+				<a href="#comunica-set-seed-sources-quadpattern-iris-context-preprocess-actor" id="comunica-set-seed-sources-quadpattern-iris-context-preprocess-actor" style="color: inherit; text-decoration: none;">
+					<h1>Comunica Set Seed Sources Quadpattern IRIs Context Preprocess Actor</h1>
 				</a>
-				<p><a href="https://www.npmjs.com/package/@comunica/actor-init-sparql-link-traversal"><img src="https://badge.fury.io/js/%40comunica%2Factor-init-sparql-link-traversal.svg" alt="npm version"></a>
-				<a href="https://hub.docker.com/r/comunica/actor-init-sparql-link-traversal/"><img src="https://img.shields.io/docker/pulls/comunica/actor-init-sparql-link-traversal.svg" alt="Docker Pulls"></a></p>
-				<p>Comunica SPARQL Link Traversal is a SPARQL query engine for JavaScript that follows links to detect new sources.</p>
-				<p>This module is part of the <a href="https://comunica.dev/">Comunica framework</a>.</p>
+				<p><a href="https://www.npmjs.com/package/@comunica/actor-context-preprocess-set-seed-sources-quadpattern-iris"><img src="https://badge.fury.io/js/%40comunica%2Factor-context-preprocess-set-seed-sources-quadpattern-iris.svg" alt="npm version"></a></p>
+				<p>A comunica Set Seed Sources Quadpattern IRIs Context Preprocess Actor.</p>
+				<p>This module is part of the <a href="https://github.com/comunica/comunica">Comunica framework</a>,
+				and should only be used by <a href="https://comunica.dev/docs/modify/">developers that want to build their own query engine</a>.</p>
+				<p><a href="https://comunica.dev/docs/query/">Click here if you just want to query with Comunica</a>.</p>
 				<a href="#install" id="install" style="color: inherit; text-decoration: none;">
 					<h2>Install</h2>
 				</a>
-				<pre><code class="language-bash">$ yarn add @comunica/actor-init-sparql-link-traversal</code></pre>
-				<p>or</p>
-				<pre><code class="language-bash">$ npm install -g @comunica/actor-init-sparql-link-traversal</code></pre>
-				<a href="#usage" id="usage" style="color: inherit; text-decoration: none;">
-					<h2>Usage</h2>
+				<pre><code class="language-bash">$ yarn add @comunica/actor-context-preprocess-set-seed-sources-quadpattern-iris
+</code></pre>
+				<a href="#configure" id="configure" style="color: inherit; text-decoration: none;">
+					<h2>Configure</h2>
 				</a>
-				<p>Show 100 triples from <a href="http://fragments.dbpedia.org/2015-10/en">http://fragments.dbpedia.org/2015-10/en</a>:</p>
-				<pre><code class="language-bash">$ comunica-sparql-link-traversal https://www.rubensworks.net/ \
-  <span class="hljs-string">&quot;SELECT DISTINCT * WHERE {
-       &lt;https://www.rubensworks.net/#me&gt; &lt;http://xmlns.com/foaf/0.1/knows&gt; ?p.
-       &lt;https://ruben.verborgh.org/profile/#me&gt; &lt;http://xmlns.com/foaf/0.1/knows&gt; ?p.
-       ?p &lt;http://xmlns.com/foaf/0.1/name&gt; ?name.
-   }&quot;</span></code></pre>
-				<p>Show the help with all options:</p>
-				<pre><code class="language-bash">$ comunica-sparql-link-traversal --<span class="hljs-built_in">help</span></code></pre>
-				<p>Just like <a href="https://github.com/comunica/comunica/tree/master/packages/actor-init-sparql">Comunica SPARQL</a>,
-				a <a href="https://github.com/comunica/comunica/tree/master/packages/actor-init-sparql#usage-from-the-command-line">dynamic variant</a> (<code>comunica-dynamic-sparql-link-traversal</code>) also exists.</p>
-				<p><em><a href="https://comunica.dev/docs/query/getting_started/query_cli/"><strong>Read more</strong> about querying from the command line</a>.</em></p>
-				<a href="#usage-within-application" id="usage-within-application" style="color: inherit; text-decoration: none;">
-					<h3>Usage within application</h3>
+				<p>After installing, this package can be added to your engine&#39;s configuration as follows:</p>
+				<pre><code class="language-text">{
+  &quot;@context&quot;: [
+    ...
+    &quot;https://linkedsoftwaredependencies.org/bundles/npm/@comunica/actor-context-preprocess-set-seed-sources-quadpattern-iris/^1.0.0/components/context.jsonld&quot;  
+  ],
+  &quot;actors&quot;: [
+    ...
+    {
+      &quot;@id&quot;: &quot;config-setsslt:set-seeds.json#mySeedSetter&quot;,
+      &quot;@type&quot;: &quot;ActorContextPreprocessSetSeedSourcesQuadpatternIris&quot;
+    }
+  ]
+}
+</code></pre>
+				<a href="#config-parameters" id="config-parameters" style="color: inherit; text-decoration: none;">
+					<h3>Config Parameters</h3>
 				</a>
-				<p>This engine can be used in JavaScript/TypeScript applications as follows:</p>
-				<pre><code class="language-javascript"><span class="hljs-keyword">const</span> newEngine = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;@comunica/actor-init-sparql-link-traversal&#x27;</span>).newEngine;
-<span class="hljs-keyword">const</span> myEngine = newEngine();
-
-<span class="hljs-keyword">const</span> result = <span class="hljs-keyword">await</span> myEngine.query(<span class="hljs-string">`
-  SELECT DISTINCT * WHERE {
-      &lt;https://www.rubensworks.net/#me&gt; &lt;http://xmlns.com/foaf/0.1/knows&gt; ?p.
-      &lt;https://ruben.verborgh.org/profile/#me&gt; &lt;http://xmlns.com/foaf/0.1/knows&gt; ?p.
-      ?p &lt;http://xmlns.com/foaf/0.1/name&gt; ?name.
-  }`</span>, {
-  <span class="hljs-attr">sources</span>: [<span class="hljs-string">&#x27;https://www.rubensworks.net/&#x27;</span>],
-});
-
-<span class="hljs-comment">// Consume results as a stream (best performance)</span>
-result.bindingsStream.on(<span class="hljs-string">&#x27;data&#x27;</span>, <span class="hljs-function">(<span class="hljs-params">binding</span>) =&gt;</span> {
-    <span class="hljs-built_in">console</span>.log(binding.get(<span class="hljs-string">&#x27;?s&#x27;</span>).value);
-    <span class="hljs-built_in">console</span>.log(binding.get(<span class="hljs-string">&#x27;?s&#x27;</span>).termType);
-
-    <span class="hljs-built_in">console</span>.log(binding.get(<span class="hljs-string">&#x27;?p&#x27;</span>).value);
-
-    <span class="hljs-built_in">console</span>.log(binding.get(<span class="hljs-string">&#x27;?o&#x27;</span>).value);
-});
-
-<span class="hljs-comment">// Consume results as an array (easier)</span>
-<span class="hljs-keyword">const</span> bindings = <span class="hljs-keyword">await</span> result.bindings();
-<span class="hljs-built_in">console</span>.log(bindings[<span class="hljs-number">0</span>].get(<span class="hljs-string">&#x27;?s&#x27;</span>).value);
-<span class="hljs-built_in">console</span>.log(bindings[<span class="hljs-number">0</span>].get(<span class="hljs-string">&#x27;?s&#x27;</span>).termType);</code></pre>
-				<p><em><a href="https://comunica.dev/docs/query/getting_started/query_app/"><strong>Read more</strong> about querying an application</a>.</em></p>
-				<a href="#usage-as-a-sparql-endpoint" id="usage-as-a-sparql-endpoint" style="color: inherit; text-decoration: none;">
-					<h3>Usage as a SPARQL endpoint</h3>
-				</a>
-				<p>Start a webservice exposing <a href="http://fragments.dbpedia.org/2015-10/en">http://fragments.dbpedia.org/2015-10/en</a> via the SPARQL protocol, i.e., a <em>SPARQL endpoint</em>.</p>
-				<pre><code class="language-bash">$ comunica-sparql-link-traversal-http https://www.rubensworks.net/</code></pre>
-				<p>Show the help with all options:</p>
-				<pre><code class="language-bash">$ comunica-sparql-link-traversal-http --<span class="hljs-built_in">help</span></code></pre>
-				<p>The SPARQL endpoint can only be started dynamically.
-				An alternative config file can be passed via the <code>COMUNICA_CONFIG</code> environment variable.</p>
-				<p>Use <code>bin/http.js</code> when running in the Comunica monorepo development environment.</p>
-				<p><em><a href="https://comunica.dev/docs/query/getting_started/setup_endpoint/"><strong>Read more</strong> about setting up a SPARQL endpoint</a>.</em></p>
+				<ul>
+					<li><code>cacpsssqi:Actor/ContextPreprocess/SetSeedSourcesQuadpatternIris#extractSubjects</code>: If IRIs should be extracted from subject positions.</li>
+					<li><code>cacpsssqi:Actor/ContextPreprocess/SetSeedSourcesQuadpatternIris#extractPredicates</code>: If IRIs should be extracted from predicate positions.</li>
+					<li><code>cacpsssqi:Actor/ContextPreprocess/SetSeedSourcesQuadpatternIris#extractObjects</code>: If IRIs should be extracted from object positions.</li>
+					<li><code>cacpsssqi:Actor/ContextPreprocess/SetSeedSourcesQuadpatternIris#extractGraphs</code>: If IRIs should be extracted from graph positions.</li>
+				</ul>
 			</div>
 		</div>
 		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
@@ -141,6 +111,9 @@ result.bindingsStream.on(<span class="hljs-string">&#x27;data&#x27;</span>, <spa
 				<ul>
 					<li class="globals  ">
 						<a href="globals.html"><em>Globals</em></a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/actor_context_preprocess_set_seed_sources_quadpattern_iris.html">actor-<wbr>context-<wbr>preprocess-<wbr>set-<wbr>seed-<wbr>sources-<wbr>quadpattern-<wbr>iris</a>
 					</li>
 					<li class=" tsd-kind-module">
 						<a href="modules/actor_init_sparql_link_traversal.html">actor-<wbr>init-<wbr>sparql-<wbr>link-<wbr>traversal</a>
@@ -152,15 +125,33 @@ result.bindingsStream.on(<span class="hljs-string">&#x27;data&#x27;</span>, <spa
 						<a href="modules/actor_rdf_metadata_extract_traverse_all.html">actor-<wbr>rdf-<wbr>metadata-<wbr>extract-<wbr>traverse-<wbr>all</a>
 					</li>
 					<li class=" tsd-kind-module">
+						<a href="modules/actor_rdf_metadata_extract_traverse_content_policies.html">actor-<wbr>rdf-<wbr>metadata-<wbr>extract-<wbr>traverse-<wbr>content-<wbr>policies</a>
+					</li>
+					<li class=" tsd-kind-module">
 						<a href="modules/actor_rdf_metadata_extract_traverse_quad_pattern.html">actor-<wbr>rdf-<wbr>metadata-<wbr>extract-<wbr>traverse-<wbr>quad-<wbr>pattern</a>
 					</li>
 					<li class=" tsd-kind-module">
+						<a href="modules/actor_rdf_metadata_extract_traverse_quad_pattern_query.html">actor-<wbr>rdf-<wbr>metadata-<wbr>extract-<wbr>traverse-<wbr>quad-<wbr>pattern-<wbr>query</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/actor_rdf_resolve_hypermedia_links_queue_wrapper_limit_count.html">actor-<wbr>rdf-<wbr>resolve-<wbr>hypermedia-<wbr>links-<wbr>queue-<wbr>wrapper-<wbr>limit-<wbr>count</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/actor_rdf_resolve_hypermedia_links_queue_wrapper_limit_depth.html">actor-<wbr>rdf-<wbr>resolve-<wbr>hypermedia-<wbr>links-<wbr>queue-<wbr>wrapper-<wbr>limit-<wbr>depth</a>
+					</li>
+					<li class=" tsd-kind-module">
 						<a href="modules/actor_rdf_resolve_hypermedia_links_traverse.html">actor-<wbr>rdf-<wbr>resolve-<wbr>hypermedia-<wbr>links-<wbr>traverse</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/actor_rdf_resolve_hypermedia_links_traverse_replace_conditional.html">actor-<wbr>rdf-<wbr>resolve-<wbr>hypermedia-<wbr>links-<wbr>traverse-<wbr>replace-<wbr>conditional</a>
 					</li>
 				</ul>
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
+					<li class=" tsd-kind-module">
+						<a href="modules/actor_context_preprocess_set_seed_sources_quadpattern_iris.html" class="tsd-kind-icon">actor-<wbr>context-<wbr>preprocess-<wbr>set-<wbr>seed-<wbr>sources-<wbr>quadpattern-<wbr>iris</a>
+					</li>
 					<li class=" tsd-kind-module">
 						<a href="modules/actor_init_sparql_link_traversal.html" class="tsd-kind-icon">actor-<wbr>init-<wbr>sparql-<wbr>link-<wbr>traversal</a>
 					</li>
@@ -171,10 +162,25 @@ result.bindingsStream.on(<span class="hljs-string">&#x27;data&#x27;</span>, <spa
 						<a href="modules/actor_rdf_metadata_extract_traverse_all.html" class="tsd-kind-icon">actor-<wbr>rdf-<wbr>metadata-<wbr>extract-<wbr>traverse-<wbr>all</a>
 					</li>
 					<li class=" tsd-kind-module">
+						<a href="modules/actor_rdf_metadata_extract_traverse_content_policies.html" class="tsd-kind-icon">actor-<wbr>rdf-<wbr>metadata-<wbr>extract-<wbr>traverse-<wbr>content-<wbr>policies</a>
+					</li>
+					<li class=" tsd-kind-module">
 						<a href="modules/actor_rdf_metadata_extract_traverse_quad_pattern.html" class="tsd-kind-icon">actor-<wbr>rdf-<wbr>metadata-<wbr>extract-<wbr>traverse-<wbr>quad-<wbr>pattern</a>
 					</li>
 					<li class=" tsd-kind-module">
+						<a href="modules/actor_rdf_metadata_extract_traverse_quad_pattern_query.html" class="tsd-kind-icon">actor-<wbr>rdf-<wbr>metadata-<wbr>extract-<wbr>traverse-<wbr>quad-<wbr>pattern-<wbr>query</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/actor_rdf_resolve_hypermedia_links_queue_wrapper_limit_count.html" class="tsd-kind-icon">actor-<wbr>rdf-<wbr>resolve-<wbr>hypermedia-<wbr>links-<wbr>queue-<wbr>wrapper-<wbr>limit-<wbr>count</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/actor_rdf_resolve_hypermedia_links_queue_wrapper_limit_depth.html" class="tsd-kind-icon">actor-<wbr>rdf-<wbr>resolve-<wbr>hypermedia-<wbr>links-<wbr>queue-<wbr>wrapper-<wbr>limit-<wbr>depth</a>
+					</li>
+					<li class=" tsd-kind-module">
 						<a href="modules/actor_rdf_resolve_hypermedia_links_traverse.html" class="tsd-kind-icon">actor-<wbr>rdf-<wbr>resolve-<wbr>hypermedia-<wbr>links-<wbr>traverse</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/actor_rdf_resolve_hypermedia_links_traverse_replace_conditional.html" class="tsd-kind-icon">actor-<wbr>rdf-<wbr>resolve-<wbr>hypermedia-<wbr>links-<wbr>traverse-<wbr>replace-<wbr>conditional</a>
 					</li>
 				</ul>
 			</nav>
@@ -188,6 +194,9 @@ result.bindingsStream.on(<span class="hljs-string">&#x27;data&#x27;</span>, <spa
 			<ul class="tsd-legend">
 				<li class="tsd-kind-variable"><span class="tsd-kind-icon">Variable</span></li>
 				<li class="tsd-kind-function"><span class="tsd-kind-icon">Function</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
 			</ul>
 			<ul class="tsd-legend">
 				<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>

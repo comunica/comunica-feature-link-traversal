@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>actor-rdf-metadata-extract-traverse-quad-pattern | Comunica Link Traversal</title>
+	<title>actor-rdf-metadata-extract-traverse-quad-pattern-query | Comunica Link Traversal</title>
 	<meta name="description" content="Documentation for Comunica Link Traversal">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -56,10 +56,10 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="actor_rdf_metadata_extract_traverse_quad_pattern.html">actor-rdf-metadata-extract-traverse-quad-pattern</a>
+					<a href="actor_rdf_metadata_extract_traverse_quad_pattern_query.html">actor-rdf-metadata-extract-traverse-quad-pattern-query</a>
 				</li>
 			</ul>
-			<h1>Package actor-rdf-metadata-extract-traverse-quad-pattern</h1>
+			<h1>Package actor-rdf-metadata-extract-traverse-quad-pattern-query</h1>
 		</div>
 	</div>
 </header>
@@ -68,20 +68,21 @@
 		<div class="col-8 col-content">
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
-					<a href="#comunica-traverse-quad-pattern-rdf-metadata-extract-actor" id="comunica-traverse-quad-pattern-rdf-metadata-extract-actor" style="color: inherit; text-decoration: none;">
-						<h1>Comunica Traverse Quad Pattern RDF Metadata Extract Actor</h1>
+					<a href="#comunica-traverse-quad-pattern-query-rdf-metadata-extract-actor" id="comunica-traverse-quad-pattern-query-rdf-metadata-extract-actor" style="color: inherit; text-decoration: none;">
+						<h1>Comunica Traverse Quad Pattern Query RDF Metadata Extract Actor</h1>
 					</a>
-					<p><a href="https://www.npmjs.com/package/@comunica/actor-rdf-metadata-extract-traverse-quad-pattern"><img src="https://badge.fury.io/js/%40comunica%2Factor-rdf-metadata-extract-traverse-quad-pattern.svg" alt="npm version"></a></p>
+					<p><a href="https://www.npmjs.com/package/@comunica/actor-rdf-metadata-extract-traverse-quad-pattern-query"><img src="https://badge.fury.io/js/%40comunica%2Factor-rdf-metadata-extract-traverse-quad-pattern-query.svg" alt="npm version"></a></p>
 					<p>An <a href="https://github.com/comunica/comunica/tree/master/packages/bus-rdf-metadata-extract">RDF Metadata Extract</a> actor that
-						collects all URIs in a page that match the current quad pattern
+						collects all URIs in a page that matches at least one quad pattern in the current query
 					and stores it inside the metadata under the <code>traverse</code> key.</p>
+					<p>This corresponds to the <code>cMatch</code> reachability criterion as defined in &quot;Hartig, Olaf, and Johann-Christoph Freytag. &quot;Foundations of traversal based query execution over linked data.&quot; Proceedings of the 23rd ACM conference on Hypertext and social media. 2012.&quot;.</p>
 					<p>This module is part of the <a href="https://github.com/comunica/comunica">Comunica framework</a>,
 					and should only be used by <a href="https://comunica.dev/docs/modify/">developers that want to build their own query engine</a>.</p>
 					<p><a href="https://comunica.dev/docs/query/">Click here if you just want to query with Comunica</a>.</p>
 					<a href="#install" id="install" style="color: inherit; text-decoration: none;">
 						<h2>Install</h2>
 					</a>
-					<pre><code class="language-bash">$ yarn add @comunica/actor-rdf-metadata-extract-traverse-quad-pattern
+					<pre><code class="language-bash">$ yarn add @comunica/actor-rdf-metadata-extract-traverse-quad-pattern-query
 </code></pre>
 					<a href="#metadata-entries" id="metadata-entries" style="color: inherit; text-decoration: none;">
 						<h2>Metadata entries</h2>
@@ -97,13 +98,13 @@
 					<pre><code class="language-text">{
   &quot;@context&quot;: [
     ...
-    &quot;https://linkedsoftwaredependencies.org/bundles/npm/@comunica/actor-rdf-metadata-extract-traverse-quad-pattern/^1.0.0/components/context.jsonld&quot;  
+    &quot;https://linkedsoftwaredependencies.org/bundles/npm/@comunica/actor-rdf-metadata-extract-traverse-quad-pattern-query/^1.0.0/components/context.jsonld&quot;  
   ],
   &quot;actors&quot;: [
     ...
     {
-      &quot;@id&quot;: &quot;config-sets:resolve-hypermedia.json#myRdfMetadataExtractTraverseQuadPattern&quot;,
-      &quot;@type&quot;: &quot;ActorRdfMetadataExtractTraverseQuadPattern&quot;
+      &quot;@id&quot;: &quot;config-sets:resolve-hypermedia.json#myRdfMetadataExtractTraverseQuadPatternQuery&quot;,
+      &quot;@type&quot;: &quot;ActorRdfMetadataExtractTraverseQuadPatternQuery&quot;
     }
   ]
 }
@@ -117,13 +118,13 @@
 						<section class="tsd-index-section ">
 							<h3>References</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-reference tsd-parent-kind-module"><a href="actor_rdf_metadata_extract_traverse_quad_pattern.html#actorrdfmetadataextracttraversequadpattern" class="tsd-kind-icon">Actor<wbr>Rdf<wbr>Metadata<wbr>Extract<wbr>Traverse<wbr>Quad<wbr>Pattern</a></li>
+								<li class="tsd-kind-reference tsd-parent-kind-module"><a href="actor_rdf_metadata_extract_traverse_quad_pattern_query.html#actorrdfmetadataextracttraversequadpatternquery" class="tsd-kind-icon">Actor<wbr>Rdf<wbr>Metadata<wbr>Extract<wbr>Traverse<wbr>Quad<wbr>Pattern<wbr>Query</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
 							<h3>Classes</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-class tsd-parent-kind-module"><a href="../classes/actor_rdf_metadata_extract_traverse_quad_pattern.actorrdfmetadataextracttraversequadpattern-1.html" class="tsd-kind-icon">Actor<wbr>Rdf<wbr>Metadata<wbr>Extract<wbr>Traverse<wbr>Quad<wbr>Pattern</a></li>
+								<li class="tsd-kind-class tsd-parent-kind-module"><a href="../classes/actor_rdf_metadata_extract_traverse_quad_pattern_query.actorrdfmetadataextracttraversequadpatternquery-1.html" class="tsd-kind-icon">Actor<wbr>Rdf<wbr>Metadata<wbr>Extract<wbr>Traverse<wbr>Quad<wbr>Pattern<wbr>Query</a></li>
 							</ul>
 						</section>
 					</div>
@@ -132,9 +133,9 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>References</h2>
 				<section class="tsd-panel tsd-member tsd-kind-reference tsd-parent-kind-module">
-					<a name="actorrdfmetadataextracttraversequadpattern" class="tsd-anchor"></a>
-					<h3>Actor<wbr>Rdf<wbr>Metadata<wbr>Extract<wbr>Traverse<wbr>Quad<wbr>Pattern</h3>
-					Re-exports <a href="../classes/actor_rdf_metadata_extract_traverse_quad_pattern.actorrdfmetadataextracttraversequadpattern-1.html">ActorRdfMetadataExtractTraverseQuadPattern</a>
+					<a name="actorrdfmetadataextracttraversequadpatternquery" class="tsd-anchor"></a>
+					<h3>Actor<wbr>Rdf<wbr>Metadata<wbr>Extract<wbr>Traverse<wbr>Quad<wbr>Pattern<wbr>Query</h3>
+					Re-exports <a href="../classes/actor_rdf_metadata_extract_traverse_quad_pattern_query.actorrdfmetadataextracttraversequadpatternquery-1.html">ActorRdfMetadataExtractTraverseQuadPatternQuery</a>
 				</section>
 			</section>
 		</div>
@@ -159,10 +160,10 @@
 					<li class=" tsd-kind-module">
 						<a href="actor_rdf_metadata_extract_traverse_content_policies.html">actor-<wbr>rdf-<wbr>metadata-<wbr>extract-<wbr>traverse-<wbr>content-<wbr>policies</a>
 					</li>
-					<li class="current tsd-kind-module">
+					<li class=" tsd-kind-module">
 						<a href="actor_rdf_metadata_extract_traverse_quad_pattern.html">actor-<wbr>rdf-<wbr>metadata-<wbr>extract-<wbr>traverse-<wbr>quad-<wbr>pattern</a>
 					</li>
-					<li class=" tsd-kind-module">
+					<li class="current tsd-kind-module">
 						<a href="actor_rdf_metadata_extract_traverse_quad_pattern_query.html">actor-<wbr>rdf-<wbr>metadata-<wbr>extract-<wbr>traverse-<wbr>quad-<wbr>pattern-<wbr>query</a>
 					</li>
 					<li class=" tsd-kind-module">
@@ -196,24 +197,24 @@
 					<li class=" tsd-kind-module">
 						<a href="actor_rdf_metadata_extract_traverse_content_policies.html" class="tsd-kind-icon">actor-<wbr>rdf-<wbr>metadata-<wbr>extract-<wbr>traverse-<wbr>content-<wbr>policies</a>
 					</li>
+					<li class=" tsd-kind-module">
+						<a href="actor_rdf_metadata_extract_traverse_quad_pattern.html" class="tsd-kind-icon">actor-<wbr>rdf-<wbr>metadata-<wbr>extract-<wbr>traverse-<wbr>quad-<wbr>pattern</a>
+					</li>
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-module">
-						<a href="actor_rdf_metadata_extract_traverse_quad_pattern.html" class="tsd-kind-icon">actor-<wbr>rdf-<wbr>metadata-<wbr>extract-<wbr>traverse-<wbr>quad-<wbr>pattern</a>
+						<a href="actor_rdf_metadata_extract_traverse_quad_pattern_query.html" class="tsd-kind-icon">actor-<wbr>rdf-<wbr>metadata-<wbr>extract-<wbr>traverse-<wbr>quad-<wbr>pattern-<wbr>query</a>
 						<ul>
 							<li class=" tsd-kind-reference tsd-parent-kind-module">
-								<a href="actor_rdf_metadata_extract_traverse_quad_pattern.html#actorrdfmetadataextracttraversequadpattern" class="tsd-kind-icon">Actor<wbr>Rdf<wbr>Metadata<wbr>Extract<wbr>Traverse<wbr>Quad<wbr>Pattern</a>
+								<a href="actor_rdf_metadata_extract_traverse_quad_pattern_query.html#actorrdfmetadataextracttraversequadpatternquery" class="tsd-kind-icon">Actor<wbr>Rdf<wbr>Metadata<wbr>Extract<wbr>Traverse<wbr>Quad<wbr>Pattern<wbr>Query</a>
 							</li>
 							<li class=" tsd-kind-class tsd-parent-kind-module">
-								<a href="../classes/actor_rdf_metadata_extract_traverse_quad_pattern.actorrdfmetadataextracttraversequadpattern-1.html" class="tsd-kind-icon">Actor<wbr>Rdf<wbr>Metadata<wbr>Extract<wbr>Traverse<wbr>Quad<wbr>Pattern</a>
+								<a href="../classes/actor_rdf_metadata_extract_traverse_quad_pattern_query.actorrdfmetadataextracttraversequadpatternquery-1.html" class="tsd-kind-icon">Actor<wbr>Rdf<wbr>Metadata<wbr>Extract<wbr>Traverse<wbr>Quad<wbr>Pattern<wbr>Query</a>
 							</li>
 						</ul>
 					</li>
 				</ul>
 				<ul class="after-current">
-					<li class=" tsd-kind-module">
-						<a href="actor_rdf_metadata_extract_traverse_quad_pattern_query.html" class="tsd-kind-icon">actor-<wbr>rdf-<wbr>metadata-<wbr>extract-<wbr>traverse-<wbr>quad-<wbr>pattern-<wbr>query</a>
-					</li>
 					<li class=" tsd-kind-module">
 						<a href="actor_rdf_resolve_hypermedia_links_queue_wrapper_limit_count.html" class="tsd-kind-icon">actor-<wbr>rdf-<wbr>resolve-<wbr>hypermedia-<wbr>links-<wbr>queue-<wbr>wrapper-<wbr>limit-<wbr>count</a>
 					</li>

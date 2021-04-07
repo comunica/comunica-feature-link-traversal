@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>actor-rdf-metadata-extract-traverse-quad-pattern | Comunica Link Traversal</title>
+	<title>actor-rdf-resolve-hypermedia-links-traverse-replace-conditional | Comunica Link Traversal</title>
 	<meta name="description" content="Documentation for Comunica Link Traversal">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -56,10 +56,10 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="actor_rdf_metadata_extract_traverse_quad_pattern.html">actor-rdf-metadata-extract-traverse-quad-pattern</a>
+					<a href="actor_rdf_resolve_hypermedia_links_traverse_replace_conditional.html">actor-rdf-resolve-hypermedia-links-traverse-replace-conditional</a>
 				</li>
 			</ul>
-			<h1>Package actor-rdf-metadata-extract-traverse-quad-pattern</h1>
+			<h1>Package actor-rdf-resolve-hypermedia-links-traverse-replace-conditional</h1>
 		</div>
 	</div>
 </header>
@@ -68,28 +68,24 @@
 		<div class="col-8 col-content">
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
-					<a href="#comunica-traverse-quad-pattern-rdf-metadata-extract-actor" id="comunica-traverse-quad-pattern-rdf-metadata-extract-actor" style="color: inherit; text-decoration: none;">
-						<h1>Comunica Traverse Quad Pattern RDF Metadata Extract Actor</h1>
+					<a href="#comunica-traverse-filter-conditional-rdf-resolve-hypermedia-links-actor" id="comunica-traverse-filter-conditional-rdf-resolve-hypermedia-links-actor" style="color: inherit; text-decoration: none;">
+						<h1>Comunica Traverse Filter Conditional RDF Resolve Hypermedia Links Actor</h1>
 					</a>
-					<p><a href="https://www.npmjs.com/package/@comunica/actor-rdf-metadata-extract-traverse-quad-pattern"><img src="https://badge.fury.io/js/%40comunica%2Factor-rdf-metadata-extract-traverse-quad-pattern.svg" alt="npm version"></a></p>
-					<p>An <a href="https://github.com/comunica/comunica/tree/master/packages/bus-rdf-metadata-extract">RDF Metadata Extract</a> actor that
-						collects all URIs in a page that match the current quad pattern
-					and stores it inside the metadata under the <code>traverse</code> key.</p>
+					<p><a href="https://www.npmjs.com/package/@comunica/actor-rdf-resolve-hypermedia-links-traverse-replace-conditional"><img src="https://badge.fury.io/js/%40comunica%2Factor-rdf-resolve-hypermedia-links-traverse-replace-conditional.svg" alt="npm version"></a></p>
+					<p>An <a href="https://github.com/comunica/comunica/tree/master/packages/bus-rdf-resolve-hypermedia-links">RDF Resolve Hypermedia Links</a>
+						actor that iterates over all links in <code>traverse</code>,
+						and for each link that is also defined in <code>traverseConditional</code>,
+					that link in <code>traverse</code> is replaced.</p>
+					<p>This allows other actors to define a conditional link in <code>traverseConditional</code> with a specific context,
+					which is only followed (and specific context applied) if another actor defines this link.</p>
 					<p>This module is part of the <a href="https://github.com/comunica/comunica">Comunica framework</a>,
 					and should only be used by <a href="https://comunica.dev/docs/modify/">developers that want to build their own query engine</a>.</p>
 					<p><a href="https://comunica.dev/docs/query/">Click here if you just want to query with Comunica</a>.</p>
 					<a href="#install" id="install" style="color: inherit; text-decoration: none;">
 						<h2>Install</h2>
 					</a>
-					<pre><code class="language-bash">$ yarn add @comunica/actor-rdf-metadata-extract-traverse-quad-pattern
+					<pre><code class="language-bash">$ yarn add @comunica/actor-rdf-resolve-hypermedia-links-traverse-replace-conditional
 </code></pre>
-					<a href="#metadata-entries" id="metadata-entries" style="color: inherit; text-decoration: none;">
-						<h2>Metadata entries</h2>
-					</a>
-					<p>This actor adds the following entries to the metadata object.</p>
-					<ul>
-						<li><code>traverse</code>: Array of ILink to traverse.</li>
-					</ul>
 					<a href="#configure" id="configure" style="color: inherit; text-decoration: none;">
 						<h2>Configure</h2>
 					</a>
@@ -97,17 +93,26 @@
 					<pre><code class="language-text">{
   &quot;@context&quot;: [
     ...
-    &quot;https://linkedsoftwaredependencies.org/bundles/npm/@comunica/actor-rdf-metadata-extract-traverse-quad-pattern/^1.0.0/components/context.jsonld&quot;  
+    &quot;https://linkedsoftwaredependencies.org/bundles/npm/@comunica/actor-rdf-resolve-hypermedia-links-traverse-replace-conditional/^1.0.0/components/context.jsonld&quot;  
   ],
   &quot;actors&quot;: [
     ...
     {
-      &quot;@id&quot;: &quot;config-sets:resolve-hypermedia.json#myRdfMetadataExtractTraverseQuadPattern&quot;,
-      &quot;@type&quot;: &quot;ActorRdfMetadataExtractTraverseQuadPattern&quot;
+      &quot;@id&quot;: &quot;config-setsslt:traverse-content-policies-conditional.json#myActorRdfResolveHypermediaLinksTraverseReplaceConditional&quot;,
+      &quot;@type&quot;: &quot;ActorRdfResolveHypermediaLinksTraverseReplaceConditional&quot;,
+      &quot;mediatorRdfResolveHypermediaLinks&quot;: {
+        &quot;@id&quot;: &quot;config-sets:resolve-hypermedia.json#mediatorRdfResolveHypermediaLinks&quot;
+      }
     }
   ]
 }
 </code></pre>
+					<a href="#config-parameters" id="config-parameters" style="color: inherit; text-decoration: none;">
+						<h3>Config Parameters</h3>
+					</a>
+					<ul>
+						<li><code>mediatorRdfResolveHypermediaLinks</code>: A mediator over the <a href="https://github.com/comunica/comunica/tree/master/packages/bus-rdf-resolve-hypermedia-links">RDF Resolve Hypermedia Links bus</a>.</li>
+					</ul>
 				</div>
 			</section>
 			<section class="tsd-panel-group tsd-index-group">
@@ -117,13 +122,20 @@
 						<section class="tsd-index-section ">
 							<h3>References</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-reference tsd-parent-kind-module"><a href="actor_rdf_metadata_extract_traverse_quad_pattern.html#actorrdfmetadataextracttraversequadpattern" class="tsd-kind-icon">Actor<wbr>Rdf<wbr>Metadata<wbr>Extract<wbr>Traverse<wbr>Quad<wbr>Pattern</a></li>
+								<li class="tsd-kind-reference tsd-parent-kind-module"><a href="actor_rdf_resolve_hypermedia_links_traverse_replace_conditional.html#actorrdfresolvehypermedialinkstraversereplaceconditional" class="tsd-kind-icon">Actor<wbr>Rdf<wbr>Resolve<wbr>Hypermedia<wbr>Links<wbr>Traverse<wbr>Replace<wbr>Conditional</a></li>
+								<li class="tsd-kind-reference tsd-parent-kind-module"><a href="actor_rdf_resolve_hypermedia_links_traverse_replace_conditional.html#iactorrdfresolvehypermedialinkstraversereplaceconditionalargs" class="tsd-kind-icon">IActor<wbr>Rdf<wbr>Resolve<wbr>Hypermedia<wbr>Links<wbr>Traverse<wbr>Replace<wbr>Conditional<wbr>Args</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
 							<h3>Classes</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-class tsd-parent-kind-module"><a href="../classes/actor_rdf_metadata_extract_traverse_quad_pattern.actorrdfmetadataextracttraversequadpattern-1.html" class="tsd-kind-icon">Actor<wbr>Rdf<wbr>Metadata<wbr>Extract<wbr>Traverse<wbr>Quad<wbr>Pattern</a></li>
+								<li class="tsd-kind-class tsd-parent-kind-module"><a href="../classes/actor_rdf_resolve_hypermedia_links_traverse_replace_conditional.actorrdfresolvehypermedialinkstraversereplaceconditional-1.html" class="tsd-kind-icon">Actor<wbr>Rdf<wbr>Resolve<wbr>Hypermedia<wbr>Links<wbr>Traverse<wbr>Replace<wbr>Conditional</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Interfaces</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-interface tsd-parent-kind-module"><a href="../interfaces/actor_rdf_resolve_hypermedia_links_traverse_replace_conditional.iactorrdfresolvehypermedialinkstraversereplaceconditionalargs-1.html" class="tsd-kind-icon">IActor<wbr>Rdf<wbr>Resolve<wbr>Hypermedia<wbr>Links<wbr>Traverse<wbr>Replace<wbr>Conditional<wbr>Args</a></li>
 							</ul>
 						</section>
 					</div>
@@ -132,9 +144,14 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>References</h2>
 				<section class="tsd-panel tsd-member tsd-kind-reference tsd-parent-kind-module">
-					<a name="actorrdfmetadataextracttraversequadpattern" class="tsd-anchor"></a>
-					<h3>Actor<wbr>Rdf<wbr>Metadata<wbr>Extract<wbr>Traverse<wbr>Quad<wbr>Pattern</h3>
-					Re-exports <a href="../classes/actor_rdf_metadata_extract_traverse_quad_pattern.actorrdfmetadataextracttraversequadpattern-1.html">ActorRdfMetadataExtractTraverseQuadPattern</a>
+					<a name="actorrdfresolvehypermedialinkstraversereplaceconditional" class="tsd-anchor"></a>
+					<h3>Actor<wbr>Rdf<wbr>Resolve<wbr>Hypermedia<wbr>Links<wbr>Traverse<wbr>Replace<wbr>Conditional</h3>
+					Re-exports <a href="../classes/actor_rdf_resolve_hypermedia_links_traverse_replace_conditional.actorrdfresolvehypermedialinkstraversereplaceconditional-1.html">ActorRdfResolveHypermediaLinksTraverseReplaceConditional</a>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-reference tsd-parent-kind-module">
+					<a name="iactorrdfresolvehypermedialinkstraversereplaceconditionalargs" class="tsd-anchor"></a>
+					<h3>IActor<wbr>Rdf<wbr>Resolve<wbr>Hypermedia<wbr>Links<wbr>Traverse<wbr>Replace<wbr>Conditional<wbr>Args</h3>
+					Re-exports <a href="../interfaces/actor_rdf_resolve_hypermedia_links_traverse_replace_conditional.iactorrdfresolvehypermedialinkstraversereplaceconditionalargs-1.html">IActorRdfResolveHypermediaLinksTraverseReplaceConditionalArgs</a>
 				</section>
 			</section>
 		</div>
@@ -159,7 +176,7 @@
 					<li class=" tsd-kind-module">
 						<a href="actor_rdf_metadata_extract_traverse_content_policies.html">actor-<wbr>rdf-<wbr>metadata-<wbr>extract-<wbr>traverse-<wbr>content-<wbr>policies</a>
 					</li>
-					<li class="current tsd-kind-module">
+					<li class=" tsd-kind-module">
 						<a href="actor_rdf_metadata_extract_traverse_quad_pattern.html">actor-<wbr>rdf-<wbr>metadata-<wbr>extract-<wbr>traverse-<wbr>quad-<wbr>pattern</a>
 					</li>
 					<li class=" tsd-kind-module">
@@ -174,7 +191,7 @@
 					<li class=" tsd-kind-module">
 						<a href="actor_rdf_resolve_hypermedia_links_traverse.html">actor-<wbr>rdf-<wbr>resolve-<wbr>hypermedia-<wbr>links-<wbr>traverse</a>
 					</li>
-					<li class=" tsd-kind-module">
+					<li class="current tsd-kind-module">
 						<a href="actor_rdf_resolve_hypermedia_links_traverse_replace_conditional.html">actor-<wbr>rdf-<wbr>resolve-<wbr>hypermedia-<wbr>links-<wbr>traverse-<wbr>replace-<wbr>conditional</a>
 					</li>
 				</ul>
@@ -196,21 +213,9 @@
 					<li class=" tsd-kind-module">
 						<a href="actor_rdf_metadata_extract_traverse_content_policies.html" class="tsd-kind-icon">actor-<wbr>rdf-<wbr>metadata-<wbr>extract-<wbr>traverse-<wbr>content-<wbr>policies</a>
 					</li>
-				</ul>
-				<ul class="current">
-					<li class="current tsd-kind-module">
+					<li class=" tsd-kind-module">
 						<a href="actor_rdf_metadata_extract_traverse_quad_pattern.html" class="tsd-kind-icon">actor-<wbr>rdf-<wbr>metadata-<wbr>extract-<wbr>traverse-<wbr>quad-<wbr>pattern</a>
-						<ul>
-							<li class=" tsd-kind-reference tsd-parent-kind-module">
-								<a href="actor_rdf_metadata_extract_traverse_quad_pattern.html#actorrdfmetadataextracttraversequadpattern" class="tsd-kind-icon">Actor<wbr>Rdf<wbr>Metadata<wbr>Extract<wbr>Traverse<wbr>Quad<wbr>Pattern</a>
-							</li>
-							<li class=" tsd-kind-class tsd-parent-kind-module">
-								<a href="../classes/actor_rdf_metadata_extract_traverse_quad_pattern.actorrdfmetadataextracttraversequadpattern-1.html" class="tsd-kind-icon">Actor<wbr>Rdf<wbr>Metadata<wbr>Extract<wbr>Traverse<wbr>Quad<wbr>Pattern</a>
-							</li>
-						</ul>
 					</li>
-				</ul>
-				<ul class="after-current">
 					<li class=" tsd-kind-module">
 						<a href="actor_rdf_metadata_extract_traverse_quad_pattern_query.html" class="tsd-kind-icon">actor-<wbr>rdf-<wbr>metadata-<wbr>extract-<wbr>traverse-<wbr>quad-<wbr>pattern-<wbr>query</a>
 					</li>
@@ -223,9 +228,27 @@
 					<li class=" tsd-kind-module">
 						<a href="actor_rdf_resolve_hypermedia_links_traverse.html" class="tsd-kind-icon">actor-<wbr>rdf-<wbr>resolve-<wbr>hypermedia-<wbr>links-<wbr>traverse</a>
 					</li>
-					<li class=" tsd-kind-module">
+				</ul>
+				<ul class="current">
+					<li class="current tsd-kind-module">
 						<a href="actor_rdf_resolve_hypermedia_links_traverse_replace_conditional.html" class="tsd-kind-icon">actor-<wbr>rdf-<wbr>resolve-<wbr>hypermedia-<wbr>links-<wbr>traverse-<wbr>replace-<wbr>conditional</a>
+						<ul>
+							<li class=" tsd-kind-reference tsd-parent-kind-module">
+								<a href="actor_rdf_resolve_hypermedia_links_traverse_replace_conditional.html#actorrdfresolvehypermedialinkstraversereplaceconditional" class="tsd-kind-icon">Actor<wbr>Rdf<wbr>Resolve<wbr>Hypermedia<wbr>Links<wbr>Traverse<wbr>Replace<wbr>Conditional</a>
+							</li>
+							<li class=" tsd-kind-reference tsd-parent-kind-module">
+								<a href="actor_rdf_resolve_hypermedia_links_traverse_replace_conditional.html#iactorrdfresolvehypermedialinkstraversereplaceconditionalargs" class="tsd-kind-icon">IActor<wbr>Rdf<wbr>Resolve<wbr>Hypermedia<wbr>Links<wbr>Traverse<wbr>Replace<wbr>Conditional<wbr>Args</a>
+							</li>
+							<li class=" tsd-kind-class tsd-parent-kind-module">
+								<a href="../classes/actor_rdf_resolve_hypermedia_links_traverse_replace_conditional.actorrdfresolvehypermedialinkstraversereplaceconditional-1.html" class="tsd-kind-icon">Actor<wbr>Rdf<wbr>Resolve<wbr>Hypermedia<wbr>Links<wbr>Traverse<wbr>Replace<wbr>Conditional</a>
+							</li>
+							<li class=" tsd-kind-interface tsd-parent-kind-module">
+								<a href="../interfaces/actor_rdf_resolve_hypermedia_links_traverse_replace_conditional.iactorrdfresolvehypermedialinkstraversereplaceconditionalargs-1.html" class="tsd-kind-icon">IActor<wbr>Rdf<wbr>Resolve<wbr>Hypermedia<wbr>Links<wbr>Traverse<wbr>Replace<wbr>Conditional<wbr>Args</a>
+							</li>
+						</ul>
 					</li>
+				</ul>
+				<ul class="after-current">
 				</ul>
 			</nav>
 		</div>
