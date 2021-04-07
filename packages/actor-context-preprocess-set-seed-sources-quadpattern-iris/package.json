@@ -1,6 +1,6 @@
 {
   "name": "@comunica/actor-context-preprocess-set-seed-sources-quadpattern-iris",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "A set-seed-sources-quadpattern-iris context-preprocess actor",
   "lsd:module": true,
   "main": "index.js",

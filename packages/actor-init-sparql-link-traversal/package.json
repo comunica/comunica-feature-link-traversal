@@ -1,6 +1,6 @@
 {
   "name": "@comunica/actor-init-sparql-link-traversal",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "A Comunica engine for link traversal-based query evaluation",
   "lsd:module": true,
   "main": "index.js",
