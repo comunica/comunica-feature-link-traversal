@@ -38,7 +38,7 @@
   ],
   "dependencies": {
     "@comunica/actor-context-preprocess-set-seed-sources-quadpattern-iris": "^1.0.0",
-    "@comunica/actor-init-sparql": "^1.20.0",
+    "@comunica/actor-init-sparql": "1.20.1-alpha.c191493f4.0",
     "@comunica/actor-query-operation-bgp-traversal": "^1.0.0",
     "@comunica/actor-rdf-metadata-extract-traverse-all": "^1.0.0",
     "@comunica/actor-rdf-metadata-extract-traverse-content-policies": "^1.0.0",
@@ -48,8 +48,8 @@
     "@comunica/actor-rdf-resolve-hypermedia-links-traverse-replace-conditional": "^1.0.0",
     "@comunica/actor-rdf-resolve-hypermedia-links-queue-wrapper-limit-count": "^1.0.0",
     "@comunica/actor-rdf-resolve-hypermedia-links-queue-wrapper-limit-depth": "^1.0.0",
-    "@comunica/runner": "^1.20.0",
-    "@comunica/runner-cli": "^1.20.0"
+    "@comunica/runner": "1.20.1-alpha.c191493f4.0",
+    "@comunica/runner-cli": "1.20.1-alpha.c191493f4.0"
   },
   "scripts": {
     "lint": "node \"../../node_modules/tslint/bin/tslint\" lib/**/*.ts test/**/*.ts --exclude '**/*.d.ts'",
