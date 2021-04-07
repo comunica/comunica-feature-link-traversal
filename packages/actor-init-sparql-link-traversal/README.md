@@ -5,6 +5,8 @@
 
 Comunica SPARQL Link Traversal is a SPARQL query engine for JavaScript that follows links to detect new sources.
 
+**Warning: due to the uncontrolled nature of the Web, it is recommended to always enable [lenient mode](https://comunica.dev/docs/query/advanced/context/#4--lenient-execution) when doing link traversal.**
+
 This module is part of the [Comunica framework](https://comunica.dev/).
 
 ## Install
@@ -29,7 +31,7 @@ $ comunica-sparql-link-traversal https://www.rubensworks.net/ \
        <https://www.rubensworks.net/#me> <http://xmlns.com/foaf/0.1/knows> ?p.
        <https://ruben.verborgh.org/profile/#me> <http://xmlns.com/foaf/0.1/knows> ?p.
        ?p <http://xmlns.com/foaf/0.1/name> ?name.
-   }"
+   }" --lenient
 ```
 
 Show the help with all options:
@@ -58,6 +60,7 @@ const result = await myEngine.query(`
       ?p <http://xmlns.com/foaf/0.1/name> ?name.
   }`, {
   sources: ['https://www.rubensworks.net/'],
+  lenient: true,
 });
 
 // Consume results as a stream (best performance)
@@ -83,7 +86,7 @@ _[**Read more** about querying an application](https://comunica.dev/docs/query/g
 Start a webservice exposing http://fragments.dbpedia.org/2015-10/en via the SPARQL protocol, i.e., a _SPARQL endpoint_.
 
 ```bash
-$ comunica-sparql-link-traversal-http https://www.rubensworks.net/
+$ comunica-sparql-link-traversal-http https://www.rubensworks.net/ --lenient
 ```
 
 Show the help with all options:
