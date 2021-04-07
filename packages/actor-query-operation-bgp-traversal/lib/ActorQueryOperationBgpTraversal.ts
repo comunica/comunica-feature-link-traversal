@@ -75,7 +75,7 @@ export class ActorQueryOperationBgpTraversal extends ActorQueryOperationTypedMed
    */
   public static getScoreSeedNonVocab(pattern: RDF.BaseQuad, sources: string[]): number {
     return ActorQueryOperationBgpTraversal.getPatternNonVocabUris(pattern)
-      .map(ActorQueryOperationBgpTraversal.getSourceUri)
+      .map(term => ActorQueryOperationBgpTraversal.getSourceUri(term))
       .filter(uri => sources.includes(uri))
       .length;
   }
@@ -142,13 +142,10 @@ export class ActorQueryOperationBgpTraversal extends ActorQueryOperationTypedMed
     patternBinder:
     (subPatterns: { pattern: Algebra.Pattern; bindings: IPatternBindings }[]) =>
     Promise<BindingsStream>): BindingsStream {
-    return new UnionIterator(baseStream.map((bindings: Bindings) => {
-      const bindingsMerger = (subBindings: Bindings): Bindings => subBindings.merge(bindings);
-      return new TransformIterator(
-        async() => (await patternBinder(ActorQueryOperationBgpLeftDeepSmallest.materializePatterns(patterns,
-          bindings))).map(bindingsMerger), { maxBufferSize: 128 },
-      );
-    }), { autoStart: false });
+    return new UnionIterator(baseStream.map((bindings: Bindings) => new TransformIterator(
+      async() => (await patternBinder(ActorQueryOperationBgpLeftDeepSmallest.materializePatterns(patterns,
+        bindings))).map((subBindings: Bindings): Bindings => subBindings.merge(bindings)), { maxBufferSize: 128 },
+    )), { autoStart: false });
   }
 
   public async testOperation(pattern: Algebra.Bgp, context: ActionContext): Promise<IActorTest> {

@@ -49,8 +49,8 @@ export class ActorRdfMetadataExtractTraverseQuadPatternQuery extends ActorRdfMet
   }
 
   public async run(action: IActionRdfMetadataExtract): Promise<IActorRdfMetadataExtractOutput> {
-    const quadPattern: Algebra.Operation = <Algebra.Operation> ActorRdfMetadataExtractTraverseQuadPatternQuery
-      .getCurrentQuery(action.context);
+    const quadPattern: Algebra.Operation = ActorRdfMetadataExtractTraverseQuadPatternQuery
+      .getCurrentQuery(action.context)!;
     return new Promise((resolve, reject) => {
       const traverse: ILink[] = [];
 

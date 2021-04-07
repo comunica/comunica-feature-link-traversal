@@ -121,7 +121,7 @@ export class ActorRdfMetadataExtractTraverseContentPolicies extends ActorRdfMeta
           transform = async(input: RDF.Stream) => {
             const subStore = await storeStream(input);
             const subResult = <IQueryResultQuads> await this.queryEngine
-              .query(<Algebra.Construct> contentPolicy.filter, {
+              .query(contentPolicy.filter!, {
                 sources: [ subStore ],
                 // Apply the bindings to the INCLUDE WHERE clause
                 initialBindings: binding,
