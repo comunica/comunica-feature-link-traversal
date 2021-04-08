@@ -1,0 +1,5 @@
+# 4. All triples that can be found from Tim's profile
+# Datasources: https://www.w3.org/People/Berners-Lee/card
+CONSTRUCT WHERE {
+  ?s ?p ?o.
+}

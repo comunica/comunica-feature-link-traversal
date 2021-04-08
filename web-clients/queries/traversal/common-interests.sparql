@@ -1,0 +1,9 @@
+# 2. Common interests of Ruben V and Ruben T
+# Datasources: //fragments.dbpedia.org/*/en https://www.rubensworks.net/ https://ruben.verborgh.org/profile/
+SELECT ?interestName
+WHERE {
+  ruben:me foaf:topic_interest ?interest.
+  rubent:me foaf:topic_interest ?interest.
+  ?interest rdfs:label ?interestName.
+  FILTER LANGMATCHES(LANG(?interestName),  "EN")
+}

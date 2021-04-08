@@ -1,0 +1,10 @@
+# 3. Find articles by my co-authors
+# Datasources: https://www.rubensworks.net/publications/ https://ruben.verborgh.org/profile/
+SELECT ?article ?coAuthor
+WHERE {
+  ?myArticle a schema:ScholarlyArticle;
+             foaf:maker ?author, <https://www.rubensworks.net/#me>.
+  ?article a schema:ScholarlyArticle;
+           foaf:maker ?coAuthor.
+  FILTER(?coAuthor != <https://www.rubensworks.net/#me>)
+}

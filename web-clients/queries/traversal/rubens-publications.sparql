@@ -1,0 +1,10 @@
+# 5. Publications of of Ruben V and Ruben T
+# Datasources: https://ruben.verborgh.org/profile/ https://www.rubensworks.net/publications/
+PREFIX schema: <http://schema.org/>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+SELECT *
+WHERE {
+  ?article a schema:ScholarlyArticle;
+  		   foaf:maker|schema:author ?author;
+           foaf:name|schema:name ?name.
+}

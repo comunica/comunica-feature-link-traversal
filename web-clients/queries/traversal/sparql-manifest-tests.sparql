@@ -1,0 +1,13 @@
+# 6. Tests in the SPARQL test suite
+# Datasources: //w3c.github.io/rdf-tests/sparql11/data-sparql11/manifest-all.ttl
+SELECT DISTINCT ?test ?type ?name ?comment WHERE {
+  ?spec mf:conformanceRequirement (?subManifest).
+  {
+    ?test a mf:QueryEvaluationTest.
+  } UNION {
+    ?test a mf:UpdateEvaluationTest.
+  }
+  ?test a ?type.
+  ?test mf:name ?name.
+  ?test rdfs:comment ?comment.
+}

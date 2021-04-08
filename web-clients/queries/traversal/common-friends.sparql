@@ -1,0 +1,7 @@
+# 1. Common friends of Ruben V and Ruben T
+# Datasources: https://www.rubensworks.net/
+SELECT DISTINCT * WHERE {
+    rubent:me foaf:knows ?person.
+    ruben:me foaf:knows ?person.
+    ?person foaf:name ?name.
+}
