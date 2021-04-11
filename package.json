@@ -40,7 +40,7 @@
     "streamify-array": "^1.0.0",
     "streamify-string": "^1.0.1",
     "ts-jest": "^26.0.0",
-    "typedoc": "^0.19.0",
+    "typedoc": "^0.20.0",
     "@strictsoftware/typedoc-plugin-monorepo": "^0.4.0",
     "tslint": "^6.0.0",
     "tslint-eslint-rules": "^5.1.0",
