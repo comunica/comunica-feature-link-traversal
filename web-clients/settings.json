@@ -6,6 +6,12 @@
   "context": {
     "lenient": true
   },
+  "branding": {
+    "title": "Comunica Link Traversal",
+    "title_href": "https://comunica.dev/research/link_traversal/",
+    "subtitle": "__SUBTITLE__",
+    "subtitle_href": "__SUBTITLE_HREF__"
+  },
   "datasources": [
     {
       "name": "DBpedia 2016-04",
