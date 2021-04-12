@@ -92,7 +92,7 @@
     "publish-release": "lerna publish",
     "publish-bare": "lerna exec -- npm publish --silent",
     "publish-canary": "yarn run build && lerna version prerelease --preid alpha.$(git rev-parse --short HEAD) --ignore-scripts --force-publish --no-push --no-git-tag-version --yes && git update-index --assume-unchanged $(git ls-files | tr '\\n' ' ') && lerna publish from-package --no-git-reset --pre-dist-tag next --force-publish --no-push --no-git-tag-version --yes && git update-index --no-assume-unchanged $(git ls-files | tr '\\n' ' ') && git checkout .",
-    "doc": "typedoc --name 'Comunica Link Traversal' --disableOutputCheck --external-modulemap '.*packages/([^/]+)/.*' --mode modules --out documentation",
+    "doc": "typedoc",
     "postinstall": "yarn run build && lerna run prepare",
     "version": "manual-git-changelog onversion"
   }
