@@ -8,8 +8,6 @@
     "node": ">=8.0"
   },
   "devDependencies": {
-    "@comunica/actor-http-proxy": "1.20.1-alpha.e8638e880.0",
-    "@comunica/web-client-generator": "^1.0.0",
     "rdf-data-factory": "^1.0.4",
     "@types/jest": "^26.0.0",
     "@types/node": "^13.1.7",

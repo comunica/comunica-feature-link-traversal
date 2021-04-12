@@ -13,7 +13,7 @@ for config in config/*.json; do
 
   # Build web client
   echo -e "\033[1m\033[34mBuilding config $id\033[0m"
-  $cwd/node_modules/@comunica/web-client-generator/bin/generate.js $config \
+  npx -p @comunica/web-client-generator comunica-web-client-generator $config \
     -d $cwd/web-clients/builds/$id \
     -s $cwd/web-clients/settings.custom.json \
     -q $cwd/web-clients/queries
