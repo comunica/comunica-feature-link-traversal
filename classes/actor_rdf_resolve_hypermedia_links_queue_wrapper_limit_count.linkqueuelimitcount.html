@@ -7,6 +7,7 @@
 	<meta name="description" content="Documentation for Comunica Link Traversal">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
+	<script async src="../assets/js/search.js" id="search-script"></script>
 </head>
 <body>
 <header>
@@ -40,8 +41,6 @@
 							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
 							<input type="checkbox" id="tsd-filter-externals" checked />
 							<label class="tsd-widget" for="tsd-filter-externals">Externals</label>
-							<input type="checkbox" id="tsd-filter-only-exported" />
-							<label class="tsd-widget" for="tsd-filter-only-exported">Only exported</label>
 						</div>
 					</div>
 					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
@@ -53,7 +52,7 @@
 		<div class="container">
 			<ul class="tsd-breadcrumb">
 				<li>
-					<a href="../globals.html">Globals</a>
+					<a href="../modules.html">Comunica Link Traversal</a>
 				</li>
 				<li>
 					<a href="../modules/actor_rdf_resolve_hypermedia_links_queue_wrapper_limit_count.html">actor-rdf-resolve-hypermedia-links-queue-wrapper-limit-count</a>
@@ -89,12 +88,6 @@
 					</li>
 				</ul>
 			</section>
-			<section class="tsd-panel">
-				<h3>Implements</h3>
-				<ul class="tsd-hierarchy">
-					<li><span class="tsd-signature-type">ILinkQueue</span></li>
-				</ul>
-			</section>
 			<section class="tsd-panel-group tsd-index-group">
 				<h2>Index</h2>
 				<section class="tsd-panel tsd-index-panel">
@@ -114,10 +107,10 @@
 						<section class="tsd-index-section ">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="actor_rdf_resolve_hypermedia_links_queue_wrapper_limit_count.linkqueuelimitcount.html#getsize" class="tsd-kind-icon">get<wbr>Size</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="actor_rdf_resolve_hypermedia_links_queue_wrapper_limit_count.linkqueuelimitcount.html#isempty" class="tsd-kind-icon">is<wbr>Empty</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="actor_rdf_resolve_hypermedia_links_queue_wrapper_limit_count.linkqueuelimitcount.html#peek" class="tsd-kind-icon">peek</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="actor_rdf_resolve_hypermedia_links_queue_wrapper_limit_count.linkqueuelimitcount.html#pop" class="tsd-kind-icon">pop</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="actor_rdf_resolve_hypermedia_links_queue_wrapper_limit_count.linkqueuelimitcount.html#getsize" class="tsd-kind-icon">get<wbr>Size</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="actor_rdf_resolve_hypermedia_links_queue_wrapper_limit_count.linkqueuelimitcount.html#isempty" class="tsd-kind-icon">is<wbr>Empty</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="actor_rdf_resolve_hypermedia_links_queue_wrapper_limit_count.linkqueuelimitcount.html#peek" class="tsd-kind-icon">peek</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="actor_rdf_resolve_hypermedia_links_queue_wrapper_limit_count.linkqueuelimitcount.html#pop" class="tsd-kind-icon">pop</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite"><a href="actor_rdf_resolve_hypermedia_links_queue_wrapper_limit_count.linkqueuelimitcount.html#push" class="tsd-kind-icon">push</a></li>
 							</ul>
 						</section>
@@ -130,14 +123,14 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Link<wbr>Queue<wbr>Limit<wbr>Count<span class="tsd-signature-symbol">(</span>linkQueue<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">ILinkQueue</span>, limit<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="actor_rdf_resolve_hypermedia_links_queue_wrapper_limit_count.linkqueuelimitcount.html" class="tsd-signature-type">LinkQueueLimitCount</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Link<wbr>Queue<wbr>Limit<wbr>Count<span class="tsd-signature-symbol">(</span>linkQueue<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">ILinkQueue</span>, limit<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="actor_rdf_resolve_hypermedia_links_queue_wrapper_limit_count.linkqueuelimitcount.html" class="tsd-signature-type" data-tsd-kind="Class">LinkQueueLimitCount</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Overrides LinkQueueWrapper.__constructor</p>
+								<p>Overrides LinkQueueWrapper.constructor</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/comunica/comunica-feature-link-traversal/blob/9ebf041/packages/actor-rdf-resolve-hypermedia-links-queue-wrapper-limit-count/lib/LinkQueueLimitCount.ts#L8">packages/actor-rdf-resolve-hypermedia-links-queue-wrapper-limit-count/lib/LinkQueueLimitCount.ts:8</a></li>
+									<li>Defined in <a href="https://github.com/comunica/comunica-feature-link-traversal/blob/2627a58/packages/actor-rdf-resolve-hypermedia-links-queue-wrapper-limit-count/lib/LinkQueueLimitCount.ts#L8">packages/actor-rdf-resolve-hypermedia-links-queue-wrapper-limit-count/lib/LinkQueueLimitCount.ts:8</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -149,7 +142,7 @@
 									<h5>limit: <span class="tsd-signature-type">number</span></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="actor_rdf_resolve_hypermedia_links_queue_wrapper_limit_count.linkqueuelimitcount.html" class="tsd-signature-type">LinkQueueLimitCount</a></h4>
+							<h4 class="tsd-returns-title">Returns <a href="actor_rdf_resolve_hypermedia_links_queue_wrapper_limit_count.linkqueuelimitcount.html" class="tsd-signature-type" data-tsd-kind="Class">LinkQueueLimitCount</a></h4>
 						</li>
 					</ul>
 				</section>
@@ -162,23 +155,23 @@
 					<div class="tsd-signature tsd-kind-icon">limit<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/comunica/comunica-feature-link-traversal/blob/9ebf041/packages/actor-rdf-resolve-hypermedia-links-queue-wrapper-limit-count/lib/LinkQueueLimitCount.ts#L8">packages/actor-rdf-resolve-hypermedia-links-queue-wrapper-limit-count/lib/LinkQueueLimitCount.ts:8</a></li>
+							<li>Defined in <a href="https://github.com/comunica/comunica-feature-link-traversal/blob/2627a58/packages/actor-rdf-resolve-hypermedia-links-queue-wrapper-limit-count/lib/LinkQueueLimitCount.ts#L8">packages/actor-rdf-resolve-hypermedia-links-queue-wrapper-limit-count/lib/LinkQueueLimitCount.ts:8</a></li>
 						</ul>
 					</aside>
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Methods</h2>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
 					<a name="getsize" class="tsd-anchor"></a>
 					<h3>get<wbr>Size</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
 						<li class="tsd-signature tsd-kind-icon">get<wbr>Size<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Inherited from <a href="actor_rdf_resolve_hypermedia_links_queue_wrapper_limit_count.linkqueuelimitcount.html">LinkQueueLimitCount</a>.<a href="actor_rdf_resolve_hypermedia_links_queue_wrapper_limit_count.linkqueuelimitcount.html#getsize">getSize</a></p>
+								<p>Inherited from LinkQueueWrapper.getSize</p>
 								<ul>
 									<li>Defined in node_modules/@comunica/bus-rdf-resolve-hypermedia-links-queue/lib/LinkQueueWrapper.d.ts:10</li>
 								</ul>
@@ -187,16 +180,16 @@
 						</li>
 					</ul>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
 					<a name="isempty" class="tsd-anchor"></a>
 					<h3>is<wbr>Empty</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
 						<li class="tsd-signature tsd-kind-icon">is<wbr>Empty<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Inherited from <a href="actor_rdf_resolve_hypermedia_links_queue_wrapper_limit_count.linkqueuelimitcount.html">LinkQueueLimitCount</a>.<a href="actor_rdf_resolve_hypermedia_links_queue_wrapper_limit_count.linkqueuelimitcount.html#isempty">isEmpty</a></p>
+								<p>Inherited from LinkQueueWrapper.isEmpty</p>
 								<ul>
 									<li>Defined in node_modules/@comunica/bus-rdf-resolve-hypermedia-links-queue/lib/LinkQueueWrapper.d.ts:11</li>
 								</ul>
@@ -205,39 +198,39 @@
 						</li>
 					</ul>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
 					<a name="peek" class="tsd-anchor"></a>
 					<h3>peek</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-						<li class="tsd-signature tsd-kind-icon">peek<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">ILink</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">undefined</span></li>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+						<li class="tsd-signature tsd-kind-icon">peek<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">ILink</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Inherited from <a href="actor_rdf_resolve_hypermedia_links_queue_wrapper_limit_count.linkqueuelimitcount.html">LinkQueueLimitCount</a>.<a href="actor_rdf_resolve_hypermedia_links_queue_wrapper_limit_count.linkqueuelimitcount.html#peek">peek</a></p>
+								<p>Inherited from LinkQueueWrapper.peek</p>
 								<ul>
 									<li>Defined in node_modules/@comunica/bus-rdf-resolve-hypermedia-links-queue/lib/LinkQueueWrapper.d.ts:13</li>
 								</ul>
 							</aside>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">ILink</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">undefined</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">ILink</span></h4>
 						</li>
 					</ul>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
 					<a name="pop" class="tsd-anchor"></a>
 					<h3>pop</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-						<li class="tsd-signature tsd-kind-icon">pop<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">ILink</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">undefined</span></li>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+						<li class="tsd-signature tsd-kind-icon">pop<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">ILink</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Inherited from <a href="actor_rdf_resolve_hypermedia_links_queue_wrapper_limit_count.linkqueuelimitcount.html">LinkQueueLimitCount</a>.<a href="actor_rdf_resolve_hypermedia_links_queue_wrapper_limit_count.linkqueuelimitcount.html#pop">pop</a></p>
+								<p>Inherited from LinkQueueWrapper.pop</p>
 								<ul>
 									<li>Defined in node_modules/@comunica/bus-rdf-resolve-hypermedia-links-queue/lib/LinkQueueWrapper.d.ts:12</li>
 								</ul>
 							</aside>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">ILink</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">undefined</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">ILink</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -252,7 +245,7 @@
 							<aside class="tsd-sources">
 								<p>Overrides LinkQueueWrapper.push</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/comunica/comunica-feature-link-traversal/blob/9ebf041/packages/actor-rdf-resolve-hypermedia-links-queue-wrapper-limit-count/lib/LinkQueueLimitCount.ts#L15">packages/actor-rdf-resolve-hypermedia-links-queue-wrapper-limit-count/lib/LinkQueueLimitCount.ts:15</a></li>
+									<li>Defined in <a href="https://github.com/comunica/comunica-feature-link-traversal/blob/2627a58/packages/actor-rdf-resolve-hypermedia-links-queue-wrapper-limit-count/lib/LinkQueueLimitCount.ts#L15">packages/actor-rdf-resolve-hypermedia-links-queue-wrapper-limit-count/lib/LinkQueueLimitCount.ts:15</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -273,14 +266,11 @@
 		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
 			<nav class="tsd-navigation primary">
 				<ul>
-					<li class="globals  ">
-						<a href="../globals.html"><em>Globals</em></a>
+					<li class=" ">
+						<a href="../modules.html">Modules</a>
 					</li>
 					<li class=" tsd-kind-module">
 						<a href="../modules/actor_context_preprocess_set_seed_sources_quadpattern_iris.html">actor-<wbr>context-<wbr>preprocess-<wbr>set-<wbr>seed-<wbr>sources-<wbr>quadpattern-<wbr>iris</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="../modules/actor_init_sparql_link_traversal.html">actor-<wbr>init-<wbr>sparql-<wbr>link-<wbr>traversal</a>
 					</li>
 					<li class=" tsd-kind-module">
 						<a href="../modules/actor_query_operation_bgp_traversal.html">actor-<wbr>query-<wbr>operation-<wbr>bgp-<wbr>traversal</a>
@@ -317,9 +307,6 @@
 						<a href="../modules/actor_context_preprocess_set_seed_sources_quadpattern_iris.html" class="tsd-kind-icon">actor-<wbr>context-<wbr>preprocess-<wbr>set-<wbr>seed-<wbr>sources-<wbr>quadpattern-<wbr>iris</a>
 					</li>
 					<li class=" tsd-kind-module">
-						<a href="../modules/actor_init_sparql_link_traversal.html" class="tsd-kind-icon">actor-<wbr>init-<wbr>sparql-<wbr>link-<wbr>traversal</a>
-					</li>
-					<li class=" tsd-kind-module">
 						<a href="../modules/actor_query_operation_bgp_traversal.html" class="tsd-kind-icon">actor-<wbr>query-<wbr>operation-<wbr>bgp-<wbr>traversal</a>
 					</li>
 					<li class=" tsd-kind-module">
@@ -351,16 +338,16 @@
 									<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
 										<a href="actor_rdf_resolve_hypermedia_links_queue_wrapper_limit_count.linkqueuelimitcount.html#limit" class="tsd-kind-icon">limit</a>
 									</li>
-									<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+									<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
 										<a href="actor_rdf_resolve_hypermedia_links_queue_wrapper_limit_count.linkqueuelimitcount.html#getsize" class="tsd-kind-icon">get<wbr>Size</a>
 									</li>
-									<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+									<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
 										<a href="actor_rdf_resolve_hypermedia_links_queue_wrapper_limit_count.linkqueuelimitcount.html#isempty" class="tsd-kind-icon">is<wbr>Empty</a>
 									</li>
-									<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+									<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
 										<a href="actor_rdf_resolve_hypermedia_links_queue_wrapper_limit_count.linkqueuelimitcount.html#peek" class="tsd-kind-icon">peek</a>
 									</li>
-									<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+									<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
 										<a href="actor_rdf_resolve_hypermedia_links_queue_wrapper_limit_count.linkqueuelimitcount.html#pop" class="tsd-kind-icon">pop</a>
 									</li>
 									<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
@@ -400,13 +387,9 @@
 			</ul>
 			<ul class="tsd-legend">
 				<li class="tsd-kind-variable"><span class="tsd-kind-icon">Variable</span></li>
-				<li class="tsd-kind-function"><span class="tsd-kind-icon">Function</span></li>
 			</ul>
 			<ul class="tsd-legend">
 				<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
-			</ul>
-			<ul class="tsd-legend">
-				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited method</span></li>
 			</ul>
 			<ul class="tsd-legend">
 				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private property</span></li>
