@@ -30,7 +30,7 @@
     "cross-fetch": "^3.0.5",
     "jest": "^26.0.0",
     "jest-rdf": "^1.6.0",
-    "lerna": "^3.4.0",
+    "lerna": "^4.0.0",
     "lodash.assign": "^4.2.0",
     "manual-git-changelog": "^1.0.0",
     "pre-commit": "^1.2.2",
