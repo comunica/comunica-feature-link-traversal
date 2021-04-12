@@ -9,10 +9,10 @@ for config in config/*.json; do
 
   # Build web client
   echo -e "\033[1m\033[34mBuilding config $id\033[0m"
-  #$cwd/node_modules/@comunica/web-client-generator/bin/generate.js $config \
-  #  -d $cwd/web-clients/builds/$id \
-  #  -s $cwd/web-clients/settings.json \
-  #  -q $cwd/web-clients/queries
+  $cwd/node_modules/@comunica/web-client-generator/bin/generate.js $config \
+    -d $cwd/web-clients/builds/$id \
+    -s $cwd/web-clients/settings.json \
+    -q $cwd/web-clients/queries
 done
 popd >/dev/null
 
