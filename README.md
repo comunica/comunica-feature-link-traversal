@@ -37,6 +37,8 @@ Concretely, this monorepo adds link traversal support to Comunica using the foll
 
 **Warning: All packages in this repo should be considered unstable, and breaking changes may occur at any time.**
 
+[Click here to learn more about Link Traversal in Comunica, or to see live examples](https://comunica.dev/research/link_traversal/).
+
 ## Development Setup
 
 _(JSDoc: https://comunica.github.io/comunica-feature-link-traversal/)_
