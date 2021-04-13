@@ -11,9 +11,26 @@
       "extends": "cbrme:Actor/RdfMetadataExtract",
       "requireElement": "ActorRdfMetadataExtractTraverseQuadPatternQuery",
       "comment": "A comunica Traverse Quad Pattern Query RDF Metadata Extract Actor.",
+      "parameters": [
+        {
+          "@id": "carmetqpq:Actor/RdfMetadataExtract/TraverseQuadPatternQuery#onlyVariables",
+          "comment": "If only links that match a variable in the query should be included.",
+          "default": true,
+          "range": "xsd:boolean",
+          "required": true,
+          "unique": true
+        }
+      ],
       "constructorArguments": [
         {
-          "extends": "cbrme:Actor/RdfMetadataExtract/constructorArgumentsObject"
+          "@id": "carmetqpq:Actor/RdfMetadataExtract/TraverseQuadPatternQuery#constructorArgumentsObject",
+          "extends": "cbrme:Actor/RdfMetadataExtract/constructorArgumentsObject",
+          "fields": [
+            {
+              "keyRaw": "onlyVariables",
+              "value": "carmetqpq:Actor/RdfMetadataExtract/TraverseQuadPatternQuery#onlyVariables"
+            }
+          ]
         }
       ]
     }

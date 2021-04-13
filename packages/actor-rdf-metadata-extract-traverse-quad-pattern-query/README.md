@@ -43,3 +43,7 @@ After installing, this package can be added to your engine's configuration as fo
   ]
 }
 ```
+
+### Config Parameters
+
+* `carmetqp:Actor/RdfMetadataExtract/TraverseQuadPatternQuery#onlyVariables`: If only links that match a variable in the query should be included. (default `true`)

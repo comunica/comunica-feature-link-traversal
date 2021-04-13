@@ -5,14 +5,16 @@ import type { ILink } from '@comunica/bus-rdf-resolve-hypermedia-links';
 import { KeysQueryOperation } from '@comunica/context-entries';
 import type { IActorArgs, IActorTest } from '@comunica/core';
 import type { ActionContext } from '@comunica/types';
-import { getNamedNodes, getTerms, matchPatternComplete } from 'rdf-terms';
+import { filterQuadTermNames, getNamedNodes, getTerms, matchPatternComplete } from 'rdf-terms';
 import type { Algebra } from 'sparqlalgebrajs';
 
 /**
  * A comunica Traverse Quad Pattern RDF Metadata Extract Actor.
  */
 export class ActorRdfMetadataExtractTraverseQuadPattern extends ActorRdfMetadataExtract {
-  public constructor(args: IActorArgs<IActionRdfMetadataExtract, IActorTest, IActorRdfMetadataExtractOutput>) {
+  private readonly onlyVariables: boolean;
+
+  public constructor(args: IActorRdfMetadataExtractTraverseQuadPatternArgs) {
     super(args);
   }
 
@@ -45,9 +47,22 @@ export class ActorRdfMetadataExtractTraverseQuadPattern extends ActorRdfMetadata
 
       // Immediately resolve when a value has been found.
       action.metadata.on('data', quad => {
-        if (matchPatternComplete(quad, quadPattern)) {
-          for (const link of getNamedNodes(getTerms(quad))) {
-            traverse.push({ url: link.value });
+        if (this.onlyVariables) {
+          // --- If we only want to follow links matching with a variable component ---
+          if (matchPatternComplete(quad, quadPattern)) {
+            for (const quadTermName of filterQuadTermNames(quadPattern, value => value.termType === 'Variable')) {
+              if (quad[quadTermName].termType === 'NamedNode') {
+                traverse.push({ url: quad[quadTermName].value });
+              }
+            }
+          }
+        } else {
+          // --- If we want to follow links, irrespective of matching with a variable component ---
+          // eslint-disable-next-line no-lonely-if
+          if (matchPatternComplete(quad, quadPattern)) {
+            for (const link of getNamedNodes(getTerms(quad))) {
+              traverse.push({ url: link.value });
+            }
           }
         }
       });
@@ -58,4 +73,9 @@ export class ActorRdfMetadataExtractTraverseQuadPattern extends ActorRdfMetadata
       });
     });
   }
+}
+
+export interface IActorRdfMetadataExtractTraverseQuadPatternArgs
+  extends IActorArgs<IActionRdfMetadataExtract, IActorTest, IActorRdfMetadataExtractOutput> {
+  onlyVariables: boolean;
 }

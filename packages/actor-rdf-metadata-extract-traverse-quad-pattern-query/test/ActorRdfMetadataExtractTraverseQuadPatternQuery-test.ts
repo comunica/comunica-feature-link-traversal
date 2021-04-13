@@ -40,14 +40,14 @@ describe('ActorRdfMetadataExtractTraverseQuadPatternQuery', () => {
       });
   });
 
-  describe('An ActorRdfMetadataExtractTraverseQuadPatternQuery instance', () => {
+  describe('An ActorRdfMetadataExtractTraverseQuadPatternQuery instance with onlyVariables false', () => {
     let actor: ActorRdfMetadataExtractTraverseQuadPatternQuery;
     let input: Readable;
     let operation: any;
     let context: ActionContext;
 
     beforeEach(() => {
-      actor = new ActorRdfMetadataExtractTraverseQuadPatternQuery({ name: 'actor', bus });
+      actor = new ActorRdfMetadataExtractTraverseQuadPatternQuery({ name: 'actor', bus, onlyVariables: false });
       input = stream([
         quad('ex:s1', 'ex:px', 'ex:o1', 'ex:gx'),
         quad('ex:s2', 'ex:p', '"o"', 'ex:g'),
@@ -156,6 +156,78 @@ describe('ActorRdfMetadataExtractTraverseQuadPatternQuery', () => {
               { url: 'ex:p' },
               { url: 'ex:o4' },
               { url: 'ex:g' },
+            ],
+          },
+        });
+    });
+  });
+
+  describe('An ActorRdfMetadataExtractTraverseQuadPatternQuery instance with onlyVariables true', () => {
+    let actor: ActorRdfMetadataExtractTraverseQuadPatternQuery;
+    let input: Readable;
+    let operation: any;
+    let context: ActionContext;
+
+    beforeEach(() => {
+      actor = new ActorRdfMetadataExtractTraverseQuadPatternQuery({ name: 'actor', bus, onlyVariables: true });
+      input = stream([
+        quad('ex:s1', 'ex:px', 'ex:o1', 'ex:gx'),
+        quad('ex:s2', 'ex:p', '"o"', 'ex:g'),
+        quad('ex:s3', 'ex:px', 'ex:o3', 'ex:gx'),
+        quad('ex:s4', 'ex:p', 'ex:o4', 'ex:g'),
+        quad('ex:s5', 'ex:p', 'ex:o5', 'ex:gx'),
+        quad('ex:s6', 'ex:p', 'ex:o6', 'ex:g'),
+      ]);
+      operation = FACTORY.createBgp([
+        FACTORY.createPattern(
+          DF.variable('s'),
+          DF.namedNode('ex:p'),
+          DF.variable('o'),
+          DF.namedNode('ex:g'),
+        ),
+      ]);
+      context = ActionContext({ [KeysInitSparql.query]: operation });
+    });
+
+    it('should run on a stream and return urls matching a query\'s variables with multiple patterns', () => {
+      operation = FACTORY.createBgp([
+        FACTORY.createPattern(
+          DF.namedNode('ex:s1'),
+          DF.namedNode('ex:p'),
+          DF.variable('o'),
+          DF.namedNode('ex:g'),
+        ),
+        FACTORY.createPattern(
+          DF.namedNode('ex:s2'),
+          DF.namedNode('ex:p'),
+          DF.variable('o'),
+          DF.namedNode('ex:g'),
+        ),
+        FACTORY.createPattern(
+          DF.namedNode('ex:s3'),
+          DF.namedNode('ex:p'),
+          DF.variable('o'),
+          DF.namedNode('ex:g'),
+        ),
+        FACTORY.createPattern(
+          DF.namedNode('ex:s4'),
+          DF.namedNode('ex:p'),
+          DF.namedNode('ex:o4'),
+          DF.namedNode('ex:g'),
+        ),
+        FACTORY.createPattern(
+          DF.namedNode('ex:s6'),
+          DF.namedNode('ex:p'),
+          DF.variable('o'),
+          DF.namedNode('ex:g'),
+        ),
+      ]);
+      context = ActionContext({ [KeysInitSparql.query]: operation });
+      return expect(actor.run({ url: '', metadata: input, context })).resolves
+        .toEqual({
+          metadata: {
+            traverse: [
+              { url: 'ex:o6' },
             ],
           },
         });

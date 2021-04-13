@@ -35,14 +35,14 @@ describe('ActorRdfMetadataExtractTraverseQuadPattern', () => {
     });
   });
 
-  describe('An ActorRdfMetadataExtractTraverseQuadPattern instance', () => {
+  describe('An ActorRdfMetadataExtractTraverseQuadPattern instance with onlyVariables false', () => {
     let actor: ActorRdfMetadataExtractTraverseQuadPattern;
     let input: Readable;
     let pattern: any;
     let context: ActionContext;
 
     beforeEach(() => {
-      actor = new ActorRdfMetadataExtractTraverseQuadPattern({ name: 'actor', bus });
+      actor = new ActorRdfMetadataExtractTraverseQuadPattern({ name: 'actor', bus, onlyVariables: false });
       input = stream([
         quad('ex:s1', 'ex:px', 'ex:o1', 'ex:gx'),
         quad('ex:s2', 'ex:p', '"o"', 'ex:g'),
@@ -92,6 +92,44 @@ describe('ActorRdfMetadataExtractTraverseQuadPattern', () => {
               { url: 'ex:p' },
               { url: 'ex:o4' },
               { url: 'ex:g' },
+            ],
+          },
+        });
+    });
+  });
+
+  describe('An ActorRdfMetadataExtractTraverseQuadPattern instance with onlyVariables true', () => {
+    let actor: ActorRdfMetadataExtractTraverseQuadPattern;
+    let input: Readable;
+    let pattern: any;
+    let context: ActionContext;
+
+    beforeEach(() => {
+      actor = new ActorRdfMetadataExtractTraverseQuadPattern({ name: 'actor', bus, onlyVariables: true });
+      input = stream([
+        quad('ex:s1', 'ex:px', 'ex:o1', 'ex:gx'),
+        quad('ex:s2', 'ex:p', '"o"', 'ex:g'),
+        quad('ex:s3', 'ex:px', 'ex:o3', 'ex:gx'),
+        quad('ex:s4', 'ex:p', 'ex:o4', 'ex:g'),
+        quad('ex:s5', 'ex:p', 'ex:o5', 'ex:gx'),
+      ]);
+      pattern = FACTORY.createPattern(
+        DF.variable('s'),
+        DF.namedNode('ex:p'),
+        DF.variable('o'),
+        DF.namedNode('ex:g'),
+      );
+      context = ActionContext({ [KeysQueryOperation.operation]: pattern });
+    });
+
+    it('should run on a stream and return urls matching the pattern', () => {
+      return expect(actor.run({ url: '', metadata: input, context })).resolves
+        .toEqual({
+          metadata: {
+            traverse: [
+              { url: 'ex:s2' },
+              { url: 'ex:s4' },
+              { url: 'ex:o4' },
             ],
           },
         });

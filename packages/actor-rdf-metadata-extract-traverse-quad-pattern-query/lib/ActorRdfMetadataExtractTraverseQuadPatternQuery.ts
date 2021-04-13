@@ -5,7 +5,8 @@ import { KeysInitSparql } from '@comunica/context-entries';
 import type { IActorArgs, IActorTest } from '@comunica/core';
 import type { ActionContext } from '@comunica/types';
 import type * as RDF from 'rdf-js';
-import { getNamedNodes, getTerms, matchPatternComplete } from 'rdf-terms';
+import type { QuadTermName } from 'rdf-terms';
+import { filterQuadTermNames, getNamedNodes, getTerms, matchPatternComplete } from 'rdf-terms';
 import type { Algebra } from 'sparqlalgebrajs';
 import { Util as AlgebraUtil } from 'sparqlalgebrajs';
 
@@ -13,7 +14,9 @@ import { Util as AlgebraUtil } from 'sparqlalgebrajs';
  * A comunica Traverse Quad Pattern Query RDF Metadata Extract Actor.
  */
 export class ActorRdfMetadataExtractTraverseQuadPatternQuery extends ActorRdfMetadataExtract {
-  public constructor(args: IActorArgs<IActionRdfMetadataExtract, IActorTest, IActorRdfMetadataExtractOutput>) {
+  private readonly onlyVariables: boolean;
+
+  public constructor(args: IActorRdfMetadataExtractTraverseQuadPatternQueryArgs) {
     super(args);
   }
 
@@ -28,17 +31,17 @@ export class ActorRdfMetadataExtractTraverseQuadPatternQuery extends ActorRdfMet
     return currentQueryOperation;
   }
 
-  public static matchQuadPatternInOperation(quad: RDF.Quad, operation: Algebra.Operation): boolean {
-    let match = false;
+  public static matchQuadPatternInOperation(quad: RDF.Quad, operation: Algebra.Operation): Algebra.Pattern[] {
+    const matchingPatterns: Algebra.Pattern[] = [];
     AlgebraUtil.recurseOperation(operation, {
       pattern(pattern: Algebra.Pattern) {
-        if (!match && matchPatternComplete(quad, pattern)) {
-          match = true;
+        if (matchPatternComplete(quad, pattern)) {
+          matchingPatterns.push(pattern);
         }
         return false;
       },
     });
-    return match;
+    return matchingPatterns;
   }
 
   public async test(action: IActionRdfMetadataExtract): Promise<IActorTest> {
@@ -49,7 +52,7 @@ export class ActorRdfMetadataExtractTraverseQuadPatternQuery extends ActorRdfMet
   }
 
   public async run(action: IActionRdfMetadataExtract): Promise<IActorRdfMetadataExtractOutput> {
-    const quadPattern: Algebra.Operation = ActorRdfMetadataExtractTraverseQuadPatternQuery
+    const operation: Algebra.Operation = ActorRdfMetadataExtractTraverseQuadPatternQuery
       .getCurrentQuery(action.context)!;
     return new Promise((resolve, reject) => {
       const traverse: ILink[] = [];
@@ -59,9 +62,31 @@ export class ActorRdfMetadataExtractTraverseQuadPatternQuery extends ActorRdfMet
 
       // Immediately resolve when a value has been found.
       action.metadata.on('data', quad => {
-        if (ActorRdfMetadataExtractTraverseQuadPatternQuery.matchQuadPatternInOperation(quad, quadPattern)) {
-          for (const link of getNamedNodes(getTerms(quad))) {
-            traverse.push({ url: link.value });
+        const matchingPatterns = ActorRdfMetadataExtractTraverseQuadPatternQuery
+          .matchQuadPatternInOperation(quad, operation);
+        if (matchingPatterns.length > 0) {
+          if (this.onlyVariables) {
+            // --- If we only want to follow links matching with a variable component ---
+
+            // Determine quad term names that we should check
+            const quadTermNames: Partial<Record<QuadTermName, boolean>> = {};
+            for (const quadPattern of matchingPatterns) {
+              for (const quadTermName of filterQuadTermNames(quadPattern, value => value.termType === 'Variable')) {
+                quadTermNames[quadTermName] = true;
+              }
+            }
+
+            // For the discovered quad term names, check extract the named nodes in the quad
+            for (const quadTermName of Object.keys(quadTermNames)) {
+              if (quad[quadTermName].termType === 'NamedNode') {
+                traverse.push({ url: quad[quadTermName].value });
+              }
+            }
+          } else {
+            // --- If we want to follow links, irrespective of matching with a variable component ---
+            for (const link of getNamedNodes(getTerms(quad))) {
+              traverse.push({ url: link.value });
+            }
           }
         }
       });
@@ -72,4 +97,9 @@ export class ActorRdfMetadataExtractTraverseQuadPatternQuery extends ActorRdfMet
       });
     });
   }
+}
+
+export interface IActorRdfMetadataExtractTraverseQuadPatternQueryArgs
+  extends IActorArgs<IActionRdfMetadataExtract, IActorTest, IActorRdfMetadataExtractOutput> {
+  onlyVariables: boolean;
 }
