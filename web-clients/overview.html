@@ -25,4 +25,29 @@
         <a href="default/">Web client</a><br /><br />
         Default configuration with all available Link Traversal features.
     </div>
+    <div>
+        <h2>Follow All</h2>
+        <a href="follow-all/">Web client</a><br /><br />
+        Configuration that implements the <code>cAll</code> reachability semantics, and follows all possible links.
+    </div>
+    <div>
+        <h2>Follow Match Query</h2>
+        <a href="follow-match-query/">Web client</a><br /><br />
+        Configuration that implements the <code>cMatch</code> reachability semantics, and follows links in triples that match at least triple pattern in the query.
+    </div>
+    <div>
+        <h2>Follow Match Pattern Bound</h2>
+        <a href="follow-match-pattern-bound/">Web client</a><br /><br />
+        Configuration that implements the <code>cMatchPatternBound</code> reachability semantics, and follows links in triples that match the current triple pattern leaf in the adaptive query plan.
+    </div>
+    <div>
+        <h2>Follow Content Policies (Restrictive)</h2>
+        <a href="follow-content-policies-restrictive/">Web client</a><br /><br />
+        Configuration that extracts <code>SCL</code> policies, and only follows links matching those policies.
+    </div>
+    <div>
+        <h2>Follow Content Policies (Conditional)</h2>
+        <a href="follow-content-policies-conditional/">Web client</a><br /><br />
+        Configuration that extracts <code>SCL</code> policies, follows links according to the <code>cMatch</code> reachability semantics, but only allows links to be followed if they also match at least one <code>SCL</code> policy.
+    </div>
 </body>
