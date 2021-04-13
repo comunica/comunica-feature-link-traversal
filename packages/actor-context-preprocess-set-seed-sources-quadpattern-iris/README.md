@@ -36,7 +36,8 @@ After installing, this package can be added to your engine's configuration as fo
 
 ### Config Parameters
 
-* `cacpsssqi:Actor/ContextPreprocess/SetSeedSourcesQuadpatternIris#extractSubjects`: If IRIs should be extracted from subject positions.
-* `cacpsssqi:Actor/ContextPreprocess/SetSeedSourcesQuadpatternIris#extractPredicates`: If IRIs should be extracted from predicate positions.
-* `cacpsssqi:Actor/ContextPreprocess/SetSeedSourcesQuadpatternIris#extractObjects`: If IRIs should be extracted from object positions.
-* `cacpsssqi:Actor/ContextPreprocess/SetSeedSourcesQuadpatternIris#extractGraphs`: If IRIs should be extracted from graph positions.
+* `cacpsssqi:Actor/ContextPreprocess/SetSeedSourcesQuadpatternIris#extractSubjects`: If IRIs should be extracted from subject positions. (default `true`)
+* `cacpsssqi:Actor/ContextPreprocess/SetSeedSourcesQuadpatternIris#extractPredicates`: If IRIs should be extracted from predicate positions. (default `false`)
+* `cacpsssqi:Actor/ContextPreprocess/SetSeedSourcesQuadpatternIris#extractObjects`: If IRIs should be extracted from object positions. (default `true`)
+* `cacpsssqi:Actor/ContextPreprocess/SetSeedSourcesQuadpatternIris#extractGraphs`: If IRIs should be extracted from graph positions. (default `true`)
+* `cacpsssqi:Actor/ContextPreprocess/SetSeedSourcesQuadpatternIris#extractVocabIris`: If object IRIs should be extracted if the predicate is rdf:type. (default `false`)

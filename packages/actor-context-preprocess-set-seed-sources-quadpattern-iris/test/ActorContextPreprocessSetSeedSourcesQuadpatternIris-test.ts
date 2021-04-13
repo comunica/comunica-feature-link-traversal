@@ -24,6 +24,7 @@ describe('ActorContextPreprocessSetSeedSourcesQuadpatternIris', () => {
         extractPredicates: true,
         extractObjects: true,
         extractGraphs: true,
+        extractVocabIris: true,
       });
     });
 
@@ -106,6 +107,7 @@ describe('ActorContextPreprocessSetSeedSourcesQuadpatternIris', () => {
         extractPredicates: false,
         extractObjects: true,
         extractGraphs: false,
+        extractVocabIris: true,
       });
       const operation = translate(`SELECT * { GRAPH <ex:g> { <ex:s> <ex:p> <ex:o> } }`, { quads: true });
       expect(await actor.run({
@@ -165,6 +167,32 @@ describe('ActorContextPreprocessSetSeedSourcesQuadpatternIris', () => {
       })).toEqual({
         context: ActionContext({
           [KeysRdfResolveQuadPattern.sources]: [],
+        }),
+      });
+    });
+
+    it('should run when not extracting vocab IRIs', async() => {
+      actor = new ActorContextPreprocessSetSeedSourcesQuadpatternIris({
+        name: 'actor',
+        bus,
+        extractSubjects: true,
+        extractPredicates: false,
+        extractObjects: true,
+        extractGraphs: false,
+        extractVocabIris: false,
+      });
+      const operation = translate(`SELECT * { <ex:s> a <ex:TYPE>. <ex:s> <ex:p> <ex:o> }`, { quads: true });
+      expect(await actor.run({
+        context: ActionContext({
+          [KeysRdfResolveQuadPattern.sources]: [],
+        }),
+        operation,
+      })).toEqual({
+        context: ActionContext({
+          [KeysRdfResolveQuadPattern.sources]: [
+            'ex:s',
+            'ex:o',
+          ],
         }),
       });
     });

@@ -12,6 +12,7 @@ export class ActorContextPreprocessSetSeedSourcesQuadpatternIris extends ActorCo
   private readonly extractPredicates: boolean;
   private readonly extractObjects: boolean;
   private readonly extractGraphs: boolean;
+  private readonly extractVocabIris: boolean;
 
   public constructor(args: IActorContextPreprocessSetSeedSourcesQuadpatternIrisArgs) {
     super(args);
@@ -56,7 +57,8 @@ export class ActorContextPreprocessSetSeedSourcesQuadpatternIris extends ActorCo
         if (this.extractPredicates && pattern.predicate.termType === 'NamedNode') {
           iris.push(pattern.predicate.value);
         }
-        if (this.extractObjects && pattern.object.termType === 'NamedNode') {
+        if (this.extractObjects && pattern.object.termType === 'NamedNode' &&
+          (this.extractVocabIris || pattern.predicate.value !== 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type')) {
           iris.push(pattern.object.value);
         }
         if (this.extractGraphs && pattern.graph.termType === 'NamedNode') {
@@ -75,4 +77,5 @@ export interface IActorContextPreprocessSetSeedSourcesQuadpatternIrisArgs
   extractPredicates: boolean;
   extractObjects: boolean;
   extractGraphs: boolean;
+  extractVocabIris: boolean;
 }

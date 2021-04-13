@@ -39,6 +39,13 @@
           "default": true,
           "required": true,
           "unique": true
+        },
+        {
+          "@id": "cacpsssqi:Actor/ContextPreprocess/SetSeedSourcesQuadpatternIris#extractVocabIris",
+          "comment": "If object IRIs should be extracted if the predicate is rdf:type.",
+          "default": false,
+          "required": true,
+          "unique": true
         }
       ],
       "constructorArguments": [
@@ -61,6 +68,10 @@
             {
               "keyRaw": "extractGraphs",
               "value": "cacpsssqi:Actor/ContextPreprocess/SetSeedSourcesQuadpatternIris#extractGraphs"
+            },
+            {
+              "keyRaw": "extractVocabIris",
+              "value": "cacpsssqi:Actor/ContextPreprocess/SetSeedSourcesQuadpatternIris#extractVocabIris"
             }
           ]
         }
