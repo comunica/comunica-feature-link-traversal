@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-<a href="https://travis-ci.org/comunica/comunica-feature-link-traversal"><img src="https://travis-ci.org/comunica/comunica-feature-link-traversal.svg?branch=master" alt="Build Status"></a>
+<a href="https://github.com/comunica/comunica-feature-link-traversal/actions?query=workflow%3ACI"><img src="https://github.com/comunica/comunica-feature-link-traversal/workflows/CI/badge.svg" alt="Build Status"></a>
 <a href="https://coveralls.io/github/comunica/comunica-feature-link-traversal?branch=master"><img src="https://coveralls.io/repos/github/comunica/comunica-feature-link-traversal/badge.svg?branch=master" alt="Coverage Status"></a>
 <a href="https://gitter.im/comunica/Lobby"><img src="https://badges.gitter.im/comunica.png" alt="Gitter chat"></a>
 </p>
