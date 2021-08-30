@@ -36,7 +36,7 @@
     "@comunica/types": "1.20.1-alpha.e8638e880.0",
     "@types/rdf-js": "*",
     "rdf-terms": "^1.6.2",
-    "sparqlalgebrajs": "^2.4.0"
+    "sparqlalgebrajs": "^3.0.0"
   },
   "peerDependencies": {
     "@comunica/core": "1.20.1-alpha.e8638e880.0",

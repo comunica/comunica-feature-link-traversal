@@ -33,7 +33,7 @@
   ],
   "dependencies": {
     "@comunica/context-entries": "1.20.1-alpha.c191493f4.0",
-    "sparqlalgebrajs": "^2.5.5"
+    "sparqlalgebrajs": "^3.0.0"
   },
   "peerDependencies": {
     "@comunica/core": "1.20.1-alpha.e8638e880.0",
