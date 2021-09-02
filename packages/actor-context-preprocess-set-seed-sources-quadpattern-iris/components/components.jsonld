@@ -1,9 +1,0 @@
-{
-  "@context": "https://linkedsoftwaredependencies.org/bundles/npm/@comunica/actor-context-preprocess-set-seed-sources-quadpattern-iris/^0.0.0/components/context.jsonld",
-  "@id": "npmd:@comunica/actor-context-preprocess-set-seed-sources-quadpattern-iris",
-  "@type": "Module",
-  "requireName": "@comunica/actor-context-preprocess-set-seed-sources-quadpattern-iris",
-  "import": [
-    "files-cacpsssqi:components/Actor/ContextPreprocess/SetSeedSourcesQuadpatternIris.jsonld"
-  ]
-}

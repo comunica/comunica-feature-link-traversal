@@ -1,35 +1,38 @@
-import type { IActionContextPreprocess, IActorContextPreprocessOutput } from '@comunica/bus-context-preprocess';
-import { ActorContextPreprocess } from '@comunica/bus-context-preprocess';
+import type {
+  IActionOptimizeQueryOperation,
+  IActorOptimizeQueryOperationOutput,
+} from '@comunica/bus-optimize-query-operation';
+import { ActorOptimizeQueryOperation } from '@comunica/bus-optimize-query-operation';
 import { KeysRdfResolveQuadPattern } from '@comunica/context-entries';
 import type { IActorArgs, IActorTest } from '@comunica/core';
-import { Util, Algebra } from 'sparqlalgebrajs';
+import { Algebra, Util } from 'sparqlalgebrajs';
 
 /**
- * A comunica Set Seed Sources Quadpattern IRIs Context Preprocess Actor.
+ * A comunica Set Seed Sources Quadpattern IRIs Optimize Query Operation Actor.
  */
-export class ActorContextPreprocessSetSeedSourcesQuadpatternIris extends ActorContextPreprocess {
+export class ActorOptimizeQueryOperationSetSeedSourcesQuadpatternIris extends ActorOptimizeQueryOperation {
   private readonly extractSubjects: boolean;
   private readonly extractPredicates: boolean;
   private readonly extractObjects: boolean;
   private readonly extractGraphs: boolean;
   private readonly extractVocabIris: boolean;
 
-  public constructor(args: IActorContextPreprocessSetSeedSourcesQuadpatternIrisArgs) {
+  public constructor(args: IActorOptimizeQueryOperationSetSeedSourcesQuadpatternIrisArgs) {
     super(args);
   }
 
-  public async test(action: IActionContextPreprocess): Promise<IActorTest> {
+  public async test(action: IActionOptimizeQueryOperation): Promise<IActorTest> {
     return true;
   }
 
-  public async run(action: IActionContextPreprocess): Promise<IActorContextPreprocessOutput> {
-    if (action.operation && action.context &&
+  public async run(action: IActionOptimizeQueryOperation): Promise<IActorOptimizeQueryOperationOutput> {
+    if (action.context &&
       (!action.context.has(KeysRdfResolveQuadPattern.sources) ||
         action.context.get(KeysRdfResolveQuadPattern.sources).length === 0)) {
       const sources: string[] = [ ...new Set(this.extractIrisFromOperation(action.operation)) ];
       action.context = action.context.set(KeysRdfResolveQuadPattern.sources, sources);
     }
-    return { context: action.context };
+    return { ...action, context: action.context };
   }
 
   public extractIrisFromOperation(operation: Algebra.Operation): string[] {
@@ -71,8 +74,8 @@ export class ActorContextPreprocessSetSeedSourcesQuadpatternIris extends ActorCo
   }
 }
 
-export interface IActorContextPreprocessSetSeedSourcesQuadpatternIrisArgs
-  extends IActorArgs<IActionContextPreprocess, IActorTest, IActorContextPreprocessOutput> {
+export interface IActorOptimizeQueryOperationSetSeedSourcesQuadpatternIrisArgs
+  extends IActorArgs<IActionOptimizeQueryOperation, IActorTest, IActorOptimizeQueryOperationOutput> {
   extractSubjects: boolean;
   extractPredicates: boolean;
   extractObjects: boolean;

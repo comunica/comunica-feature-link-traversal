@@ -22,7 +22,7 @@ If you want to _use_ an Link Traversal-enabled Comunica engine, have a look at [
 Concretely, this monorepo adds link traversal support to Comunica using the following packages:
 
 * Seed URL actors:
-    * [Seed URL preprocessor](https://github.com/comunica/comunica-feature-link-traversal/tree/master/packages/actor-context-preprocess-set-seed-sources-quadpattern-iris): Actor that sets sources based on the given query, if no other sources were set.
+    * [Seed URL preprocessor](https://github.com/comunica/comunica-feature-link-traversal/tree/master/packages/actor-optimize-query-operation-set-seed-sources-quadpattern-iris): Actor that sets sources based on the given query, if no other sources were set.
 * Query operation actors:
     * [BGP query operator](https://github.com/comunica/comunica-feature-link-traversal/tree/master/packages/actor-query-operation-bgp-traversal): Actor that handles BGP operations based on heuristics for plan selection in link traversal environments.
 * Link extractors (all require [Traverse RDF Resolve Hypermedia Links Actor](https://github.com/comunica/comunica-feature-link-traversal/tree/master/packages/actor-rdf-resolve-hypermedia-links-traverse)):

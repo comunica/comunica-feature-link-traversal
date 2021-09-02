@@ -279,17 +279,17 @@ describe('ActorQueryOperationBgpTraversal', () => {
     });
 
     it('should not test on empty BGPs', () => {
-      const op = { operation: { type: 'bgp', patterns: []}};
+      const op = <any> { operation: { type: 'bgp', patterns: []}};
       return expect(actor.test(op)).rejects.toBeTruthy();
     });
 
     it('should not test on BGPs with a single pattern', () => {
-      const op = { operation: { type: 'bgp', patterns: [ 'abc' ]}};
+      const op = <any> { operation: { type: 'bgp', patterns: [ 'abc' ]}};
       return expect(actor.test(op)).rejects.toBeTruthy();
     });
 
     it('should test on BGPs with more than one pattern', () => {
-      const op = { operation: { type: 'bgp', patterns: [ 'abc', 'def' ]}};
+      const op = <any> { operation: { type: 'bgp', patterns: [ 'abc', 'def' ]}};
       return expect(actor.test(op)).resolves.toBeTruthy();
     });
 
@@ -298,7 +298,7 @@ describe('ActorQueryOperationBgpTraversal', () => {
     const patterns = [ pattern1, pattern2 ];
 
     it('should run without a context and delegate the pattern to the mediator', () => {
-      const op = {
+      const op = <any> {
         operation: { type: 'bgp', patterns },
       };
       return actor.run(op).then(async(output: IActorQueryOperationOutputBindings) => {
@@ -318,7 +318,7 @@ describe('ActorQueryOperationBgpTraversal', () => {
     });
 
     it('should run with an empty context and delegate the pattern to the mediator', () => {
-      const op = {
+      const op = <any> {
         operation: { type: 'bgp', patterns },
         context: ActionContext({}),
       };
@@ -339,7 +339,7 @@ describe('ActorQueryOperationBgpTraversal', () => {
     });
 
     it('should run with string sources and delegate the pattern to the mediator', () => {
-      const op = {
+      const op = <any> {
         operation: { type: 'bgp', patterns },
         context: ActionContext({
           [KEY_CONTEXT_SOURCES]: [ 'a', 'b' ],
@@ -362,7 +362,7 @@ describe('ActorQueryOperationBgpTraversal', () => {
     });
 
     it('should run with non-string sources and delegate the pattern to the mediator', () => {
-      const op = {
+      const op = <any> {
         operation: { type: 'bgp', patterns },
         context: ActionContext({
           [KEY_CONTEXT_SOURCES]: [ 'a', <any> { value: {}} ],
@@ -387,7 +387,7 @@ describe('ActorQueryOperationBgpTraversal', () => {
     it('should run with a logger', async() => {
       const logger = new LoggerVoid();
       const spy = spyOn(logger, 'debug');
-      const op = {
+      const op = <any> {
         operation: { type: 'bgp', patterns },
         context: ActionContext({ [KEY_CONTEXT_LOG]: logger }),
       };
