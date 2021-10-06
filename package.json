@@ -90,5 +90,8 @@
     "doc": "typedoc",
     "postinstall": "yarn run build && lerna run prepare",
     "version": "manual-git-changelog onversion"
+  },
+  "resolutions": {
+    "@types/yargs": "17.0.3"
   }
 }

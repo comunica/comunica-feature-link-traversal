@@ -1,0 +1,11 @@
+{
+  "@context": [
+    "https://linkedsoftwaredependencies.org/bundles/npm/componentsjs/^4.0.0/components/context.jsonld",
+    {
+      "npmd": "https://linkedsoftwaredependencies.org/bundles/npm/",
+      "caisslts": "npmd:@comunica/actor-init-sparql-link-traversal-solid/",
+      "files-caisslts": "caisslts:^0.0.0/",
+      "config-setsslts": "files-caisslts:config/sets/"
+    }
+  ]
+}
