@@ -21,6 +21,9 @@ If you want to _use_ an Link Traversal-enabled Comunica engine, have a look at [
 
 Concretely, this monorepo adds link traversal support to Comunica using the following packages:
 
+* Query engine configurations:
+  * [Comunica SPARQL Link Traversal](https://github.com/comunica/comunica-feature-link-traversal/tree/master/packages/actor-init-sparql-link-traversal): A Comunica query engine that includes all Link Traversal packages.
+  * [Comunica SPARQL Link Traversal Solid](https://github.com/comunica/comunica-feature-link-traversal/tree/master/packages/actor-init-sparql-link-traversal-solid): A Comunica query engine that includes all Link Traversal and Solid-related packages.
 * Seed URL actors:
     * [Seed URL preprocessor](https://github.com/comunica/comunica-feature-link-traversal/tree/master/packages/actor-optimize-query-operation-set-seed-sources-quadpattern-iris): Actor that sets sources based on the given query, if no other sources were set.
 * Query operation actors:
