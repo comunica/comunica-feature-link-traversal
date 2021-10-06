@@ -94,7 +94,7 @@ _[**Read more** about querying an application](https://comunica.dev/docs/query/g
 
 ### Usage as a SPARQL endpoint
 
-Start a webservice exposing http://fragments.dbpedia.org/2015-10/en via the SPARQL protocol, i.e., a _SPARQL endpoint_,
+Start a webservice exposing https://www.rubensworks.net/ via the SPARQL protocol, i.e., a _SPARQL endpoint_,
 by authenticating through the https://solidcommunity.net/ identity provider.
 
 ```bash
