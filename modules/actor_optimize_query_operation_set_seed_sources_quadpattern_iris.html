@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>actor-rdf-metadata-extract-traverse-all | Comunica Link Traversal</title>
+	<title>actor-optimize-query-operation-set-seed-sources-quadpattern-iris | Comunica Link Traversal</title>
 	<meta name="description" content="Documentation for Comunica Link Traversal">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -55,10 +55,10 @@
 					<a href="../modules.html">Comunica Link Traversal</a>
 				</li>
 				<li>
-					<a href="actor_rdf_metadata_extract_traverse_all.html">actor-rdf-metadata-extract-traverse-all</a>
+					<a href="actor_optimize_query_operation_set_seed_sources_quadpattern_iris.html">actor-optimize-query-operation-set-seed-sources-quadpattern-iris</a>
 				</li>
 			</ul>
-			<h1>Module actor-rdf-metadata-extract-traverse-all</h1>
+			<h1>Module actor-optimize-query-operation-set-seed-sources-quadpattern-iris</h1>
 		</div>
 	</div>
 </header>
@@ -67,29 +67,19 @@
 		<div class="col-8 col-content">
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
-					<a href="#comunica-traverse-all-rdf-metadata-extract-actor" id="comunica-traverse-all-rdf-metadata-extract-actor" style="color: inherit; text-decoration: none;">
-						<h1>Comunica Traverse All RDF Metadata Extract Actor</h1>
+					<a href="#comunica-set-seed-sources-quadpattern-iris-optimize-query-operation-actor" id="comunica-set-seed-sources-quadpattern-iris-optimize-query-operation-actor" style="color: inherit; text-decoration: none;">
+						<h1>Comunica Set Seed Sources Quadpattern IRIs Optimize Query Operation Actor</h1>
 					</a>
-					<p><a href="https://www.npmjs.com/package/@comunica/actor-rdf-metadata-extract-traverse-all"><img src="https://badge.fury.io/js/%40comunica%2Factor-rdf-metadata-extract-traverse-all.svg" alt="npm version"></a></p>
-					<p>An <a href="https://github.com/comunica/comunica/tree/master/packages/bus-rdf-metadata-extract">RDF Metadata Extract</a> actor that
-						collects all URIs in a page
-					and stores it inside the metadata under the <code>traverse</code> key.</p>
-					<p>This corresponds to the <code>cAll</code> reachability criterion as defined in &quot;Hartig, Olaf, and Johann-Christoph Freytag. &quot;Foundations of traversal based query execution over linked data.&quot; Proceedings of the 23rd ACM conference on Hypertext and social media. 2012.&quot;.</p>
+					<p><a href="https://www.npmjs.com/package/@comunica/actor-optimize-query-operation-set-seed-sources-quadpattern-iris"><img src="https://badge.fury.io/js/%40comunica%2Factor-optimize-query-operation-set-seed-sources-quadpattern-iris.svg" alt="npm version"></a></p>
+					<p>A comunica Set Seed Sources Quadpattern IRIs Optimize Query Operation Actor.</p>
 					<p>This module is part of the <a href="https://github.com/comunica/comunica">Comunica framework</a>,
 					and should only be used by <a href="https://comunica.dev/docs/modify/">developers that want to build their own query engine</a>.</p>
 					<p><a href="https://comunica.dev/docs/query/">Click here if you just want to query with Comunica</a>.</p>
 					<a href="#install" id="install" style="color: inherit; text-decoration: none;">
 						<h2>Install</h2>
 					</a>
-					<pre><code class="language-bash"><span style="color: #000000">$ yarn add @comunica/actor-rdf-metadata-extract-traverse-all</span>
+					<pre><code class="language-bash"><span style="color: #000000">$ yarn add @comunica/actor-optimize-query-operation-set-seed-sources-quadpattern-iris</span>
 </code></pre>
-					<a href="#metadata-entries" id="metadata-entries" style="color: inherit; text-decoration: none;">
-						<h2>Metadata entries</h2>
-					</a>
-					<p>This actor adds the following entries to the metadata object.</p>
-					<ul>
-						<li><code>traverse</code>: Array of URLs to traverse.</li>
-					</ul>
 					<a href="#configure" id="configure" style="color: inherit; text-decoration: none;">
 						<h2>Configure</h2>
 					</a>
@@ -97,17 +87,27 @@
 					<pre><code class="language-text">{
   &quot;@context&quot;: [
     ...
-    &quot;https://linkedsoftwaredependencies.org/bundles/npm/@comunica/actor-rdf-metadata-extract-traverse-all/^1.0.0/components/context.jsonld&quot;  
+    &quot;https://linkedsoftwaredependencies.org/bundles/npm/@comunica/actor-optimize-query-operation-set-seed-sources-quadpattern-iris/^1.0.0/components/context.jsonld&quot;  
   ],
   &quot;actors&quot;: [
     ...
     {
-      &quot;@id&quot;: &quot;config-sets:resolve-hypermedia.json#myRdfMetadataExtractTraverseAll&quot;,
-      &quot;@type&quot;: &quot;ActorRdfMetadataExtractTraverseAll&quot;
+      &quot;@id&quot;: &quot;config-setsslt:set-seeds.json#mySeedSetter&quot;,
+      &quot;@type&quot;: &quot;ActorOptimizeQueryOperationSetSeedSourcesQuadpatternIris&quot;
     }
   ]
 }
 </code></pre>
+					<a href="#config-parameters" id="config-parameters" style="color: inherit; text-decoration: none;">
+						<h3>Config Parameters</h3>
+					</a>
+					<ul>
+						<li><code>caoqosssqi:Actor/OptimizeQueryOperation/SetSeedSourcesQuadpatternIris#extractSubjects</code>: If IRIs should be extracted from subject positions. (default <code>true</code>)</li>
+						<li><code>caoqosssqi:Actor/OptimizeQueryOperation/SetSeedSourcesQuadpatternIris#extractPredicates</code>: If IRIs should be extracted from predicate positions. (default <code>false</code>)</li>
+						<li><code>caoqosssqi:Actor/OptimizeQueryOperation/SetSeedSourcesQuadpatternIris#extractObjects</code>: If IRIs should be extracted from object positions. (default <code>true</code>)</li>
+						<li><code>caoqosssqi:Actor/OptimizeQueryOperation/SetSeedSourcesQuadpatternIris#extractGraphs</code>: If IRIs should be extracted from graph positions. (default <code>true</code>)</li>
+						<li><code>caoqosssqi:Actor/OptimizeQueryOperation/SetSeedSourcesQuadpatternIris#extractVocabIris</code>: If object IRIs should be extracted if the predicate is rdf:type. (default <code>false</code>)</li>
+					</ul>
 				</div>
 			</section>
 			<section class="tsd-panel-group tsd-index-group">
@@ -117,7 +117,13 @@
 						<section class="tsd-index-section ">
 							<h3>Classes</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-class tsd-parent-kind-module"><a href="../classes/actor_rdf_metadata_extract_traverse_all.ActorRdfMetadataExtractTraverseAll.html" class="tsd-kind-icon">Actor<wbr>Rdf<wbr>Metadata<wbr>Extract<wbr>Traverse<wbr>All</a></li>
+								<li class="tsd-kind-class tsd-parent-kind-module"><a href="../classes/actor_optimize_query_operation_set_seed_sources_quadpattern_iris.ActorOptimizeQueryOperationSetSeedSourcesQuadpatternIris.html" class="tsd-kind-icon">Actor<wbr>Optimize<wbr>Query<wbr>Operation<wbr>Set<wbr>Seed<wbr>Sources<wbr>Quadpattern<wbr>Iris</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Interfaces</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-interface tsd-parent-kind-module"><a href="../interfaces/actor_optimize_query_operation_set_seed_sources_quadpattern_iris.IActorOptimizeQueryOperationSetSeedSourcesQuadpatternIrisArgs.html" class="tsd-kind-icon">IActor<wbr>Optimize<wbr>Query<wbr>Operation<wbr>Set<wbr>Seed<wbr>Sources<wbr>Quadpattern<wbr>Iris<wbr>Args</a></li>
 							</ul>
 						</section>
 					</div>
@@ -130,13 +136,13 @@
 					<li class=" ">
 						<a href="../modules.html">Modules</a>
 					</li>
-					<li class=" tsd-kind-module">
+					<li class="current tsd-kind-module">
 						<a href="actor_optimize_query_operation_set_seed_sources_quadpattern_iris.html">actor-<wbr>optimize-<wbr>query-<wbr>operation-<wbr>set-<wbr>seed-<wbr>sources-<wbr>quadpattern-<wbr>iris</a>
 					</li>
 					<li class=" tsd-kind-module">
 						<a href="actor_query_operation_bgp_traversal.html">actor-<wbr>query-<wbr>operation-<wbr>bgp-<wbr>traversal</a>
 					</li>
-					<li class="current tsd-kind-module">
+					<li class=" tsd-kind-module">
 						<a href="actor_rdf_metadata_extract_traverse_all.html">actor-<wbr>rdf-<wbr>metadata-<wbr>extract-<wbr>traverse-<wbr>all</a>
 					</li>
 					<li class=" tsd-kind-module">
@@ -164,24 +170,27 @@
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
-					<li class=" tsd-kind-module">
-						<a href="actor_optimize_query_operation_set_seed_sources_quadpattern_iris.html" class="tsd-kind-icon">actor-<wbr>optimize-<wbr>query-<wbr>operation-<wbr>set-<wbr>seed-<wbr>sources-<wbr>quadpattern-<wbr>iris</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="actor_query_operation_bgp_traversal.html" class="tsd-kind-icon">actor-<wbr>query-<wbr>operation-<wbr>bgp-<wbr>traversal</a>
-					</li>
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-module">
-						<a href="actor_rdf_metadata_extract_traverse_all.html" class="tsd-kind-icon">actor-<wbr>rdf-<wbr>metadata-<wbr>extract-<wbr>traverse-<wbr>all</a>
+						<a href="actor_optimize_query_operation_set_seed_sources_quadpattern_iris.html" class="tsd-kind-icon">actor-<wbr>optimize-<wbr>query-<wbr>operation-<wbr>set-<wbr>seed-<wbr>sources-<wbr>quadpattern-<wbr>iris</a>
 						<ul>
 							<li class=" tsd-kind-class tsd-parent-kind-module">
-								<a href="../classes/actor_rdf_metadata_extract_traverse_all.ActorRdfMetadataExtractTraverseAll.html" class="tsd-kind-icon">Actor<wbr>Rdf<wbr>Metadata<wbr>Extract<wbr>Traverse<wbr>All</a>
+								<a href="../classes/actor_optimize_query_operation_set_seed_sources_quadpattern_iris.ActorOptimizeQueryOperationSetSeedSourcesQuadpatternIris.html" class="tsd-kind-icon">Actor<wbr>Optimize<wbr>Query<wbr>Operation<wbr>Set<wbr>Seed<wbr>Sources<wbr>Quadpattern<wbr>Iris</a>
+							</li>
+							<li class=" tsd-kind-interface tsd-parent-kind-module">
+								<a href="../interfaces/actor_optimize_query_operation_set_seed_sources_quadpattern_iris.IActorOptimizeQueryOperationSetSeedSourcesQuadpatternIrisArgs.html" class="tsd-kind-icon">IActor<wbr>Optimize<wbr>Query<wbr>Operation<wbr>Set<wbr>Seed<wbr>Sources<wbr>Quadpattern<wbr>Iris<wbr>Args</a>
 							</li>
 						</ul>
 					</li>
 				</ul>
 				<ul class="after-current">
+					<li class=" tsd-kind-module">
+						<a href="actor_query_operation_bgp_traversal.html" class="tsd-kind-icon">actor-<wbr>query-<wbr>operation-<wbr>bgp-<wbr>traversal</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="actor_rdf_metadata_extract_traverse_all.html" class="tsd-kind-icon">actor-<wbr>rdf-<wbr>metadata-<wbr>extract-<wbr>traverse-<wbr>all</a>
+					</li>
 					<li class=" tsd-kind-module">
 						<a href="actor_rdf_metadata_extract_traverse_content_policies.html" class="tsd-kind-icon">actor-<wbr>rdf-<wbr>metadata-<wbr>extract-<wbr>traverse-<wbr>content-<wbr>policies</a>
 					</li>
