@@ -92,6 +92,6 @@
     "version": "manual-git-changelog onversion"
   },
   "resolutions": {
-    "@types/yargs": "17.0.5"
+    "@types/yargs": "17.0.7"
   }
 }
