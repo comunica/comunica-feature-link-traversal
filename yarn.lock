@@ -2859,6 +2859,41 @@
     "@inrupt/solid-client-authn-core" "^1.11.2"
     "@inrupt/solid-client-authn-node" "^1.11.2"
 
+"@shexjs/parser@^1.0.0-alpha.15":
+  version "1.0.0-alpha.15"
+  resolved "https://registry.yarnpkg.com/@shexjs/parser/-/parser-1.0.0-alpha.15.tgz#c6b6b9b49599796a95aff9b74ac051b42c16ce02"
+  integrity sha512-auY+0ad8mi5i7DxB7rkf4q6RgThd7nASx8iRVEDf25RY4FAs/BBjxjOL2rCfH9Af8EqDNniv7lF9pehbbYlyqw==
+  dependencies:
+    "@shexjs/util" "^1.0.0-alpha.15"
+    "@ts-jison/parser" "^0.0.9"
+
+"@shexjs/term@^1.0.0-alpha.15":
+  version "1.0.0-alpha.15"
+  resolved "https://registry.yarnpkg.com/@shexjs/term/-/term-1.0.0-alpha.15.tgz#ac08c281359f1c89e9a0a4e52f830b8533654075"
+  integrity sha512-BgrmuYR99pn/LG30fltaWLmPZT2hAQq1WO0vFWxixP6/bw5rTgSzcybMAMqsPywrrhTy64M77xVpwhZhZAYZuA==
+
+"@shexjs/util@^1.0.0-alpha.15":
+  version "1.0.0-alpha.15"
+  resolved "https://registry.yarnpkg.com/@shexjs/util/-/util-1.0.0-alpha.15.tgz#0208667c6f33ce45f9e1155ca032339c8c1a93b4"
+  integrity sha512-o4mctp+1HzTsotTghvTRfEDZc2QZOUWlJQfdDTWP+UhUHdaybuEjcrRZXDXWDrKjHsfX7l0gaRYd323OtZdZAQ==
+  dependencies:
+    "@shexjs/term" "^1.0.0-alpha.15"
+    "@shexjs/visitor" "^1.0.0-alpha.15"
+    "@shexjs/writer" "^1.0.0-alpha.15"
+    hierarchy-closure "^1.2.1"
+
+"@shexjs/visitor@^1.0.0-alpha.15":
+  version "1.0.0-alpha.15"
+  resolved "https://registry.yarnpkg.com/@shexjs/visitor/-/visitor-1.0.0-alpha.15.tgz#ed396e2e942f846f9d4a62a89d3e2dae29f07606"
+  integrity sha512-4OxahOHsSwvxFlemqYcWMBmmo4S2ludFLDbCaPUTBFoMgaqi9Iy+VDs4ZBTFUSPI0E8csPrcbuvOmt0bXbRj+g==
+
+"@shexjs/writer@^1.0.0-alpha.15":
+  version "1.0.0-alpha.15"
+  resolved "https://registry.yarnpkg.com/@shexjs/writer/-/writer-1.0.0-alpha.15.tgz#ec762526f36bbfe46883f544f1de6b95686c34b6"
+  integrity sha512-D6Cz3cb8t4pb1EUgMjQWHROMY7Rflh9LtHSLyg4T9sWMbKO5kiNrYuR4y1KU0Ip0VJdBp9NUucCeCP4+8fJDkA==
+  dependencies:
+    relateurl "^0.2.7"
+
 "@sindresorhus/is@^4.0.0":
   version "4.2.0"
   resolved "https://registry.yarnpkg.com/@sindresorhus/is/-/is-4.2.0.tgz#667bfc6186ae7c9e0b45a08960c551437176e1ca"
@@ -2896,6 +2931,26 @@
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/@tootallnate/once/-/once-1.1.2.tgz#ccb91445360179a04e7fe6aff78c00ffc1eeaf82"
   integrity sha512-RbzJvlNzmRq5c3O09UipeuXno4tA1FE6ikOjxZK0tuxVv3412l64l5t1W5pj4+rJq9vpkm/kwiR07aZXnsKPxw==
+
+"@ts-jison/common@^0.0.9":
+  version "0.0.9"
+  resolved "https://registry.yarnpkg.com/@ts-jison/common/-/common-0.0.9.tgz#9a4265f7c688c9da92229f91648e7c0e694be5b9"
+  integrity sha512-GEFQYz1fflmkVSzdNr8iVoUTX8SWJsQhe+DtPf1AsZOFA2NuequhOYEsuPNw3Dt1/xWmM5aiV/MuAsLEgvitvQ==
+
+"@ts-jison/lexer@^0.0.9":
+  version "0.0.9"
+  resolved "https://registry.yarnpkg.com/@ts-jison/lexer/-/lexer-0.0.9.tgz#52bc5ab0a2d71f8165b02b7c33532173e2654bcc"
+  integrity sha512-GYmn6C6pwNZti8sYt8kFvrm5N67h1A1Ma4MIB1TThCPa4bCoH+TUnWZBlpT/9guDbcEPW5Gp1gZKz14itukkaA==
+  dependencies:
+    "@ts-jison/common" "^0.0.9"
+
+"@ts-jison/parser@^0.0.9":
+  version "0.0.9"
+  resolved "https://registry.yarnpkg.com/@ts-jison/parser/-/parser-0.0.9.tgz#aa69cfd6b7a64e173ace1776e06c63e9fdfb2f74"
+  integrity sha512-61huC3o1fcCqLzDvPtVBRovePRjc0vNxXmeewkJ9hFHbzZfV/l3bM5DryoTvhLGdes7CDFaVniTvpkvyJ+B+Yw==
+  dependencies:
+    "@ts-jison/common" "^0.0.9"
+    "@ts-jison/lexer" "^0.0.9"
 
 "@types/babel__core@^7.0.0", "@types/babel__core@^7.1.7":
   version "7.1.16"
@@ -3102,6 +3157,11 @@
   version "7.3.8"
   resolved "https://registry.yarnpkg.com/@types/semver/-/semver-7.3.8.tgz#508a27995498d7586dcecd77c25e289bfaf90c59"
   integrity sha512-D/2EJvAlCEtYFEYmmlGwbGXuK886HzyCc3nZX/tkFTQdEU8jZDAgiv08P162yB17y4ZXZoq7yFAnW4GDBb9Now==
+
+"@types/shexj@^2.1.1":
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/@types/shexj/-/shexj-2.1.1.tgz#463dd3b8c48afe62fc99b80aaf0d3c09314a53a3"
+  integrity sha512-UpzXaBgVCRh/OJcpQoeqnjJNW92aC3J6N7cuvpxgqGA6Bezmna8z0Yi4BH9lrnEG3NmSRUW3qUCJnEmhkwVH4w==
 
 "@types/spark-md5@^3.0.2":
   version "3.0.2"
@@ -5902,6 +5962,11 @@ hash.js@^1.1.7:
   dependencies:
     inherits "^2.0.3"
     minimalistic-assert "^1.0.1"
+
+hierarchy-closure@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/hierarchy-closure/-/hierarchy-closure-1.2.1.tgz#8291c439f4a9d3021e4b752bacf191d83cca193d"
+  integrity sha512-3Lm4gqKditachEhU94qyd5YtyfVOcKAs3WZVAd62DxQGLaA1ZU4mGPg7bOvgm9JTzWbcXoipTikYRvrflY7Orw==
 
 hosted-git-info@^2.1.4:
   version "2.8.9"
@@ -9092,6 +9157,11 @@ regexpp@^3.0.0, regexpp@^3.1.0:
   version "3.2.0"
   resolved "https://registry.yarnpkg.com/regexpp/-/regexpp-3.2.0.tgz#0425a2768d8f23bad70ca4b90461fa2f1213e1b2"
   integrity sha512-pq2bWo9mVD43nbts2wGv17XLiNLya+GklZ8kaDLV2Z08gDCsGpnKn9BFMepvWuHCbyVvY7J5o5+BVvoQbmlJLg==
+
+relateurl@^0.2.7:
+  version "0.2.7"
+  resolved "https://registry.yarnpkg.com/relateurl/-/relateurl-0.2.7.tgz#54dbf377e51440aca90a4cd274600d3ff2d888a9"
+  integrity sha1-VNvzd+UUQKypCkzSdGANP/LYiKk=
 
 relative-to-absolute-iri@^1.0.0, relative-to-absolute-iri@^1.0.2, relative-to-absolute-iri@^1.0.5, relative-to-absolute-iri@^1.0.6:
   version "1.0.6"

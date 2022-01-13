@@ -1,0 +1,9 @@
+{
+  "@context": "https://linkedsoftwaredependencies.org/bundles/npm/@comunica/actor-rdf-metadata-extract-traverse-shapetrees/^0.0.0/components/context.jsonld",
+  "@id": "npmd:@comunica/actor-rdf-metadata-extract-traverse-shapetrees",
+  "@type": "Module",
+  "requireName": "@comunica/actor-rdf-metadata-extract-traverse-shapetrees",
+  "import": [
+    "files-carmets:components/Actor/RdfMetadataExtract/TraverseShapetrees.jsonld"
+  ]
+}

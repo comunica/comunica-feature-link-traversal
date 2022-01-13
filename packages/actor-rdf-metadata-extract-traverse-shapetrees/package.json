@@ -1,0 +1,72 @@
+{
+  "name": "@comunica/actor-rdf-metadata-extract-traverse-shapetrees",
+  "version": "0.0.1",
+  "description": "A traverse-shapetrees rdf-metadata-extract actor",
+  "lsd:module": true,
+  "main": "index.js",
+  "typings": "index",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/comunica/comunica.git",
+    "directory": "packages/actor-rdf-metadata-extract-traverse-shapetrees"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [
+    "comunica",
+    "actor",
+    "rdf-metadata-extract",
+    "traverse-shapetrees"
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/comunica/comunica/issues"
+  },
+  "homepage": "https://comunica.dev/",
+  "files": [
+    "components",
+    "lib/**/*.d.ts",
+    "lib/**/*.js",
+    "index.d.ts",
+    "index.js"
+  ],
+  "dependencies": {
+    "parse-link-header": "^1.0.1",
+    "@shexjs/parser": "^1.0.0-alpha.15",
+    "@types/parse-link-header": "^1.0.0",
+    "@types/shexj": "^2.1.1"
+  },
+  "peerDependencies": {
+    "@comunica/core": "^1.22.0",
+    "@comunica/bus-rdf-metadata-extract": "^1.22.0",
+    "@comunica/bus-rdf-resolve-hypermedia-links": "^1.22.0"
+  },
+  "devDependencies": {
+    "@comunica/core": "^1.22.0",
+    "@comunica/bus-rdf-metadata-extract": "^1.22.0",
+    "@comunica/bus-rdf-resolve-hypermedia-links": "^1.22.0"
+  },
+  "jest": {
+    "globals": {
+      "ts-jest": {
+        "tsConfig": "../../tsconfig.json"
+      }
+    },
+    "transform": {
+      "^.+\\.ts$": "ts-jest"
+    },
+    "testRegex": "(/test/.*|(\\.|/)(test|spec))\\.ts$",
+    "moduleFileExtensions": [
+      "ts",
+      "js"
+    ],
+    "collectCoverage": true
+  },
+  "scripts": {
+    "test": "node \"../../node_modules/jest/bin/jest.js\" ${1}",
+    "test-watch": "node \"../../node_modules/jest/bin/jest.js\" ${1} --watch",
+    "build": "node \"../../node_modules/typescript/bin/tsc\"",
+    "validate": "npm ls"
+  }
+}

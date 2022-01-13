@@ -46,6 +46,7 @@
     "@comunica/actor-rdf-metadata-extract-traverse-content-policies": "^0.0.1",
     "@comunica/actor-rdf-metadata-extract-traverse-quad-pattern": "^0.0.1",
     "@comunica/actor-rdf-metadata-extract-traverse-quad-pattern-query": "^0.0.1",
+    "@comunica/actor-rdf-metadata-extract-traverse-shapetrees": "^0.0.1",
     "@comunica/actor-rdf-resolve-hypermedia-links-traverse": "^0.0.1",
     "@comunica/actor-rdf-resolve-hypermedia-links-traverse-replace-conditional": "^0.0.1",
     "@comunica/actor-rdf-resolve-hypermedia-links-queue-wrapper-limit-count": "^0.0.1",

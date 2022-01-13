@@ -1,0 +1,57 @@
+{
+  "@context": [
+    "https://linkedsoftwaredependencies.org/bundles/npm/@comunica/actor-rdf-metadata-extract-traverse-shapetrees/^0.0.0/components/context.jsonld",
+    "https://linkedsoftwaredependencies.org/bundles/npm/@comunica/bus-rdf-metadata-extract/^1.0.0/components/context.jsonld"
+  ],
+  "@id": "npmd:@comunica/actor-rdf-metadata-extract-traverse-shapetrees",
+  "components": [
+    {
+      "@id": "carmets:Actor/RdfMetadataExtract/TraverseShapetrees",
+      "@type": "Class",
+      "extends": "cbrme:Actor/RdfMetadataExtract",
+      "requireElement": "ActorRdfMetadataExtractTraverseShapetrees",
+      "comment": "A comunica Traverse Shapetrees RDF Metadata Extract Actor.",
+      "parameters": [
+        {
+          "@id": "carmets:Actor/RdfMetadataExtract/TraverseShapetrees#queryEngine",
+          "comment": "A SPARQL engine that is used to query all links to follow from a stream",
+          "default": { "@id": "urn:comunica:sparqlinit" },
+          "required": true,
+          "unique": true
+        },
+        {
+          "@id": "carmets:Actor/RdfMetadataExtract/TraverseShapetrees#mediatorRdfDereference",
+          "comment": "The RDF Dereference mediator",
+          "required": true,
+          "unique": true
+        },
+        {
+          "@id": "carmets:Actor/RdfMetadataExtract/TraverseShapetrees#mediatorHttp",
+          "comment": "The HTTP mediator",
+          "required": true,
+          "unique": true
+        }
+      ],
+      "constructorArguments": [
+        {
+          "@id": "carmets:Actor/RdfMetadataExtract/TraverseShapetrees#constructorArgumentsObject",
+          "extends": "cbrme:Actor/RdfMetadataExtract/constructorArgumentsObject",
+          "fields": [
+            {
+              "keyRaw": "queryEngine",
+              "value": "carmets:Actor/RdfMetadataExtract/TraverseShapetrees#queryEngine"
+            },
+            {
+              "keyRaw": "mediatorRdfDereference",
+              "value": "carmets:Actor/RdfMetadataExtract/TraverseShapetrees#mediatorRdfDereference"
+            },
+            {
+              "keyRaw": "mediatorHttp",
+              "value": "carmets:Actor/RdfMetadataExtract/TraverseShapetrees#mediatorHttp"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
