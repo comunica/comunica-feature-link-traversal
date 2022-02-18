@@ -35,11 +35,8 @@ export class ActorRdfResolveHypermediaLinksTraverseReplaceConditional extends Ac
 
     // Obtain links from metadata
     const links: ILink[] = action.metadata.traverse;
-    const linksConditional: Record<string, ILink> = (<ILink[]>action.metadata.traverseConditional)
-      .reduce<Record<string, ILink>>((hash, link) => {
-      hash[link.url] = link;
-      return hash;
-    }, {});
+    const linksConditional: Record<string, ILink> = Object.fromEntries((<ILink[]>action.metadata.traverseConditional)
+      .map(link => [ link.url, link ]));
 
     // Replace links with their conditional counterpart if they exist
     for (let i = 0; i < links.length; i++) {

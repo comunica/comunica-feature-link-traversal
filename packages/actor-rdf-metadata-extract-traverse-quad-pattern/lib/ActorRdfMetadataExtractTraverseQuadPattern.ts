@@ -4,7 +4,7 @@ import { ActorRdfMetadataExtract } from '@comunica/bus-rdf-metadata-extract';
 import type { ILink } from '@comunica/bus-rdf-resolve-hypermedia-links';
 import { KeysQueryOperation } from '@comunica/context-entries';
 import type { IActorArgs, IActorTest } from '@comunica/core';
-import type { ActionContext } from '@comunica/types';
+import type { IActionContext } from '@comunica/types';
 import { filterQuadTermNames, getNamedNodes, getTerms, matchPatternComplete } from 'rdf-terms';
 import type { Algebra } from 'sparqlalgebrajs';
 
@@ -18,11 +18,8 @@ export class ActorRdfMetadataExtractTraverseQuadPattern extends ActorRdfMetadata
     super(args);
   }
 
-  public static getCurrentQuadPattern(context?: ActionContext): Algebra.Pattern | undefined {
-    if (!context) {
-      return;
-    }
-    const currentQueryOperation = context.get(KeysQueryOperation.operation);
+  public static getCurrentQuadPattern(context: IActionContext): Algebra.Pattern | undefined {
+    const currentQueryOperation: Algebra.Operation | undefined = context.get(KeysQueryOperation.operation);
     if (!currentQueryOperation || currentQueryOperation.type !== 'pattern') {
       return;
     }

@@ -1,6 +1,6 @@
 import type { Readable } from 'stream';
 import { ActorRdfMetadataExtract } from '@comunica/bus-rdf-metadata-extract';
-import { Bus } from '@comunica/core';
+import { ActionContext, Bus } from '@comunica/core';
 import { ActorRdfMetadataExtractTraverseAll } from '../lib/ActorRdfMetadataExtractTraverseAll';
 const quad = require('rdf-quad');
 const stream = require('streamify-array');
@@ -45,11 +45,12 @@ describe('ActorRdfMetadataExtractTraverseAll', () => {
     });
 
     it('should test ', () => {
-      return expect(actor.test({ url: '', metadata: input })).resolves.toEqual(true);
+      return expect(actor.test({ url: '', metadata: input, requestTime: 0, context: new ActionContext() }))
+        .resolves.toEqual(true);
     });
 
     it('should run on a stream and return all urls', () => {
-      return expect(actor.run({ url: '', metadata: input })).resolves
+      return expect(actor.run({ url: '', metadata: input, requestTime: 0, context: new ActionContext() })).resolves
         .toEqual({
           metadata: {
             traverse: [

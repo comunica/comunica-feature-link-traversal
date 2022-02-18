@@ -1,0 +1,13 @@
+{
+  "@context": [
+    "https://linkedsoftwaredependencies.org/bundles/npm/@comunica/config-query-sparql/^2.0.0/components/context.jsonld",
+    "https://linkedsoftwaredependencies.org/bundles/npm/@comunica/config-query-sparql-link-traversal/^2.0.0/components/context.jsonld"
+  ],
+  "import": [
+    "ccqslt:config/config-base.json",
+    "ccqslt:config/rdf-metadata-extract/actors/traverse-content-policies-conditional.json",
+    "ccqslt:config/rdf-metadata-extract/actors/traverse-quad-pattern-query.json",
+    "ccqslt:config/rdf-resolve-hypermedia-links/actors/traverse-replace-restrictive.json",
+    "ccqslt:config/rdf-resolve-hypermedia-links-queue/actors/wrapper-limit-count.json"
+  ]
+}

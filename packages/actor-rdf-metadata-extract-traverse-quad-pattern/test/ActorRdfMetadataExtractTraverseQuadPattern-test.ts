@@ -56,32 +56,27 @@ describe('ActorRdfMetadataExtractTraverseQuadPattern', () => {
         DF.variable('o'),
         DF.namedNode('ex:g'),
       );
-      context = ActionContext({ [KeysQueryOperation.operation]: pattern });
-    });
-
-    it('should fail to test with undefined context', () => {
-      return expect(actor.test({ url: '', metadata: input })).rejects
-        .toThrow(new Error('Actor actor can only work in the context of a quad pattern.'));
+      context = new ActionContext({ [KeysQueryOperation.operation.name]: pattern });
     });
 
     it('should fail to test without query operation in context', () => {
-      context = ActionContext({});
-      return expect(actor.test({ url: '', metadata: input, context })).rejects
+      context = new ActionContext({});
+      return expect(actor.test({ url: '', metadata: input, requestTime: 0, context })).rejects
         .toThrow(new Error('Actor actor can only work in the context of a quad pattern.'));
     });
 
     it('should fail to test with query operation of wrong type in context', () => {
-      context = ActionContext({ [KeysQueryOperation.operation]: FACTORY.createBgp([]) });
-      return expect(actor.test({ url: '', metadata: input, context })).rejects
+      context = new ActionContext({ [KeysQueryOperation.operation.name]: FACTORY.createBgp([]) });
+      return expect(actor.test({ url: '', metadata: input, requestTime: 0, context })).rejects
         .toThrow(new Error('Actor actor can only work in the context of a quad pattern.'));
     });
 
     it('should test with quad pattern query operation in context', () => {
-      return expect(actor.test({ url: '', metadata: input, context })).resolves.toEqual(true);
+      return expect(actor.test({ url: '', metadata: input, requestTime: 0, context })).resolves.toEqual(true);
     });
 
     it('should run on a stream and return urls matching the pattern', () => {
-      return expect(actor.run({ url: '', metadata: input, context })).resolves
+      return expect(actor.run({ url: '', metadata: input, requestTime: 0, context })).resolves
         .toEqual({
           metadata: {
             traverse: [
@@ -119,11 +114,11 @@ describe('ActorRdfMetadataExtractTraverseQuadPattern', () => {
         DF.variable('o'),
         DF.namedNode('ex:g'),
       );
-      context = ActionContext({ [KeysQueryOperation.operation]: pattern });
+      context = new ActionContext({ [KeysQueryOperation.operation.name]: pattern });
     });
 
     it('should run on a stream and return urls matching the pattern', () => {
-      return expect(actor.run({ url: '', metadata: input, context })).resolves
+      return expect(actor.run({ url: '', metadata: input, requestTime: 0, context })).resolves
         .toEqual({
           metadata: {
             traverse: [

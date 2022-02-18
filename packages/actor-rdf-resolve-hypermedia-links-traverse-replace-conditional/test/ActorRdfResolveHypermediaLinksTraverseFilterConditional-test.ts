@@ -1,5 +1,6 @@
 import { ActorRdfResolveHypermediaLinks } from '@comunica/bus-rdf-resolve-hypermedia-links';
-import { Bus } from '@comunica/core';
+import { ActionContext, Bus } from '@comunica/core';
+import type { IActionContext } from '@comunica/types';
 import {
   ActorRdfResolveHypermediaLinksTraverseReplaceConditional,
 } from '../lib/ActorRdfResolveHypermediaLinksTraverseReplaceConditional';
@@ -32,6 +33,7 @@ describe('ActorRdfResolveHypermediaLinksTraverseReplaceConditional', () => {
   describe('An ActorRdfResolveHypermediaLinksTraverseReplaceConditional instance', () => {
     let mediatorRdfResolveHypermediaLinks: any;
     let actor: ActorRdfResolveHypermediaLinksTraverseReplaceConditional;
+    let context: IActionContext;
 
     beforeEach(() => {
       mediatorRdfResolveHypermediaLinks = {
@@ -42,23 +44,25 @@ describe('ActorRdfResolveHypermediaLinksTraverseReplaceConditional', () => {
       actor = new ActorRdfResolveHypermediaLinksTraverseReplaceConditional(
         { name: 'actor', bus, mediatorRdfResolveHypermediaLinks },
       );
+      context = new ActionContext();
     });
 
     it('should fail to test with empty metadata', () => {
-      return expect(actor.test({ metadata: {}})).rejects
+      return expect(actor.test({ metadata: {}, context })).rejects
         .toThrow(new Error('Actor actor requires a \'traverse\' metadata entry.'));
     });
 
     it('should fail to test without traverseConditional in metadata', () => {
-      return expect(actor.test({ metadata: { traverse: true }})).rejects.toThrow();
+      return expect(actor.test({ metadata: { traverse: true }, context })).rejects.toThrow();
     });
 
     it('should fail to test without traverse in metadata', () => {
-      return expect(actor.test({ metadata: { traverseConditional: true }})).rejects.toThrow();
+      return expect(actor.test({ metadata: { traverseConditional: true }, context })).rejects.toThrow();
     });
 
     it('should test with traverse and traverseConditional in metadata', () => {
-      return expect(actor.test({ metadata: { traverse: true, traverseConditional: true }})).resolves.toEqual(true);
+      return expect(actor.test({ metadata: { traverse: true, traverseConditional: true }, context }))
+        .resolves.toEqual(true);
     });
 
     it('should run with empty data', () => {
@@ -67,11 +71,13 @@ describe('ActorRdfResolveHypermediaLinksTraverseReplaceConditional', () => {
           traverse: [],
           traverseConditional: [],
         },
+        context,
       };
       return expect(actor.run(action)).resolves.toEqual({
         metadata: {
           traverse: [],
         },
+        context,
       });
     });
 
@@ -85,6 +91,7 @@ describe('ActorRdfResolveHypermediaLinksTraverseReplaceConditional', () => {
           ],
           traverseConditional: [],
         },
+        context,
       };
       return expect(actor.run(action)).resolves.toEqual({
         metadata: {
@@ -94,6 +101,7 @@ describe('ActorRdfResolveHypermediaLinksTraverseReplaceConditional', () => {
             { url: 'c' },
           ],
         },
+        context,
       });
     });
 
@@ -110,6 +118,7 @@ describe('ActorRdfResolveHypermediaLinksTraverseReplaceConditional', () => {
             { url: 'c', context: 'C' },
           ],
         },
+        context,
       };
       return expect(actor.run(action)).resolves.toEqual({
         metadata: {
@@ -119,6 +128,7 @@ describe('ActorRdfResolveHypermediaLinksTraverseReplaceConditional', () => {
             { url: 'c', context: 'C' },
           ],
         },
+        context,
       });
     });
   });

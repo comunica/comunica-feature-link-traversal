@@ -22,7 +22,7 @@ export class ActorRdfResolveHypermediaLinksTraverse extends ActorRdfResolveHyper
 
   public async run(action: IActionRdfResolveHypermediaLinks): Promise<IActorRdfResolveHypermediaLinksOutput> {
     return {
-      urls: action.metadata.traverse.map((fileLink: ILink) => {
+      links: action.metadata.traverse.map((fileLink: ILink) => {
         const hashPosition = fileLink.url.indexOf('#');
         if (hashPosition >= 0) {
           fileLink.url = fileLink.url.slice(0, hashPosition);

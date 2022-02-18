@@ -1,5 +1,5 @@
 import { ActorRdfResolveHypermediaLinks } from '@comunica/bus-rdf-resolve-hypermedia-links';
-import { Bus } from '@comunica/core';
+import { ActionContext, Bus } from '@comunica/core';
 import { ActorRdfResolveHypermediaLinksTraverse } from '../lib/ActorRdfResolveHypermediaLinksTraverse';
 
 describe('ActorRdfResolveHypermediaLinksTraverse', () => {
@@ -34,25 +34,27 @@ describe('ActorRdfResolveHypermediaLinksTraverse', () => {
     });
 
     it('should fail to test with empty metadata', () => {
-      return expect(actor.test({ metadata: {}})).rejects
+      return expect(actor.test({ context: new ActionContext(), metadata: {}})).rejects
         .toThrow(new Error('Actor actor requires a \'traverse\' metadata entry.'));
     });
 
     it('should test with traverse in metadata', () => {
-      return expect(actor.test({ metadata: { traverse: true }})).resolves.toEqual(true);
+      return expect(actor.test({ context: new ActionContext(), metadata: { traverse: true }}))
+        .resolves.toEqual(true);
     });
 
     it('should run', () => {
-      return expect(actor.run({ metadata: { traverse: [{ url: 'a' }, { url: 'b' }]}})).resolves
-        .toMatchObject({ urls: [{ url: 'a' }, { url: 'b' }]});
+      return expect(actor.run({ context: new ActionContext(), metadata: { traverse: [{ url: 'a' }, { url: 'b' }]}}))
+        .resolves.toMatchObject({ links: [{ url: 'a' }, { url: 'b' }]});
     });
 
     it('should run and remove hashes from URLs', () => {
-      return expect(actor.run({ metadata: { traverse: [
-        { url: 'http://example.org?abc' },
-        { url: 'http://example.org#abc' },
-      ]}}))
-        .resolves.toMatchObject({ urls: [
+      return expect(actor.run({ context: new ActionContext(),
+        metadata: { traverse: [
+          { url: 'http://example.org?abc' },
+          { url: 'http://example.org#abc' },
+        ]}}))
+        .resolves.toMatchObject({ links: [
           { url: 'http://example.org?abc' },
           { url: 'http://example.org' },
         ]});

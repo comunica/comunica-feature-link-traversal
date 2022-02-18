@@ -1,6 +1,5 @@
-import type { ActorInitSparql, IQueryResultBindings } from '@comunica/actor-init-sparql';
-import type { IQueryResultQuads } from '@comunica/actor-init-sparql/lib/ActorInitSparql-browser';
-import type { Bindings } from '@comunica/bus-query-operation';
+import type { ActorInitQueryBase } from '@comunica/actor-init-query';
+import { QueryEngineBase } from '@comunica/actor-init-query';
 import type { IActionRdfMetadataExtract,
   IActorRdfMetadataExtractOutput } from '@comunica/bus-rdf-metadata-extract';
 import {
@@ -9,7 +8,8 @@ import {
 import type { ILink } from '@comunica/bus-rdf-resolve-hypermedia-links';
 import { KeysQueryOperation } from '@comunica/context-entries';
 import type { IActorArgs, IActorTest } from '@comunica/core';
-import { ActionContext } from '@comunica/core';
+import { ActionContext, ActionContextKey } from '@comunica/core';
+import type { Bindings, IActionContext, IQueryBindingsEnhanced } from '@comunica/types';
 import type * as RDF from 'rdf-js';
 import { storeStream } from 'rdf-store-stream';
 import { matchPatternComplete } from 'rdf-terms';
@@ -24,28 +24,27 @@ export class ActorRdfMetadataExtractTraverseContentPolicies extends ActorRdfMeta
   implements IActorRdfMetadataExtractTraverseContentPoliciesArgs {
   private readonly sclParser: SimpleSclParser;
 
-  public readonly queryEngine: ActorInitSparql;
+  public readonly actorInitQuery: ActorInitQueryBase;
   public readonly traverseConditional: boolean;
+  public readonly queryEngine: QueryEngineBase;
 
   public constructor(args: IActorRdfMetadataExtractTraverseContentPoliciesArgs) {
     super(args);
     this.sclParser = new SimpleSclParser();
+    this.queryEngine = new QueryEngineBase(args.actorInitQuery);
   }
 
   public async test(action: IActionRdfMetadataExtract): Promise<IActorTest> {
     return true;
   }
 
-  public static getContentPolicies(context?: ActionContext): ContentPolicy[] {
-    if (!context || !context.has(KEY_CONTEXT_POLICIES)) {
-      return [];
-    }
-    return context.get(KEY_CONTEXT_POLICIES);
+  public static getContentPolicies(context: IActionContext): ContentPolicy[] {
+    return context.get(KEY_CONTEXT_POLICIES) || [];
   }
 
   protected async getContentPoliciesFromDocument(documentIri: string, store: RDF.Store): Promise<ContentPolicy[]> {
     // Query the content policies that apply to the current document
-    const result = <IQueryResultBindings> await this.queryEngine
+    const result = <IQueryBindingsEnhanced> await this.queryEngine
       .query(`
         PREFIX scl: <https://w3id.org/scl/vocab#>
         SELECT ?scope WHERE {
@@ -55,14 +54,11 @@ export class ActorRdfMetadataExtractTraverseContentPolicies extends ActorRdfMeta
 
     // Parse all found content policies
     return (await result.bindings())
-      .map(binding => this.sclParser.parse(binding.get('?scope').value, documentIri));
+      .map(binding => this.sclParser.parse(binding.get('scope')!.value, documentIri));
   }
 
-  public static getCurrentQuadPattern(context?: ActionContext): Algebra.Pattern | undefined {
-    if (!context) {
-      return;
-    }
-    const currentQueryOperation = context.get(KeysQueryOperation.operation);
+  public static getCurrentQuadPattern(context: IActionContext): Algebra.Pattern | undefined {
+    const currentQueryOperation: Algebra.Operation | undefined = context.get(KeysQueryOperation.operation);
     if (!currentQueryOperation || currentQueryOperation.type !== 'pattern') {
       return;
     }
@@ -109,7 +105,7 @@ export class ActorRdfMetadataExtractTraverseContentPolicies extends ActorRdfMeta
       }
 
       // Find all matching results
-      const result = <IQueryResultBindings> await this.queryEngine
+      const result = <IQueryBindingsEnhanced> await this.queryEngine
         .query(contentPolicy.graphPattern, { sources: [ store ]});
 
       // Extract all bound named nodes from the policy's variables
@@ -120,24 +116,22 @@ export class ActorRdfMetadataExtractTraverseContentPolicies extends ActorRdfMeta
         if (contentPolicy.filter) {
           transform = async(input: RDF.Stream) => {
             const subStore = await storeStream(input);
-            const subResult = <IQueryResultQuads> await this.queryEngine
-              .query(contentPolicy.filter!, {
-                sources: [ subStore ],
-                // Apply the bindings to the INCLUDE WHERE clause
-                initialBindings: binding,
-              });
-            return subResult.quadStream;
+            return await this.queryEngine.queryQuads(contentPolicy.filter!, {
+              sources: [ subStore ],
+              // Apply the bindings to the INCLUDE WHERE clause
+              initialBindings: binding,
+            });
           };
         }
 
         // Create a separate link for each followed variable
         for (const variable of contentPolicy.variables) {
-          const term = binding.get(`?${variable.name}`);
+          const term = binding.get(variable.name);
           if (term && term.termType === 'NamedNode') {
             const link: ILink = { url: term.value, transform };
 
             // Mark in the context if the linked document's policies should be considered
-            link.context = ActionContext({ [KEY_CONTEXT_WITHPOLICIES]: variable.withPolicies });
+            link.context = new ActionContext({ [KEY_CONTEXT_WITHPOLICIES.name]: variable.withPolicies });
 
             traverse.push(link);
           }
@@ -150,9 +144,22 @@ export class ActorRdfMetadataExtractTraverseContentPolicies extends ActorRdfMeta
 
 export interface IActorRdfMetadataExtractTraverseContentPoliciesArgs
   extends IActorArgs<IActionRdfMetadataExtract, IActorTest, IActorRdfMetadataExtractOutput>{
-  queryEngine: ActorInitSparql;
+  /**
+   * An init query actor that is used to query all links to follow from a stream.
+   * @default {<urn:comunica:default:init/actors#query>}
+   */
+  actorInitQuery: ActorInitQueryBase;
+  /**
+   * If true (default), then content policies will be applied on links that are being detected by some other actor,
+   * if false, then links detected by content policies will forcefully be added to the link queue.
+   * @default {true}
+   */
   traverseConditional: boolean;
 }
 
-export const KEY_CONTEXT_POLICIES = '@comunica/actor-rdf-metadata-extract-traverse-content-policies:policies';
-export const KEY_CONTEXT_WITHPOLICIES = '@comunica/actor-rdf-metadata-extract-traverse-content-policies:withPolicies';
+export const KEY_CONTEXT_POLICIES = new ActionContextKey<ContentPolicy[]>(
+  '@comunica/actor-rdf-metadata-extract-traverse-content-policies:policies',
+);
+export const KEY_CONTEXT_WITHPOLICIES = new ActionContextKey<boolean>(
+  '@comunica/actor-rdf-metadata-extract-traverse-content-policies:withPolicies',
+);

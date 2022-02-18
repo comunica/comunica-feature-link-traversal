@@ -5,6 +5,7 @@ import type {
 import { ActorOptimizeQueryOperation } from '@comunica/bus-optimize-query-operation';
 import { KeysRdfResolveQuadPattern } from '@comunica/context-entries';
 import type { IActorArgs, IActorTest } from '@comunica/core';
+import type { DataSources } from '@comunica/types';
 import { Algebra, Util } from 'sparqlalgebrajs';
 
 /**
@@ -26,9 +27,8 @@ export class ActorOptimizeQueryOperationSetSeedSourcesQuadpatternIris extends Ac
   }
 
   public async run(action: IActionOptimizeQueryOperation): Promise<IActorOptimizeQueryOperationOutput> {
-    if (action.context &&
-      (!action.context.has(KeysRdfResolveQuadPattern.sources) ||
-        action.context.get(KeysRdfResolveQuadPattern.sources).length === 0)) {
+    const contextSources: DataSources | undefined = action.context.get(KeysRdfResolveQuadPattern.sources);
+    if (!contextSources || contextSources.length === 0) {
       const sources: string[] = [ ...new Set(this.extractIrisFromOperation(action.operation)) ];
       action.context = action.context.set(KeysRdfResolveQuadPattern.sources, sources);
     }
@@ -38,8 +38,7 @@ export class ActorOptimizeQueryOperationSetSeedSourcesQuadpatternIris extends Ac
   public extractIrisFromOperation(operation: Algebra.Operation): string[] {
     const iris: string[] = [];
     Util.recurseOperation(operation, {
-      [Algebra.types.PATH]: op => {
-        const path: Algebra.Path = <Algebra.Path> op;
+      [Algebra.types.PATH]: path => {
         if (this.extractSubjects && path.subject.termType === 'NamedNode') {
           iris.push(path.subject.value);
         }
@@ -52,8 +51,7 @@ export class ActorOptimizeQueryOperationSetSeedSourcesQuadpatternIris extends Ac
         }
         return false;
       },
-      [Algebra.types.PATTERN]: op => {
-        const pattern: Algebra.Pattern = <Algebra.Pattern> op;
+      [Algebra.types.PATTERN]: pattern => {
         if (this.extractSubjects && pattern.subject.termType === 'NamedNode') {
           iris.push(pattern.subject.value);
         }
@@ -76,9 +74,29 @@ export class ActorOptimizeQueryOperationSetSeedSourcesQuadpatternIris extends Ac
 
 export interface IActorOptimizeQueryOperationSetSeedSourcesQuadpatternIrisArgs
   extends IActorArgs<IActionOptimizeQueryOperation, IActorTest, IActorOptimizeQueryOperationOutput> {
+  /**
+   * If IRIs should be extracted from subject positions.
+   * @default {true}
+   */
   extractSubjects: boolean;
+  /**
+   * If IRIs should be extracted from predicate positions.
+   * @default {false}
+   */
   extractPredicates: boolean;
+  /**
+   * If IRIs should be extracted from object positions.
+   * @default {true}
+   */
   extractObjects: boolean;
+  /**
+   * If IRIs should be extracted from graph positions.
+   * @default {true}
+   */
   extractGraphs: boolean;
+  /**
+   * If object IRIs should be extracted if the predicate is rdf:type.
+   * @default {false}
+   */
   extractVocabIris: boolean;
 }

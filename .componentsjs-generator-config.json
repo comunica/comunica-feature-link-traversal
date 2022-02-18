@@ -1,0 +1,9 @@
+{
+  "source": "lib",
+  "ignorePackagePaths": [
+    "engines/query-sparql-link-traversal",
+    "engines/query-sparql-link-traversal-solid"
+  ],
+  "ignoreComponents": [],
+  "modulePrefix": {}
+}

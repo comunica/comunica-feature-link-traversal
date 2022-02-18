@@ -190,14 +190,14 @@ describe('SimpleSclParser', () => {
             factory.createPattern(DF.variable('s'), DF.namedNode('ex:p'), DF.variable('uri')),
           ]), [
             { name: 'uri', withPolicies: false },
-          ], factory.createConstruct(factory.createUnion(
+          ], factory.createConstruct(factory.createUnion([
             factory.createBgp([
               factory.createPattern(DF.variable('a'), DF.namedNode('ex:b'), DF.variable('c')),
             ]),
             factory.createBgp([
               factory.createPattern(DF.variable('a'), DF.namedNode('ex:c'), DF.variable('c')),
             ]),
-          ), [
+          ]), [
             factory.createPattern(DF.variable('a'), DF.namedNode('ex:b'), DF.variable('c')),
           ])),
         );

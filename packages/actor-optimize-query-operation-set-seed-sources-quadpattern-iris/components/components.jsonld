@@ -1,9 +1,0 @@
-{
-  "@context": "https://linkedsoftwaredependencies.org/bundles/npm/@comunica/actor-optimize-query-operation-set-seed-sources-quadpattern-iris/^0.0.0/components/context.jsonld",
-  "@id": "npmd:@comunica/actor-optimize-query-operation-set-seed-sources-quadpattern-iris",
-  "@type": "Module",
-  "requireName": "@comunica/actor-optimize-query-operation-set-seed-sources-quadpattern-iris",
-  "import": [
-    "files-caoqosssqi:components/Actor/OptimizeQueryOperation/SetSeedSourcesQuadpatternIris.jsonld"
-  ]
-}

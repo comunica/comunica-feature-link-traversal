@@ -1,9 +1,9 @@
 import type { IActionRdfMetadataExtract, IActorRdfMetadataExtractOutput } from '@comunica/bus-rdf-metadata-extract';
 import { ActorRdfMetadataExtract } from '@comunica/bus-rdf-metadata-extract';
 import type { ILink } from '@comunica/bus-rdf-resolve-hypermedia-links';
-import { KeysInitSparql } from '@comunica/context-entries';
+import { KeysInitQuery } from '@comunica/context-entries';
 import type { IActorArgs, IActorTest } from '@comunica/core';
-import type { ActionContext } from '@comunica/types';
+import type { IActionContext } from '@comunica/types';
 import type * as RDF from 'rdf-js';
 import type { QuadTermName } from 'rdf-terms';
 import { filterQuadTermNames, getNamedNodes, getTerms, matchPatternComplete } from 'rdf-terms';
@@ -20,11 +20,8 @@ export class ActorRdfMetadataExtractTraverseQuadPatternQuery extends ActorRdfMet
     super(args);
   }
 
-  public static getCurrentQuery(context?: ActionContext): Algebra.Operation | undefined {
-    if (!context) {
-      return;
-    }
-    const currentQueryOperation = context.get(KeysInitSparql.query);
+  public static getCurrentQuery(context: IActionContext): Algebra.Operation | undefined {
+    const currentQueryOperation: Algebra.Operation | undefined = context.get(KeysInitQuery.query);
     if (!currentQueryOperation) {
       return;
     }
@@ -101,5 +98,9 @@ export class ActorRdfMetadataExtractTraverseQuadPatternQuery extends ActorRdfMet
 
 export interface IActorRdfMetadataExtractTraverseQuadPatternQueryArgs
   extends IActorArgs<IActionRdfMetadataExtract, IActorTest, IActorRdfMetadataExtractOutput> {
+  /**
+   * If only links that match a variable in the query should be included.
+   * @default {true}
+   */
   onlyVariables: boolean;
 }

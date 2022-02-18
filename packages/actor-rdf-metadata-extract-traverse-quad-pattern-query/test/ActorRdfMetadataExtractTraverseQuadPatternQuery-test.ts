@@ -1,6 +1,6 @@
 import type { Readable } from 'stream';
 import { ActorRdfMetadataExtract } from '@comunica/bus-rdf-metadata-extract';
-import { KeysInitSparql } from '@comunica/context-entries';
+import { KeysInitQuery } from '@comunica/context-entries';
 import { ActionContext, Bus } from '@comunica/core';
 import { DataFactory } from 'rdf-data-factory';
 import { Factory } from 'sparqlalgebrajs';
@@ -63,26 +63,21 @@ describe('ActorRdfMetadataExtractTraverseQuadPatternQuery', () => {
           DF.namedNode('ex:g'),
         ),
       ]);
-      context = ActionContext({ [KeysInitSparql.query]: operation });
-    });
-
-    it('should fail to test with undefined context', () => {
-      return expect(actor.test({ url: '', metadata: input })).rejects
-        .toThrow(new Error('Actor actor can only work in the context of a query.'));
+      context = new ActionContext({ [KeysInitQuery.query.name]: operation });
     });
 
     it('should fail to test without query operation in context', () => {
-      context = ActionContext({});
-      return expect(actor.test({ url: '', metadata: input, context })).rejects
+      context = new ActionContext({});
+      return expect(actor.test({ url: '', metadata: input, requestTime: 0, context })).rejects
         .toThrow(new Error('Actor actor can only work in the context of a query.'));
     });
 
     it('should test with quad pattern query operation in context', () => {
-      return expect(actor.test({ url: '', metadata: input, context })).resolves.toEqual(true);
+      return expect(actor.test({ url: '', metadata: input, requestTime: 0, context })).resolves.toEqual(true);
     });
 
     it('should run on a stream and return urls matching a query with single pattern', () => {
-      return expect(actor.run({ url: '', metadata: input, context })).resolves
+      return expect(actor.run({ url: '', metadata: input, requestTime: 0, context })).resolves
         .toEqual({
           metadata: {
             traverse: [
@@ -119,8 +114,8 @@ describe('ActorRdfMetadataExtractTraverseQuadPatternQuery', () => {
           DF.namedNode('ex:g'),
         ),
       ]);
-      context = ActionContext({ [KeysInitSparql.query]: operation });
-      return expect(actor.run({ url: '', metadata: input, context })).resolves
+      context = new ActionContext({ [KeysInitQuery.query.name]: operation });
+      return expect(actor.run({ url: '', metadata: input, requestTime: 0, context })).resolves
         .toEqual({
           metadata: {
             traverse: [
@@ -144,8 +139,8 @@ describe('ActorRdfMetadataExtractTraverseQuadPatternQuery', () => {
         ]),
         [],
       );
-      context = ActionContext({ [KeysInitSparql.query]: operation });
-      return expect(actor.run({ url: '', metadata: input, context })).resolves
+      context = new ActionContext({ [KeysInitQuery.query.name]: operation });
+      return expect(actor.run({ url: '', metadata: input, requestTime: 0, context })).resolves
         .toEqual({
           metadata: {
             traverse: [
@@ -186,7 +181,7 @@ describe('ActorRdfMetadataExtractTraverseQuadPatternQuery', () => {
           DF.namedNode('ex:g'),
         ),
       ]);
-      context = ActionContext({ [KeysInitSparql.query]: operation });
+      context = new ActionContext({ [KeysInitQuery.query.name]: operation });
     });
 
     it('should run on a stream and return urls matching a query\'s variables with multiple patterns', () => {
@@ -222,8 +217,8 @@ describe('ActorRdfMetadataExtractTraverseQuadPatternQuery', () => {
           DF.namedNode('ex:g'),
         ),
       ]);
-      context = ActionContext({ [KeysInitSparql.query]: operation });
-      return expect(actor.run({ url: '', metadata: input, context })).resolves
+      context = new ActionContext({ [KeysInitQuery.query.name]: operation });
+      return expect(actor.run({ url: '', metadata: input, requestTime: 0, context })).resolves
         .toEqual({
           metadata: {
             traverse: [

@@ -1,14 +1,14 @@
 #!/bin/bash
-# Build web clients from all default configs of actor-init-sparql-link-traversal
+# Build web clients from all default configs of query-sparql-link-traversal
 
 cwd=$(pwd)
 mkdir -p $cwd/web-clients/builds
-pushd packages/actor-init-sparql-link-traversal >/dev/null
-for config in config/*.json; do
+pushd engines/query-sparql-link-traversal >/dev/null
+for config in ../config-query-sparql-link-traversal/config/*.json; do
   id=$(echo $config | sed "s/config\/config-\(.*\)\.json/\1/")
 
   cat $cwd/web-clients/settings.json | \
-    sed "s/__SUBTITLE__/Using $id config/; s~__SUBTITLE_HREF__~https://github.com/comunica/comunica-feature-link-traversal/blob/master/packages/actor-init-sparql-link-traversal/config/config-$id.json~" \
+    sed "s/__SUBTITLE__/Using $id config/; s~__SUBTITLE_HREF__~https://github.com/comunica/comunica-feature-link-traversal/blob/master/engines/config-query-sparql-link-traversal/config/config-$id.json~" \
     > $cwd/web-clients/settings.custom.json
 
   # Build web client

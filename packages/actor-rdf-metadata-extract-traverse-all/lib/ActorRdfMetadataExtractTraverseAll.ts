@@ -3,7 +3,6 @@ import type { IActionRdfMetadataExtract,
 import { ActorRdfMetadataExtract } from '@comunica/bus-rdf-metadata-extract';
 import type { ILink } from '@comunica/bus-rdf-resolve-hypermedia-links';
 import type { IActorArgs, IActorTest } from '@comunica/core';
-
 import { getNamedNodes, getTerms } from 'rdf-terms';
 
 /**
