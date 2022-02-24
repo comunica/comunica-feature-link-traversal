@@ -56,14 +56,14 @@ _[**Read more** about querying from the command line](https://comunica.dev/docs/
 This engine can be used in JavaScript/TypeScript applications as follows:
 
 ```javascript
-const newEngine = require('engines/query-sparql-link-traversal-solid/index').newEngine;
+const QueryEngine = require('@comunica/query-sparql-link-traversal-solid').QueryEngine;
 const {interactiveLogin} = require('solid-node-interactive-auth');
 
 // This will open your Web browser to log in
 const session = await interactiveLogin({oidcIssuer: 'https://solidcommunity.net/'});
-const myEngine = newEngine();
+const myEngine = new QueryEngine();
 
-const result = await myEngine.query(`
+const bindingsStream = await myEngine.queryBindings(`
   SELECT DISTINCT * WHERE {
       <https://www.rubensworks.net/#me> <http://xmlns.com/foaf/0.1/knows> ?p.
       <https://ruben.verborgh.org/profile/#me> <http://xmlns.com/foaf/0.1/knows> ?p.
@@ -75,19 +75,22 @@ const result = await myEngine.query(`
 });
 
 // Consume results as a stream (best performance)
-result.bindingsStream.on('data', (binding) => {
-    console.log(binding.get('?s').value);
-    console.log(binding.get('?s').termType);
+bindingsStream.on('data', (binding) => {
+    console.log(binding.toString()); // Quick way to print bindings for testing
 
-    console.log(binding.get('?p').value);
+    console.log(binding.has('s')); // Will be true
 
-    console.log(binding.get('?o').value);
+    // Obtaining values
+    console.log(binding.get('s').value);
+    console.log(binding.get('s').termType);
+    console.log(binding.get('p').value);
+    console.log(binding.get('o').value);
 });
 
 // Consume results as an array (easier)
-const bindings = await result.bindings();
-console.log(bindings[0].get('?s').value);
-console.log(bindings[0].get('?s').termType);
+const bindings = await bindingsStream.toArray();
+console.log(bindings[0].get('s').value);
+console.log(bindings[0].get('s').termType);
 ```
 
 _[**Read more** about querying an application](https://comunica.dev/docs/query/getting_started/query_app/)._
