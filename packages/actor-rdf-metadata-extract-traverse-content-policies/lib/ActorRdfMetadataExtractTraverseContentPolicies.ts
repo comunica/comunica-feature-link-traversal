@@ -9,7 +9,7 @@ import type { ILink } from '@comunica/bus-rdf-resolve-hypermedia-links';
 import { KeysQueryOperation } from '@comunica/context-entries';
 import type { IActorArgs, IActorTest } from '@comunica/core';
 import { ActionContext, ActionContextKey } from '@comunica/core';
-import type { Bindings, IActionContext, IQueryBindingsEnhanced } from '@comunica/types';
+import type { Bindings, IActionContext } from '@comunica/types';
 import type * as RDF from 'rdf-js';
 import { storeStream } from 'rdf-store-stream';
 import { matchPatternComplete } from 'rdf-terms';
@@ -44,8 +44,8 @@ export class ActorRdfMetadataExtractTraverseContentPolicies extends ActorRdfMeta
 
   protected async getContentPoliciesFromDocument(documentIri: string, store: RDF.Store): Promise<ContentPolicy[]> {
     // Query the content policies that apply to the current document
-    const result = <IQueryBindingsEnhanced> await this.queryEngine
-      .query(`
+    const bindingsStream = await this.queryEngine
+      .queryBindings(`
         PREFIX scl: <https://w3id.org/scl/vocab#>
         SELECT ?scope WHERE {
           ?policy scl:appliesTo <${documentIri}>;
@@ -53,7 +53,7 @@ export class ActorRdfMetadataExtractTraverseContentPolicies extends ActorRdfMeta
         }`, { sources: [ store ]});
 
     // Parse all found content policies
-    return (await result.bindings())
+    return (await bindingsStream.toArray())
       .map(binding => this.sclParser.parse(binding.get('scope')!.value, documentIri));
   }
 
@@ -105,11 +105,11 @@ export class ActorRdfMetadataExtractTraverseContentPolicies extends ActorRdfMeta
       }
 
       // Find all matching results
-      const result = <IQueryBindingsEnhanced> await this.queryEngine
-        .query(contentPolicy.graphPattern, { sources: [ store ]});
+      const bindingsStream = await this.queryEngine
+        .queryBindings(contentPolicy.graphPattern, { sources: [ store ]});
 
       // Extract all bound named nodes from the policy's variables
-      const bindings: Bindings[] = await result.bindings();
+      const bindings: Bindings[] = await bindingsStream.toArray();
       for (const binding of bindings) {
         // If the content policy has a filter, apply it on the links to traverse
         let transform: ((input: RDF.Stream) => Promise<RDF.Stream>) | undefined;

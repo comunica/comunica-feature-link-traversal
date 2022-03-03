@@ -38,11 +38,11 @@ describe('ActorRdfMetadataExtractTraverseContentPolicies', () => {
             DF.quad(DF.namedNode('ex:s'), DF.namedNode('ex:p'), DF.namedNode('ex:o')),
           ]);
         }),
-        query: jest.fn(pattern => {
+        queryBindings: jest.fn(pattern => {
           if (typeof pattern === 'string') {
             // Query in getContentPoliciesFromDocument
             return {
-              bindings() {
+              toArray() {
                 if (pattern.includes('one_policy')) {
                   return Promise.resolve([
                     BF.bindings([
@@ -95,7 +95,7 @@ describe('ActorRdfMetadataExtractTraverseContentPolicies', () => {
           }
           // FOLLOW clause
           return {
-            bindings: () => [
+            toArray: () => [
               BF.bindings([[ DF.variable('varA'), DF.namedNode('ex:match1') ]]),
               BF.bindings([
                 [ DF.variable('varA'), DF.blankNode('ex:match2') ],
@@ -325,12 +325,12 @@ describe('ActorRdfMetadataExtractTraverseContentPolicies', () => {
       expect(result.metadata.traverse[0].transform).toBeInstanceOf(Function);
       expect(result.metadata.traverse[1].transform).toBeInstanceOf(Function);
 
-      expect(queryEngine.query).toHaveBeenCalledTimes(1);
+      expect(queryEngine.queryBindings).toHaveBeenCalledTimes(1);
       expect(queryEngine.queryQuads).toHaveBeenCalledTimes(0);
       expect(await arrayifyStream(await result.metadata.traverse[0].transform(new ArrayIterator()))).toEqual([
         DF.quad(DF.namedNode('ex:s'), DF.namedNode('ex:p'), DF.namedNode('ex:o')),
       ]);
-      expect(queryEngine.query).toHaveBeenCalledTimes(1);
+      expect(queryEngine.queryBindings).toHaveBeenCalledTimes(1);
       expect(queryEngine.queryQuads).toHaveBeenCalledTimes(1);
       expect(queryEngine.queryQuads).toHaveBeenNthCalledWith(1, filter, {
         sources: [ expect.anything() ],
@@ -339,7 +339,7 @@ describe('ActorRdfMetadataExtractTraverseContentPolicies', () => {
       expect(await arrayifyStream(await result.metadata.traverse[1].transform(new ArrayIterator()))).toEqual([
         DF.quad(DF.namedNode('ex:s'), DF.namedNode('ex:p'), DF.namedNode('ex:o')),
       ]);
-      expect(queryEngine.query).toHaveBeenCalledTimes(1);
+      expect(queryEngine.queryBindings).toHaveBeenCalledTimes(1);
       expect(queryEngine.queryQuads).toHaveBeenCalledTimes(2);
       expect(queryEngine.queryQuads).toHaveBeenNthCalledWith(2, filter, {
         sources: [ expect.anything() ],

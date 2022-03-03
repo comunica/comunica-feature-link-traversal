@@ -9,7 +9,6 @@
     "@babel/core": "^7.16.0",
     "@babel/polyfill": "^7.12.1",
     "@babel/preset-env": "^7.16.4",
-    "@comunica/actor-http-native": "^2.0.1-alpha.9.0",
     "rdf-data-factory": "^1.1.0",
     "@types/jest": "^26.0.0",
     "@types/node": "^16.0.0",
@@ -18,7 +17,7 @@
     "arrayify-stream": "^1.0.0",
     "asynciterator": "^3.0.3",
     "babel-loader": "^8.2.3",
-    "componentsjs-generator": "3.0.0-beta.5",
+    "componentsjs-generator": "^3.0.1",
     "eslint": "^8.3.0",
     "eslint-config-es": "4.1.0",
     "eslint-import-resolver-typescript": "^2.5.0",
@@ -80,9 +79,6 @@
     "version": "manual-git-changelog onversion"
   },
   "resolutions": {
-    "@types/yargs": "17.0.8",
-    "@rdfjs/types": "1.1.0",
-    "@comunica/bindings-factory": "^2.0.1-alpha.9.0",
-    "componentsjs": "5.0.0-beta.3"
+    "@types/yargs": "17.0.8"
   }
 }

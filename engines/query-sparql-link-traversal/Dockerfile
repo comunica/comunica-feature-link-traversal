@@ -1,12 +1,13 @@
-FROM node:10
+FROM node:16
 
 # Install location
-ENV dir /var/www/@comunica/actor-init-sparql-link-traversal/
+ENV dir /var/www/@comunica/query-sparql-link-traversal/
 
 # Copy the engine files (generated from package.json!files)
 COPY config ${dir}/config/
+COPY lib/*.js ${dir}/lib/
 COPY bin/*.js ${dir}/bin/
-COPY index.js index-browser.js engine-default.js package.json ${dir}
+COPY engine-default.js package.json ${dir}
 
 # Set the npm registry
 ARG NPM_REGISTRY=https://registry.npmjs.org/
