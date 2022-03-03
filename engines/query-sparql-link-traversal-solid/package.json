@@ -54,6 +54,7 @@
     "@comunica/actor-rdf-resolve-hypermedia-links-traverse-replace-conditional": "^0.0.1",
     "@comunica/actor-rdf-resolve-hypermedia-links-queue-wrapper-limit-count": "^0.0.1",
     "@comunica/actor-rdf-resolve-hypermedia-links-queue-wrapper-limit-depth": "^0.0.1",
+    "@comunica/config-query-sparql-link-traversal": "^0.0.1",
     "@comunica/actor-init-query": "^2.0.3",
     "@comunica/context-entries": "^2.0.1",
     "@comunica/core": "^2.0.1",
