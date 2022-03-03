@@ -94,10 +94,10 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="actor_rdf_metadata_extract_traverse_content_policies.IActorRdfMetadataExtractTraverseContentPoliciesArgs.html#actorInitQuery" class="tsd-kind-icon">actor<wbr>Init<wbr>Query</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="actor_rdf_metadata_extract_traverse_content_policies.IActorRdfMetadataExtractTraverseContentPoliciesArgs.html#beforeActors" class="tsd-kind-icon">before<wbr>Actors</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="actor_rdf_metadata_extract_traverse_content_policies.IActorRdfMetadataExtractTraverseContentPoliciesArgs.html#bus" class="tsd-kind-icon">bus</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="actor_rdf_metadata_extract_traverse_content_policies.IActorRdfMetadataExtractTraverseContentPoliciesArgs.html#name" class="tsd-kind-icon">name</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="actor_rdf_metadata_extract_traverse_content_policies.IActorRdfMetadataExtractTraverseContentPoliciesArgs.html#queryEngine" class="tsd-kind-icon">query<wbr>Engine</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="actor_rdf_metadata_extract_traverse_content_policies.IActorRdfMetadataExtractTraverseContentPoliciesArgs.html#traverseConditional" class="tsd-kind-icon">traverse<wbr>Conditional</a></li>
 							</ul>
 						</section>
@@ -106,6 +106,26 @@
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="actorInitQuery" class="tsd-anchor"></a>
+					<h3>actor<wbr>Init<wbr>Query</h3>
+					<div class="tsd-signature tsd-kind-icon">actor<wbr>Init<wbr>Query<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">ActorInitQueryBase</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/comunica/comunica-feature-link-traversal/blob/48102f8/packages/actor-rdf-metadata-extract-traverse-content-policies/lib/ActorRdfMetadataExtractTraverseContentPolicies.ts#L151">packages/actor-rdf-metadata-extract-traverse-content-policies/lib/ActorRdfMetadataExtractTraverseContentPolicies.ts:151</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>An init query actor that is used to query all links to follow from a stream.</p>
+						</div>
+						<dl class="tsd-comment-tags">
+							<dt>default</dt>
+							<dd><p>{<a href="urn:comunica:default:init/actors#query">urn:comunica:default:init/actors#query</a>}</p>
+							</dd>
+						</dl>
+					</div>
+				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
 					<a name="beforeActors" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagOptional">Optional</span> before<wbr>Actors</h3>
@@ -113,9 +133,14 @@
 					<aside class="tsd-sources">
 						<p>Inherited from IActorArgs.beforeActors</p>
 						<ul>
-							<li>Defined in node_modules/@comunica/core/lib/Actor.d.ts:96</li>
+							<li>Defined in node_modules/@comunica/core/lib/Actor.d.ts:105</li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Actor that must be registered in the bus before this actor.</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
 					<a name="bus" class="tsd-anchor"></a>
@@ -124,9 +149,14 @@
 					<aside class="tsd-sources">
 						<p>Inherited from IActorArgs.bus</p>
 						<ul>
-							<li>Defined in node_modules/@comunica/core/lib/Actor.d.ts:95</li>
+							<li>Defined in node_modules/@comunica/core/lib/Actor.d.ts:101</li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The bus this actor subscribes to.</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
 					<a name="name" class="tsd-anchor"></a>
@@ -135,19 +165,19 @@
 					<aside class="tsd-sources">
 						<p>Inherited from IActorArgs.name</p>
 						<ul>
-							<li>Defined in node_modules/@comunica/core/lib/Actor.d.ts:94</li>
+							<li>Defined in node_modules/@comunica/core/lib/Actor.d.ts:97</li>
 						</ul>
 					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="queryEngine" class="tsd-anchor"></a>
-					<h3>query<wbr>Engine</h3>
-					<div class="tsd-signature tsd-kind-icon">query<wbr>Engine<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">ActorInitSparql</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/comunica/comunica-feature-link-traversal/blob/e74249a/packages/actor-rdf-metadata-extract-traverse-content-policies/lib/ActorRdfMetadataExtractTraverseContentPolicies.ts#L153">packages/actor-rdf-metadata-extract-traverse-content-policies/lib/ActorRdfMetadataExtractTraverseContentPolicies.ts:153</a></li>
-						</ul>
-					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The name for this actor.</p>
+						</div>
+						<dl class="tsd-comment-tags">
+							<dt>default</dt>
+							<dd><p>{<a href="rdf:subject">rdf:subject</a>}</p>
+							</dd>
+						</dl>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="traverseConditional" class="tsd-anchor"></a>
@@ -155,9 +185,20 @@
 					<div class="tsd-signature tsd-kind-icon">traverse<wbr>Conditional<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/comunica/comunica-feature-link-traversal/blob/e74249a/packages/actor-rdf-metadata-extract-traverse-content-policies/lib/ActorRdfMetadataExtractTraverseContentPolicies.ts#L154">packages/actor-rdf-metadata-extract-traverse-content-policies/lib/ActorRdfMetadataExtractTraverseContentPolicies.ts:154</a></li>
+							<li>Defined in <a href="https://github.com/comunica/comunica-feature-link-traversal/blob/48102f8/packages/actor-rdf-metadata-extract-traverse-content-policies/lib/ActorRdfMetadataExtractTraverseContentPolicies.ts#L157">packages/actor-rdf-metadata-extract-traverse-content-policies/lib/ActorRdfMetadataExtractTraverseContentPolicies.ts:157</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>If true (default), then content policies will be applied on links that are being detected by some other actor,
+							if false, then links detected by content policies will forcefully be added to the link queue.</p>
+						</div>
+						<dl class="tsd-comment-tags">
+							<dt>default</dt>
+							<dd><p>{true}</p>
+							</dd>
+						</dl>
+					</div>
 				</section>
 			</section>
 		</div>
@@ -167,11 +208,14 @@
 					<li class=" ">
 						<a href="../modules.html">Modules</a>
 					</li>
+					<li class="label tsd-is-external">
+						<span>Internals</span>
+					</li>
 					<li class=" tsd-kind-module">
 						<a href="../modules/actor_optimize_query_operation_set_seed_sources_quadpattern_iris.html">actor-<wbr>optimize-<wbr>query-<wbr>operation-<wbr>set-<wbr>seed-<wbr>sources-<wbr>quadpattern-<wbr>iris</a>
 					</li>
 					<li class=" tsd-kind-module">
-						<a href="../modules/actor_query_operation_bgp_traversal.html">actor-<wbr>query-<wbr>operation-<wbr>bgp-<wbr>traversal</a>
+						<a href="../modules/actor_rdf_join_entries_sort_traversal_zero_knowledge.html">actor-<wbr>rdf-<wbr>join-<wbr>entries-<wbr>sort-<wbr>traversal-<wbr>zero-<wbr>knowledge</a>
 					</li>
 					<li class=" tsd-kind-module">
 						<a href="../modules/actor_rdf_metadata_extract_traverse_all.html">actor-<wbr>rdf-<wbr>metadata-<wbr>extract-<wbr>traverse-<wbr>all</a>
@@ -197,6 +241,48 @@
 					<li class=" tsd-kind-module">
 						<a href="../modules/actor_rdf_resolve_hypermedia_links_traverse_replace_conditional.html">actor-<wbr>rdf-<wbr>resolve-<wbr>hypermedia-<wbr>links-<wbr>traverse-<wbr>replace-<wbr>conditional</a>
 					</li>
+					<li class=" tsd-kind-module">
+						<a href="../modules/engines_query_sparql_link_traversal_solid_lib.html">engines/query-<wbr>sparql-<wbr>link-<wbr>traversal-<wbr>solid/lib</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="../modules/engines_query_sparql_link_traversal_solid_lib_QueryEngine.html">engines/query-<wbr>sparql-<wbr>link-<wbr>traversal-<wbr>solid/lib/<wbr>Query<wbr>Engine</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="../modules/engines_query_sparql_link_traversal_solid_lib_QueryEngineFactory.html">engines/query-<wbr>sparql-<wbr>link-<wbr>traversal-<wbr>solid/lib/<wbr>Query<wbr>Engine<wbr>Factory</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="../modules/engines_query_sparql_link_traversal_solid_lib_index_browser.html">engines/query-<wbr>sparql-<wbr>link-<wbr>traversal-<wbr>solid/lib/index-<wbr>browser</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="../modules/engines_query_sparql_link_traversal_lib.html">engines/query-<wbr>sparql-<wbr>link-<wbr>traversal/lib</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="../modules/engines_query_sparql_link_traversal_lib_QueryEngine.html">engines/query-<wbr>sparql-<wbr>link-<wbr>traversal/lib/<wbr>Query<wbr>Engine</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="../modules/engines_query_sparql_link_traversal_lib_QueryEngineFactory.html">engines/query-<wbr>sparql-<wbr>link-<wbr>traversal/lib/<wbr>Query<wbr>Engine<wbr>Factory</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="../modules/engines_query_sparql_link_traversal_lib_index_browser.html">engines/query-<wbr>sparql-<wbr>link-<wbr>traversal/lib/index-<wbr>browser</a>
+					</li>
+					<li class="label tsd-is-external">
+						<span>Externals</span>
+					</li>
+					<li class=" tsd-kind-module tsd-is-external">
+						<a href="../modules/packages_actor_optimize_query_operation_set_seed_sources_quadpattern_iris_node_modules_sparqlalgebrajs.html">packages/actor-<wbr>optimize-<wbr>query-<wbr>operation-<wbr>set-<wbr>seed-<wbr>sources-<wbr>quadpattern-<wbr>iris/node_<wbr>modules/sparqlalgebrajs</a>
+					</li>
+					<li class=" tsd-kind-module tsd-is-external">
+						<a href="../modules/packages_actor_rdf_join_entries_sort_traversal_zero_knowledge_node_modules_sparqlalgebrajs.html">packages/actor-<wbr>rdf-<wbr>join-<wbr>entries-<wbr>sort-<wbr>traversal-<wbr>zero-<wbr>knowledge/node_<wbr>modules/sparqlalgebrajs</a>
+					</li>
+					<li class=" tsd-kind-module tsd-is-external">
+						<a href="../modules/packages_actor_rdf_metadata_extract_traverse_content_policies_node_modules_sparqlalgebrajs.html">packages/actor-<wbr>rdf-<wbr>metadata-<wbr>extract-<wbr>traverse-<wbr>content-<wbr>policies/node_<wbr>modules/sparqlalgebrajs</a>
+					</li>
+					<li class=" tsd-kind-module tsd-is-external">
+						<a href="../modules/packages_actor_rdf_metadata_extract_traverse_quad_pattern_query_node_modules_sparqlalgebrajs.html">packages/actor-<wbr>rdf-<wbr>metadata-<wbr>extract-<wbr>traverse-<wbr>quad-<wbr>pattern-<wbr>query/node_<wbr>modules/sparqlalgebrajs</a>
+					</li>
+					<li class=" tsd-kind-module tsd-is-external">
+						<a href="../modules/packages_actor_rdf_metadata_extract_traverse_quad_pattern_node_modules_sparqlalgebrajs.html">packages/actor-<wbr>rdf-<wbr>metadata-<wbr>extract-<wbr>traverse-<wbr>quad-<wbr>pattern/node_<wbr>modules/sparqlalgebrajs</a>
+					</li>
 				</ul>
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
@@ -205,7 +291,7 @@
 						<a href="../modules/actor_optimize_query_operation_set_seed_sources_quadpattern_iris.html" class="tsd-kind-icon">actor-<wbr>optimize-<wbr>query-<wbr>operation-<wbr>set-<wbr>seed-<wbr>sources-<wbr>quadpattern-<wbr>iris</a>
 					</li>
 					<li class=" tsd-kind-module">
-						<a href="../modules/actor_query_operation_bgp_traversal.html" class="tsd-kind-icon">actor-<wbr>query-<wbr>operation-<wbr>bgp-<wbr>traversal</a>
+						<a href="../modules/actor_rdf_join_entries_sort_traversal_zero_knowledge.html" class="tsd-kind-icon">actor-<wbr>rdf-<wbr>join-<wbr>entries-<wbr>sort-<wbr>traversal-<wbr>zero-<wbr>knowledge</a>
 					</li>
 					<li class=" tsd-kind-module">
 						<a href="../modules/actor_rdf_metadata_extract_traverse_all.html" class="tsd-kind-icon">actor-<wbr>rdf-<wbr>metadata-<wbr>extract-<wbr>traverse-<wbr>all</a>
@@ -227,6 +313,9 @@
 							<li class="current tsd-kind-interface tsd-parent-kind-module">
 								<a href="actor_rdf_metadata_extract_traverse_content_policies.IActorRdfMetadataExtractTraverseContentPoliciesArgs.html" class="tsd-kind-icon">IActor<wbr>Rdf<wbr>Metadata<wbr>Extract<wbr>Traverse<wbr>Content<wbr>Policies<wbr>Args</a>
 								<ul>
+									<li class=" tsd-kind-property tsd-parent-kind-interface">
+										<a href="actor_rdf_metadata_extract_traverse_content_policies.IActorRdfMetadataExtractTraverseContentPoliciesArgs.html#actorInitQuery" class="tsd-kind-icon">actor<wbr>Init<wbr>Query</a>
+									</li>
 									<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
 										<a href="actor_rdf_metadata_extract_traverse_content_policies.IActorRdfMetadataExtractTraverseContentPoliciesArgs.html#beforeActors" class="tsd-kind-icon">before<wbr>Actors</a>
 									</li>
@@ -235,9 +324,6 @@
 									</li>
 									<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
 										<a href="actor_rdf_metadata_extract_traverse_content_policies.IActorRdfMetadataExtractTraverseContentPoliciesArgs.html#name" class="tsd-kind-icon">name</a>
-									</li>
-									<li class=" tsd-kind-property tsd-parent-kind-interface">
-										<a href="actor_rdf_metadata_extract_traverse_content_policies.IActorRdfMetadataExtractTraverseContentPoliciesArgs.html#queryEngine" class="tsd-kind-icon">query<wbr>Engine</a>
 									</li>
 									<li class=" tsd-kind-property tsd-parent-kind-interface">
 										<a href="actor_rdf_metadata_extract_traverse_content_policies.IActorRdfMetadataExtractTraverseContentPoliciesArgs.html#traverseConditional" class="tsd-kind-icon">traverse<wbr>Conditional</a>
@@ -274,6 +360,45 @@
 					</li>
 					<li class=" tsd-kind-module">
 						<a href="../modules/actor_rdf_resolve_hypermedia_links_traverse_replace_conditional.html" class="tsd-kind-icon">actor-<wbr>rdf-<wbr>resolve-<wbr>hypermedia-<wbr>links-<wbr>traverse-<wbr>replace-<wbr>conditional</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="../modules/engines_query_sparql_link_traversal_solid_lib.html" class="tsd-kind-icon">engines/query-<wbr>sparql-<wbr>link-<wbr>traversal-<wbr>solid/lib</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="../modules/engines_query_sparql_link_traversal_solid_lib_QueryEngine.html" class="tsd-kind-icon">engines/query-<wbr>sparql-<wbr>link-<wbr>traversal-<wbr>solid/lib/<wbr>Query<wbr>Engine</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="../modules/engines_query_sparql_link_traversal_solid_lib_QueryEngineFactory.html" class="tsd-kind-icon">engines/query-<wbr>sparql-<wbr>link-<wbr>traversal-<wbr>solid/lib/<wbr>Query<wbr>Engine<wbr>Factory</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="../modules/engines_query_sparql_link_traversal_solid_lib_index_browser.html" class="tsd-kind-icon">engines/query-<wbr>sparql-<wbr>link-<wbr>traversal-<wbr>solid/lib/index-<wbr>browser</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="../modules/engines_query_sparql_link_traversal_lib.html" class="tsd-kind-icon">engines/query-<wbr>sparql-<wbr>link-<wbr>traversal/lib</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="../modules/engines_query_sparql_link_traversal_lib_QueryEngine.html" class="tsd-kind-icon">engines/query-<wbr>sparql-<wbr>link-<wbr>traversal/lib/<wbr>Query<wbr>Engine</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="../modules/engines_query_sparql_link_traversal_lib_QueryEngineFactory.html" class="tsd-kind-icon">engines/query-<wbr>sparql-<wbr>link-<wbr>traversal/lib/<wbr>Query<wbr>Engine<wbr>Factory</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="../modules/engines_query_sparql_link_traversal_lib_index_browser.html" class="tsd-kind-icon">engines/query-<wbr>sparql-<wbr>link-<wbr>traversal/lib/index-<wbr>browser</a>
+					</li>
+					<li class=" tsd-kind-module tsd-is-external">
+						<a href="../modules/packages_actor_optimize_query_operation_set_seed_sources_quadpattern_iris_node_modules_sparqlalgebrajs.html" class="tsd-kind-icon">packages/actor-<wbr>optimize-<wbr>query-<wbr>operation-<wbr>set-<wbr>seed-<wbr>sources-<wbr>quadpattern-<wbr>iris/node_<wbr>modules/sparqlalgebrajs</a>
+					</li>
+					<li class=" tsd-kind-module tsd-is-external">
+						<a href="../modules/packages_actor_rdf_join_entries_sort_traversal_zero_knowledge_node_modules_sparqlalgebrajs.html" class="tsd-kind-icon">packages/actor-<wbr>rdf-<wbr>join-<wbr>entries-<wbr>sort-<wbr>traversal-<wbr>zero-<wbr>knowledge/node_<wbr>modules/sparqlalgebrajs</a>
+					</li>
+					<li class=" tsd-kind-module tsd-is-external">
+						<a href="../modules/packages_actor_rdf_metadata_extract_traverse_content_policies_node_modules_sparqlalgebrajs.html" class="tsd-kind-icon">packages/actor-<wbr>rdf-<wbr>metadata-<wbr>extract-<wbr>traverse-<wbr>content-<wbr>policies/node_<wbr>modules/sparqlalgebrajs</a>
+					</li>
+					<li class=" tsd-kind-module tsd-is-external">
+						<a href="../modules/packages_actor_rdf_metadata_extract_traverse_quad_pattern_query_node_modules_sparqlalgebrajs.html" class="tsd-kind-icon">packages/actor-<wbr>rdf-<wbr>metadata-<wbr>extract-<wbr>traverse-<wbr>quad-<wbr>pattern-<wbr>query/node_<wbr>modules/sparqlalgebrajs</a>
+					</li>
+					<li class=" tsd-kind-module tsd-is-external">
+						<a href="../modules/packages_actor_rdf_metadata_extract_traverse_quad_pattern_node_modules_sparqlalgebrajs.html" class="tsd-kind-icon">packages/actor-<wbr>rdf-<wbr>metadata-<wbr>extract-<wbr>traverse-<wbr>quad-<wbr>pattern/node_<wbr>modules/sparqlalgebrajs</a>
 					</li>
 				</ul>
 			</nav>
