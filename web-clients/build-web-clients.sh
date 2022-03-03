@@ -5,7 +5,11 @@ cwd=$(pwd)
 mkdir -p $cwd/web-clients/builds
 pushd engines/query-sparql-link-traversal >/dev/null
 for config in ../config-query-sparql-link-traversal/config/*.json; do
-  id=$(echo $config | sed "s/config\/config-\(.*\)\.json/\1/")
+  id=$(echo $config | sed "s/.*config\/config-\(.*\)\.json/\1/")
+
+  if [ "$id" = "base" ]; then
+    continue;
+  fi
 
   cat $cwd/web-clients/settings.json | \
     sed "s/__SUBTITLE__/Using $id config/; s~__SUBTITLE_HREF__~https://github.com/comunica/comunica-feature-link-traversal/blob/master/engines/config-query-sparql-link-traversal/config/config-$id.json~" \

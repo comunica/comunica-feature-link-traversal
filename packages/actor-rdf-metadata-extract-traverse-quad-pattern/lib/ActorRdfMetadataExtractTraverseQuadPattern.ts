@@ -74,5 +74,8 @@ export class ActorRdfMetadataExtractTraverseQuadPattern extends ActorRdfMetadata
 
 export interface IActorRdfMetadataExtractTraverseQuadPatternArgs
   extends IActorArgs<IActionRdfMetadataExtract, IActorTest, IActorRdfMetadataExtractOutput> {
+  /**
+   * @default {true}
+   */
   onlyVariables: boolean;
 }
