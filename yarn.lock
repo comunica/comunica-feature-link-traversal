@@ -2511,15 +2511,15 @@
   dependencies:
     "@comunica/config-query-sparql" "2.0.1-alpha.5.0"
 
+"@comunica/config-query-sparql@2.0.1", "@comunica/config-query-sparql@^2.0.1":
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/@comunica/config-query-sparql/-/config-query-sparql-2.0.1.tgz#8a777e755e5053e75c4cccb37f0ef69a3f489281"
+  integrity sha512-DicTrd/z5Oh9LtAs74aaCeGdCy02Cl+XXyqqPfZ3KiykBOk02CK1ESjaSd3sPzQpIUEW7WRkNqrmEyKKfuQR/w==
+
 "@comunica/config-query-sparql@2.0.1-alpha.5.0":
   version "2.0.1-alpha.5.0"
   resolved "https://registry.yarnpkg.com/@comunica/config-query-sparql/-/config-query-sparql-2.0.1-alpha.5.0.tgz#0380cf0bb095b36365f7c523385932ff1c3663d3"
   integrity sha512-7zJgXd+WKnaoasEXtC7czhFxihznBUGmSkgGhrpyjTZ7MsZUGNHyCGavCWPqOG2QDUFYpNwSWMsLenBP8wVTAQ==
-
-"@comunica/config-query-sparql@^2.0.1":
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/@comunica/config-query-sparql/-/config-query-sparql-2.0.1.tgz#8a777e755e5053e75c4cccb37f0ef69a3f489281"
-  integrity sha512-DicTrd/z5Oh9LtAs74aaCeGdCy02Cl+XXyqqPfZ3KiykBOk02CK1ESjaSd3sPzQpIUEW7WRkNqrmEyKKfuQR/w==
 
 "@comunica/context-entries@^2.0.1":
   version "2.0.1"
