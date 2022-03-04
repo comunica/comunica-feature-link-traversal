@@ -73,12 +73,12 @@
 				</p>
 				<p><strong><a href="https://comunica.dev/">Learn more about Comunica on our website</a>.</strong></p>
 				<p>This is a monorepo that contains packages for allowing <a href="https://github.com/comunica/comunica">Comunica</a> to link traversal-based query execution.
-				If you want to <em>use</em> an Link Traversal-enabled Comunica engine, have a look at <a href="https://github.com/comunica/comunica-feature-link-traversal/tree/master/packages/actor-init-sparql-link-traversal">Comunica SPARQL Link Traversal</a>.</p>
+				If you want to <em>use</em> an Link Traversal-enabled Comunica engine, have a look at <a href="https://github.com/comunica/comunica-feature-link-traversal/tree/master/engines/query-sparql-link-traversal">Comunica SPARQL Link Traversal</a>.</p>
 				<p>Concretely, this monorepo adds link traversal support to Comunica using the following packages:</p>
 				<ul>
 					<li>Query engine configurations:<ul>
-							<li><a href="https://github.com/comunica/comunica-feature-link-traversal/tree/master/packages/actor-init-sparql-link-traversal">Comunica SPARQL Link Traversal</a>: A Comunica query engine that includes all Link Traversal packages.</li>
-							<li><a href="https://github.com/comunica/comunica-feature-link-traversal/tree/master/packages/actor-init-sparql-link-traversal-solid">Comunica SPARQL Link Traversal Solid</a>: A Comunica query engine that includes all Link Traversal and Solid-related packages.</li>
+							<li><a href="https://github.com/comunica/comunica-feature-link-traversal/tree/master/engines/query-sparql-link-traversal">Comunica SPARQL Link Traversal</a>: A Comunica query engine that includes all Link Traversal packages.</li>
+							<li><a href="https://github.com/comunica/comunica-feature-link-traversal/tree/master/engines/query-sparql-link-traversal-solid">Comunica SPARQL Link Traversal Solid</a>: A Comunica query engine that includes all Link Traversal and Solid-related packages.</li>
 						</ul>
 					</li>
 					<li>Seed URL actors:<ul>
@@ -127,7 +127,7 @@
 				<p><strong>Note: <code>npm install</code> is not supported at the moment, as this project makes use of Yarn&#39;s <a href="https://yarnpkg.com/lang/en/docs/workspaces/">workspaces</a> functionality</strong></p>
 				<p>This will install the dependencies of all modules, and bootstrap the Lerna monorepo.
 					After that, all <a href="https://github.com/comunica/comunica-feature-link-traversal/tree/master/packages">Comunica packages</a> are available in the <code>packages/</code> folder
-				and can be used in a development environment, such as querying with <a href="https://github.com/comunica/comunica-feature-link-traversal/tree/master/packages/actor-init-sparql-link-traversal">Comunica SPARQL Link Traversal (<code>packages/actor-init-sparql-link-traversal</code>)</a>.</p>
+				and can be used in a development environment, such as querying with <a href="https://github.com/comunica/comunica-feature-link-traversal/tree/master/engines/query-sparql-link-traversal">Comunica SPARQL Link Traversal (<code>engines/query-sparql-link-traversal</code>)</a>.</p>
 				<p>Furthermore, this will add <a href="https://www.npmjs.com/package/pre-commit">pre-commit hooks</a>
 					to build, lint and test.
 				These hooks can temporarily be disabled at your own risk by adding the <code>-n</code> flag to the commit command.</p>
