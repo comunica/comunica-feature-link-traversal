@@ -1,7 +1,7 @@
 # Comunica SPARQL Link Traversal Solid Init Actor
 
-[![npm version](https://badge.fury.io/js/%40comunica%2Factor-init-sparql-link-traversal-solid.svg)](https://www.npmjs.com/package/@comunica/actor-init-sparql-link-traversal-solid)
-[![Docker Pulls](https://img.shields.io/docker/pulls/comunica/actor-init-sparql-link-traversal-solid.svg)](https://hub.docker.com/r/comunica/actor-init-sparql-link-traversal-solid/)
+[![npm version](https://badge.fury.io/js/%40comunica%2Fquery-sparql-link-traversal-solid.svg)](https://www.npmjs.com/package/@comunica/query-sparql-link-traversal-solid)
+[![Docker Pulls](https://img.shields.io/docker/pulls/comunica/query-sparql-link-traversal-solid.svg)](https://hub.docker.com/r/comunica/query-sparql-link-traversal-solid/)
 
 Comunica SPARQL Link Traversal Solid is a SPARQL query engine for JavaScript that follows links across documents within [Solid](https://solidproject.org/) data pods.
 
@@ -46,8 +46,8 @@ Show the help with all options:
 $ comunica-sparql-link-traversal-solid --help
 ```
 
-Just like [Comunica SPARQL](https://github.com/comunica/comunica/tree/master/packages/actor-init-sparql),
-a [dynamic variant](https://github.com/comunica/comunica/tree/master/packages/actor-init-sparql#usage-from-the-command-line) (`comunica-dynamic-sparql-link-traversal`) also exists.
+Just like [Comunica SPARQL](https://github.com/comunica/comunica/tree/master/packages/query-sparql),
+a [dynamic variant](https://github.com/comunica/comunica/tree/master/packages/query-sparql#usage-from-the-command-line) (`comunica-dynamic-sparql-link-traversal`) also exists.
 
 _[**Read more** about querying from the command line](https://comunica.dev/docs/query/getting_started/query_cli/)._
 
