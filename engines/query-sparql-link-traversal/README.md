@@ -21,6 +21,20 @@ or
 $ npm install -g @comunica/query-sparql-link-traversal
 ```
 
+## Install a prerelease
+
+Since this package is still in testing phase, you may want to install a prerelease of this package, which you can do by appending `@next` to the package name during installation.
+
+```bash
+$ yarn add @comunica/query-sparql-link-traversal@next
+```
+
+or
+
+```bash
+$ npm install -g @comunica/query-sparql-link-traversal@next
+```
+
 ## Usage
 
 Show 100 triples from http://fragments.dbpedia.org/2015-10/en:

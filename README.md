@@ -17,13 +17,13 @@
 **[Learn more about Comunica on our website](https://comunica.dev/).**
 
 This is a monorepo that contains packages for allowing [Comunica](https://github.com/comunica/comunica) to link traversal-based query execution.
-If you want to _use_ an Link Traversal-enabled Comunica engine, have a look at [Comunica SPARQL Link Traversal](https://github.com/comunica/comunica-feature-link-traversal/tree/master/packages/actor-init-sparql-link-traversal).
+If you want to _use_ an Link Traversal-enabled Comunica engine, have a look at [Comunica SPARQL Link Traversal](https://github.com/comunica/comunica-feature-link-traversal/tree/master/engines/query-sparql-link-traversal).
 
 Concretely, this monorepo adds link traversal support to Comunica using the following packages:
 
 * Query engine configurations:
-  * [Comunica SPARQL Link Traversal](https://github.com/comunica/comunica-feature-link-traversal/tree/master/packages/actor-init-sparql-link-traversal): A Comunica query engine that includes all Link Traversal packages.
-  * [Comunica SPARQL Link Traversal Solid](https://github.com/comunica/comunica-feature-link-traversal/tree/master/packages/actor-init-sparql-link-traversal-solid): A Comunica query engine that includes all Link Traversal and Solid-related packages.
+  * [Comunica SPARQL Link Traversal](https://github.com/comunica/comunica-feature-link-traversal/tree/master/engines/query-sparql-link-traversal): A Comunica query engine that includes all Link Traversal packages.
+  * [Comunica SPARQL Link Traversal Solid](https://github.com/comunica/comunica-feature-link-traversal/tree/master/engines/query-sparql-link-traversal-solid): A Comunica query engine that includes all Link Traversal and Solid-related packages.
 * Seed URL actors:
     * [Seed URL preprocessor](https://github.com/comunica/comunica-feature-link-traversal/tree/master/packages/actor-optimize-query-operation-set-seed-sources-quadpattern-iris): Actor that sets sources based on the given query, if no other sources were set.
 * Query operation actors:
@@ -69,7 +69,7 @@ $ yarn install
 
 This will install the dependencies of all modules, and bootstrap the Lerna monorepo.
 After that, all [Comunica packages](https://github.com/comunica/comunica-feature-link-traversal/tree/master/packages) are available in the `packages/` folder
-and can be used in a development environment, such as querying with [Comunica SPARQL Link Traversal (`packages/actor-init-sparql-link-traversal`)](https://github.com/comunica/comunica-feature-link-traversal/tree/master/packages/actor-init-sparql-link-traversal).
+and can be used in a development environment, such as querying with [Comunica SPARQL Link Traversal (`engines/query-sparql-link-traversal`)](https://github.com/comunica/comunica-feature-link-traversal/tree/master/engines/query-sparql-link-traversal).
 
 Furthermore, this will add [pre-commit hooks](https://www.npmjs.com/package/pre-commit)
 to build, lint and test.

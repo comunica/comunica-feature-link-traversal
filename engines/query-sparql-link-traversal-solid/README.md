@@ -21,6 +21,19 @@ or
 $ npm install -g @comunica/query-sparql-link-traversal-solid
 ```
 
+## Install a prerelease
+
+Since this package is still in testing phase, you may want to install a prerelease of this package, which you can do by appending `@next` to the package name during installation.
+
+```bash
+$ yarn add @comunica/query-sparql-link-traversal-solid@next
+```
+
+or
+
+```bash
+$ npm install -g @comunica/query-sparql-link-traversal-solid@next
+
 ## Usage
 
 Show 100 triples from a private resource
