@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>engines/query-sparql-link-traversal/lib/QueryEngineFactory | Comunica Link Traversal</title>
+	<title>actor-rdf-metadata-extract-traverse-shapetrees | Comunica Link Traversal</title>
 	<meta name="description" content="Documentation for Comunica Link Traversal">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -55,16 +55,62 @@
 					<a href="../modules.html">Comunica Link Traversal</a>
 				</li>
 				<li>
-					<a href="engines_query_sparql_link_traversal_lib_QueryEngineFactory.html">engines/query-sparql-link-traversal/lib/QueryEngineFactory</a>
+					<a href="actor_rdf_metadata_extract_traverse_shapetrees.html">actor-rdf-metadata-extract-traverse-shapetrees</a>
 				</li>
 			</ul>
-			<h1>Module engines/query-sparql-link-traversal/lib/QueryEngineFactory</h1>
+			<h1>Module actor-rdf-metadata-extract-traverse-shapetrees</h1>
 		</div>
 	</div>
 </header>
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<a href="#comunica-traverse-shapetrees-rdf-metadata-extract-actor" id="comunica-traverse-shapetrees-rdf-metadata-extract-actor" style="color: inherit; text-decoration: none;">
+						<h1>Comunica Traverse Shapetrees RDF Metadata Extract Actor</h1>
+					</a>
+					<p><a href="https://www.npmjs.com/package/@comunica/actor-rdf-metadata-extract-traverse-shapetrees"><img src="https://badge.fury.io/js/%40comunica%2Factor-rdf-metadata-extract-traverse-shapetrees.svg" alt="npm version"></a></p>
+					<p>A comunica Traverse Shapetrees RDF Metadata Extract Actor.</p>
+					<p><strong>Warning: this package is experimental, and does not work properly yet.</strong></p>
+					<p>This module is part of the <a href="https://github.com/comunica/comunica">Comunica framework</a>,
+					and should only be used by <a href="https://comunica.dev/docs/modify/">developers that want to build their own query engine</a>.</p>
+					<p><a href="https://comunica.dev/docs/query/">Click here if you just want to query with Comunica</a>.</p>
+					<a href="#install" id="install" style="color: inherit; text-decoration: none;">
+						<h2>Install</h2>
+					</a>
+					<pre><code class="language-bash"><span style="color: #000000">$ yarn add @comunica/actor-rdf-metadata-extract-traverse-shapetrees</span>
+</code></pre>
+					<a href="#configure" id="configure" style="color: inherit; text-decoration: none;">
+						<h2>Configure</h2>
+					</a>
+					<p>After installing, this package can be added to your engine&#39;s configuration as follows:</p>
+					<pre><code class="language-text">{
+  &quot;@context&quot;: [
+    ...
+    &quot;https://linkedsoftwaredependencies.org/bundles/npm/@comunica/actor-rdf-metadata-extract-traverse-shapetrees/^1.0.0/components/context.jsonld&quot;  
+  ],
+  &quot;actors&quot;: [
+    ...
+    {
+      &quot;@id&quot;: &quot;urn:comunica:default:rdf-metadata-extract/actors#traverse-shapetrees&quot;,
+      &quot;@type&quot;: &quot;ActorRdfMetadataExtractTraverseShapetrees&quot;,
+      &quot;mediatorDereferenceRdf&quot;: { &quot;@id&quot;: &quot;urn:comunica:default:dereference-rdf/mediators#main&quot; },
+      &quot;mediatorHttp&quot;: { &quot;@id&quot;: &quot;urn:comunica:default:http/mediators#main&quot; }
+    }
+  ]
+}
+</code></pre>
+					<a href="#config-parameters" id="config-parameters" style="color: inherit; text-decoration: none;">
+						<h3>Config Parameters</h3>
+					</a>
+					<ul>
+						<li><code>actorInitQuery</code>: An instance of <a href="https://github.com/comunica/comunica/tree/master/packages/actor-init-query">ActorInitQuery</a>, defaults to <code>urn:comunica:default:init/actors#query</code>.</li>
+						<li><code>mediatorDereferenceRdf</code>: A mediator over the <a href="https://github.com/comunica/comunica/tree/master/packages/bus-dereference-rdf">Dereference RDF bus</a>.</li>
+						<li><code>mediatorHttp</code>: A mediator over the <a href="https://github.com/comunica/comunica/tree/master/packages/bus-http">HTTP bus</a>.</li>
+					</ul>
+				</div>
+			</section>
 			<section class="tsd-panel-group tsd-index-group">
 				<h2>Index</h2>
 				<section class="tsd-panel tsd-index-panel">
@@ -72,7 +118,27 @@
 						<section class="tsd-index-section ">
 							<h3>Classes</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-class tsd-parent-kind-module"><a href="../classes/engines_query_sparql_link_traversal_lib_QueryEngineFactory.QueryEngineFactory.html" class="tsd-kind-icon">Query<wbr>Engine<wbr>Factory</a></li>
+								<li class="tsd-kind-class tsd-parent-kind-module tsd-is-external"><a href="../classes/actor_rdf_metadata_extract_traverse_shapetrees.ActorInitQuery.html" class="tsd-kind-icon">Actor<wbr>Init<wbr>Query</a></li>
+								<li class="tsd-kind-class tsd-parent-kind-module tsd-is-external"><a href="../classes/actor_rdf_metadata_extract_traverse_shapetrees.ActorInitQueryBase.html" class="tsd-kind-icon">Actor<wbr>Init<wbr>Query<wbr>Base</a></li>
+								<li class="tsd-kind-class tsd-parent-kind-module"><a href="../classes/actor_rdf_metadata_extract_traverse_shapetrees.ActorRdfMetadataExtractTraverseShapetrees.html" class="tsd-kind-icon">Actor<wbr>Rdf<wbr>Metadata<wbr>Extract<wbr>Traverse<wbr>Shapetrees</a></li>
+								<li class="tsd-kind-class tsd-parent-kind-module tsd-is-external"><a href="../classes/actor_rdf_metadata_extract_traverse_shapetrees.CliArgsHandlerBase.html" class="tsd-kind-icon">Cli<wbr>Args<wbr>Handler<wbr>Base</a></li>
+								<li class="tsd-kind-class tsd-parent-kind-module tsd-is-external"><a href="../classes/actor_rdf_metadata_extract_traverse_shapetrees.CliArgsHandlerHttp.html" class="tsd-kind-icon">Cli<wbr>Args<wbr>Handler<wbr>Http</a></li>
+								<li class="tsd-kind-class tsd-parent-kind-module tsd-is-external"><a href="../classes/actor_rdf_metadata_extract_traverse_shapetrees.CliArgsHandlerQuery.html" class="tsd-kind-icon">Cli<wbr>Args<wbr>Handler<wbr>Query</a></li>
+								<li class="tsd-kind-class tsd-parent-kind-module tsd-is-external"><a href="../classes/actor_rdf_metadata_extract_traverse_shapetrees.HttpServiceSparqlEndpoint.html" class="tsd-kind-icon">Http<wbr>Service<wbr>Sparql<wbr>Endpoint</a></li>
+								<li class="tsd-kind-class tsd-parent-kind-module tsd-is-external"><a href="../classes/actor_rdf_metadata_extract_traverse_shapetrees.MemoryPhysicalQueryPlanLogger.html" class="tsd-kind-icon">Memory<wbr>Physical<wbr>Query<wbr>Plan<wbr>Logger</a></li>
+								<li class="tsd-kind-class tsd-parent-kind-module tsd-is-external"><a href="../classes/actor_rdf_metadata_extract_traverse_shapetrees.QueryEngineBase.html" class="tsd-kind-icon">Query<wbr>Engine<wbr>Base</a></li>
+								<li class="tsd-kind-class tsd-parent-kind-module tsd-has-type-parameter tsd-is-external"><a href="../classes/actor_rdf_metadata_extract_traverse_shapetrees.QueryEngineFactoryBase.html" class="tsd-kind-icon">Query<wbr>Engine<wbr>Factory<wbr>Base</a></li>
+								<li class="tsd-kind-class tsd-parent-kind-module"><a href="../classes/actor_rdf_metadata_extract_traverse_shapetrees.ShapeTree.html" class="tsd-kind-icon">Shape<wbr>Tree</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Interfaces</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-interface tsd-parent-kind-module tsd-is-external"><a href="../interfaces/actor_rdf_metadata_extract_traverse_shapetrees.IActorInitQueryBaseArgs.html" class="tsd-kind-icon">IActor<wbr>Init<wbr>Query<wbr>Base<wbr>Args</a></li>
+								<li class="tsd-kind-interface tsd-parent-kind-module"><a href="../interfaces/actor_rdf_metadata_extract_traverse_shapetrees.IActorRdfMetadataExtractTraverseShapetreesArgs.html" class="tsd-kind-icon">IActor<wbr>Rdf<wbr>Metadata<wbr>Extract<wbr>Traverse<wbr>Shapetrees<wbr>Args</a></li>
+								<li class="tsd-kind-interface tsd-parent-kind-module tsd-is-external"><a href="../interfaces/actor_rdf_metadata_extract_traverse_shapetrees.IDynamicQueryEngineOptions.html" class="tsd-kind-icon">IDynamic<wbr>Query<wbr>Engine<wbr>Options</a></li>
+								<li class="tsd-kind-interface tsd-parent-kind-module tsd-is-external"><a href="../interfaces/actor_rdf_metadata_extract_traverse_shapetrees.IHttpServiceSparqlEndpointArgs.html" class="tsd-kind-icon">IHttp<wbr>Service<wbr>Sparql<wbr>Endpoint<wbr>Args</a></li>
+								<li class="tsd-kind-interface tsd-parent-kind-module tsd-is-external"><a href="../interfaces/actor_rdf_metadata_extract_traverse_shapetrees.IQueryBody.html" class="tsd-kind-icon">IQuery<wbr>Body</a></li>
 							</ul>
 						</section>
 					</div>
@@ -103,7 +169,7 @@
 					<li class=" tsd-kind-module">
 						<a href="actor_rdf_metadata_extract_traverse_quad_pattern_query.html">actor-<wbr>rdf-<wbr>metadata-<wbr>extract-<wbr>traverse-<wbr>quad-<wbr>pattern-<wbr>query</a>
 					</li>
-					<li class=" tsd-kind-module">
+					<li class="current tsd-kind-module">
 						<a href="actor_rdf_metadata_extract_traverse_shapetrees.html">actor-<wbr>rdf-<wbr>metadata-<wbr>extract-<wbr>traverse-<wbr>shapetrees</a>
 					</li>
 					<li class=" tsd-kind-module">
@@ -136,7 +202,7 @@
 					<li class=" tsd-kind-module">
 						<a href="engines_query_sparql_link_traversal_lib_QueryEngine.html">engines/query-<wbr>sparql-<wbr>link-<wbr>traversal/lib/<wbr>Query<wbr>Engine</a>
 					</li>
-					<li class="current tsd-kind-module">
+					<li class=" tsd-kind-module">
 						<a href="engines_query_sparql_link_traversal_lib_QueryEngineFactory.html">engines/query-<wbr>sparql-<wbr>link-<wbr>traversal/lib/<wbr>Query<wbr>Engine<wbr>Factory</a>
 					</li>
 					<li class=" tsd-kind-module">
@@ -164,9 +230,63 @@
 					<li class=" tsd-kind-module">
 						<a href="actor_rdf_metadata_extract_traverse_quad_pattern_query.html" class="tsd-kind-icon">actor-<wbr>rdf-<wbr>metadata-<wbr>extract-<wbr>traverse-<wbr>quad-<wbr>pattern-<wbr>query</a>
 					</li>
-					<li class=" tsd-kind-module">
+				</ul>
+				<ul class="current">
+					<li class="current tsd-kind-module">
 						<a href="actor_rdf_metadata_extract_traverse_shapetrees.html" class="tsd-kind-icon">actor-<wbr>rdf-<wbr>metadata-<wbr>extract-<wbr>traverse-<wbr>shapetrees</a>
+						<ul>
+							<li class=" tsd-kind-class tsd-parent-kind-module tsd-is-external">
+								<a href="../classes/actor_rdf_metadata_extract_traverse_shapetrees.ActorInitQuery.html" class="tsd-kind-icon">Actor<wbr>Init<wbr>Query</a>
+							</li>
+							<li class=" tsd-kind-class tsd-parent-kind-module tsd-is-external">
+								<a href="../classes/actor_rdf_metadata_extract_traverse_shapetrees.ActorInitQueryBase.html" class="tsd-kind-icon">Actor<wbr>Init<wbr>Query<wbr>Base</a>
+							</li>
+							<li class=" tsd-kind-class tsd-parent-kind-module">
+								<a href="../classes/actor_rdf_metadata_extract_traverse_shapetrees.ActorRdfMetadataExtractTraverseShapetrees.html" class="tsd-kind-icon">Actor<wbr>Rdf<wbr>Metadata<wbr>Extract<wbr>Traverse<wbr>Shapetrees</a>
+							</li>
+							<li class=" tsd-kind-class tsd-parent-kind-module tsd-is-external">
+								<a href="../classes/actor_rdf_metadata_extract_traverse_shapetrees.CliArgsHandlerBase.html" class="tsd-kind-icon">Cli<wbr>Args<wbr>Handler<wbr>Base</a>
+							</li>
+							<li class=" tsd-kind-class tsd-parent-kind-module tsd-is-external">
+								<a href="../classes/actor_rdf_metadata_extract_traverse_shapetrees.CliArgsHandlerHttp.html" class="tsd-kind-icon">Cli<wbr>Args<wbr>Handler<wbr>Http</a>
+							</li>
+							<li class=" tsd-kind-class tsd-parent-kind-module tsd-is-external">
+								<a href="../classes/actor_rdf_metadata_extract_traverse_shapetrees.CliArgsHandlerQuery.html" class="tsd-kind-icon">Cli<wbr>Args<wbr>Handler<wbr>Query</a>
+							</li>
+							<li class=" tsd-kind-class tsd-parent-kind-module tsd-is-external">
+								<a href="../classes/actor_rdf_metadata_extract_traverse_shapetrees.HttpServiceSparqlEndpoint.html" class="tsd-kind-icon">Http<wbr>Service<wbr>Sparql<wbr>Endpoint</a>
+							</li>
+							<li class=" tsd-kind-class tsd-parent-kind-module tsd-is-external">
+								<a href="../classes/actor_rdf_metadata_extract_traverse_shapetrees.MemoryPhysicalQueryPlanLogger.html" class="tsd-kind-icon">Memory<wbr>Physical<wbr>Query<wbr>Plan<wbr>Logger</a>
+							</li>
+							<li class=" tsd-kind-class tsd-parent-kind-module tsd-is-external">
+								<a href="../classes/actor_rdf_metadata_extract_traverse_shapetrees.QueryEngineBase.html" class="tsd-kind-icon">Query<wbr>Engine<wbr>Base</a>
+							</li>
+							<li class=" tsd-kind-class tsd-parent-kind-module tsd-has-type-parameter tsd-is-external">
+								<a href="../classes/actor_rdf_metadata_extract_traverse_shapetrees.QueryEngineFactoryBase.html" class="tsd-kind-icon">Query<wbr>Engine<wbr>Factory<wbr>Base</a>
+							</li>
+							<li class=" tsd-kind-class tsd-parent-kind-module">
+								<a href="../classes/actor_rdf_metadata_extract_traverse_shapetrees.ShapeTree.html" class="tsd-kind-icon">Shape<wbr>Tree</a>
+							</li>
+							<li class=" tsd-kind-interface tsd-parent-kind-module tsd-is-external">
+								<a href="../interfaces/actor_rdf_metadata_extract_traverse_shapetrees.IActorInitQueryBaseArgs.html" class="tsd-kind-icon">IActor<wbr>Init<wbr>Query<wbr>Base<wbr>Args</a>
+							</li>
+							<li class=" tsd-kind-interface tsd-parent-kind-module">
+								<a href="../interfaces/actor_rdf_metadata_extract_traverse_shapetrees.IActorRdfMetadataExtractTraverseShapetreesArgs.html" class="tsd-kind-icon">IActor<wbr>Rdf<wbr>Metadata<wbr>Extract<wbr>Traverse<wbr>Shapetrees<wbr>Args</a>
+							</li>
+							<li class=" tsd-kind-interface tsd-parent-kind-module tsd-is-external">
+								<a href="../interfaces/actor_rdf_metadata_extract_traverse_shapetrees.IDynamicQueryEngineOptions.html" class="tsd-kind-icon">IDynamic<wbr>Query<wbr>Engine<wbr>Options</a>
+							</li>
+							<li class=" tsd-kind-interface tsd-parent-kind-module tsd-is-external">
+								<a href="../interfaces/actor_rdf_metadata_extract_traverse_shapetrees.IHttpServiceSparqlEndpointArgs.html" class="tsd-kind-icon">IHttp<wbr>Service<wbr>Sparql<wbr>Endpoint<wbr>Args</a>
+							</li>
+							<li class=" tsd-kind-interface tsd-parent-kind-module tsd-is-external">
+								<a href="../interfaces/actor_rdf_metadata_extract_traverse_shapetrees.IQueryBody.html" class="tsd-kind-icon">IQuery<wbr>Body</a>
+							</li>
+						</ul>
 					</li>
+				</ul>
+				<ul class="after-current">
 					<li class=" tsd-kind-module">
 						<a href="actor_rdf_resolve_hypermedia_links_queue_wrapper_limit_count.html" class="tsd-kind-icon">actor-<wbr>rdf-<wbr>resolve-<wbr>hypermedia-<wbr>links-<wbr>queue-<wbr>wrapper-<wbr>limit-<wbr>count</a>
 					</li>
@@ -197,18 +317,9 @@
 					<li class=" tsd-kind-module">
 						<a href="engines_query_sparql_link_traversal_lib_QueryEngine.html" class="tsd-kind-icon">engines/query-<wbr>sparql-<wbr>link-<wbr>traversal/lib/<wbr>Query<wbr>Engine</a>
 					</li>
-				</ul>
-				<ul class="current">
-					<li class="current tsd-kind-module">
+					<li class=" tsd-kind-module">
 						<a href="engines_query_sparql_link_traversal_lib_QueryEngineFactory.html" class="tsd-kind-icon">engines/query-<wbr>sparql-<wbr>link-<wbr>traversal/lib/<wbr>Query<wbr>Engine<wbr>Factory</a>
-						<ul>
-							<li class=" tsd-kind-class tsd-parent-kind-module">
-								<a href="../classes/engines_query_sparql_link_traversal_lib_QueryEngineFactory.QueryEngineFactory.html" class="tsd-kind-icon">Query<wbr>Engine<wbr>Factory</a>
-							</li>
-						</ul>
 					</li>
-				</ul>
-				<ul class="after-current">
 					<li class=" tsd-kind-module">
 						<a href="engines_query_sparql_link_traversal_lib_index_browser.html" class="tsd-kind-icon">engines/query-<wbr>sparql-<wbr>link-<wbr>traversal/lib/index-<wbr>browser</a>
 					</li>
