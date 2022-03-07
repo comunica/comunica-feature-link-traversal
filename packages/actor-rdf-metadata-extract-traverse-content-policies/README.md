@@ -43,5 +43,5 @@ After installing, this package can be added to your engine's configuration as fo
 
 ### Config Parameters
 
-* `cbrme:Actor/RdfMetadataExtract/TraverseContentPolicies#queryEngine`: An instance of ActorInitSparql.
-* `cbrme:Actor/RdfMetadataExtract/TraverseContentPolicies#traverseConditional`: A flag indicating if links should only be follow IF it has been defined by some other link extractor. _(default: `true`)_
+* `actorInitQuery`: An instance of ActorInitQuery.
+* `traverseConditional`: A flag indicating if links should only be follow IF it has been defined by some other link extractor. _(default: `true`)_

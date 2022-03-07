@@ -17,7 +17,8 @@ module.exports = {
   coveragePathIgnorePatterns: [
     '/node_modules/',
     '/mocks/',
-    'index.js'
+    'index.js',
+    '/packages/actor-rdf-metadata-extract-traverse-shapetrees/',
   ],
   testEnvironment: 'node',
   coverageThreshold: {
