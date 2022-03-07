@@ -7,7 +7,7 @@ pushd engines/query-sparql-link-traversal >/dev/null
 for config in ../config-query-sparql-link-traversal/config/*.json; do
   id=$(echo $config | sed "s/.*config\/config-\(.*\)\.json/\1/")
 
-  if [ "$id" = "base" ]; then
+  if [ "$id" = "base" ] || [ "$id" = "solid-base" ]; then
     continue;
   fi
 
