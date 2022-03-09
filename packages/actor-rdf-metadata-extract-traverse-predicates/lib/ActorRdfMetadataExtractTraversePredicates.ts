@@ -30,7 +30,7 @@ export class ActorRdfMetadataExtractTraversePredicates extends ActorRdfMetadataE
 
       // Immediately resolve when a value has been found.
       action.metadata.on('data', (quad: RDF.Quad) => {
-        if (!this.checkSubject || quad.subject.value === action.url) {
+        if (!this.checkSubject || this.subjectMatches(quad.subject.value, action.url)) {
           for (const regex of this.predicates) {
             if (regex.test(quad.predicate.value)) {
               traverse.push({ url: quad.object.value });
@@ -45,6 +45,14 @@ export class ActorRdfMetadataExtractTraversePredicates extends ActorRdfMetadataE
         resolve({ metadata: { traverse }});
       });
     });
+  }
+
+  private subjectMatches(subject: string, url: string): boolean {
+    const fragmentPos = subject.indexOf('#');
+    if (fragmentPos >= 0) {
+      subject = subject.slice(0, fragmentPos);
+    }
+    return subject === url;
   }
 }
 

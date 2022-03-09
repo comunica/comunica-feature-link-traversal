@@ -26,7 +26,7 @@ describe('ActorRdfMetadataExtractTraversePredicates', () => {
       });
       input = stream([
         quad('ex:s', 'http://www.w3.org/ns/ldp#contains', 'ex:r1', 'ex:gx'),
-        quad('ex:s', 'http://www.w3.org/ns/ldp#contains', 'ex:r2'),
+        quad('ex:s#abc', 'http://www.w3.org/ns/ldp#contains', 'ex:r2'),
         quad('ex:s', 'ex:px', 'ex:r3'),
         quad('ex:s2', 'http://www.w3.org/ns/ldp#contains', 'ex:r3'),
       ]);
