@@ -5,13 +5,15 @@ import type { IActorArgs, IActorTest } from '@comunica/core';
 import type * as RDF from '@rdfjs/types';
 
 /**
- * A comunica Traverse LDP Contains RDF Metadata Extract Actor.
+ * A comunica Traverse Predicates RDF Metadata Extract Actor.
  */
-export class ActorRdfMetadataExtractTraverseLdpContains extends ActorRdfMetadataExtract {
-  public static readonly IRI_LDP_CONTAINS = 'http://www.w3.org/ns/ldp#contains';
+export class ActorRdfMetadataExtractTraversePredicates extends ActorRdfMetadataExtract {
+  private readonly predicates: RegExp[];
 
-  public constructor(args: IActorArgs<IActionRdfMetadataExtract, IActorTest, IActorRdfMetadataExtractOutput>) {
+  public constructor(args: IActorRdfMetadataExtractTraversePredicatesArgs) {
     super(args);
+
+    this.predicates = args.predicateRegexes.map(stringRegex => new RegExp(stringRegex, 'u'));
   }
 
   public async test(action: IActionRdfMetadataExtract): Promise<IActorTest> {
@@ -27,8 +29,13 @@ export class ActorRdfMetadataExtractTraverseLdpContains extends ActorRdfMetadata
 
       // Immediately resolve when a value has been found.
       action.metadata.on('data', (quad: RDF.Quad) => {
-        if (quad.predicate.value === ActorRdfMetadataExtractTraverseLdpContains.IRI_LDP_CONTAINS) {
-          traverse.push({ url: quad.object.value });
+        if (quad.subject.value === action.url) {
+          for (const regex of this.predicates) {
+            if (regex.test(quad.predicate.value)) {
+              traverse.push({ url: quad.object.value });
+              break;
+            }
+          }
         }
       });
 
@@ -38,4 +45,9 @@ export class ActorRdfMetadataExtractTraverseLdpContains extends ActorRdfMetadata
       });
     });
   }
+}
+
+export interface IActorRdfMetadataExtractTraversePredicatesArgs
+  extends IActorArgs<IActionRdfMetadataExtract, IActorTest, IActorRdfMetadataExtractOutput> {
+  predicateRegexes: string[];
 }

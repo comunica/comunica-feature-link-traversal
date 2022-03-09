@@ -1,14 +1,14 @@
 {
-  "name": "@comunica/actor-rdf-metadata-extract-traverse-ldp-contains",
+  "name": "@comunica/actor-rdf-metadata-extract-traverse-predicates",
   "version": "0.0.1",
-  "description": "A traverse-ldp-contains rdf-metadata-extract actor",
+  "description": "A traverse-predicates rdf-metadata-extract actor",
   "lsd:module": true,
   "main": "lib/index.js",
   "typings": "lib/index",
   "repository": {
     "type": "git",
     "url": "https://github.com/comunica/comunica.git",
-    "directory": "packages/actor-rdf-metadata-extract-traverse-ldp-contains"
+    "directory": "packages/actor-rdf-metadata-extract-traverse-predicates"
   },
   "publishConfig": {
     "access": "public"
@@ -18,7 +18,7 @@
     "comunica",
     "actor",
     "rdf-metadata-extract",
-    "traverse-ldp-contains"
+    "traverse-predicates"
   ],
   "license": "MIT",
   "bugs": {
@@ -32,7 +32,8 @@
   ],
   "dependencies": {
     "@comunica/core": "^2.0.1",
-    "@comunica/bus-rdf-metadata-extract": "^2.0.1"
+    "@comunica/bus-rdf-metadata-extract": "^2.0.1",
+    "@comunica/bus-rdf-resolve-hypermedia-links": "^2.0.1"
   },
   "scripts": {
     "build": "npm run build:ts && npm run build:components",
