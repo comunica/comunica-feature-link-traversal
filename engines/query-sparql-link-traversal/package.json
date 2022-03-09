@@ -42,7 +42,7 @@
     "engine-default.js"
   ],
   "dependencies": {
-    "@comunica/query-sparql": "^2.0.3",
+    "@comunica/query-sparql": "^2.1.0",
     "@comunica/actor-optimize-query-operation-set-seed-sources-quadpattern-iris": "^0.0.1",
     "@comunica/actor-rdf-join-entries-sort-traversal-zero-knowledge": "^0.0.1",
     "@comunica/actor-rdf-metadata-extract-traverse-all": "^0.0.1",
