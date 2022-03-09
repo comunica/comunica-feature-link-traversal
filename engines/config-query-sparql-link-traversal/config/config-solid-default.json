@@ -5,6 +5,8 @@
   ],
   "import": [
     "ccqslt:config/config-solid-base.json",
-    "ccqslt:config/rdf-metadata-extract/actors/traverse-ldp.json"
+    "ccqslt:config/rdf-metadata-extract/actors/traverse-predicates-common.json",
+    "ccqslt:config/rdf-metadata-extract/actors/traverse-predicates-ldp.json",
+    "ccqslt:config/rdf-metadata-extract/actors/traverse-predicates-solid.json"
   ]
 }

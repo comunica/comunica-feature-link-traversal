@@ -8,8 +8,9 @@
   "@type": "Runner",
   "actors": [
     {
-      "@id": "urn:comunica:default:rdf-metadata-extract/actors#traverse-ldp-contains",
+      "@id": "urn:comunica:default:rdf-metadata-extract/actors#traverse-predicates-ldp",
       "@type": "ActorRdfMetadataExtractTraversePredicates",
+      "checkSubject": true,
       "predicateRegexes": [
         "http://www.w3.org/ns/ldp#contains"
       ]
