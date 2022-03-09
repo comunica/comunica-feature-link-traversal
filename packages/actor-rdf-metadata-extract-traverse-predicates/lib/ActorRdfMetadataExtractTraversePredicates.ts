@@ -8,6 +8,7 @@ import type * as RDF from '@rdfjs/types';
  * A comunica Traverse Predicates RDF Metadata Extract Actor.
  */
 export class ActorRdfMetadataExtractTraversePredicates extends ActorRdfMetadataExtract {
+  private readonly checkSubject: boolean;
   private readonly predicates: RegExp[];
 
   public constructor(args: IActorRdfMetadataExtractTraversePredicatesArgs) {
@@ -29,7 +30,7 @@ export class ActorRdfMetadataExtractTraversePredicates extends ActorRdfMetadataE
 
       // Immediately resolve when a value has been found.
       action.metadata.on('data', (quad: RDF.Quad) => {
-        if (quad.subject.value === action.url) {
+        if (!this.checkSubject || quad.subject.value === action.url) {
           for (const regex of this.predicates) {
             if (regex.test(quad.predicate.value)) {
               traverse.push({ url: quad.object.value });
@@ -49,5 +50,12 @@ export class ActorRdfMetadataExtractTraversePredicates extends ActorRdfMetadataE
 
 export interface IActorRdfMetadataExtractTraversePredicatesArgs
   extends IActorArgs<IActionRdfMetadataExtract, IActorTest, IActorRdfMetadataExtractOutput> {
+  /**
+   * If only quads will be considered that have a subject equal to the request URL.
+   */
+  checkSubject: boolean;
+  /**
+   * A list of regular expressions that will be tested against predicates of quads.
+   */
   predicateRegexes: string[];
 }

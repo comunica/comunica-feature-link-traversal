@@ -3,7 +3,7 @@
 [![npm version](https://badge.fury.io/js/%40comunica%2Factor-rdf-metadata-extract-traverse-predicates.svg)](https://www.npmjs.com/package/@comunica/actor-rdf-metadata-extract-traverse-predicates)
 
 An [RDF Metadata Extract](https://github.com/comunica/comunica/tree/master/packages/bus-rdf-metadata-extract) actor that
-collects all object links for subjects that match the current document
+collects all object links for subjects that (optionally) match the current document
 and predicates that match with any of the configured regular expressions, 
 and stores it inside the metadata under the `traverse` key.
 
@@ -32,6 +32,7 @@ After installing, this package can be added to your engine's configuration as fo
     {
       "@id": "urn:comunica:default:rdf-metadata-extract/actors#traverse-predicates",
       "@type": "ActorRdfMetadataExtractTraversePredicates"
+      "checkSubject": true,
       "predicateRegexes": [
         "http://www.w3.org/ns/ldp#contains"
       ]
@@ -42,4 +43,5 @@ After installing, this package can be added to your engine's configuration as fo
 
 ### Config Parameters
 
+* `checkSubject`: If only quads will be considered that have a subject equal to the request URL.
 * `predicateRegexes`: An array of regular expressions that will be matched with incoming predicates.
