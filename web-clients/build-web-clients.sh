@@ -1,6 +1,9 @@
 #!/bin/bash
 # Build web clients from all default configs of query-sparql-link-traversal
 
+# Exit when any command fails
+set -e
+
 cwd=$(pwd)
 mkdir -p $cwd/web-clients/builds
 pushd engines/query-sparql-link-traversal >/dev/null
