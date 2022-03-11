@@ -18,7 +18,7 @@ module.exports = {
     '/node_modules/',
     '/mocks/',
     'index.js',
-    '/packages/actor-rdf-metadata-extract-traverse-shapetrees/',
+    '/packages/actor-extract-links-traverse-shapetrees/',
   ],
   testEnvironment: 'node',
   coverageThreshold: {

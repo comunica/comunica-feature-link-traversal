@@ -19,25 +19,32 @@
 This is a monorepo that contains packages for allowing [Comunica](https://github.com/comunica/comunica) to link traversal-based query execution.
 If you want to _use_ an Link Traversal-enabled Comunica engine, have a look at [Comunica SPARQL Link Traversal](https://github.com/comunica/comunica-feature-link-traversal/tree/master/engines/query-sparql-link-traversal).
 
-Concretely, this monorepo adds link traversal support to Comunica using the following packages:
+Concretely, link traversal is enabled in the following engines:
 
 * Query engine configurations:
   * [Comunica SPARQL Link Traversal](https://github.com/comunica/comunica-feature-link-traversal/tree/master/engines/query-sparql-link-traversal): A Comunica query engine that includes all Link Traversal packages.
   * [Comunica SPARQL Link Traversal Solid](https://github.com/comunica/comunica-feature-link-traversal/tree/master/engines/query-sparql-link-traversal-solid): A Comunica query engine that includes all Link Traversal and Solid-related packages.
+
+These engines make use of the following packages:
+
 * Seed URL actors:
     * [Seed URL preprocessor](https://github.com/comunica/comunica-feature-link-traversal/tree/master/packages/actor-optimize-query-operation-set-seed-sources-quadpattern-iris): Actor that sets sources based on the given query, if no other sources were set.
-* Query operation actors:
-    * [BGP query operator](https://github.com/comunica/comunica-feature-link-traversal/tree/master/packages/actor-query-operation-bgp-traversal): Actor that handles BGP operations based on heuristics for plan selection in link traversal environments.
-* Link extractors (all require [Traverse RDF Resolve Hypermedia Links Actor](https://github.com/comunica/comunica-feature-link-traversal/tree/master/packages/actor-rdf-resolve-hypermedia-links-traverse)):
-    * [All links extractor](https://github.com/comunica/comunica-feature-link-traversal/tree/master/packages/actor-rdf-metadata-extract-traverse-all): Actor that extracts all URLs in a document for traversal.
-    * [Content policies extractor](https://github.com/comunica/comunica-feature-link-traversal/tree/master/packages/actor-rdf-metadata-extract-traverse-content-policies): Actor that extracts URLs matching content policies in a document for traversal.
+* Join entries sort actors:
+    * [Zero-knowledge](https://github.com/comunica/comunica-feature-link-traversal/tree/master/packages/actor-rdf-join-entries-sort-traversal-zero-knowledge): Actor that orders join entries based on heuristics for plan selection in link traversal environments.
+* Link extractors (all require [Traverse RDF Resolve Hypermedia Links Actor](https://github.com/comunica/comunica-feature-link-traversal/tree/master/packages/actor-rdf-resolve-hypermedia-links-traverse) and [Traverse RDF Metadata Extract Actor](https://github.com/comunica/comunica-feature-link-traversal/tree/master/packages/actor-rdf-metadata-extract-traverse)):
+    * [All links extractor](https://github.com/comunica/comunica-feature-link-traversal/tree/master/packages/actor-extract-links-all): Actor that extracts all URLs in a document for traversal.
+    * [Content policies extractor](https://github.com/comunica/comunica-feature-link-traversal/tree/master/packages/actor-extract-links-content-policies): Actor that extracts URLs matching content policies in a document for traversal.
         * _Requires [Traverse Filter Conditional RDF Resolve Hypermedia Links Actor](https://github.com/comunica/comunica-feature-link-traversal/tree/master/packages/actor-rdf-resolve-hypermedia-links-traverse-replace-conditional)_
-    * [Predicates extractor](https://github.com/comunica/comunica-feature-link-traversal/tree/master/packages/actor-rdf-metadata-extract-traverse-predicates): Actor that extracts the object URLs of triples that match with a configured predicate regex for traversal.
-    * [Quad pattern extractor](https://github.com/comunica/comunica-feature-link-traversal/tree/master/packages/actor-rdf-metadata-extract-traverse-quad-pattern): Actor that extracts all URLs that match the current quad pattern in a document for traversal.
-    * [Quad pattern query extractor](https://github.com/comunica/comunica-feature-link-traversal/tree/master/packages/actor-rdf-metadata-extract-traverse-quad-pattern-query): Actor that extracts all URLs that match any quad pattern in the current query in a document for traversal.
+    * [Predicates extractor](https://github.com/comunica/comunica-feature-link-traversal/tree/master/packages/actor-extract-links-predicates): Actor that extracts the object URLs of triples that match with a configured predicate regex for traversal.
+    * [Quad pattern extractor](https://github.com/comunica/comunica-feature-link-traversal/tree/master/packages/actor-extract-links-quad-pattern): Actor that extracts all URLs that match the current quad pattern in a document for traversal.
+    * [Quad pattern query extractor](https://github.com/comunica/comunica-feature-link-traversal/tree/master/packages/actor-extract-links-quad-pattern-query): Actor that extracts all URLs that match any quad pattern in the current query in a document for traversal.
 * Query termination actors:
     * [Link count limit](https://github.com/comunica/comunica-feature-link-traversal/tree/master/packages/actor-rdf-resolve-hypermedia-links-queue-wrapper-limit-count): Actor that imposes a limit of the maximum number of links that can be pushed into the link queue.
     * [Link depth limit](https://github.com/comunica/comunica-feature-link-traversal/tree/master/packages/actor-rdf-resolve-hypermedia-links-queue-wrapper-limit-depth): Actor that imposes a limit of the depth of link paths that can be pushed into the link queue.
+* Buses:
+  * [Extract links](https://github.com/comunica/comunica-feature-link-traversal/tree/master/packages/bus-extract-links): Bus that determines the links to follow from a metadata quad stream.
+* Mediators:
+  * [Combine array](https://github.com/comunica/comunica-feature-link-traversal/tree/master/packages/mediator-combine-array): Mediator that concatenates an array of all actor results.
 
 **Warning: All packages in this repo should be considered unstable, and breaking changes may occur at any time.**
 

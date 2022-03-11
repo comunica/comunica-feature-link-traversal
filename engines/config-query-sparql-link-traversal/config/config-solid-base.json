@@ -7,6 +7,7 @@
   "import": [
     "ccqs:config/context-preprocess/actors.json",
     "ccqs:config/context-preprocess/mediators.json",
+    "ccqslt:config/extract-links/mediators.json",
     "ccqs:config/hash-bindings/actors.json",
     "ccqs:config/hash-bindings/mediators.json",
     "ccqss:config/http/actors.json",
@@ -36,6 +37,7 @@
     "ccqs:config/rdf-metadata/mediators.json",
     "ccqs:config/rdf-metadata-extract/actors.json",
     "ccqs:config/rdf-metadata-extract/mediators.json",
+    "ccqslt:config/rdf-metadata-extract/actors/traverse.json",
     "ccqs:config/rdf-parse/actors.json",
     "ccqs:config/rdf-parse/mediators.json",
     "ccqs:config/rdf-parse-html/actors.json",

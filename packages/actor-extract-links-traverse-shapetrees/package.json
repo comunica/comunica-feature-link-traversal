@@ -1,0 +1,50 @@
+{
+  "name": "@comunica/actor-extract-links-shapetrees",
+  "version": "0.0.1",
+  "description": "A traverse-shapetrees extract-links actor",
+  "lsd:module": true,
+  "main": "lib/index.js",
+  "typings": "lib/index",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/comunica/comunica.git",
+    "directory": "packages/actor-extract-links-shapetrees"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "sideEffects": false,
+  "keywords": [
+    "comunica",
+    "actor",
+    "extract-links",
+    "traverse-shapetrees"
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/comunica/comunica/issues"
+  },
+  "homepage": "https://comunica.dev/",
+  "files": [
+    "components",
+    "lib/**/*.d.ts",
+    "lib/**/*.js"
+  ],
+  "dependencies": {
+    "@comunica/actor-init-query": "^2.0.6",
+    "@comunica/core": "^2.0.1",
+    "@comunica/bus-extract-links": "^0.0.1",
+    "@comunica/bus-dereference-rdf": "^2.0.1",
+    "@comunica/bus-http": "^2.0.1",
+    "@shexjs/parser": "^1.0.0-alpha.20",
+    "@types/parse-link-header": "^1.0.1",
+    "@types/shexj": "^2.1.1",
+    "parse-link-header": "^2.0.0",
+    "rdf-store-stream": "^1.3.0"
+  },
+  "scripts": {
+    "build": "npm run build:ts && npm run build:components",
+    "build:ts": "node \"../../node_modules/typescript/bin/tsc\"",
+    "build:components": "componentsjs-generator"
+  }
+}

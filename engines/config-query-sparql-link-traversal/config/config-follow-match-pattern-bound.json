@@ -5,6 +5,6 @@
   ],
   "import": [
     "ccqslt:config/config-base.json",
-    "ccqslt:config/rdf-metadata-extract/actors/traverse-quad-pattern.json"
+    "ccqslt:config/extract-links/actors/quad-pattern.json"
   ]
 }
