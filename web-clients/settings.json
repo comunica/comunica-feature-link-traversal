@@ -4,7 +4,8 @@
     "graphql": true
   },
   "context": {
-    "lenient": true
+    "lenient": true,
+    "@comunica/actor-rdf-resolve-hypermedia-links-traverse:traverse": true
   },
   "branding": {
     "title": "Comunica Link Traversal",
