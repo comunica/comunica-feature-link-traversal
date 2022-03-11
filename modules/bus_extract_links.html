@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>actor-rdf-join-entries-sort-traversal-zero-knowledge | Comunica Link Traversal</title>
+	<title>bus-extract-links | Comunica Link Traversal</title>
 	<meta name="description" content="Documentation for Comunica Link Traversal">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -55,10 +55,10 @@
 					<a href="../modules.html">Comunica Link Traversal</a>
 				</li>
 				<li>
-					<a href="actor_rdf_join_entries_sort_traversal_zero_knowledge.html">actor-rdf-join-entries-sort-traversal-zero-knowledge</a>
+					<a href="bus_extract_links.html">bus-extract-links</a>
 				</li>
 			</ul>
-			<h1>Module actor-rdf-join-entries-sort-traversal-zero-knowledge</h1>
+			<h1>Module bus-extract-links</h1>
 		</div>
 	</div>
 </header>
@@ -67,39 +67,33 @@
 		<div class="col-8 col-content">
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
-					<a href="#comunica-zero-knowledge-based-traversal-rdf-join-entries-sort-actor" id="comunica-zero-knowledge-based-traversal-rdf-join-entries-sort-actor" style="color: inherit; text-decoration: none;">
-						<h1>Comunica Zero-knowledge-based Traversal RDF Join Entries Sort Actor</h1>
+					<a href="#comunica-bus-extract-links" id="comunica-bus-extract-links" style="color: inherit; text-decoration: none;">
+						<h1>Comunica Bus Extract Links</h1>
 					</a>
-					<p><a href="https://www.npmjs.com/package/@comunica/actor-rdf-join-entries-sort-traversal-zero-knowledge"><img src="https://badge.fury.io/js/%40comunica%2Factor-rdf-join-entries-sort-traversal-zero-knowledge.svg" alt="npm version"></a></p>
-					<p>An <a href="https://github.com/comunica/comunica/tree/master/packages/bus-rdf-join-entries-sort">RDF Join Entries Sort</a> actor
-						that orders join entries based on Hartig&#39;s heuristic for plan selection in link traversal environments
-					as described in &quot;Zero-Knowledge Query Planning for an Iterator Implementation of Link Traversal Based Query Execution&quot;.</p>
+					<p><a href="https://www.npmjs.com/package/@comunica/bus-extract-links"><img src="https://badge.fury.io/js/%40comunica%2Fbus-extract-links.svg" alt="npm version"></a></p>
+					<p>A comunica bus that determines the links to follow from a metadata quad stream.</p>
 					<p>This module is part of the <a href="https://github.com/comunica/comunica">Comunica framework</a>,
 					and should only be used by <a href="https://comunica.dev/docs/modify/">developers that want to build their own query engine</a>.</p>
 					<p><a href="https://comunica.dev/docs/query/">Click here if you just want to query with Comunica</a>.</p>
 					<a href="#install" id="install" style="color: inherit; text-decoration: none;">
 						<h2>Install</h2>
 					</a>
-					<pre><code class="language-bash"><span style="color: #000000">$ yarn add @comunica/actor-rdf-join-entries-sort-traversal-zero-knowledge</span>
+					<pre><code class="language-bash"><span style="color: #000000">$ yarn add @comunica/bus-extract-links</span>
 </code></pre>
-					<a href="#configure" id="configure" style="color: inherit; text-decoration: none;">
-						<h2>Configure</h2>
+					<a href="#usage" id="usage" style="color: inherit; text-decoration: none;">
+						<h2>Usage</h2>
 					</a>
-					<p>After installing, this package can be added to your engine&#39;s configuration as follows:</p>
-					<pre><code class="language-text">{
-  &quot;@context&quot;: [
-    ...
-    &quot;https://linkedsoftwaredependencies.org/bundles/npm/@comunica/actor-rdf-join-entries-sort-traversal-zero-knowledge/^2.0.0/components/context.jsonld&quot;  
-  ],
-  &quot;actors&quot;: [
-    ...
-    {
-      &quot;@id&quot;: &quot;urn:comunica:default:rdf-join-entries-sort/actors#traversal-zero-knowledge&quot;,
-      &quot;@type&quot;: &quot;ActorRdfJoinEntriesSortTraversalZeroKnowledge&quot;
-    }
-  ]
-}
-</code></pre>
+					<a href="#bus-usage" id="bus-usage" style="color: inherit; text-decoration: none;">
+						<h2>Bus usage</h2>
+					</a>
+					<ul>
+						<li><strong>Context</strong>: <code>&quot;https://linkedsoftwaredependencies.org/bundles/npm/@comunica/bus-extract-links/^1.0.0/components/context.jsonld&quot;</code></li>
+						<li><strong>Bus name</strong>: <code>ActorExtractLinks:_default_bus</code></li>
+					</ul>
+					<a href="#creating-actors-on-this-bus" id="creating-actors-on-this-bus" style="color: inherit; text-decoration: none;">
+						<h2>Creating actors on this bus</h2>
+					</a>
+					<p>Actors extending <a href="https://comunica.github.io/comunica-feature-link-traversal/classes/bus_extract_links.ActorExtractLinks.html"><code>ActorExtractLinks</code></a> are automatically subscribed to this bus.</p>
 				</div>
 			</section>
 			<section class="tsd-panel-group tsd-index-group">
@@ -109,10 +103,47 @@
 						<section class="tsd-index-section ">
 							<h3>Classes</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-class tsd-parent-kind-module"><a href="../classes/actor_rdf_join_entries_sort_traversal_zero_knowledge.ActorRdfJoinEntriesSortTraversalZeroKnowledge.html" class="tsd-kind-icon">Actor<wbr>Rdf<wbr>Join<wbr>Entries<wbr>Sort<wbr>Traversal<wbr>Zero<wbr>Knowledge</a></li>
+								<li class="tsd-kind-class tsd-parent-kind-module"><a href="../classes/bus_extract_links.ActorExtractLinks.html" class="tsd-kind-icon">Actor<wbr>Extract<wbr>Links</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Interfaces</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-interface tsd-parent-kind-module"><a href="../interfaces/bus_extract_links.IActionExtractLinks.html" class="tsd-kind-icon">IAction<wbr>Extract<wbr>Links</a></li>
+								<li class="tsd-kind-interface tsd-parent-kind-module"><a href="../interfaces/bus_extract_links.IActorExtractLinksOutput.html" class="tsd-kind-icon">IActor<wbr>Extract<wbr>Links<wbr>Output</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Type aliases</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-type-alias tsd-parent-kind-module"><a href="bus_extract_links.html#IActorExtractLinksArgs" class="tsd-kind-icon">IActor<wbr>Extract<wbr>Links<wbr>Args</a></li>
+								<li class="tsd-kind-type-alias tsd-parent-kind-module"><a href="bus_extract_links.html#MediatorExtractLinks" class="tsd-kind-icon">Mediator<wbr>Extract<wbr>Links</a></li>
 							</ul>
 						</section>
 					</div>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Type aliases</h2>
+				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-parent-kind-module">
+					<a name="IActorExtractLinksArgs" class="tsd-anchor"></a>
+					<h3>IActor<wbr>Extract<wbr>Links<wbr>Args</h3>
+					<div class="tsd-signature tsd-kind-icon">IActor<wbr>Extract<wbr>Links<wbr>Args<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">IActorArgs</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/bus_extract_links.IActionExtractLinks.html" class="tsd-signature-type" data-tsd-kind="Interface">IActionExtractLinks</a><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">IActorTest</span><span class="tsd-signature-symbol">, </span><a href="../interfaces/bus_extract_links.IActorExtractLinksOutput.html" class="tsd-signature-type" data-tsd-kind="Interface">IActorExtractLinksOutput</a><span class="tsd-signature-symbol">&gt;</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/comunica/comunica-feature-link-traversal/blob/52595a5/packages/bus-extract-links/lib/ActorExtractLinks.ts#L57">packages/bus-extract-links/lib/ActorExtractLinks.ts:57</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-parent-kind-module">
+					<a name="MediatorExtractLinks" class="tsd-anchor"></a>
+					<h3>Mediator<wbr>Extract<wbr>Links</h3>
+					<div class="tsd-signature tsd-kind-icon">Mediator<wbr>Extract<wbr>Links<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Mediate</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/bus_extract_links.IActionExtractLinks.html" class="tsd-signature-type" data-tsd-kind="Interface">IActionExtractLinks</a><span class="tsd-signature-symbol">, </span><a href="../interfaces/bus_extract_links.IActorExtractLinksOutput.html" class="tsd-signature-type" data-tsd-kind="Interface">IActorExtractLinksOutput</a><span class="tsd-signature-symbol">&gt;</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/comunica/comunica-feature-link-traversal/blob/52595a5/packages/bus-extract-links/lib/ActorExtractLinks.ts#L60">packages/bus-extract-links/lib/ActorExtractLinks.ts:60</a></li>
+						</ul>
+					</aside>
 				</section>
 			</section>
 		</div>
@@ -143,7 +174,7 @@
 					<li class=" tsd-kind-module">
 						<a href="actor_optimize_query_operation_set_seed_sources_quadpattern_iris.html">actor-<wbr>optimize-<wbr>query-<wbr>operation-<wbr>set-<wbr>seed-<wbr>sources-<wbr>quadpattern-<wbr>iris</a>
 					</li>
-					<li class="current tsd-kind-module">
+					<li class=" tsd-kind-module">
 						<a href="actor_rdf_join_entries_sort_traversal_zero_knowledge.html">actor-<wbr>rdf-<wbr>join-<wbr>entries-<wbr>sort-<wbr>traversal-<wbr>zero-<wbr>knowledge</a>
 					</li>
 					<li class=" tsd-kind-module">
@@ -161,7 +192,7 @@
 					<li class=" tsd-kind-module">
 						<a href="actor_rdf_resolve_hypermedia_links_traverse_replace_conditional.html">actor-<wbr>rdf-<wbr>resolve-<wbr>hypermedia-<wbr>links-<wbr>traverse-<wbr>replace-<wbr>conditional</a>
 					</li>
-					<li class=" tsd-kind-module">
+					<li class="current tsd-kind-module">
 						<a href="bus_extract_links.html">bus-<wbr>extract-<wbr>links</a>
 					</li>
 					<li class=" tsd-kind-module">
@@ -216,18 +247,9 @@
 					<li class=" tsd-kind-module">
 						<a href="actor_optimize_query_operation_set_seed_sources_quadpattern_iris.html" class="tsd-kind-icon">actor-<wbr>optimize-<wbr>query-<wbr>operation-<wbr>set-<wbr>seed-<wbr>sources-<wbr>quadpattern-<wbr>iris</a>
 					</li>
-				</ul>
-				<ul class="current">
-					<li class="current tsd-kind-module">
+					<li class=" tsd-kind-module">
 						<a href="actor_rdf_join_entries_sort_traversal_zero_knowledge.html" class="tsd-kind-icon">actor-<wbr>rdf-<wbr>join-<wbr>entries-<wbr>sort-<wbr>traversal-<wbr>zero-<wbr>knowledge</a>
-						<ul>
-							<li class=" tsd-kind-class tsd-parent-kind-module">
-								<a href="../classes/actor_rdf_join_entries_sort_traversal_zero_knowledge.ActorRdfJoinEntriesSortTraversalZeroKnowledge.html" class="tsd-kind-icon">Actor<wbr>Rdf<wbr>Join<wbr>Entries<wbr>Sort<wbr>Traversal<wbr>Zero<wbr>Knowledge</a>
-							</li>
-						</ul>
 					</li>
-				</ul>
-				<ul class="after-current">
 					<li class=" tsd-kind-module">
 						<a href="actor_rdf_metadata_extract_traverse.html" class="tsd-kind-icon">actor-<wbr>rdf-<wbr>metadata-<wbr>extract-<wbr>traverse</a>
 					</li>
@@ -243,9 +265,30 @@
 					<li class=" tsd-kind-module">
 						<a href="actor_rdf_resolve_hypermedia_links_traverse_replace_conditional.html" class="tsd-kind-icon">actor-<wbr>rdf-<wbr>resolve-<wbr>hypermedia-<wbr>links-<wbr>traverse-<wbr>replace-<wbr>conditional</a>
 					</li>
-					<li class=" tsd-kind-module">
+				</ul>
+				<ul class="current">
+					<li class="current tsd-kind-module">
 						<a href="bus_extract_links.html" class="tsd-kind-icon">bus-<wbr>extract-<wbr>links</a>
+						<ul>
+							<li class=" tsd-kind-class tsd-parent-kind-module">
+								<a href="../classes/bus_extract_links.ActorExtractLinks.html" class="tsd-kind-icon">Actor<wbr>Extract<wbr>Links</a>
+							</li>
+							<li class=" tsd-kind-interface tsd-parent-kind-module">
+								<a href="../interfaces/bus_extract_links.IActionExtractLinks.html" class="tsd-kind-icon">IAction<wbr>Extract<wbr>Links</a>
+							</li>
+							<li class=" tsd-kind-interface tsd-parent-kind-module">
+								<a href="../interfaces/bus_extract_links.IActorExtractLinksOutput.html" class="tsd-kind-icon">IActor<wbr>Extract<wbr>Links<wbr>Output</a>
+							</li>
+							<li class=" tsd-kind-type-alias tsd-parent-kind-module">
+								<a href="bus_extract_links.html#IActorExtractLinksArgs" class="tsd-kind-icon">IActor<wbr>Extract<wbr>Links<wbr>Args</a>
+							</li>
+							<li class=" tsd-kind-type-alias tsd-parent-kind-module">
+								<a href="bus_extract_links.html#MediatorExtractLinks" class="tsd-kind-icon">Mediator<wbr>Extract<wbr>Links</a>
+							</li>
+						</ul>
 					</li>
+				</ul>
+				<ul class="after-current">
 					<li class=" tsd-kind-module">
 						<a href="engines_query_sparql_link_traversal_solid_lib.html" class="tsd-kind-icon">engines/query-<wbr>sparql-<wbr>link-<wbr>traversal-<wbr>solid/lib</a>
 					</li>

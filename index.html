@@ -74,35 +74,46 @@
 				<p><strong><a href="https://comunica.dev/">Learn more about Comunica on our website</a>.</strong></p>
 				<p>This is a monorepo that contains packages for allowing <a href="https://github.com/comunica/comunica">Comunica</a> to link traversal-based query execution.
 				If you want to <em>use</em> an Link Traversal-enabled Comunica engine, have a look at <a href="https://github.com/comunica/comunica-feature-link-traversal/tree/master/engines/query-sparql-link-traversal">Comunica SPARQL Link Traversal</a>.</p>
-				<p>Concretely, this monorepo adds link traversal support to Comunica using the following packages:</p>
+				<p>Concretely, link traversal is enabled in the following engines:</p>
 				<ul>
 					<li>Query engine configurations:<ul>
 							<li><a href="https://github.com/comunica/comunica-feature-link-traversal/tree/master/engines/query-sparql-link-traversal">Comunica SPARQL Link Traversal</a>: A Comunica query engine that includes all Link Traversal packages.</li>
 							<li><a href="https://github.com/comunica/comunica-feature-link-traversal/tree/master/engines/query-sparql-link-traversal-solid">Comunica SPARQL Link Traversal Solid</a>: A Comunica query engine that includes all Link Traversal and Solid-related packages.</li>
 						</ul>
 					</li>
+				</ul>
+				<p>These engines make use of the following packages:</p>
+				<ul>
 					<li>Seed URL actors:<ul>
 							<li><a href="https://github.com/comunica/comunica-feature-link-traversal/tree/master/packages/actor-optimize-query-operation-set-seed-sources-quadpattern-iris">Seed URL preprocessor</a>: Actor that sets sources based on the given query, if no other sources were set.</li>
 						</ul>
 					</li>
-					<li>Query operation actors:<ul>
-							<li><a href="https://github.com/comunica/comunica-feature-link-traversal/tree/master/packages/actor-query-operation-bgp-traversal">BGP query operator</a>: Actor that handles BGP operations based on heuristics for plan selection in link traversal environments.</li>
+					<li>Join entries sort actors:<ul>
+							<li><a href="https://github.com/comunica/comunica-feature-link-traversal/tree/master/packages/actor-rdf-join-entries-sort-traversal-zero-knowledge">Zero-knowledge</a>: Actor that orders join entries based on heuristics for plan selection in link traversal environments.</li>
 						</ul>
 					</li>
-					<li>Link extractors (all require <a href="https://github.com/comunica/comunica-feature-link-traversal/tree/master/packages/actor-rdf-resolve-hypermedia-links-traverse">Traverse RDF Resolve Hypermedia Links Actor</a>):<ul>
-							<li><a href="https://github.com/comunica/comunica-feature-link-traversal/tree/master/packages/actor-rdf-metadata-extract-traverse-all">All links extractor</a>: Actor that extracts all URLs in a document for traversal.</li>
-							<li><a href="https://github.com/comunica/comunica-feature-link-traversal/tree/master/packages/actor-rdf-metadata-extract-traverse-content-policies">Content policies extractor</a>: Actor that extracts URLs matching content policies in a document for traversal.<ul>
+					<li>Link extractors (all require <a href="https://github.com/comunica/comunica-feature-link-traversal/tree/master/packages/actor-rdf-resolve-hypermedia-links-traverse">Traverse RDF Resolve Hypermedia Links Actor</a> and <a href="https://github.com/comunica/comunica-feature-link-traversal/tree/master/packages/actor-rdf-metadata-extract-traverse">Traverse RDF Metadata Extract Actor</a>):<ul>
+							<li><a href="https://github.com/comunica/comunica-feature-link-traversal/tree/master/packages/actor-extract-links-all">All links extractor</a>: Actor that extracts all URLs in a document for traversal.</li>
+							<li><a href="https://github.com/comunica/comunica-feature-link-traversal/tree/master/packages/actor-extract-links-content-policies">Content policies extractor</a>: Actor that extracts URLs matching content policies in a document for traversal.<ul>
 									<li><em>Requires <a href="https://github.com/comunica/comunica-feature-link-traversal/tree/master/packages/actor-rdf-resolve-hypermedia-links-traverse-replace-conditional">Traverse Filter Conditional RDF Resolve Hypermedia Links Actor</a></em></li>
 								</ul>
 							</li>
-							<li><a href="https://github.com/comunica/comunica-feature-link-traversal/tree/master/packages/actor-rdf-metadata-extract-traverse-predicates">Predicates extractor</a>: Actor that extracts the object URLs of triples that match with a configured predicate regex for traversal.</li>
-							<li><a href="https://github.com/comunica/comunica-feature-link-traversal/tree/master/packages/actor-rdf-metadata-extract-traverse-quad-pattern">Quad pattern extractor</a>: Actor that extracts all URLs that match the current quad pattern in a document for traversal.</li>
-							<li><a href="https://github.com/comunica/comunica-feature-link-traversal/tree/master/packages/actor-rdf-metadata-extract-traverse-quad-pattern-query">Quad pattern query extractor</a>: Actor that extracts all URLs that match any quad pattern in the current query in a document for traversal.</li>
+							<li><a href="https://github.com/comunica/comunica-feature-link-traversal/tree/master/packages/actor-extract-links-predicates">Predicates extractor</a>: Actor that extracts the object URLs of triples that match with a configured predicate regex for traversal.</li>
+							<li><a href="https://github.com/comunica/comunica-feature-link-traversal/tree/master/packages/actor-extract-links-quad-pattern">Quad pattern extractor</a>: Actor that extracts all URLs that match the current quad pattern in a document for traversal.</li>
+							<li><a href="https://github.com/comunica/comunica-feature-link-traversal/tree/master/packages/actor-extract-links-quad-pattern-query">Quad pattern query extractor</a>: Actor that extracts all URLs that match any quad pattern in the current query in a document for traversal.</li>
 						</ul>
 					</li>
 					<li>Query termination actors:<ul>
 							<li><a href="https://github.com/comunica/comunica-feature-link-traversal/tree/master/packages/actor-rdf-resolve-hypermedia-links-queue-wrapper-limit-count">Link count limit</a>: Actor that imposes a limit of the maximum number of links that can be pushed into the link queue.</li>
 							<li><a href="https://github.com/comunica/comunica-feature-link-traversal/tree/master/packages/actor-rdf-resolve-hypermedia-links-queue-wrapper-limit-depth">Link depth limit</a>: Actor that imposes a limit of the depth of link paths that can be pushed into the link queue.</li>
+						</ul>
+					</li>
+					<li>Buses:<ul>
+							<li><a href="https://github.com/comunica/comunica-feature-link-traversal/tree/master/packages/bus-extract-links">Extract links</a>: Bus that determines the links to follow from a metadata quad stream.</li>
+						</ul>
+					</li>
+					<li>Mediators:<ul>
+							<li><a href="https://github.com/comunica/comunica-feature-link-traversal/tree/master/packages/mediator-combine-array">Combine array</a>: Mediator that concatenates an array of all actor results.</li>
 						</ul>
 					</li>
 				</ul>
@@ -146,28 +157,31 @@
 						<a href="modules.html">Modules</a>
 					</li>
 					<li class=" tsd-kind-module">
+						<a href="modules/actor_extract_links_predicates.html">actor-<wbr>extract-<wbr>links-<wbr>predicates</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/actor_extract_links_traverse_all.html">actor-<wbr>extract-<wbr>links-<wbr>traverse-<wbr>all</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/actor_extract_links_traverse_content_policies.html">actor-<wbr>extract-<wbr>links-<wbr>traverse-<wbr>content-<wbr>policies</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/actor_extract_links_traverse_quad_pattern.html">actor-<wbr>extract-<wbr>links-<wbr>traverse-<wbr>quad-<wbr>pattern</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/actor_extract_links_traverse_quad_pattern_query.html">actor-<wbr>extract-<wbr>links-<wbr>traverse-<wbr>quad-<wbr>pattern-<wbr>query</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/actor_extract_links_traverse_shapetrees.html">actor-<wbr>extract-<wbr>links-<wbr>traverse-<wbr>shapetrees</a>
+					</li>
+					<li class=" tsd-kind-module">
 						<a href="modules/actor_optimize_query_operation_set_seed_sources_quadpattern_iris.html">actor-<wbr>optimize-<wbr>query-<wbr>operation-<wbr>set-<wbr>seed-<wbr>sources-<wbr>quadpattern-<wbr>iris</a>
 					</li>
 					<li class=" tsd-kind-module">
 						<a href="modules/actor_rdf_join_entries_sort_traversal_zero_knowledge.html">actor-<wbr>rdf-<wbr>join-<wbr>entries-<wbr>sort-<wbr>traversal-<wbr>zero-<wbr>knowledge</a>
 					</li>
 					<li class=" tsd-kind-module">
-						<a href="modules/actor_rdf_metadata_extract_traverse_all.html">actor-<wbr>rdf-<wbr>metadata-<wbr>extract-<wbr>traverse-<wbr>all</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/actor_rdf_metadata_extract_traverse_content_policies.html">actor-<wbr>rdf-<wbr>metadata-<wbr>extract-<wbr>traverse-<wbr>content-<wbr>policies</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/actor_rdf_metadata_extract_traverse_predicates.html">actor-<wbr>rdf-<wbr>metadata-<wbr>extract-<wbr>traverse-<wbr>predicates</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/actor_rdf_metadata_extract_traverse_quad_pattern.html">actor-<wbr>rdf-<wbr>metadata-<wbr>extract-<wbr>traverse-<wbr>quad-<wbr>pattern</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/actor_rdf_metadata_extract_traverse_quad_pattern_query.html">actor-<wbr>rdf-<wbr>metadata-<wbr>extract-<wbr>traverse-<wbr>quad-<wbr>pattern-<wbr>query</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/actor_rdf_metadata_extract_traverse_shapetrees.html">actor-<wbr>rdf-<wbr>metadata-<wbr>extract-<wbr>traverse-<wbr>shapetrees</a>
+						<a href="modules/actor_rdf_metadata_extract_traverse.html">actor-<wbr>rdf-<wbr>metadata-<wbr>extract-<wbr>traverse</a>
 					</li>
 					<li class=" tsd-kind-module">
 						<a href="modules/actor_rdf_resolve_hypermedia_links_queue_wrapper_limit_count.html">actor-<wbr>rdf-<wbr>resolve-<wbr>hypermedia-<wbr>links-<wbr>queue-<wbr>wrapper-<wbr>limit-<wbr>count</a>
@@ -180,6 +194,9 @@
 					</li>
 					<li class=" tsd-kind-module">
 						<a href="modules/actor_rdf_resolve_hypermedia_links_traverse_replace_conditional.html">actor-<wbr>rdf-<wbr>resolve-<wbr>hypermedia-<wbr>links-<wbr>traverse-<wbr>replace-<wbr>conditional</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/bus_extract_links.html">bus-<wbr>extract-<wbr>links</a>
 					</li>
 					<li class=" tsd-kind-module">
 						<a href="modules/engines_query_sparql_link_traversal_solid_lib.html">engines/query-<wbr>sparql-<wbr>link-<wbr>traversal-<wbr>solid/lib</a>
@@ -205,10 +222,31 @@
 					<li class=" tsd-kind-module">
 						<a href="modules/engines_query_sparql_link_traversal_lib_index_browser.html">engines/query-<wbr>sparql-<wbr>link-<wbr>traversal/lib/index-<wbr>browser</a>
 					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/mediator_combine_array.html">mediator-<wbr>combine-<wbr>array</a>
+					</li>
 				</ul>
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
+					<li class=" tsd-kind-module">
+						<a href="modules/actor_extract_links_predicates.html" class="tsd-kind-icon">actor-<wbr>extract-<wbr>links-<wbr>predicates</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/actor_extract_links_traverse_all.html" class="tsd-kind-icon">actor-<wbr>extract-<wbr>links-<wbr>traverse-<wbr>all</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/actor_extract_links_traverse_content_policies.html" class="tsd-kind-icon">actor-<wbr>extract-<wbr>links-<wbr>traverse-<wbr>content-<wbr>policies</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/actor_extract_links_traverse_quad_pattern.html" class="tsd-kind-icon">actor-<wbr>extract-<wbr>links-<wbr>traverse-<wbr>quad-<wbr>pattern</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/actor_extract_links_traverse_quad_pattern_query.html" class="tsd-kind-icon">actor-<wbr>extract-<wbr>links-<wbr>traverse-<wbr>quad-<wbr>pattern-<wbr>query</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/actor_extract_links_traverse_shapetrees.html" class="tsd-kind-icon">actor-<wbr>extract-<wbr>links-<wbr>traverse-<wbr>shapetrees</a>
+					</li>
 					<li class=" tsd-kind-module">
 						<a href="modules/actor_optimize_query_operation_set_seed_sources_quadpattern_iris.html" class="tsd-kind-icon">actor-<wbr>optimize-<wbr>query-<wbr>operation-<wbr>set-<wbr>seed-<wbr>sources-<wbr>quadpattern-<wbr>iris</a>
 					</li>
@@ -216,22 +254,7 @@
 						<a href="modules/actor_rdf_join_entries_sort_traversal_zero_knowledge.html" class="tsd-kind-icon">actor-<wbr>rdf-<wbr>join-<wbr>entries-<wbr>sort-<wbr>traversal-<wbr>zero-<wbr>knowledge</a>
 					</li>
 					<li class=" tsd-kind-module">
-						<a href="modules/actor_rdf_metadata_extract_traverse_all.html" class="tsd-kind-icon">actor-<wbr>rdf-<wbr>metadata-<wbr>extract-<wbr>traverse-<wbr>all</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/actor_rdf_metadata_extract_traverse_content_policies.html" class="tsd-kind-icon">actor-<wbr>rdf-<wbr>metadata-<wbr>extract-<wbr>traverse-<wbr>content-<wbr>policies</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/actor_rdf_metadata_extract_traverse_predicates.html" class="tsd-kind-icon">actor-<wbr>rdf-<wbr>metadata-<wbr>extract-<wbr>traverse-<wbr>predicates</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/actor_rdf_metadata_extract_traverse_quad_pattern.html" class="tsd-kind-icon">actor-<wbr>rdf-<wbr>metadata-<wbr>extract-<wbr>traverse-<wbr>quad-<wbr>pattern</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/actor_rdf_metadata_extract_traverse_quad_pattern_query.html" class="tsd-kind-icon">actor-<wbr>rdf-<wbr>metadata-<wbr>extract-<wbr>traverse-<wbr>quad-<wbr>pattern-<wbr>query</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/actor_rdf_metadata_extract_traverse_shapetrees.html" class="tsd-kind-icon">actor-<wbr>rdf-<wbr>metadata-<wbr>extract-<wbr>traverse-<wbr>shapetrees</a>
+						<a href="modules/actor_rdf_metadata_extract_traverse.html" class="tsd-kind-icon">actor-<wbr>rdf-<wbr>metadata-<wbr>extract-<wbr>traverse</a>
 					</li>
 					<li class=" tsd-kind-module">
 						<a href="modules/actor_rdf_resolve_hypermedia_links_queue_wrapper_limit_count.html" class="tsd-kind-icon">actor-<wbr>rdf-<wbr>resolve-<wbr>hypermedia-<wbr>links-<wbr>queue-<wbr>wrapper-<wbr>limit-<wbr>count</a>
@@ -244,6 +267,9 @@
 					</li>
 					<li class=" tsd-kind-module">
 						<a href="modules/actor_rdf_resolve_hypermedia_links_traverse_replace_conditional.html" class="tsd-kind-icon">actor-<wbr>rdf-<wbr>resolve-<wbr>hypermedia-<wbr>links-<wbr>traverse-<wbr>replace-<wbr>conditional</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/bus_extract_links.html" class="tsd-kind-icon">bus-<wbr>extract-<wbr>links</a>
 					</li>
 					<li class=" tsd-kind-module">
 						<a href="modules/engines_query_sparql_link_traversal_solid_lib.html" class="tsd-kind-icon">engines/query-<wbr>sparql-<wbr>link-<wbr>traversal-<wbr>solid/lib</a>
@@ -269,6 +295,9 @@
 					<li class=" tsd-kind-module">
 						<a href="modules/engines_query_sparql_link_traversal_lib_index_browser.html" class="tsd-kind-icon">engines/query-<wbr>sparql-<wbr>link-<wbr>traversal/lib/index-<wbr>browser</a>
 					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/mediator_combine_array.html" class="tsd-kind-icon">mediator-<wbr>combine-<wbr>array</a>
+					</li>
 				</ul>
 			</nav>
 		</div>
@@ -280,12 +309,15 @@
 		<div class="tsd-legend-group">
 			<ul class="tsd-legend">
 				<li class="tsd-kind-variable"><span class="tsd-kind-icon">Variable</span></li>
+				<li class="tsd-kind-type-alias"><span class="tsd-kind-icon">Type alias</span></li>
 			</ul>
 			<ul class="tsd-legend">
 				<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
+				<li class="tsd-kind-interface tsd-has-type-parameter"><span class="tsd-kind-icon">Interface with type parameter</span></li>
 			</ul>
 			<ul class="tsd-legend">
 				<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
+				<li class="tsd-kind-class tsd-has-type-parameter"><span class="tsd-kind-icon">Class with type parameter</span></li>
 			</ul>
 		</div>
 	</div>

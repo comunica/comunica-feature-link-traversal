@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>IActorRdfResolveHypermediaLinksTraverseReplaceConditionalArgs | Comunica Link Traversal</title>
+	<title>IActionExtractLinks | Comunica Link Traversal</title>
 	<meta name="description" content="Documentation for Comunica Link Traversal">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -55,13 +55,13 @@
 					<a href="../modules.html">Comunica Link Traversal</a>
 				</li>
 				<li>
-					<a href="../modules/actor_rdf_resolve_hypermedia_links_traverse_replace_conditional.html">actor-rdf-resolve-hypermedia-links-traverse-replace-conditional</a>
+					<a href="../modules/bus_extract_links.html">bus-extract-links</a>
 				</li>
 				<li>
-					<a href="actor_rdf_resolve_hypermedia_links_traverse_replace_conditional.IActorRdfResolveHypermediaLinksTraverseReplaceConditionalArgs.html">IActorRdfResolveHypermediaLinksTraverseReplaceConditionalArgs</a>
+					<a href="bus_extract_links.IActionExtractLinks.html">IActionExtractLinks</a>
 				</li>
 			</ul>
-			<h1>Interface IActorRdfResolveHypermediaLinksTraverseReplaceConditionalArgs</h1>
+			<h1>Interface IActionExtractLinks</h1>
 		</div>
 	</div>
 </header>
@@ -72,10 +72,10 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="tsd-signature-type">IActorArgs</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">IActionRdfResolveHypermediaLinks</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">IActorTest</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">IActorRdfResolveHypermediaLinksOutput</span><span class="tsd-signature-symbol">&gt;</span>
+						<span class="tsd-signature-type">IAction</span>
 						<ul class="tsd-hierarchy">
 							<li>
-								<span class="target">IActorRdfResolveHypermediaLinksTraverseReplaceConditionalArgs</span>
+								<span class="target">IActionExtractLinks</span>
 							</li>
 						</ul>
 					</li>
@@ -88,10 +88,11 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="actor_rdf_resolve_hypermedia_links_traverse_replace_conditional.IActorRdfResolveHypermediaLinksTraverseReplaceConditionalArgs.html#beforeActors" class="tsd-kind-icon">before<wbr>Actors</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="actor_rdf_resolve_hypermedia_links_traverse_replace_conditional.IActorRdfResolveHypermediaLinksTraverseReplaceConditionalArgs.html#bus" class="tsd-kind-icon">bus</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="actor_rdf_resolve_hypermedia_links_traverse_replace_conditional.IActorRdfResolveHypermediaLinksTraverseReplaceConditionalArgs.html#mediatorRdfResolveHypermediaLinks" class="tsd-kind-icon">mediator<wbr>Rdf<wbr>Resolve<wbr>Hypermedia<wbr>Links</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="actor_rdf_resolve_hypermedia_links_traverse_replace_conditional.IActorRdfResolveHypermediaLinksTraverseReplaceConditionalArgs.html#name" class="tsd-kind-icon">name</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="bus_extract_links.IActionExtractLinks.html#context" class="tsd-kind-icon">context</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="bus_extract_links.IActionExtractLinks.html#headers" class="tsd-kind-icon">headers</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="bus_extract_links.IActionExtractLinks.html#metadata" class="tsd-kind-icon">metadata</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="bus_extract_links.IActionExtractLinks.html#requestTime" class="tsd-kind-icon">request<wbr>Time</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="bus_extract_links.IActionExtractLinks.html#url" class="tsd-kind-icon">url</a></li>
 							</ul>
 						</section>
 					</div>
@@ -100,66 +101,80 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
-					<a name="beforeActors" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> before<wbr>Actors</h3>
-					<div class="tsd-signature tsd-kind-icon">before<wbr>Actors<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Actor</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">IActionRdfResolveHypermediaLinks</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">IActorTest</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">IActorRdfResolveHypermediaLinksOutput</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[]</span></div>
+					<a name="context" class="tsd-anchor"></a>
+					<h3>context</h3>
+					<div class="tsd-signature tsd-kind-icon">context<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">IActionContext</span></div>
 					<aside class="tsd-sources">
-						<p>Inherited from IActorArgs.beforeActors</p>
+						<p>Inherited from IAction.context</p>
 						<ul>
-							<li>Defined in node_modules/@comunica/core/lib/Actor.d.ts:105</li>
+							<li>Defined in node_modules/@comunica/core/lib/Actor.d.ts:114</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>Actor that must be registered in the bus before this actor.</p>
-						</div>
-					</div>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
-					<a name="bus" class="tsd-anchor"></a>
-					<h3>bus</h3>
-					<div class="tsd-signature tsd-kind-icon">bus<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Bus</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Actor</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">IActionRdfResolveHypermediaLinks</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">IActorTest</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">IActorRdfResolveHypermediaLinksOutput</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">IActionRdfResolveHypermediaLinks</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">IActorTest</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">IActorRdfResolveHypermediaLinksOutput</span><span class="tsd-signature-symbol">&gt;</span></div>
-					<aside class="tsd-sources">
-						<p>Inherited from IActorArgs.bus</p>
-						<ul>
-							<li>Defined in node_modules/@comunica/core/lib/Actor.d.ts:101</li>
-						</ul>
-					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>The bus this actor subscribes to.</p>
+							<p>The input context that is passed through by actors.</p>
 						</div>
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="mediatorRdfResolveHypermediaLinks" class="tsd-anchor"></a>
-					<h3>mediator<wbr>Rdf<wbr>Resolve<wbr>Hypermedia<wbr>Links</h3>
-					<div class="tsd-signature tsd-kind-icon">mediator<wbr>Rdf<wbr>Resolve<wbr>Hypermedia<wbr>Links<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Mediator</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Actor</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">IActionRdfResolveHypermediaLinks</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">IActorTest</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">IActorRdfResolveHypermediaLinksOutput</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">IActionRdfResolveHypermediaLinks</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">IActorTest</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">IActorRdfResolveHypermediaLinksOutput</span><span class="tsd-signature-symbol">&gt;</span></div>
+					<a name="headers" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> headers</h3>
+					<div class="tsd-signature tsd-kind-icon">headers<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Headers</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/comunica/comunica-feature-link-traversal/blob/52595a5/packages/actor-rdf-resolve-hypermedia-links-traverse-replace-conditional/lib/ActorRdfResolveHypermediaLinksTraverseReplaceConditional.ts#L59">packages/actor-rdf-resolve-hypermedia-links-traverse-replace-conditional/lib/ActorRdfResolveHypermediaLinksTraverseReplaceConditional.ts:59</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
-					<a name="name" class="tsd-anchor"></a>
-					<h3>name</h3>
-					<div class="tsd-signature tsd-kind-icon">name<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
-					<aside class="tsd-sources">
-						<p>Inherited from IActorArgs.name</p>
-						<ul>
-							<li>Defined in node_modules/@comunica/core/lib/Actor.d.ts:97</li>
+							<li>Defined in <a href="https://github.com/comunica/comunica-feature-link-traversal/blob/52595a5/packages/bus-extract-links/lib/ActorExtractLinks.ts#L43">packages/bus-extract-links/lib/ActorExtractLinks.ts:43</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>The name for this actor.</p>
+							<p>The headers of the page.</p>
 						</div>
-						<dl class="tsd-comment-tags">
-							<dt>default</dt>
-							<dd><p>{<a href="rdf:subject">rdf:subject</a>}</p>
-							</dd>
-						</dl>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="metadata" class="tsd-anchor"></a>
+					<h3>metadata</h3>
+					<div class="tsd-signature tsd-kind-icon">metadata<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Stream</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Quad</span><span class="tsd-signature-symbol">&gt;</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/comunica/comunica-feature-link-traversal/blob/52595a5/packages/bus-extract-links/lib/ActorExtractLinks.ts#L34">packages/bus-extract-links/lib/ActorExtractLinks.ts:34</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The stream of quads to extract links from.</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="requestTime" class="tsd-anchor"></a>
+					<h3>request<wbr>Time</h3>
+					<div class="tsd-signature tsd-kind-icon">request<wbr>Time<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/comunica/comunica-feature-link-traversal/blob/52595a5/packages/bus-extract-links/lib/ActorExtractLinks.ts#L39">packages/bus-extract-links/lib/ActorExtractLinks.ts:39</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The time it took to request the page in milliseconds.
+							This is the time until the first byte arrives.</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="url" class="tsd-anchor"></a>
+					<h3>url</h3>
+					<div class="tsd-signature tsd-kind-icon">url<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/comunica/comunica-feature-link-traversal/blob/52595a5/packages/bus-extract-links/lib/ActorExtractLinks.ts#L30">packages/bus-extract-links/lib/ActorExtractLinks.ts:30</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The page URL from which the quads were retrieved.</p>
+						</div>
 					</div>
 				</section>
 			</section>
@@ -206,10 +221,10 @@
 					<li class=" tsd-kind-module">
 						<a href="../modules/actor_rdf_resolve_hypermedia_links_traverse.html">actor-<wbr>rdf-<wbr>resolve-<wbr>hypermedia-<wbr>links-<wbr>traverse</a>
 					</li>
-					<li class="current tsd-kind-module">
+					<li class=" tsd-kind-module">
 						<a href="../modules/actor_rdf_resolve_hypermedia_links_traverse_replace_conditional.html">actor-<wbr>rdf-<wbr>resolve-<wbr>hypermedia-<wbr>links-<wbr>traverse-<wbr>replace-<wbr>conditional</a>
 					</li>
-					<li class=" tsd-kind-module">
+					<li class="current tsd-kind-module">
 						<a href="../modules/bus_extract_links.html">bus-<wbr>extract-<wbr>links</a>
 					</li>
 					<li class=" tsd-kind-module">
@@ -279,38 +294,50 @@
 					<li class=" tsd-kind-module">
 						<a href="../modules/actor_rdf_resolve_hypermedia_links_traverse.html" class="tsd-kind-icon">actor-<wbr>rdf-<wbr>resolve-<wbr>hypermedia-<wbr>links-<wbr>traverse</a>
 					</li>
+					<li class=" tsd-kind-module">
+						<a href="../modules/actor_rdf_resolve_hypermedia_links_traverse_replace_conditional.html" class="tsd-kind-icon">actor-<wbr>rdf-<wbr>resolve-<wbr>hypermedia-<wbr>links-<wbr>traverse-<wbr>replace-<wbr>conditional</a>
+					</li>
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-module">
-						<a href="../modules/actor_rdf_resolve_hypermedia_links_traverse_replace_conditional.html" class="tsd-kind-icon">actor-<wbr>rdf-<wbr>resolve-<wbr>hypermedia-<wbr>links-<wbr>traverse-<wbr>replace-<wbr>conditional</a>
+						<a href="../modules/bus_extract_links.html" class="tsd-kind-icon">bus-<wbr>extract-<wbr>links</a>
 						<ul>
 							<li class=" tsd-kind-class tsd-parent-kind-module">
-								<a href="../classes/actor_rdf_resolve_hypermedia_links_traverse_replace_conditional.ActorRdfResolveHypermediaLinksTraverseReplaceConditional.html" class="tsd-kind-icon">Actor<wbr>Rdf<wbr>Resolve<wbr>Hypermedia<wbr>Links<wbr>Traverse<wbr>Replace<wbr>Conditional</a>
+								<a href="../classes/bus_extract_links.ActorExtractLinks.html" class="tsd-kind-icon">Actor<wbr>Extract<wbr>Links</a>
 							</li>
 							<li class="current tsd-kind-interface tsd-parent-kind-module">
-								<a href="actor_rdf_resolve_hypermedia_links_traverse_replace_conditional.IActorRdfResolveHypermediaLinksTraverseReplaceConditionalArgs.html" class="tsd-kind-icon">IActor<wbr>Rdf<wbr>Resolve<wbr>Hypermedia<wbr>Links<wbr>Traverse<wbr>Replace<wbr>Conditional<wbr>Args</a>
+								<a href="bus_extract_links.IActionExtractLinks.html" class="tsd-kind-icon">IAction<wbr>Extract<wbr>Links</a>
 								<ul>
 									<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
-										<a href="actor_rdf_resolve_hypermedia_links_traverse_replace_conditional.IActorRdfResolveHypermediaLinksTraverseReplaceConditionalArgs.html#beforeActors" class="tsd-kind-icon">before<wbr>Actors</a>
-									</li>
-									<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
-										<a href="actor_rdf_resolve_hypermedia_links_traverse_replace_conditional.IActorRdfResolveHypermediaLinksTraverseReplaceConditionalArgs.html#bus" class="tsd-kind-icon">bus</a>
+										<a href="bus_extract_links.IActionExtractLinks.html#context" class="tsd-kind-icon">context</a>
 									</li>
 									<li class=" tsd-kind-property tsd-parent-kind-interface">
-										<a href="actor_rdf_resolve_hypermedia_links_traverse_replace_conditional.IActorRdfResolveHypermediaLinksTraverseReplaceConditionalArgs.html#mediatorRdfResolveHypermediaLinks" class="tsd-kind-icon">mediator<wbr>Rdf<wbr>Resolve<wbr>Hypermedia<wbr>Links</a>
+										<a href="bus_extract_links.IActionExtractLinks.html#headers" class="tsd-kind-icon">headers</a>
 									</li>
-									<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
-										<a href="actor_rdf_resolve_hypermedia_links_traverse_replace_conditional.IActorRdfResolveHypermediaLinksTraverseReplaceConditionalArgs.html#name" class="tsd-kind-icon">name</a>
+									<li class=" tsd-kind-property tsd-parent-kind-interface">
+										<a href="bus_extract_links.IActionExtractLinks.html#metadata" class="tsd-kind-icon">metadata</a>
+									</li>
+									<li class=" tsd-kind-property tsd-parent-kind-interface">
+										<a href="bus_extract_links.IActionExtractLinks.html#requestTime" class="tsd-kind-icon">request<wbr>Time</a>
+									</li>
+									<li class=" tsd-kind-property tsd-parent-kind-interface">
+										<a href="bus_extract_links.IActionExtractLinks.html#url" class="tsd-kind-icon">url</a>
 									</li>
 								</ul>
+							</li>
+							<li class=" tsd-kind-interface tsd-parent-kind-module">
+								<a href="bus_extract_links.IActorExtractLinksOutput.html" class="tsd-kind-icon">IActor<wbr>Extract<wbr>Links<wbr>Output</a>
+							</li>
+							<li class=" tsd-kind-type-alias tsd-parent-kind-module">
+								<a href="../modules/bus_extract_links.html#IActorExtractLinksArgs" class="tsd-kind-icon">IActor<wbr>Extract<wbr>Links<wbr>Args</a>
+							</li>
+							<li class=" tsd-kind-type-alias tsd-parent-kind-module">
+								<a href="../modules/bus_extract_links.html#MediatorExtractLinks" class="tsd-kind-icon">Mediator<wbr>Extract<wbr>Links</a>
 							</li>
 						</ul>
 					</li>
 				</ul>
 				<ul class="after-current">
-					<li class=" tsd-kind-module">
-						<a href="../modules/bus_extract_links.html" class="tsd-kind-icon">bus-<wbr>extract-<wbr>links</a>
-					</li>
 					<li class=" tsd-kind-module">
 						<a href="../modules/engines_query_sparql_link_traversal_solid_lib.html" class="tsd-kind-icon">engines/query-<wbr>sparql-<wbr>link-<wbr>traversal-<wbr>solid/lib</a>
 					</li>

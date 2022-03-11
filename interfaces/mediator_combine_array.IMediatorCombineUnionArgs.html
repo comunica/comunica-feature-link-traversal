@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>IActorRdfResolveHypermediaLinksTraverseReplaceConditionalArgs | Comunica Link Traversal</title>
+	<title>IMediatorCombineUnionArgs | Comunica Link Traversal</title>
 	<meta name="description" content="Documentation for Comunica Link Traversal">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -55,30 +55,53 @@
 					<a href="../modules.html">Comunica Link Traversal</a>
 				</li>
 				<li>
-					<a href="../modules/actor_rdf_resolve_hypermedia_links_traverse_replace_conditional.html">actor-rdf-resolve-hypermedia-links-traverse-replace-conditional</a>
+					<a href="../modules/mediator_combine_array.html">mediator-combine-array</a>
 				</li>
 				<li>
-					<a href="actor_rdf_resolve_hypermedia_links_traverse_replace_conditional.IActorRdfResolveHypermediaLinksTraverseReplaceConditionalArgs.html">IActorRdfResolveHypermediaLinksTraverseReplaceConditionalArgs</a>
+					<a href="mediator_combine_array.IMediatorCombineUnionArgs.html">IMediatorCombineUnionArgs</a>
 				</li>
 			</ul>
-			<h1>Interface IActorRdfResolveHypermediaLinksTraverseReplaceConditionalArgs</h1>
+			<h1>Interface IMediatorCombineUnionArgs&lt;A, I, T, O&gt;</h1>
 		</div>
 	</div>
 </header>
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-type-parameters">
+				<h3>Type parameters</h3>
+				<ul class="tsd-type-parameters">
+					<li>
+						<h4>A<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Actor</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">I</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">O</span><span class="tsd-signature-symbol">&gt;</span></h4>
+					</li>
+					<li>
+						<h4>I<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">IAction</span></h4>
+					</li>
+					<li>
+						<h4>T<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">IActorTest</span></h4>
+					</li>
+					<li>
+						<h4>O<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">IActorOutput</span></h4>
+					</li>
+				</ul>
+			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="tsd-signature-type">IActorArgs</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">IActionRdfResolveHypermediaLinks</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">IActorTest</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">IActorRdfResolveHypermediaLinksOutput</span><span class="tsd-signature-symbol">&gt;</span>
+						<span class="tsd-signature-type">IMediatorArgs</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">A</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">I</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">O</span><span class="tsd-signature-symbol">&gt;</span>
 						<ul class="tsd-hierarchy">
 							<li>
-								<span class="target">IActorRdfResolveHypermediaLinksTraverseReplaceConditionalArgs</span>
+								<span class="target">IMediatorCombineUnionArgs</span>
 							</li>
 						</ul>
 					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel">
+				<h3>Implemented by</h3>
+				<ul class="tsd-hierarchy">
+					<li><a href="../classes/mediator_combine_array.MediatorCombineArray.html" class="tsd-signature-type" data-tsd-kind="Class">MediatorCombineArray</a></li>
 				</ul>
 			</section>
 			<section class="tsd-panel-group tsd-index-group">
@@ -88,10 +111,9 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="actor_rdf_resolve_hypermedia_links_traverse_replace_conditional.IActorRdfResolveHypermediaLinksTraverseReplaceConditionalArgs.html#beforeActors" class="tsd-kind-icon">before<wbr>Actors</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="actor_rdf_resolve_hypermedia_links_traverse_replace_conditional.IActorRdfResolveHypermediaLinksTraverseReplaceConditionalArgs.html#bus" class="tsd-kind-icon">bus</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="actor_rdf_resolve_hypermedia_links_traverse_replace_conditional.IActorRdfResolveHypermediaLinksTraverseReplaceConditionalArgs.html#mediatorRdfResolveHypermediaLinks" class="tsd-kind-icon">mediator<wbr>Rdf<wbr>Resolve<wbr>Hypermedia<wbr>Links</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="actor_rdf_resolve_hypermedia_links_traverse_replace_conditional.IActorRdfResolveHypermediaLinksTraverseReplaceConditionalArgs.html#name" class="tsd-kind-icon">name</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="mediator_combine_array.IMediatorCombineUnionArgs.html#bus" class="tsd-kind-icon">bus</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="mediator_combine_array.IMediatorCombineUnionArgs.html#fields" class="tsd-kind-icon">fields</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="mediator_combine_array.IMediatorCombineUnionArgs.html#name" class="tsd-kind-icon">name</a></li>
 							</ul>
 						</section>
 					</div>
@@ -100,60 +122,49 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
-					<a name="beforeActors" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> before<wbr>Actors</h3>
-					<div class="tsd-signature tsd-kind-icon">before<wbr>Actors<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Actor</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">IActionRdfResolveHypermediaLinks</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">IActorTest</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">IActorRdfResolveHypermediaLinksOutput</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[]</span></div>
-					<aside class="tsd-sources">
-						<p>Inherited from IActorArgs.beforeActors</p>
-						<ul>
-							<li>Defined in node_modules/@comunica/core/lib/Actor.d.ts:105</li>
-						</ul>
-					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>Actor that must be registered in the bus before this actor.</p>
-						</div>
-					</div>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
 					<a name="bus" class="tsd-anchor"></a>
 					<h3>bus</h3>
-					<div class="tsd-signature tsd-kind-icon">bus<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Bus</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Actor</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">IActionRdfResolveHypermediaLinks</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">IActorTest</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">IActorRdfResolveHypermediaLinksOutput</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">IActionRdfResolveHypermediaLinks</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">IActorTest</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">IActorRdfResolveHypermediaLinksOutput</span><span class="tsd-signature-symbol">&gt;</span></div>
+					<div class="tsd-signature tsd-kind-icon">bus<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Bus</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">A</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">I</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">O</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
-						<p>Inherited from IActorArgs.bus</p>
+						<p>Inherited from IMediatorArgs.bus</p>
 						<ul>
-							<li>Defined in node_modules/@comunica/core/lib/Actor.d.ts:101</li>
+							<li>Defined in node_modules/@comunica/core/lib/Mediator.d.ts:88</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>The bus this actor subscribes to.</p>
+							<p>The bus this mediator will mediate over.</p>
 						</div>
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="mediatorRdfResolveHypermediaLinks" class="tsd-anchor"></a>
-					<h3>mediator<wbr>Rdf<wbr>Resolve<wbr>Hypermedia<wbr>Links</h3>
-					<div class="tsd-signature tsd-kind-icon">mediator<wbr>Rdf<wbr>Resolve<wbr>Hypermedia<wbr>Links<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Mediator</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Actor</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">IActionRdfResolveHypermediaLinks</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">IActorTest</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">IActorRdfResolveHypermediaLinksOutput</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">IActionRdfResolveHypermediaLinks</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">IActorTest</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">IActorRdfResolveHypermediaLinksOutput</span><span class="tsd-signature-symbol">&gt;</span></div>
+					<a name="fields" class="tsd-anchor"></a>
+					<h3>fields</h3>
+					<div class="tsd-signature tsd-kind-icon">fields<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/comunica/comunica-feature-link-traversal/blob/52595a5/packages/actor-rdf-resolve-hypermedia-links-traverse-replace-conditional/lib/ActorRdfResolveHypermediaLinksTraverseReplaceConditional.ts#L59">packages/actor-rdf-resolve-hypermedia-links-traverse-replace-conditional/lib/ActorRdfResolveHypermediaLinksTraverseReplaceConditional.ts:59</a></li>
+							<li>Defined in <a href="https://github.com/comunica/comunica-feature-link-traversal/blob/52595a5/packages/mediator-combine-array/lib/MediatorCombineArray.ts#L63">packages/mediator-combine-array/lib/MediatorCombineArray.ts:63</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The field names of the test result fields over which must be mediated.</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
 					<a name="name" class="tsd-anchor"></a>
 					<h3>name</h3>
 					<div class="tsd-signature tsd-kind-icon">name<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
-						<p>Inherited from IActorArgs.name</p>
+						<p>Inherited from IMediatorArgs.name</p>
 						<ul>
-							<li>Defined in node_modules/@comunica/core/lib/Actor.d.ts:97</li>
+							<li>Defined in node_modules/@comunica/core/lib/Mediator.d.ts:84</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>The name for this actor.</p>
+							<p>The name for this mediator.</p>
 						</div>
 						<dl class="tsd-comment-tags">
 							<dt>default</dt>
@@ -206,7 +217,7 @@
 					<li class=" tsd-kind-module">
 						<a href="../modules/actor_rdf_resolve_hypermedia_links_traverse.html">actor-<wbr>rdf-<wbr>resolve-<wbr>hypermedia-<wbr>links-<wbr>traverse</a>
 					</li>
-					<li class="current tsd-kind-module">
+					<li class=" tsd-kind-module">
 						<a href="../modules/actor_rdf_resolve_hypermedia_links_traverse_replace_conditional.html">actor-<wbr>rdf-<wbr>resolve-<wbr>hypermedia-<wbr>links-<wbr>traverse-<wbr>replace-<wbr>conditional</a>
 					</li>
 					<li class=" tsd-kind-module">
@@ -236,7 +247,7 @@
 					<li class=" tsd-kind-module">
 						<a href="../modules/engines_query_sparql_link_traversal_lib_index_browser.html">engines/query-<wbr>sparql-<wbr>link-<wbr>traversal/lib/index-<wbr>browser</a>
 					</li>
-					<li class=" tsd-kind-module">
+					<li class="current tsd-kind-module">
 						<a href="../modules/mediator_combine_array.html">mediator-<wbr>combine-<wbr>array</a>
 					</li>
 				</ul>
@@ -279,35 +290,9 @@
 					<li class=" tsd-kind-module">
 						<a href="../modules/actor_rdf_resolve_hypermedia_links_traverse.html" class="tsd-kind-icon">actor-<wbr>rdf-<wbr>resolve-<wbr>hypermedia-<wbr>links-<wbr>traverse</a>
 					</li>
-				</ul>
-				<ul class="current">
-					<li class="current tsd-kind-module">
+					<li class=" tsd-kind-module">
 						<a href="../modules/actor_rdf_resolve_hypermedia_links_traverse_replace_conditional.html" class="tsd-kind-icon">actor-<wbr>rdf-<wbr>resolve-<wbr>hypermedia-<wbr>links-<wbr>traverse-<wbr>replace-<wbr>conditional</a>
-						<ul>
-							<li class=" tsd-kind-class tsd-parent-kind-module">
-								<a href="../classes/actor_rdf_resolve_hypermedia_links_traverse_replace_conditional.ActorRdfResolveHypermediaLinksTraverseReplaceConditional.html" class="tsd-kind-icon">Actor<wbr>Rdf<wbr>Resolve<wbr>Hypermedia<wbr>Links<wbr>Traverse<wbr>Replace<wbr>Conditional</a>
-							</li>
-							<li class="current tsd-kind-interface tsd-parent-kind-module">
-								<a href="actor_rdf_resolve_hypermedia_links_traverse_replace_conditional.IActorRdfResolveHypermediaLinksTraverseReplaceConditionalArgs.html" class="tsd-kind-icon">IActor<wbr>Rdf<wbr>Resolve<wbr>Hypermedia<wbr>Links<wbr>Traverse<wbr>Replace<wbr>Conditional<wbr>Args</a>
-								<ul>
-									<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
-										<a href="actor_rdf_resolve_hypermedia_links_traverse_replace_conditional.IActorRdfResolveHypermediaLinksTraverseReplaceConditionalArgs.html#beforeActors" class="tsd-kind-icon">before<wbr>Actors</a>
-									</li>
-									<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
-										<a href="actor_rdf_resolve_hypermedia_links_traverse_replace_conditional.IActorRdfResolveHypermediaLinksTraverseReplaceConditionalArgs.html#bus" class="tsd-kind-icon">bus</a>
-									</li>
-									<li class=" tsd-kind-property tsd-parent-kind-interface">
-										<a href="actor_rdf_resolve_hypermedia_links_traverse_replace_conditional.IActorRdfResolveHypermediaLinksTraverseReplaceConditionalArgs.html#mediatorRdfResolveHypermediaLinks" class="tsd-kind-icon">mediator<wbr>Rdf<wbr>Resolve<wbr>Hypermedia<wbr>Links</a>
-									</li>
-									<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
-										<a href="actor_rdf_resolve_hypermedia_links_traverse_replace_conditional.IActorRdfResolveHypermediaLinksTraverseReplaceConditionalArgs.html#name" class="tsd-kind-icon">name</a>
-									</li>
-								</ul>
-							</li>
-						</ul>
 					</li>
-				</ul>
-				<ul class="after-current">
 					<li class=" tsd-kind-module">
 						<a href="../modules/bus_extract_links.html" class="tsd-kind-icon">bus-<wbr>extract-<wbr>links</a>
 					</li>
@@ -335,9 +320,32 @@
 					<li class=" tsd-kind-module">
 						<a href="../modules/engines_query_sparql_link_traversal_lib_index_browser.html" class="tsd-kind-icon">engines/query-<wbr>sparql-<wbr>link-<wbr>traversal/lib/index-<wbr>browser</a>
 					</li>
-					<li class=" tsd-kind-module">
+				</ul>
+				<ul class="current">
+					<li class="current tsd-kind-module">
 						<a href="../modules/mediator_combine_array.html" class="tsd-kind-icon">mediator-<wbr>combine-<wbr>array</a>
+						<ul>
+							<li class=" tsd-kind-class tsd-parent-kind-module tsd-has-type-parameter">
+								<a href="../classes/mediator_combine_array.MediatorCombineArray.html" class="tsd-kind-icon">Mediator<wbr>Combine<wbr>Array</a>
+							</li>
+							<li class="current tsd-kind-interface tsd-parent-kind-module tsd-has-type-parameter">
+								<a href="mediator_combine_array.IMediatorCombineUnionArgs.html" class="tsd-kind-icon">IMediator<wbr>Combine<wbr>Union<wbr>Args</a>
+								<ul>
+									<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
+										<a href="mediator_combine_array.IMediatorCombineUnionArgs.html#bus" class="tsd-kind-icon">bus</a>
+									</li>
+									<li class=" tsd-kind-property tsd-parent-kind-interface">
+										<a href="mediator_combine_array.IMediatorCombineUnionArgs.html#fields" class="tsd-kind-icon">fields</a>
+									</li>
+									<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
+										<a href="mediator_combine_array.IMediatorCombineUnionArgs.html#name" class="tsd-kind-icon">name</a>
+									</li>
+								</ul>
+							</li>
+						</ul>
 					</li>
+				</ul>
+				<ul class="after-current">
 				</ul>
 			</nav>
 		</div>

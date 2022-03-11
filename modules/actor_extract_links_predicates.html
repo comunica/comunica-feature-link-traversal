@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>actor-rdf-join-entries-sort-traversal-zero-knowledge | Comunica Link Traversal</title>
+	<title>actor-extract-links-predicates | Comunica Link Traversal</title>
 	<meta name="description" content="Documentation for Comunica Link Traversal">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -55,10 +55,10 @@
 					<a href="../modules.html">Comunica Link Traversal</a>
 				</li>
 				<li>
-					<a href="actor_rdf_join_entries_sort_traversal_zero_knowledge.html">actor-rdf-join-entries-sort-traversal-zero-knowledge</a>
+					<a href="actor_extract_links_predicates.html">actor-extract-links-predicates</a>
 				</li>
 			</ul>
-			<h1>Module actor-rdf-join-entries-sort-traversal-zero-knowledge</h1>
+			<h1>Module actor-extract-links-predicates</h1>
 		</div>
 	</div>
 </header>
@@ -67,20 +67,20 @@
 		<div class="col-8 col-content">
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
-					<a href="#comunica-zero-knowledge-based-traversal-rdf-join-entries-sort-actor" id="comunica-zero-knowledge-based-traversal-rdf-join-entries-sort-actor" style="color: inherit; text-decoration: none;">
-						<h1>Comunica Zero-knowledge-based Traversal RDF Join Entries Sort Actor</h1>
+					<a href="#comunica-predicates-extract-links-actor" id="comunica-predicates-extract-links-actor" style="color: inherit; text-decoration: none;">
+						<h1>Comunica Predicates Extract Links Actor</h1>
 					</a>
-					<p><a href="https://www.npmjs.com/package/@comunica/actor-rdf-join-entries-sort-traversal-zero-knowledge"><img src="https://badge.fury.io/js/%40comunica%2Factor-rdf-join-entries-sort-traversal-zero-knowledge.svg" alt="npm version"></a></p>
-					<p>An <a href="https://github.com/comunica/comunica/tree/master/packages/bus-rdf-join-entries-sort">RDF Join Entries Sort</a> actor
-						that orders join entries based on Hartig&#39;s heuristic for plan selection in link traversal environments
-					as described in &quot;Zero-Knowledge Query Planning for an Iterator Implementation of Link Traversal Based Query Execution&quot;.</p>
+					<p><a href="https://www.npmjs.com/package/@comunica/actor-extract-links-predicates"><img src="https://badge.fury.io/js/%40comunica%2Factor-extract-links-predicates.svg" alt="npm version"></a></p>
+					<p>An <a href="https://github.com/comunica/comunica/tree/master/packages/bus-extract-links">RDF Metadata Extract</a> actor that
+						collects all object links for subjects that (optionally) match the current document
+					and predicates that match with any of the configured regular expressions.</p>
 					<p>This module is part of the <a href="https://github.com/comunica/comunica">Comunica framework</a>,
 					and should only be used by <a href="https://comunica.dev/docs/modify/">developers that want to build their own query engine</a>.</p>
 					<p><a href="https://comunica.dev/docs/query/">Click here if you just want to query with Comunica</a>.</p>
 					<a href="#install" id="install" style="color: inherit; text-decoration: none;">
 						<h2>Install</h2>
 					</a>
-					<pre><code class="language-bash"><span style="color: #000000">$ yarn add @comunica/actor-rdf-join-entries-sort-traversal-zero-knowledge</span>
+					<pre><code class="language-bash"><span style="color: #000000">$ yarn add @comunica/actor-extract-links-predicates</span>
 </code></pre>
 					<a href="#configure" id="configure" style="color: inherit; text-decoration: none;">
 						<h2>Configure</h2>
@@ -89,17 +89,28 @@
 					<pre><code class="language-text">{
   &quot;@context&quot;: [
     ...
-    &quot;https://linkedsoftwaredependencies.org/bundles/npm/@comunica/actor-rdf-join-entries-sort-traversal-zero-knowledge/^2.0.0/components/context.jsonld&quot;  
+    &quot;https://linkedsoftwaredependencies.org/bundles/npm/@comunica/actor-extract-links-predicates/^1.0.0/components/context.jsonld&quot;  
   ],
   &quot;actors&quot;: [
     ...
     {
-      &quot;@id&quot;: &quot;urn:comunica:default:rdf-join-entries-sort/actors#traversal-zero-knowledge&quot;,
-      &quot;@type&quot;: &quot;ActorRdfJoinEntriesSortTraversalZeroKnowledge&quot;
+      &quot;@id&quot;: &quot;urn:comunica:default:extract-links/actors#predicates&quot;,
+      &quot;@type&quot;: &quot;ActorExtractLinksTraversePredicates&quot;
+      &quot;checkSubject&quot;: true,
+      &quot;predicateRegexes&quot;: [
+        &quot;http://www.w3.org/ns/ldp#contains&quot;
+      ]
     }
   ]
 }
 </code></pre>
+					<a href="#config-parameters" id="config-parameters" style="color: inherit; text-decoration: none;">
+						<h3>Config Parameters</h3>
+					</a>
+					<ul>
+						<li><code>checkSubject</code>: If only quads will be considered that have a subject equal to the request URL.</li>
+						<li><code>predicateRegexes</code>: An array of regular expressions that will be matched with incoming predicates.</li>
+					</ul>
 				</div>
 			</section>
 			<section class="tsd-panel-group tsd-index-group">
@@ -109,7 +120,13 @@
 						<section class="tsd-index-section ">
 							<h3>Classes</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-class tsd-parent-kind-module"><a href="../classes/actor_rdf_join_entries_sort_traversal_zero_knowledge.ActorRdfJoinEntriesSortTraversalZeroKnowledge.html" class="tsd-kind-icon">Actor<wbr>Rdf<wbr>Join<wbr>Entries<wbr>Sort<wbr>Traversal<wbr>Zero<wbr>Knowledge</a></li>
+								<li class="tsd-kind-class tsd-parent-kind-module"><a href="../classes/actor_extract_links_predicates.ActorExtractLinksPredicates.html" class="tsd-kind-icon">Actor<wbr>Extract<wbr>Links<wbr>Predicates</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Interfaces</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-interface tsd-parent-kind-module"><a href="../interfaces/actor_extract_links_predicates.IActorExtractLinksTraversePredicatesArgs.html" class="tsd-kind-icon">IActor<wbr>Extract<wbr>Links<wbr>Traverse<wbr>Predicates<wbr>Args</a></li>
 							</ul>
 						</section>
 					</div>
@@ -122,7 +139,7 @@
 					<li class=" ">
 						<a href="../modules.html">Modules</a>
 					</li>
-					<li class=" tsd-kind-module">
+					<li class="current tsd-kind-module">
 						<a href="actor_extract_links_predicates.html">actor-<wbr>extract-<wbr>links-<wbr>predicates</a>
 					</li>
 					<li class=" tsd-kind-module">
@@ -143,7 +160,7 @@
 					<li class=" tsd-kind-module">
 						<a href="actor_optimize_query_operation_set_seed_sources_quadpattern_iris.html">actor-<wbr>optimize-<wbr>query-<wbr>operation-<wbr>set-<wbr>seed-<wbr>sources-<wbr>quadpattern-<wbr>iris</a>
 					</li>
-					<li class="current tsd-kind-module">
+					<li class=" tsd-kind-module">
 						<a href="actor_rdf_join_entries_sort_traversal_zero_knowledge.html">actor-<wbr>rdf-<wbr>join-<wbr>entries-<wbr>sort-<wbr>traversal-<wbr>zero-<wbr>knowledge</a>
 					</li>
 					<li class=" tsd-kind-module">
@@ -195,9 +212,21 @@
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
-					<li class=" tsd-kind-module">
+				</ul>
+				<ul class="current">
+					<li class="current tsd-kind-module">
 						<a href="actor_extract_links_predicates.html" class="tsd-kind-icon">actor-<wbr>extract-<wbr>links-<wbr>predicates</a>
+						<ul>
+							<li class=" tsd-kind-class tsd-parent-kind-module">
+								<a href="../classes/actor_extract_links_predicates.ActorExtractLinksPredicates.html" class="tsd-kind-icon">Actor<wbr>Extract<wbr>Links<wbr>Predicates</a>
+							</li>
+							<li class=" tsd-kind-interface tsd-parent-kind-module">
+								<a href="../interfaces/actor_extract_links_predicates.IActorExtractLinksTraversePredicatesArgs.html" class="tsd-kind-icon">IActor<wbr>Extract<wbr>Links<wbr>Traverse<wbr>Predicates<wbr>Args</a>
+							</li>
+						</ul>
 					</li>
+				</ul>
+				<ul class="after-current">
 					<li class=" tsd-kind-module">
 						<a href="actor_extract_links_traverse_all.html" class="tsd-kind-icon">actor-<wbr>extract-<wbr>links-<wbr>traverse-<wbr>all</a>
 					</li>
@@ -216,18 +245,9 @@
 					<li class=" tsd-kind-module">
 						<a href="actor_optimize_query_operation_set_seed_sources_quadpattern_iris.html" class="tsd-kind-icon">actor-<wbr>optimize-<wbr>query-<wbr>operation-<wbr>set-<wbr>seed-<wbr>sources-<wbr>quadpattern-<wbr>iris</a>
 					</li>
-				</ul>
-				<ul class="current">
-					<li class="current tsd-kind-module">
+					<li class=" tsd-kind-module">
 						<a href="actor_rdf_join_entries_sort_traversal_zero_knowledge.html" class="tsd-kind-icon">actor-<wbr>rdf-<wbr>join-<wbr>entries-<wbr>sort-<wbr>traversal-<wbr>zero-<wbr>knowledge</a>
-						<ul>
-							<li class=" tsd-kind-class tsd-parent-kind-module">
-								<a href="../classes/actor_rdf_join_entries_sort_traversal_zero_knowledge.ActorRdfJoinEntriesSortTraversalZeroKnowledge.html" class="tsd-kind-icon">Actor<wbr>Rdf<wbr>Join<wbr>Entries<wbr>Sort<wbr>Traversal<wbr>Zero<wbr>Knowledge</a>
-							</li>
-						</ul>
 					</li>
-				</ul>
-				<ul class="after-current">
 					<li class=" tsd-kind-module">
 						<a href="actor_rdf_metadata_extract_traverse.html" class="tsd-kind-icon">actor-<wbr>rdf-<wbr>metadata-<wbr>extract-<wbr>traverse</a>
 					</li>
