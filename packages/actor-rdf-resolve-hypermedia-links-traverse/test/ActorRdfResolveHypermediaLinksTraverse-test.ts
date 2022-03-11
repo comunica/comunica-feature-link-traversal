@@ -43,6 +43,14 @@ describe('ActorRdfResolveHypermediaLinksTraverse', () => {
         .resolves.toEqual(true);
     });
 
+    it('should fail to test when traverse is disable in the context', () => {
+      return expect(actor.test({ context: new ActionContext({
+        [ActorRdfResolveHypermediaLinksTraverse.CONTEXT_KEY_TRAVERSE.name]: false,
+      }),
+      metadata: { traverse: true }})).rejects
+        .toThrow(new Error('Link traversal has been disabled via the context.'));
+    });
+
     it('should run', () => {
       return expect(actor.run({ context: new ActionContext(), metadata: { traverse: [{ url: 'a' }, { url: 'b' }]}}))
         .resolves.toMatchObject({ links: [{ url: 'a' }, { url: 'b' }]});
