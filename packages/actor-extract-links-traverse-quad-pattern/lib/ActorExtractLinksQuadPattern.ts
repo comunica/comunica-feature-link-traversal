@@ -1,7 +1,6 @@
 import type { IActionExtractLinks,
   IActorExtractLinksOutput } from '@comunica/bus-extract-links';
 import { ActorExtractLinks } from '@comunica/bus-extract-links';
-import type { ILink } from '@comunica/bus-rdf-resolve-hypermedia-links';
 import { KeysQueryOperation } from '@comunica/context-entries';
 import type { IActorArgs, IActorTest } from '@comunica/core';
 import type { IActionContext } from '@comunica/types';
@@ -36,14 +35,9 @@ export class ActorExtractLinksQuadPattern extends ActorExtractLinks {
   public async run(action: IActionExtractLinks): Promise<IActorExtractLinksOutput> {
     const quadPattern: Algebra.Pattern = ActorExtractLinksQuadPattern
       .getCurrentQuadPattern(action.context)!;
-    return new Promise((resolve, reject) => {
-      const links: ILink[] = [];
 
-      // Forward errors
-      action.metadata.on('error', reject);
-
-      // Immediately resolve when a value has been found.
-      action.metadata.on('data', quad => {
+    return {
+      links: await ActorExtractLinks.collectStream(action.metadata, (quad, links) => {
         if (this.onlyVariables) {
           // --- If we only want to follow links matching with a variable component ---
           if (matchPatternComplete(quad, quadPattern)) {
@@ -62,13 +56,8 @@ export class ActorExtractLinksQuadPattern extends ActorExtractLinks {
             }
           }
         }
-      });
-
-      // If no value has been found, assume infinity.
-      action.metadata.on('end', () => {
-        resolve({ links });
-      });
-    });
+      }),
+    };
   }
 }
 

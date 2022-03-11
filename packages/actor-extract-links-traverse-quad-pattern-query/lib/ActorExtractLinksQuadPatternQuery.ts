@@ -1,6 +1,5 @@
 import type { IActionExtractLinks, IActorExtractLinksOutput } from '@comunica/bus-extract-links';
 import { ActorExtractLinks } from '@comunica/bus-extract-links';
-import type { ILink } from '@comunica/bus-rdf-resolve-hypermedia-links';
 import { KeysInitQuery } from '@comunica/context-entries';
 import type { IActorArgs, IActorTest } from '@comunica/core';
 import type { IActionContext } from '@comunica/types';
@@ -51,14 +50,9 @@ export class ActorExtractLinksQuadPatternQuery extends ActorExtractLinks {
   public async run(action: IActionExtractLinks): Promise<IActorExtractLinksOutput> {
     const operation: Algebra.Operation = ActorExtractLinksQuadPatternQuery
       .getCurrentQuery(action.context)!;
-    return new Promise((resolve, reject) => {
-      const links: ILink[] = [];
 
-      // Forward errors
-      action.metadata.on('error', reject);
-
-      // Immediately resolve when a value has been found.
-      action.metadata.on('data', quad => {
+    return {
+      links: await ActorExtractLinks.collectStream(action.metadata, (quad, links) => {
         const matchingPatterns = ActorExtractLinksQuadPatternQuery
           .matchQuadPatternInOperation(quad, operation);
         if (matchingPatterns.length > 0) {
@@ -74,7 +68,7 @@ export class ActorExtractLinksQuadPatternQuery extends ActorExtractLinks {
             }
 
             // For the discovered quad term names, check extract the named nodes in the quad
-            for (const quadTermName of Object.keys(quadTermNames)) {
+            for (const quadTermName of <QuadTermName[]> Object.keys(quadTermNames)) {
               if (quad[quadTermName].termType === 'NamedNode') {
                 links.push({ url: quad[quadTermName].value });
               }
@@ -86,13 +80,8 @@ export class ActorExtractLinksQuadPatternQuery extends ActorExtractLinks {
             }
           }
         }
-      });
-
-      // If no value has been found, assume infinity.
-      action.metadata.on('end', () => {
-        resolve({ links });
-      });
-    });
+      }),
+    };
   }
 }
 

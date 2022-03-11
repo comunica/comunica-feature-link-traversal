@@ -1,8 +1,6 @@
 import type { IActionExtractLinks, IActorExtractLinksOutput } from '@comunica/bus-extract-links';
 import { ActorExtractLinks } from '@comunica/bus-extract-links';
-import type { ILink } from '@comunica/bus-rdf-resolve-hypermedia-links';
 import type { IActorArgs, IActorTest } from '@comunica/core';
-import type * as RDF from '@rdfjs/types';
 
 /**
  * A comunica Traverse Predicates RDF Metadata Extract Actor.
@@ -22,14 +20,8 @@ export class ActorExtractLinksPredicates extends ActorExtractLinks {
   }
 
   public async run(action: IActionExtractLinks): Promise<IActorExtractLinksOutput> {
-    return new Promise((resolve, reject) => {
-      const links: ILink[] = [];
-
-      // Forward errors
-      action.metadata.on('error', reject);
-
-      // Immediately resolve when a value has been found.
-      action.metadata.on('data', (quad: RDF.Quad) => {
+    return {
+      links: await ActorExtractLinks.collectStream(action.metadata, (quad, links) => {
         if (!this.checkSubject || this.subjectMatches(quad.subject.value, action.url)) {
           for (const regex of this.predicates) {
             if (regex.test(quad.predicate.value)) {
@@ -38,13 +30,8 @@ export class ActorExtractLinksPredicates extends ActorExtractLinks {
             }
           }
         }
-      });
-
-      // If no value has been found, assume infinity.
-      action.metadata.on('end', () => {
-        resolve({ links });
-      });
-    });
+      }),
+    };
   }
 
   private subjectMatches(subject: string, url: string): boolean {

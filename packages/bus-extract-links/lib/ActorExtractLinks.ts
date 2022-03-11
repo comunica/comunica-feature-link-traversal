@@ -21,6 +21,32 @@ export abstract class ActorExtractLinks extends Actor<IActionExtractLinks, IActo
   public constructor(args: IActorExtractLinksArgs) {
     super(args);
   }
+
+  /**
+   * A helper function to append links based on incoming quads.
+   * @param metadata A metadata stream of quads.
+   * @param onQuad A callback that will be invoked for each quad in the metadata stream.
+   *               The second argument is the array of links that can be appended to.
+   */
+  public static collectStream(
+    metadata: RDF.Stream,
+    onQuad: (quad: RDF.Quad, links: ILink[]) => void,
+  ): Promise<ILink[]> {
+    return new Promise((resolve, reject) => {
+      const links: ILink[] = [];
+
+      // Forward errors
+      metadata.on('error', reject);
+
+      // Invoke callback on each metadata quad
+      metadata.on('data', (quad: RDF.Quad) => onQuad(quad, links));
+
+      // Resolve to discovered links
+      metadata.on('end', () => {
+        resolve(links);
+      });
+    });
+  }
 }
 
 export interface IActionExtractLinks extends IAction {
