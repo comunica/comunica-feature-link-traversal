@@ -23,13 +23,14 @@ After installing, this package can be added to your engine's configuration as fo
 {
   "@context": [
     ...
-    "https://linkedsoftwaredependencies.org/bundles/npm/@comunica/actor-extract-links-solid-type-index/^1.0.0/components/context.jsonld"  
+    "https://linkedsoftwaredependencies.org/bundles/npm/@comunica/actor-extract-links-solid-type-index/^0.0.0/components/context.jsonld"  
   ],
   "actors": [
     ...
     {
       "@id": "urn:comunica:default:extract-links/actors#solid-type-index",
-      "@type": "ActorExtractLinksSolidTypeIndex"
+      "@type": "ActorExtractLinksSolidTypeIndex",
+      "mediatorDereferenceRdf": { "@id": "urn:comunica:default:dereference-rdf/mediators#main" },
     }
   ]
 }
@@ -37,6 +38,6 @@ After installing, this package can be added to your engine's configuration as fo
 
 ### Config Parameters
 
-TODO: fill in parameters (this section can be removed if there are none)
-
-* `someParam`: Description of the param
+* `typeIndexPredicates`: The type index predicate URLs that will be followed, defaults to `http://www.w3.org/ns/solid/terms#publicTypeIndex` and `http://www.w3.org/ns/solid/terms#privateTypeIndex`.
+* `actorInitQuery`: An instance of [ActorInitQuery](https://github.com/comunica/comunica/tree/master/packages/actor-init-query), defaults to `urn:comunica:default:init/actors#query`.
+* `mediatorDereferenceRdf`: A mediator over the [Dereference RDF bus](https://github.com/comunica/comunica/tree/master/packages/bus-dereference-rdf).
