@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>actor-extract-links-traverse-content-policies | Comunica Link Traversal</title>
+	<title>actor-extract-links-quad-pattern | Comunica Link Traversal</title>
 	<meta name="description" content="Documentation for Comunica Link Traversal">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -55,10 +55,10 @@
 					<a href="../modules.html">Comunica Link Traversal</a>
 				</li>
 				<li>
-					<a href="actor_extract_links_traverse_content_policies.html">actor-extract-links-traverse-content-policies</a>
+					<a href="actor_extract_links_quad_pattern.html">actor-extract-links-quad-pattern</a>
 				</li>
 			</ul>
-			<h1>Module actor-extract-links-traverse-content-policies</h1>
+			<h1>Module actor-extract-links-quad-pattern</h1>
 		</div>
 	</div>
 </header>
@@ -67,26 +67,26 @@
 		<div class="col-8 col-content">
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
-					<a href="#comunica-content-policies-extract-links-actor" id="comunica-content-policies-extract-links-actor" style="color: inherit; text-decoration: none;">
-						<h1>Comunica Content Policies Extract Links Actor</h1>
+					<a href="#comunica-quad-pattern-extract-links-actor" id="comunica-quad-pattern-extract-links-actor" style="color: inherit; text-decoration: none;">
+						<h1>Comunica Quad Pattern Extract Links Actor</h1>
 					</a>
-					<p><a href="https://www.npmjs.com/package/@comunica/actor-extract-links-content-policies"><img src="https://badge.fury.io/js/%40comunica%2Factor-extract-links-content-policies.svg" alt="npm version"></a></p>
-					<p>A comunica Traverse Content Policies RDF Metadata Extract Actor.</p>
+					<p><a href="https://www.npmjs.com/package/@comunica/actor-extract-links-quad-pattern"><img src="https://badge.fury.io/js/%40comunica%2Factor-extract-links-quad-pattern.svg" alt="npm version"></a></p>
+					<p>An <a href="https://github.com/comunica/comunica/tree/master/packages/bus-extract-links">RDF Metadata Extract</a> actor that
+					collects all URIs in a page that match the current quad pattern.</p>
 					<p>This module is part of the <a href="https://github.com/comunica/comunica">Comunica framework</a>,
 					and should only be used by <a href="https://comunica.dev/docs/modify/">developers that want to build their own query engine</a>.</p>
 					<p><a href="https://comunica.dev/docs/query/">Click here if you just want to query with Comunica</a>.</p>
 					<a href="#install" id="install" style="color: inherit; text-decoration: none;">
 						<h2>Install</h2>
 					</a>
-					<pre><code class="language-bash"><span style="color: #000000">$ yarn add @comunica/actor-extract-links-content-policies</span>
+					<pre><code class="language-bash"><span style="color: #000000">$ yarn add @comunica/actor-extract-links-quad-pattern</span>
 </code></pre>
 					<a href="#metadata-entries" id="metadata-entries" style="color: inherit; text-decoration: none;">
 						<h2>Metadata entries</h2>
 					</a>
 					<p>This actor adds the following entries to the metadata object.</p>
 					<ul>
-						<li><code>traverse</code>: Array of URLs to traverse. <em>(if <code>traverseConditional: false</code>)</em></li>
-						<li><code>traverseConditional</code>: Array of URLs to conditionally traverse. <em>(if <code>traverseConditional: true</code>)</em></li>
+						<li><code>traverse</code>: Array of ILink to traverse.</li>
 					</ul>
 					<a href="#configure" id="configure" style="color: inherit; text-decoration: none;">
 						<h2>Configure</h2>
@@ -95,24 +95,17 @@
 					<pre><code class="language-text">{
   &quot;@context&quot;: [
     ...
-    &quot;https://linkedsoftwaredependencies.org/bundles/npm/@comunica/actor-extract-links-content-policies/^1.0.0/components/context.jsonld&quot;  
+    &quot;https://linkedsoftwaredependencies.org/bundles/npm/@comunica/actor-extract-links-quad-pattern/^1.0.0/components/context.jsonld&quot;  
   ],
   &quot;actors&quot;: [
     ...
     {
-      &quot;@id&quot;: &quot;config-sets:resolve-hypermedia.json#myExtractLinksContentPolicies&quot;,
-      &quot;@type&quot;: &quot;ActorExtractLinksContentPolicies&quot;
+      &quot;@id&quot;: &quot;config-sets:resolve-hypermedia.json#myExtractLinksQuadPattern&quot;,
+      &quot;@type&quot;: &quot;ActorExtractLinksQuadPattern&quot;
     }
   ]
 }
 </code></pre>
-					<a href="#config-parameters" id="config-parameters" style="color: inherit; text-decoration: none;">
-						<h3>Config Parameters</h3>
-					</a>
-					<ul>
-						<li><code>actorInitQuery</code>: An instance of ActorInitQuery.</li>
-						<li><code>traverseConditional</code>: A flag indicating if links should only be follow IF it has been defined by some other link extractor. <em>(default: <code>true</code>)</em></li>
-					</ul>
 				</div>
 			</section>
 			<section class="tsd-panel-group tsd-index-group">
@@ -122,49 +115,16 @@
 						<section class="tsd-index-section ">
 							<h3>Classes</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-class tsd-parent-kind-module"><a href="../classes/actor_extract_links_traverse_content_policies.ActorExtractLinksContentPolicies.html" class="tsd-kind-icon">Actor<wbr>Extract<wbr>Links<wbr>Content<wbr>Policies</a></li>
-								<li class="tsd-kind-class tsd-parent-kind-module"><a href="../classes/actor_extract_links_traverse_content_policies.ContentPolicy.html" class="tsd-kind-icon">Content<wbr>Policy</a></li>
-								<li class="tsd-kind-class tsd-parent-kind-module"><a href="../classes/actor_extract_links_traverse_content_policies.SimpleSclParser.html" class="tsd-kind-icon">Simple<wbr>Scl<wbr>Parser</a></li>
+								<li class="tsd-kind-class tsd-parent-kind-module"><a href="../classes/actor_extract_links_quad_pattern.ActorExtractLinksQuadPattern.html" class="tsd-kind-icon">Actor<wbr>Extract<wbr>Links<wbr>Quad<wbr>Pattern</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
 							<h3>Interfaces</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-interface tsd-parent-kind-module"><a href="../interfaces/actor_extract_links_traverse_content_policies.IActorExtractLinksContentPoliciesArgs.html" class="tsd-kind-icon">IActor<wbr>Extract<wbr>Links<wbr>Content<wbr>Policies<wbr>Args</a></li>
-								<li class="tsd-kind-interface tsd-parent-kind-module"><a href="../interfaces/actor_extract_links_traverse_content_policies.IVariable.html" class="tsd-kind-icon">IVariable</a></li>
-							</ul>
-						</section>
-						<section class="tsd-index-section ">
-							<h3>Variables</h3>
-							<ul class="tsd-index-list">
-								<li class="tsd-kind-variable tsd-parent-kind-module"><a href="actor_extract_links_traverse_content_policies.html#KEY_CONTEXT_POLICIES" class="tsd-kind-icon">KEY_<wbr>CONTEXT_<wbr>POLICIES</a></li>
-								<li class="tsd-kind-variable tsd-parent-kind-module"><a href="actor_extract_links_traverse_content_policies.html#KEY_CONTEXT_WITHPOLICIES" class="tsd-kind-icon">KEY_<wbr>CONTEXT_<wbr>WITHPOLICIES</a></li>
+								<li class="tsd-kind-interface tsd-parent-kind-module"><a href="../interfaces/actor_extract_links_quad_pattern.IActorExtractLinksQuadPatternArgs.html" class="tsd-kind-icon">IActor<wbr>Extract<wbr>Links<wbr>Quad<wbr>Pattern<wbr>Args</a></li>
 							</ul>
 						</section>
 					</div>
-				</section>
-			</section>
-			<section class="tsd-panel-group tsd-member-group ">
-				<h2>Variables</h2>
-				<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-module">
-					<a name="KEY_CONTEXT_POLICIES" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagConst">Const</span> KEY_<wbr>CONTEXT_<wbr>POLICIES</h3>
-					<div class="tsd-signature tsd-kind-icon">KEY_<wbr>CONTEXT_<wbr>POLICIES<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">ActionContextKey</span><span class="tsd-signature-symbol">&lt;</span><a href="../classes/actor_extract_links_traverse_content_policies.ContentPolicy.html" class="tsd-signature-type" data-tsd-kind="Class">ContentPolicy</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> = ...</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/comunica/comunica-feature-link-traversal/blob/ab82b55/packages/actor-extract-links-traverse-content-policies/lib/ActorExtractLinksContentPolicies.ts#L160">packages/actor-extract-links-traverse-content-policies/lib/ActorExtractLinksContentPolicies.ts:160</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-module">
-					<a name="KEY_CONTEXT_WITHPOLICIES" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagConst">Const</span> KEY_<wbr>CONTEXT_<wbr>WITHPOLICIES</h3>
-					<div class="tsd-signature tsd-kind-icon">KEY_<wbr>CONTEXT_<wbr>WITHPOLICIES<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">ActionContextKey</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> = ...</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/comunica/comunica-feature-link-traversal/blob/ab82b55/packages/actor-extract-links-traverse-content-policies/lib/ActorExtractLinksContentPolicies.ts#L163">packages/actor-extract-links-traverse-content-policies/lib/ActorExtractLinksContentPolicies.ts:163</a></li>
-						</ul>
-					</aside>
 				</section>
 			</section>
 		</div>
@@ -175,22 +135,22 @@
 						<a href="../modules.html">Modules</a>
 					</li>
 					<li class=" tsd-kind-module">
+						<a href="actor_extract_links_all.html">actor-<wbr>extract-<wbr>links-<wbr>all</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="actor_extract_links_content_policies.html">actor-<wbr>extract-<wbr>links-<wbr>content-<wbr>policies</a>
+					</li>
+					<li class=" tsd-kind-module">
 						<a href="actor_extract_links_predicates.html">actor-<wbr>extract-<wbr>links-<wbr>predicates</a>
 					</li>
-					<li class=" tsd-kind-module">
-						<a href="actor_extract_links_traverse_all.html">actor-<wbr>extract-<wbr>links-<wbr>traverse-<wbr>all</a>
-					</li>
 					<li class="current tsd-kind-module">
-						<a href="actor_extract_links_traverse_content_policies.html">actor-<wbr>extract-<wbr>links-<wbr>traverse-<wbr>content-<wbr>policies</a>
+						<a href="actor_extract_links_quad_pattern.html">actor-<wbr>extract-<wbr>links-<wbr>quad-<wbr>pattern</a>
 					</li>
 					<li class=" tsd-kind-module">
-						<a href="actor_extract_links_traverse_quad_pattern.html">actor-<wbr>extract-<wbr>links-<wbr>traverse-<wbr>quad-<wbr>pattern</a>
+						<a href="actor_extract_links_quad_pattern_query.html">actor-<wbr>extract-<wbr>links-<wbr>quad-<wbr>pattern-<wbr>query</a>
 					</li>
 					<li class=" tsd-kind-module">
-						<a href="actor_extract_links_traverse_quad_pattern_query.html">actor-<wbr>extract-<wbr>links-<wbr>traverse-<wbr>quad-<wbr>pattern-<wbr>query</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="actor_extract_links_traverse_shapetrees.html">actor-<wbr>extract-<wbr>links-<wbr>traverse-<wbr>shapetrees</a>
+						<a href="actor_extract_links_shapetrees.html">actor-<wbr>extract-<wbr>links-<wbr>shapetrees</a>
 					</li>
 					<li class=" tsd-kind-module">
 						<a href="actor_optimize_query_operation_set_seed_sources_quadpattern_iris.html">actor-<wbr>optimize-<wbr>query-<wbr>operation-<wbr>set-<wbr>seed-<wbr>sources-<wbr>quadpattern-<wbr>iris</a>
@@ -248,49 +208,34 @@
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
 					<li class=" tsd-kind-module">
-						<a href="actor_extract_links_predicates.html" class="tsd-kind-icon">actor-<wbr>extract-<wbr>links-<wbr>predicates</a>
+						<a href="actor_extract_links_all.html" class="tsd-kind-icon">actor-<wbr>extract-<wbr>links-<wbr>all</a>
 					</li>
 					<li class=" tsd-kind-module">
-						<a href="actor_extract_links_traverse_all.html" class="tsd-kind-icon">actor-<wbr>extract-<wbr>links-<wbr>traverse-<wbr>all</a>
+						<a href="actor_extract_links_content_policies.html" class="tsd-kind-icon">actor-<wbr>extract-<wbr>links-<wbr>content-<wbr>policies</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="actor_extract_links_predicates.html" class="tsd-kind-icon">actor-<wbr>extract-<wbr>links-<wbr>predicates</a>
 					</li>
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-module">
-						<a href="actor_extract_links_traverse_content_policies.html" class="tsd-kind-icon">actor-<wbr>extract-<wbr>links-<wbr>traverse-<wbr>content-<wbr>policies</a>
+						<a href="actor_extract_links_quad_pattern.html" class="tsd-kind-icon">actor-<wbr>extract-<wbr>links-<wbr>quad-<wbr>pattern</a>
 						<ul>
 							<li class=" tsd-kind-class tsd-parent-kind-module">
-								<a href="../classes/actor_extract_links_traverse_content_policies.ActorExtractLinksContentPolicies.html" class="tsd-kind-icon">Actor<wbr>Extract<wbr>Links<wbr>Content<wbr>Policies</a>
-							</li>
-							<li class=" tsd-kind-class tsd-parent-kind-module">
-								<a href="../classes/actor_extract_links_traverse_content_policies.ContentPolicy.html" class="tsd-kind-icon">Content<wbr>Policy</a>
-							</li>
-							<li class=" tsd-kind-class tsd-parent-kind-module">
-								<a href="../classes/actor_extract_links_traverse_content_policies.SimpleSclParser.html" class="tsd-kind-icon">Simple<wbr>Scl<wbr>Parser</a>
+								<a href="../classes/actor_extract_links_quad_pattern.ActorExtractLinksQuadPattern.html" class="tsd-kind-icon">Actor<wbr>Extract<wbr>Links<wbr>Quad<wbr>Pattern</a>
 							</li>
 							<li class=" tsd-kind-interface tsd-parent-kind-module">
-								<a href="../interfaces/actor_extract_links_traverse_content_policies.IActorExtractLinksContentPoliciesArgs.html" class="tsd-kind-icon">IActor<wbr>Extract<wbr>Links<wbr>Content<wbr>Policies<wbr>Args</a>
-							</li>
-							<li class=" tsd-kind-interface tsd-parent-kind-module">
-								<a href="../interfaces/actor_extract_links_traverse_content_policies.IVariable.html" class="tsd-kind-icon">IVariable</a>
-							</li>
-							<li class=" tsd-kind-variable tsd-parent-kind-module">
-								<a href="actor_extract_links_traverse_content_policies.html#KEY_CONTEXT_POLICIES" class="tsd-kind-icon">KEY_<wbr>CONTEXT_<wbr>POLICIES</a>
-							</li>
-							<li class=" tsd-kind-variable tsd-parent-kind-module">
-								<a href="actor_extract_links_traverse_content_policies.html#KEY_CONTEXT_WITHPOLICIES" class="tsd-kind-icon">KEY_<wbr>CONTEXT_<wbr>WITHPOLICIES</a>
+								<a href="../interfaces/actor_extract_links_quad_pattern.IActorExtractLinksQuadPatternArgs.html" class="tsd-kind-icon">IActor<wbr>Extract<wbr>Links<wbr>Quad<wbr>Pattern<wbr>Args</a>
 							</li>
 						</ul>
 					</li>
 				</ul>
 				<ul class="after-current">
 					<li class=" tsd-kind-module">
-						<a href="actor_extract_links_traverse_quad_pattern.html" class="tsd-kind-icon">actor-<wbr>extract-<wbr>links-<wbr>traverse-<wbr>quad-<wbr>pattern</a>
+						<a href="actor_extract_links_quad_pattern_query.html" class="tsd-kind-icon">actor-<wbr>extract-<wbr>links-<wbr>quad-<wbr>pattern-<wbr>query</a>
 					</li>
 					<li class=" tsd-kind-module">
-						<a href="actor_extract_links_traverse_quad_pattern_query.html" class="tsd-kind-icon">actor-<wbr>extract-<wbr>links-<wbr>traverse-<wbr>quad-<wbr>pattern-<wbr>query</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="actor_extract_links_traverse_shapetrees.html" class="tsd-kind-icon">actor-<wbr>extract-<wbr>links-<wbr>traverse-<wbr>shapetrees</a>
+						<a href="actor_extract_links_shapetrees.html" class="tsd-kind-icon">actor-<wbr>extract-<wbr>links-<wbr>shapetrees</a>
 					</li>
 					<li class=" tsd-kind-module">
 						<a href="actor_optimize_query_operation_set_seed_sources_quadpattern_iris.html" class="tsd-kind-icon">actor-<wbr>optimize-<wbr>query-<wbr>operation-<wbr>set-<wbr>seed-<wbr>sources-<wbr>quadpattern-<wbr>iris</a>
