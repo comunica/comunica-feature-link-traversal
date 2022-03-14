@@ -52,6 +52,7 @@
     "@comunica/actor-extract-links-predicates": "^0.0.1",
     "@comunica/actor-extract-links-quad-pattern": "^0.0.1",
     "@comunica/actor-extract-links-quad-pattern-query": "^0.0.1",
+    "@comunica/actor-extract-links-solid-type-index": "^0.0.1",
     "@comunica/actor-rdf-resolve-hypermedia-links-traverse": "^0.0.1",
     "@comunica/actor-rdf-resolve-hypermedia-links-traverse-replace-conditional": "^0.0.1",
     "@comunica/actor-rdf-resolve-hypermedia-links-queue-wrapper-limit-count": "^0.0.1",
