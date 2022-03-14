@@ -4,6 +4,9 @@
     "engines/query-sparql-link-traversal",
     "engines/query-sparql-link-traversal-solid"
   ],
-  "ignoreComponents": [],
+  "ignoreComponents": [
+    "Headers",
+    "RDF.Stream"
+  ],
   "modulePrefix": {}
 }
