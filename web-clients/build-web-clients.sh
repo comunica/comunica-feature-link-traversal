@@ -15,7 +15,7 @@ for config in ../config-query-sparql-link-traversal/config/*.json; do
   fi
 
   cat $cwd/web-clients/settings.json | \
-    sed "s/__SUBTITLE__/Using $id config/; s~__SUBTITLE_HREF__~https://github.com/comunica/comunica-feature-link-traversal/blob/master/engines/config-query-sparql-link-traversal/config/config-$id.json~" \
+    sed "s/__SUBTITLE__/Using $id config/; s~__SUBTITLE_HREF__~https://github.com/comunica/comunica-feature-link-traversal/blob/$GITHUB_SHA/engines/config-query-sparql-link-traversal/config/config-$id.json~" \
     > $cwd/web-clients/settings.custom.json
 
   # Build web client
