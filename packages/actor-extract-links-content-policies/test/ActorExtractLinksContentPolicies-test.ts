@@ -2,6 +2,7 @@ import type { Readable } from 'stream';
 import { BindingsFactory } from '@comunica/bindings-factory';
 import { KeysQueryOperation } from '@comunica/context-entries';
 import { ActionContext, Bus } from '@comunica/core';
+import arrayifyStream from 'arrayify-stream';
 import { ArrayIterator } from 'asynciterator';
 import { DataFactory } from 'rdf-data-factory';
 import { Factory } from 'sparqlalgebrajs';
@@ -11,7 +12,6 @@ import {
   KEY_CONTEXT_POLICIES,
   KEY_CONTEXT_WITHPOLICIES,
 } from '..';
-const arrayifyStream = require('arrayify-stream');
 const quad = require('rdf-quad');
 const stream = require('streamify-array');
 const factory = new Factory();
