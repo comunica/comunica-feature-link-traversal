@@ -105,9 +105,36 @@
 					</a>
 					<ul>
 						<li><code>typeIndexPredicates</code>: The type index predicate URLs that will be followed, defaults to <code>http://www.w3.org/ns/solid/terms#publicTypeIndex</code> and <code>http://www.w3.org/ns/solid/terms#privateTypeIndex</code>.</li>
+						<li><code>onlyMatchingTypes</code>: If only those type index entries matching with the current query should be considered. If false, all links within the type index entries will be followed. Defaults to true.</li>
 						<li><code>actorInitQuery</code>: An instance of <a href="https://github.com/comunica/comunica/tree/master/packages/actor-init-query">ActorInitQuery</a>, defaults to <code>urn:comunica:default:init/actors#query</code>.</li>
 						<li><code>mediatorDereferenceRdf</code>: A mediator over the <a href="https://github.com/comunica/comunica/tree/master/packages/bus-dereference-rdf">Dereference RDF bus</a>.</li>
 					</ul>
+					<a href="#how-it-works" id="how-it-works" style="color: inherit; text-decoration: none;">
+						<h3>How it works</h3>
+					</a>
+					<p>If the <code>onlyMatchingTypes</code> option is true (which it is by default), then only those type links will be extracted
+					that match with at least one pattern within the query.</p>
+					<p>For example, assuming the following type index contents:</p>
+					<pre><code class="language-turtle"><span style="color: #000000">@prefix </span><span style="color: #0000FF">:</span><span style="color: #000000"> </span><span style="color: #267F99">&lt;#&gt;</span><span style="color: #000000">.</span>
+<span style="color: #000000">@prefix </span><span style="color: #0000FF">solid:</span><span style="color: #000000"> </span><span style="color: #267F99">&lt;http://www.w3.org/ns/solid/terms#&gt;</span><span style="color: #000000">.</span>
+<span style="color: #000000">@prefix </span><span style="color: #0000FF">bookm:</span><span style="color: #000000"> </span><span style="color: #267F99">&lt;http://www.w3.org/2002/01/bookmark#&gt;</span><span style="color: #000000">.</span>
+
+<span style="color: #0000FF">:</span><span style="color: #001080">id1566207550642</span>
+<span style="color: #000000">    </span><span style="color: #AF00DB">a</span><span style="color: #000000"> </span><span style="color: #0000FF">solid:</span><span style="color: #001080">TypeRegistration</span><span style="color: #000000">;</span>
+<span style="color: #000000">    </span><span style="color: #0000FF">solid:</span><span style="color: #001080">forClass</span><span style="color: #000000"> </span><span style="color: #0000FF">bookm:</span><span style="color: #001080">Bookmark</span><span style="color: #000000">;</span>
+<span style="color: #000000">    </span><span style="color: #0000FF">solid:</span><span style="color: #001080">instance</span><span style="color: #000000"> </span><span style="color: #267F99">&lt;bookmarks.ttl&gt;</span><span style="color: #000000">.</span>
+</code></pre>
+					<p>The link to <code>bookmarks.ttl</code> will <em>only</em> be followed
+						if the query requests contains the <code>_:any rdf:type bookm:Bookmark</code> pattern.
+					For example, the link will be followed for the following query:</p>
+					<pre><code class="language-sparql"><span style="color: #000000">PREFIX </span><span style="color: #0000FF">bookm:</span><span style="color: #000000"> </span><span style="color: #267F99">&lt;http://www.w3.org/2002/01/bookmark#&gt;</span>
+
+<span style="color: #AF00DB">SELECT</span><span style="color: #000000"> </span><span style="color: #267F99">*</span><span style="color: #000000"> </span><span style="color: #AF00DB">WHERE</span><span style="color: #000000"> {</span>
+<span style="color: #000000">  ?bookmark </span><span style="color: #AF00DB">a</span><span style="color: #000000"> </span><span style="color: #0000FF">bookm:</span><span style="color: #001080">Bookmark</span><span style="color: #000000">;</span>
+<span style="color: #000000">    </span><span style="color: #0000FF">bookm:</span><span style="color: #001080">hasTopic</span><span style="color: #000000"> ?topic.</span>
+<span style="color: #000000">}</span>
+
+</code></pre>
 				</div>
 			</section>
 			<section class="tsd-panel-group tsd-index-group">
