@@ -1,0 +1,7 @@
+# Bookmarks of Ruben T
+# Datasources: https://rubensworks.solidcommunity.net/profile/card
+PREFIX bookm: <http://www.w3.org/2002/01/bookmark#>
+SELECT * WHERE {
+  ?bookmark a bookm:Bookmark;
+    bookm:hasTopic ?topic.
+}
