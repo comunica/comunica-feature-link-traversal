@@ -1,0 +1,8 @@
+# Movies watched by Ruben V
+# Datasources: https://ruben.verborgh.org/profile/
+PREFIX schema: <https://schema.org/>
+SELECT * WHERE {
+  ?movie a schema:Movie.
+  ?action a schema:WatchAction;
+          schema:object ?movie.
+}

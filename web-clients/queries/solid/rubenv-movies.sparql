@@ -1,0 +1,6 @@
+# Movies collection of Ruben V
+# Datasources: https://ruben.verborgh.org/profile/
+PREFIX schema: <https://schema.org/>
+SELECT * WHERE {
+  ?movie a schema:Movie.
+}

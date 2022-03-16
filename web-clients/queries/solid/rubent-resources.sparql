@@ -1,0 +1,7 @@
+# Files within the pod of Ruben T
+# Datasources: https://rubensworks.solidcommunity.net/profile/card
+PREFIX ldp: <http://www.w3.org/ns/ldp#>
+SELECT ?container ?resource WHERE {
+  ?container ldp:contains ?resource.
+  ?resource a ldp:Resource.
+}
