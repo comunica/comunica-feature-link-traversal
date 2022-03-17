@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>IActorExtractLinksQuadPatternArgs | Comunica Link Traversal</title>
+	<title>IActorRdfMetadataExtractShapetreesArgs | Comunica Link Traversal</title>
 	<meta name="description" content="Documentation for Comunica Link Traversal">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -55,13 +55,13 @@
 					<a href="../modules.html">Comunica Link Traversal</a>
 				</li>
 				<li>
-					<a href="../modules/actor_extract_links_quad_pattern.html">actor-extract-links-quad-pattern</a>
+					<a href="../modules/actor_rdf_metadata_extract_shapetrees.html">actor-rdf-metadata-extract-shapetrees</a>
 				</li>
 				<li>
-					<a href="actor_extract_links_quad_pattern.IActorExtractLinksQuadPatternArgs.html">IActorExtractLinksQuadPatternArgs</a>
+					<a href="actor_rdf_metadata_extract_shapetrees.IActorRdfMetadataExtractShapetreesArgs.html">IActorRdfMetadataExtractShapetreesArgs</a>
 				</li>
 			</ul>
-			<h1>Interface IActorExtractLinksQuadPatternArgs</h1>
+			<h1>Interface IActorRdfMetadataExtractShapetreesArgs</h1>
 		</div>
 	</div>
 </header>
@@ -72,10 +72,10 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="tsd-signature-type">IActorArgs</span><span class="tsd-signature-symbol">&lt;</span><a href="bus_extract_links.IActionExtractLinks.html" class="tsd-signature-type" data-tsd-kind="Interface">IActionExtractLinks</a><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">IActorTest</span><span class="tsd-signature-symbol">, </span><a href="bus_extract_links.IActorExtractLinksOutput.html" class="tsd-signature-type" data-tsd-kind="Interface">IActorExtractLinksOutput</a><span class="tsd-signature-symbol">&gt;</span>
+						<span class="tsd-signature-type">IActorArgs</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">IActionRdfMetadataExtract</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">IActorTest</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">IActorRdfMetadataExtractOutput</span><span class="tsd-signature-symbol">&gt;</span>
 						<ul class="tsd-hierarchy">
 							<li>
-								<span class="target">IActorExtractLinksQuadPatternArgs</span>
+								<span class="target">IActorRdfMetadataExtractShapetreesArgs</span>
 							</li>
 						</ul>
 					</li>
@@ -88,10 +88,12 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="actor_extract_links_quad_pattern.IActorExtractLinksQuadPatternArgs.html#beforeActors" class="tsd-kind-icon">before<wbr>Actors</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="actor_extract_links_quad_pattern.IActorExtractLinksQuadPatternArgs.html#bus" class="tsd-kind-icon">bus</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="actor_extract_links_quad_pattern.IActorExtractLinksQuadPatternArgs.html#name" class="tsd-kind-icon">name</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="actor_extract_links_quad_pattern.IActorExtractLinksQuadPatternArgs.html#onlyVariables" class="tsd-kind-icon">only<wbr>Variables</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="actor_rdf_metadata_extract_shapetrees.IActorRdfMetadataExtractShapetreesArgs.html#actorInitQuery" class="tsd-kind-icon">actor<wbr>Init<wbr>Query</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="actor_rdf_metadata_extract_shapetrees.IActorRdfMetadataExtractShapetreesArgs.html#beforeActors" class="tsd-kind-icon">before<wbr>Actors</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="actor_rdf_metadata_extract_shapetrees.IActorRdfMetadataExtractShapetreesArgs.html#bus" class="tsd-kind-icon">bus</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="actor_rdf_metadata_extract_shapetrees.IActorRdfMetadataExtractShapetreesArgs.html#mediatorDereferenceRdf" class="tsd-kind-icon">mediator<wbr>Dereference<wbr>Rdf</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="actor_rdf_metadata_extract_shapetrees.IActorRdfMetadataExtractShapetreesArgs.html#mediatorHttp" class="tsd-kind-icon">mediator<wbr>Http</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="actor_rdf_metadata_extract_shapetrees.IActorRdfMetadataExtractShapetreesArgs.html#name" class="tsd-kind-icon">name</a></li>
 							</ul>
 						</section>
 					</div>
@@ -99,10 +101,30 @@
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="actorInitQuery" class="tsd-anchor"></a>
+					<h3>actor<wbr>Init<wbr>Query</h3>
+					<div class="tsd-signature tsd-kind-icon">actor<wbr>Init<wbr>Query<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">ActorInitQueryBase</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/comunica/comunica-feature-link-traversal/blob/091df1a/packages/actor-rdf-metadata-extract-shapetrees/lib/ActorRdfMetadataExtractShapetrees.ts#L262">packages/actor-rdf-metadata-extract-shapetrees/lib/ActorRdfMetadataExtractShapetrees.ts:262</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>An init query actor that is used to query shapes.</p>
+						</div>
+						<dl class="tsd-comment-tags">
+							<dt>default</dt>
+							<dd><p>{<a href="urn:comunica:default:init/actors#query">urn:comunica:default:init/actors#query</a>}</p>
+							</dd>
+						</dl>
+					</div>
+				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
 					<a name="beforeActors" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagOptional">Optional</span> before<wbr>Actors</h3>
-					<div class="tsd-signature tsd-kind-icon">before<wbr>Actors<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Actor</span><span class="tsd-signature-symbol">&lt;</span><a href="bus_extract_links.IActionExtractLinks.html" class="tsd-signature-type" data-tsd-kind="Interface">IActionExtractLinks</a><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">IActorTest</span><span class="tsd-signature-symbol">, </span><a href="bus_extract_links.IActorExtractLinksOutput.html" class="tsd-signature-type" data-tsd-kind="Interface">IActorExtractLinksOutput</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[]</span></div>
+					<div class="tsd-signature tsd-kind-icon">before<wbr>Actors<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Actor</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">IActionRdfMetadataExtract</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">IActorTest</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">IActorRdfMetadataExtractOutput</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<p>Inherited from IActorArgs.beforeActors</p>
 						<ul>
@@ -118,7 +140,7 @@
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
 					<a name="bus" class="tsd-anchor"></a>
 					<h3>bus</h3>
-					<div class="tsd-signature tsd-kind-icon">bus<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Bus</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Actor</span><span class="tsd-signature-symbol">&lt;</span><a href="bus_extract_links.IActionExtractLinks.html" class="tsd-signature-type" data-tsd-kind="Interface">IActionExtractLinks</a><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">IActorTest</span><span class="tsd-signature-symbol">, </span><a href="bus_extract_links.IActorExtractLinksOutput.html" class="tsd-signature-type" data-tsd-kind="Interface">IActorExtractLinksOutput</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">, </span><a href="bus_extract_links.IActionExtractLinks.html" class="tsd-signature-type" data-tsd-kind="Interface">IActionExtractLinks</a><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">IActorTest</span><span class="tsd-signature-symbol">, </span><a href="bus_extract_links.IActorExtractLinksOutput.html" class="tsd-signature-type" data-tsd-kind="Interface">IActorExtractLinksOutput</a><span class="tsd-signature-symbol">&gt;</span></div>
+					<div class="tsd-signature tsd-kind-icon">bus<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Bus</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Actor</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">IActionRdfMetadataExtract</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">IActorTest</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">IActorRdfMetadataExtractOutput</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">IActionRdfMetadataExtract</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">IActorTest</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">IActorRdfMetadataExtractOutput</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<p>Inherited from IActorArgs.bus</p>
 						<ul>
@@ -128,6 +150,36 @@
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
 							<p>The bus this actor subscribes to.</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="mediatorDereferenceRdf" class="tsd-anchor"></a>
+					<h3>mediator<wbr>Dereference<wbr>Rdf</h3>
+					<div class="tsd-signature tsd-kind-icon">mediator<wbr>Dereference<wbr>Rdf<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">MediatorDereferenceRdf</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/comunica/comunica-feature-link-traversal/blob/091df1a/packages/actor-rdf-metadata-extract-shapetrees/lib/ActorRdfMetadataExtractShapetrees.ts#L266">packages/actor-rdf-metadata-extract-shapetrees/lib/ActorRdfMetadataExtractShapetrees.ts:266</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The Dereference RDF mediator</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="mediatorHttp" class="tsd-anchor"></a>
+					<h3>mediator<wbr>Http</h3>
+					<div class="tsd-signature tsd-kind-icon">mediator<wbr>Http<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">MediatorHttp</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/comunica/comunica-feature-link-traversal/blob/091df1a/packages/actor-rdf-metadata-extract-shapetrees/lib/ActorRdfMetadataExtractShapetrees.ts#L270">packages/actor-rdf-metadata-extract-shapetrees/lib/ActorRdfMetadataExtractShapetrees.ts:270</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The HTTP mediator</p>
 						</div>
 					</div>
 				</section>
@@ -152,23 +204,6 @@
 						</dl>
 					</div>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="onlyVariables" class="tsd-anchor"></a>
-					<h3>only<wbr>Variables</h3>
-					<div class="tsd-signature tsd-kind-icon">only<wbr>Variables<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/comunica/comunica-feature-link-traversal/blob/091df1a/packages/actor-extract-links-quad-pattern/lib/ActorExtractLinksQuadPattern.ts#L69">packages/actor-extract-links-quad-pattern/lib/ActorExtractLinksQuadPattern.ts:69</a></li>
-						</ul>
-					</aside>
-					<div class="tsd-comment tsd-typography">
-						<dl class="tsd-comment-tags">
-							<dt>default</dt>
-							<dd><p>{true}</p>
-							</dd>
-						</dl>
-					</div>
-				</section>
 			</section>
 		</div>
 		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
@@ -186,7 +221,7 @@
 					<li class=" tsd-kind-module">
 						<a href="../modules/actor_extract_links_predicates.html">actor-<wbr>extract-<wbr>links-<wbr>predicates</a>
 					</li>
-					<li class="current tsd-kind-module">
+					<li class=" tsd-kind-module">
 						<a href="../modules/actor_extract_links_quad_pattern.html">actor-<wbr>extract-<wbr>links-<wbr>quad-<wbr>pattern</a>
 					</li>
 					<li class=" tsd-kind-module">
@@ -201,7 +236,7 @@
 					<li class=" tsd-kind-module">
 						<a href="../modules/actor_rdf_join_entries_sort_traversal_zero_knowledge.html">actor-<wbr>rdf-<wbr>join-<wbr>entries-<wbr>sort-<wbr>traversal-<wbr>zero-<wbr>knowledge</a>
 					</li>
-					<li class=" tsd-kind-module">
+					<li class="current tsd-kind-module">
 						<a href="../modules/actor_rdf_metadata_extract_shapetrees.html">actor-<wbr>rdf-<wbr>metadata-<wbr>extract-<wbr>shapetrees</a>
 					</li>
 					<li class=" tsd-kind-module">
@@ -265,35 +300,9 @@
 					<li class=" tsd-kind-module">
 						<a href="../modules/actor_extract_links_predicates.html" class="tsd-kind-icon">actor-<wbr>extract-<wbr>links-<wbr>predicates</a>
 					</li>
-				</ul>
-				<ul class="current">
-					<li class="current tsd-kind-module">
+					<li class=" tsd-kind-module">
 						<a href="../modules/actor_extract_links_quad_pattern.html" class="tsd-kind-icon">actor-<wbr>extract-<wbr>links-<wbr>quad-<wbr>pattern</a>
-						<ul>
-							<li class=" tsd-kind-class tsd-parent-kind-module">
-								<a href="../classes/actor_extract_links_quad_pattern.ActorExtractLinksQuadPattern.html" class="tsd-kind-icon">Actor<wbr>Extract<wbr>Links<wbr>Quad<wbr>Pattern</a>
-							</li>
-							<li class="current tsd-kind-interface tsd-parent-kind-module">
-								<a href="actor_extract_links_quad_pattern.IActorExtractLinksQuadPatternArgs.html" class="tsd-kind-icon">IActor<wbr>Extract<wbr>Links<wbr>Quad<wbr>Pattern<wbr>Args</a>
-								<ul>
-									<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
-										<a href="actor_extract_links_quad_pattern.IActorExtractLinksQuadPatternArgs.html#beforeActors" class="tsd-kind-icon">before<wbr>Actors</a>
-									</li>
-									<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
-										<a href="actor_extract_links_quad_pattern.IActorExtractLinksQuadPatternArgs.html#bus" class="tsd-kind-icon">bus</a>
-									</li>
-									<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
-										<a href="actor_extract_links_quad_pattern.IActorExtractLinksQuadPatternArgs.html#name" class="tsd-kind-icon">name</a>
-									</li>
-									<li class=" tsd-kind-property tsd-parent-kind-interface">
-										<a href="actor_extract_links_quad_pattern.IActorExtractLinksQuadPatternArgs.html#onlyVariables" class="tsd-kind-icon">only<wbr>Variables</a>
-									</li>
-								</ul>
-							</li>
-						</ul>
 					</li>
-				</ul>
-				<ul class="after-current">
 					<li class=" tsd-kind-module">
 						<a href="../modules/actor_extract_links_quad_pattern_query.html" class="tsd-kind-icon">actor-<wbr>extract-<wbr>links-<wbr>quad-<wbr>pattern-<wbr>query</a>
 					</li>
@@ -306,9 +315,44 @@
 					<li class=" tsd-kind-module">
 						<a href="../modules/actor_rdf_join_entries_sort_traversal_zero_knowledge.html" class="tsd-kind-icon">actor-<wbr>rdf-<wbr>join-<wbr>entries-<wbr>sort-<wbr>traversal-<wbr>zero-<wbr>knowledge</a>
 					</li>
-					<li class=" tsd-kind-module">
+				</ul>
+				<ul class="current">
+					<li class="current tsd-kind-module">
 						<a href="../modules/actor_rdf_metadata_extract_shapetrees.html" class="tsd-kind-icon">actor-<wbr>rdf-<wbr>metadata-<wbr>extract-<wbr>shapetrees</a>
+						<ul>
+							<li class=" tsd-kind-class tsd-parent-kind-module">
+								<a href="../classes/actor_rdf_metadata_extract_shapetrees.ActorRdfMetadataExtractShapetrees.html" class="tsd-kind-icon">Actor<wbr>Rdf<wbr>Metadata<wbr>Extract<wbr>Shapetrees</a>
+							</li>
+							<li class=" tsd-kind-class tsd-parent-kind-module">
+								<a href="../classes/actor_rdf_metadata_extract_shapetrees.ShapeTree.html" class="tsd-kind-icon">Shape<wbr>Tree</a>
+							</li>
+							<li class="current tsd-kind-interface tsd-parent-kind-module">
+								<a href="actor_rdf_metadata_extract_shapetrees.IActorRdfMetadataExtractShapetreesArgs.html" class="tsd-kind-icon">IActor<wbr>Rdf<wbr>Metadata<wbr>Extract<wbr>Shapetrees<wbr>Args</a>
+								<ul>
+									<li class=" tsd-kind-property tsd-parent-kind-interface">
+										<a href="actor_rdf_metadata_extract_shapetrees.IActorRdfMetadataExtractShapetreesArgs.html#actorInitQuery" class="tsd-kind-icon">actor<wbr>Init<wbr>Query</a>
+									</li>
+									<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
+										<a href="actor_rdf_metadata_extract_shapetrees.IActorRdfMetadataExtractShapetreesArgs.html#beforeActors" class="tsd-kind-icon">before<wbr>Actors</a>
+									</li>
+									<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
+										<a href="actor_rdf_metadata_extract_shapetrees.IActorRdfMetadataExtractShapetreesArgs.html#bus" class="tsd-kind-icon">bus</a>
+									</li>
+									<li class=" tsd-kind-property tsd-parent-kind-interface">
+										<a href="actor_rdf_metadata_extract_shapetrees.IActorRdfMetadataExtractShapetreesArgs.html#mediatorDereferenceRdf" class="tsd-kind-icon">mediator<wbr>Dereference<wbr>Rdf</a>
+									</li>
+									<li class=" tsd-kind-property tsd-parent-kind-interface">
+										<a href="actor_rdf_metadata_extract_shapetrees.IActorRdfMetadataExtractShapetreesArgs.html#mediatorHttp" class="tsd-kind-icon">mediator<wbr>Http</a>
+									</li>
+									<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
+										<a href="actor_rdf_metadata_extract_shapetrees.IActorRdfMetadataExtractShapetreesArgs.html#name" class="tsd-kind-icon">name</a>
+									</li>
+								</ul>
+							</li>
+						</ul>
 					</li>
+				</ul>
+				<ul class="after-current">
 					<li class=" tsd-kind-module">
 						<a href="../modules/actor_rdf_metadata_extract_traverse.html" class="tsd-kind-icon">actor-<wbr>rdf-<wbr>metadata-<wbr>extract-<wbr>traverse</a>
 					</li>

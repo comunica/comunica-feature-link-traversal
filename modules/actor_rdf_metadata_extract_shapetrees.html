@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>actor-extract-links-shapetrees | Comunica Link Traversal</title>
+	<title>actor-rdf-metadata-extract-shapetrees | Comunica Link Traversal</title>
 	<meta name="description" content="Documentation for Comunica Link Traversal">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -55,10 +55,10 @@
 					<a href="../modules.html">Comunica Link Traversal</a>
 				</li>
 				<li>
-					<a href="actor_extract_links_shapetrees.html">actor-extract-links-shapetrees</a>
+					<a href="actor_rdf_metadata_extract_shapetrees.html">actor-rdf-metadata-extract-shapetrees</a>
 				</li>
 			</ul>
-			<h1>Module actor-extract-links-shapetrees</h1>
+			<h1>Module actor-rdf-metadata-extract-shapetrees</h1>
 		</div>
 	</div>
 </header>
@@ -67,26 +67,28 @@
 		<div class="col-8 col-content">
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
-					<a href="#comunica-shapetrees-extract-links-actor" id="comunica-shapetrees-extract-links-actor" style="color: inherit; text-decoration: none;">
-						<h1>Comunica Shapetrees Extract Links Actor</h1>
+					<a href="#comunica-shapetrees-rdf-metadata-extract-actor" id="comunica-shapetrees-rdf-metadata-extract-actor" style="color: inherit; text-decoration: none;">
+						<h1>Comunica Shapetrees RDF Metadata Extract Actor</h1>
 					</a>
-					<p><a href="https://www.npmjs.com/package/@comunica/actor-extract-links-shapetrees"><img src="https://badge.fury.io/js/%40comunica%2Factor-extract-links-shapetrees.svg" alt="npm version"></a></p>
-					<p>A comunica Traverse Shapetrees RDF Metadata Extract Actor.</p>
-					<p><strong>Warning: this package is experimental, and does not work properly yet.</strong></p>
+					<p><a href="https://www.npmjs.com/package/@comunica/actor-rdf-metadata-extract-shapetrees"><img src="https://badge.fury.io/js/%40comunica%2Factor-rdf-metadata-extract-shapetrees.svg" alt="npm version"></a></p>
+					<p>An <a href="https://github.com/comunica/comunica/tree/master/packages/bus-rdf-metadata-extract">RDF Metadata Extract</a> actor that
+						adds the <code>shapetrees</code> entry to the metadata object,
+						which will contain those <a href="https://shapetrees.org/">Shape Trees</a> objects that either match and do not match with the current query.
+					The applicable and non-applicable are stored in separate arrays.</p>
 					<p>This module is part of the <a href="https://github.com/comunica/comunica">Comunica framework</a>,
 					and should only be used by <a href="https://comunica.dev/docs/modify/">developers that want to build their own query engine</a>.</p>
 					<p><a href="https://comunica.dev/docs/query/">Click here if you just want to query with Comunica</a>.</p>
 					<a href="#install" id="install" style="color: inherit; text-decoration: none;">
 						<h2>Install</h2>
 					</a>
-					<pre><code class="language-bash"><span style="color: #000000">$ yarn add @comunica/actor-extract-links-shapetrees</span>
+					<pre><code class="language-bash"><span style="color: #000000">$ yarn add @comunica/actor-rdf-metadata-extract-shapetrees</span>
 </code></pre>
 					<a href="#metadata-entries" id="metadata-entries" style="color: inherit; text-decoration: none;">
 						<h2>Metadata entries</h2>
 					</a>
 					<p>This actor adds the following entries to the metadata object.</p>
 					<ul>
-						<li><code>traverse</code>: Array of URLs to traverse.</li>
+						<li><code>shapetrees</code>: An object containing arrays of <code>applicable</code> and <code>nonApplicable</code> <code>ShapeTree</code> objects.</li>
 					</ul>
 					<a href="#configure" id="configure" style="color: inherit; text-decoration: none;">
 						<h2>Configure</h2>
@@ -95,13 +97,13 @@
 					<pre><code class="language-text">{
   &quot;@context&quot;: [
     ...
-    &quot;https://linkedsoftwaredependencies.org/bundles/npm/@comunica/actor-extract-links-shapetrees/^0.0.0/components/context.jsonld&quot;  
+    &quot;https://linkedsoftwaredependencies.org/bundles/npm/@comunica/actor-rdf-metadata-extract-shapetrees/^1.0.0/components/context.jsonld&quot;  
   ],
   &quot;actors&quot;: [
     ...
     {
-      &quot;@id&quot;: &quot;urn:comunica:default:extract-links/actors#traverse-shapetrees&quot;,
-      &quot;@type&quot;: &quot;ActorExtractLinksShapetrees&quot;,
+      &quot;@id&quot;: &quot;urn:comunica:default:rdf-metadata-extract/actors#shapetrees&quot;,
+      &quot;@type&quot;: &quot;ActorRdfMetadataExtractShapetrees&quot;
       &quot;mediatorDereferenceRdf&quot;: { &quot;@id&quot;: &quot;urn:comunica:default:dereference-rdf/mediators#main&quot; },
       &quot;mediatorHttp&quot;: { &quot;@id&quot;: &quot;urn:comunica:default:http/mediators#main&quot; }
     }
@@ -125,14 +127,14 @@
 						<section class="tsd-index-section ">
 							<h3>Classes</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-class tsd-parent-kind-module"><a href="../classes/actor_extract_links_shapetrees.ActorExtractLinksShapetrees.html" class="tsd-kind-icon">Actor<wbr>Extract<wbr>Links<wbr>Shapetrees</a></li>
-								<li class="tsd-kind-class tsd-parent-kind-module"><a href="../classes/actor_extract_links_shapetrees.ShapeTree.html" class="tsd-kind-icon">Shape<wbr>Tree</a></li>
+								<li class="tsd-kind-class tsd-parent-kind-module"><a href="../classes/actor_rdf_metadata_extract_shapetrees.ActorRdfMetadataExtractShapetrees.html" class="tsd-kind-icon">Actor<wbr>Rdf<wbr>Metadata<wbr>Extract<wbr>Shapetrees</a></li>
+								<li class="tsd-kind-class tsd-parent-kind-module"><a href="../classes/actor_rdf_metadata_extract_shapetrees.ShapeTree.html" class="tsd-kind-icon">Shape<wbr>Tree</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
 							<h3>Interfaces</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-interface tsd-parent-kind-module"><a href="../interfaces/actor_extract_links_shapetrees.IActorExtractLinksShapetreesArgs.html" class="tsd-kind-icon">IActor<wbr>Extract<wbr>Links<wbr>Shapetrees<wbr>Args</a></li>
+								<li class="tsd-kind-interface tsd-parent-kind-module"><a href="../interfaces/actor_rdf_metadata_extract_shapetrees.IActorRdfMetadataExtractShapetreesArgs.html" class="tsd-kind-icon">IActor<wbr>Rdf<wbr>Metadata<wbr>Extract<wbr>Shapetrees<wbr>Args</a></li>
 							</ul>
 						</section>
 					</div>
@@ -160,9 +162,6 @@
 					<li class=" tsd-kind-module">
 						<a href="actor_extract_links_quad_pattern_query.html">actor-<wbr>extract-<wbr>links-<wbr>quad-<wbr>pattern-<wbr>query</a>
 					</li>
-					<li class="current tsd-kind-module">
-						<a href="actor_extract_links_shapetrees.html">actor-<wbr>extract-<wbr>links-<wbr>shapetrees</a>
-					</li>
 					<li class=" tsd-kind-module">
 						<a href="actor_extract_links_solid_type_index.html">actor-<wbr>extract-<wbr>links-<wbr>solid-<wbr>type-<wbr>index</a>
 					</li>
@@ -171,6 +170,9 @@
 					</li>
 					<li class=" tsd-kind-module">
 						<a href="actor_rdf_join_entries_sort_traversal_zero_knowledge.html">actor-<wbr>rdf-<wbr>join-<wbr>entries-<wbr>sort-<wbr>traversal-<wbr>zero-<wbr>knowledge</a>
+					</li>
+					<li class="current tsd-kind-module">
+						<a href="actor_rdf_metadata_extract_shapetrees.html">actor-<wbr>rdf-<wbr>metadata-<wbr>extract-<wbr>shapetrees</a>
 					</li>
 					<li class=" tsd-kind-module">
 						<a href="actor_rdf_metadata_extract_traverse.html">actor-<wbr>rdf-<wbr>metadata-<wbr>extract-<wbr>traverse</a>
@@ -183,6 +185,9 @@
 					</li>
 					<li class=" tsd-kind-module">
 						<a href="actor_rdf_resolve_hypermedia_links_traverse.html">actor-<wbr>rdf-<wbr>resolve-<wbr>hypermedia-<wbr>links-<wbr>traverse</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="actor_rdf_resolve_hypermedia_links_traverse_prune_shapetrees.html">actor-<wbr>rdf-<wbr>resolve-<wbr>hypermedia-<wbr>links-<wbr>traverse-<wbr>prune-<wbr>shapetrees</a>
 					</li>
 					<li class=" tsd-kind-module">
 						<a href="actor_rdf_resolve_hypermedia_links_traverse_replace_conditional.html">actor-<wbr>rdf-<wbr>resolve-<wbr>hypermedia-<wbr>links-<wbr>traverse-<wbr>replace-<wbr>conditional</a>
@@ -236,24 +241,6 @@
 					<li class=" tsd-kind-module">
 						<a href="actor_extract_links_quad_pattern_query.html" class="tsd-kind-icon">actor-<wbr>extract-<wbr>links-<wbr>quad-<wbr>pattern-<wbr>query</a>
 					</li>
-				</ul>
-				<ul class="current">
-					<li class="current tsd-kind-module">
-						<a href="actor_extract_links_shapetrees.html" class="tsd-kind-icon">actor-<wbr>extract-<wbr>links-<wbr>shapetrees</a>
-						<ul>
-							<li class=" tsd-kind-class tsd-parent-kind-module">
-								<a href="../classes/actor_extract_links_shapetrees.ActorExtractLinksShapetrees.html" class="tsd-kind-icon">Actor<wbr>Extract<wbr>Links<wbr>Shapetrees</a>
-							</li>
-							<li class=" tsd-kind-class tsd-parent-kind-module">
-								<a href="../classes/actor_extract_links_shapetrees.ShapeTree.html" class="tsd-kind-icon">Shape<wbr>Tree</a>
-							</li>
-							<li class=" tsd-kind-interface tsd-parent-kind-module">
-								<a href="../interfaces/actor_extract_links_shapetrees.IActorExtractLinksShapetreesArgs.html" class="tsd-kind-icon">IActor<wbr>Extract<wbr>Links<wbr>Shapetrees<wbr>Args</a>
-							</li>
-						</ul>
-					</li>
-				</ul>
-				<ul class="after-current">
 					<li class=" tsd-kind-module">
 						<a href="actor_extract_links_solid_type_index.html" class="tsd-kind-icon">actor-<wbr>extract-<wbr>links-<wbr>solid-<wbr>type-<wbr>index</a>
 					</li>
@@ -263,6 +250,24 @@
 					<li class=" tsd-kind-module">
 						<a href="actor_rdf_join_entries_sort_traversal_zero_knowledge.html" class="tsd-kind-icon">actor-<wbr>rdf-<wbr>join-<wbr>entries-<wbr>sort-<wbr>traversal-<wbr>zero-<wbr>knowledge</a>
 					</li>
+				</ul>
+				<ul class="current">
+					<li class="current tsd-kind-module">
+						<a href="actor_rdf_metadata_extract_shapetrees.html" class="tsd-kind-icon">actor-<wbr>rdf-<wbr>metadata-<wbr>extract-<wbr>shapetrees</a>
+						<ul>
+							<li class=" tsd-kind-class tsd-parent-kind-module">
+								<a href="../classes/actor_rdf_metadata_extract_shapetrees.ActorRdfMetadataExtractShapetrees.html" class="tsd-kind-icon">Actor<wbr>Rdf<wbr>Metadata<wbr>Extract<wbr>Shapetrees</a>
+							</li>
+							<li class=" tsd-kind-class tsd-parent-kind-module">
+								<a href="../classes/actor_rdf_metadata_extract_shapetrees.ShapeTree.html" class="tsd-kind-icon">Shape<wbr>Tree</a>
+							</li>
+							<li class=" tsd-kind-interface tsd-parent-kind-module">
+								<a href="../interfaces/actor_rdf_metadata_extract_shapetrees.IActorRdfMetadataExtractShapetreesArgs.html" class="tsd-kind-icon">IActor<wbr>Rdf<wbr>Metadata<wbr>Extract<wbr>Shapetrees<wbr>Args</a>
+							</li>
+						</ul>
+					</li>
+				</ul>
+				<ul class="after-current">
 					<li class=" tsd-kind-module">
 						<a href="actor_rdf_metadata_extract_traverse.html" class="tsd-kind-icon">actor-<wbr>rdf-<wbr>metadata-<wbr>extract-<wbr>traverse</a>
 					</li>
@@ -274,6 +279,9 @@
 					</li>
 					<li class=" tsd-kind-module">
 						<a href="actor_rdf_resolve_hypermedia_links_traverse.html" class="tsd-kind-icon">actor-<wbr>rdf-<wbr>resolve-<wbr>hypermedia-<wbr>links-<wbr>traverse</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="actor_rdf_resolve_hypermedia_links_traverse_prune_shapetrees.html" class="tsd-kind-icon">actor-<wbr>rdf-<wbr>resolve-<wbr>hypermedia-<wbr>links-<wbr>traverse-<wbr>prune-<wbr>shapetrees</a>
 					</li>
 					<li class=" tsd-kind-module">
 						<a href="actor_rdf_resolve_hypermedia_links_traverse_replace_conditional.html" class="tsd-kind-icon">actor-<wbr>rdf-<wbr>resolve-<wbr>hypermedia-<wbr>links-<wbr>traverse-<wbr>replace-<wbr>conditional</a>
