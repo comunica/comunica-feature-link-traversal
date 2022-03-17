@@ -18,7 +18,6 @@ module.exports = {
     '/node_modules/',
     '/mocks/',
     'index.js',
-    '/packages/actor-extract-links-shapetrees/',
   ],
   testEnvironment: 'node',
   coverageThreshold: {

@@ -39,6 +39,9 @@ These engines make use of the following packages:
     * [Quad pattern extractor](https://github.com/comunica/comunica-feature-link-traversal/tree/master/packages/actor-extract-links-quad-pattern): Actor that extracts all URLs that match the current quad pattern in a document for traversal.
     * [Quad pattern query extractor](https://github.com/comunica/comunica-feature-link-traversal/tree/master/packages/actor-extract-links-quad-pattern-query): Actor that extracts all URLs that match any quad pattern in the current query in a document for traversal.
     * [Solid type index extractor](https://github.com/comunica/comunica-feature-link-traversal/tree/master/packages/actor-extract-links-solid-type-index): Actor that extracts links to types via the [Solid type index](https://github.com/solid/solid/blob/main/proposals/data-discovery.md).
+* Pruning actors:
+  * [Traverse Prune ShapeTrees RDF Resolve Hypermedia Links Actor](https://github.com/comunica/comunica-feature-link-traversal/tree/master/packages/actor-rdf-resolve-hypermedia-links-traverse-prune-shapetrees): Actor that prunes links that are guaranteed to not match with the current query based on [ShapeTrees](https://shapetrees.org/) metadata.
+    * _Requires [ShapeTrees RDF Metadata Extract Actor](https://github.com/comunica/comunica-feature-link-traversal/tree/master/packages/actor-rdf-metadata-extract-shapetrees)_
 * Query termination actors:
     * [Link count limit](https://github.com/comunica/comunica-feature-link-traversal/tree/master/packages/actor-rdf-resolve-hypermedia-links-queue-wrapper-limit-count): Actor that imposes a limit of the maximum number of links that can be pushed into the link queue.
     * [Link depth limit](https://github.com/comunica/comunica-feature-link-traversal/tree/master/packages/actor-rdf-resolve-hypermedia-links-queue-wrapper-limit-depth): Actor that imposes a limit of the depth of link paths that can be pushed into the link queue.

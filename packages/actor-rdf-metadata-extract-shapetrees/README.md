@@ -1,10 +1,11 @@
-# Comunica Shapetrees Extract Links Actor
+# Comunica Shapetrees RDF Metadata Extract Actor
 
-[![npm version](https://badge.fury.io/js/%40comunica%2Factor-extract-links-shapetrees.svg)](https://www.npmjs.com/package/@comunica/actor-extract-links-shapetrees)
+[![npm version](https://badge.fury.io/js/%40comunica%2Factor-rdf-metadata-extract-shapetrees.svg)](https://www.npmjs.com/package/@comunica/actor-rdf-metadata-extract-shapetrees)
 
-A comunica Traverse Shapetrees RDF Metadata Extract Actor.
-
-**Warning: this package is experimental, and does not work properly yet.**
+An [RDF Metadata Extract](https://github.com/comunica/comunica/tree/master/packages/bus-rdf-metadata-extract) actor that
+adds the `shapetrees` entry to the metadata object,
+which will contain those [Shape Trees](https://shapetrees.org/) objects that either match and do not match with the current query.
+The applicable and non-applicable are stored in separate arrays.
 
 This module is part of the [Comunica framework](https://github.com/comunica/comunica),
 and should only be used by [developers that want to build their own query engine](https://comunica.dev/docs/modify/).
@@ -14,14 +15,14 @@ and should only be used by [developers that want to build their own query engine
 ## Install
 
 ```bash
-$ yarn add @comunica/actor-extract-links-shapetrees
+$ yarn add @comunica/actor-rdf-metadata-extract-shapetrees
 ```
 
 ## Metadata entries
 
 This actor adds the following entries to the metadata object.
 
-* `traverse`: Array of URLs to traverse.
+* `shapetrees`: An object containing arrays of `applicable` and `nonApplicable` `ShapeTree` objects.
 
 ## Configure
 
@@ -30,13 +31,13 @@ After installing, this package can be added to your engine's configuration as fo
 {
   "@context": [
     ...
-    "https://linkedsoftwaredependencies.org/bundles/npm/@comunica/actor-extract-links-shapetrees/^0.0.0/components/context.jsonld"  
+    "https://linkedsoftwaredependencies.org/bundles/npm/@comunica/actor-rdf-metadata-extract-shapetrees/^1.0.0/components/context.jsonld"  
   ],
   "actors": [
     ...
     {
-      "@id": "urn:comunica:default:extract-links/actors#traverse-shapetrees",
-      "@type": "ActorExtractLinksShapetrees",
+      "@id": "urn:comunica:default:rdf-metadata-extract/actors#shapetrees",
+      "@type": "ActorRdfMetadataExtractShapetrees"
       "mediatorDereferenceRdf": { "@id": "urn:comunica:default:dereference-rdf/mediators#main" },
       "mediatorHttp": { "@id": "urn:comunica:default:http/mediators#main" }
     }

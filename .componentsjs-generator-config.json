@@ -6,7 +6,8 @@
   ],
   "ignoreComponents": [
     "Headers",
-    "RDF.Stream"
+    "RDF.Stream",
+    "ShapeTree"
   ],
   "modulePrefix": {}
 }

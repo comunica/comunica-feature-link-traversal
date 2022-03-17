@@ -35,9 +35,7 @@ After installing, this package can be added to your engine's configuration as fo
     {
       "@id": "config-setsslt:traverse-content-policies-conditional.json#myActorRdfResolveHypermediaLinksTraverseReplaceConditional",
       "@type": "ActorRdfResolveHypermediaLinksTraverseReplaceConditional",
-      "mediatorRdfResolveHypermediaLinks": {
-        "@id": "config-sets:resolve-hypermedia.json#mediatorRdfResolveHypermediaLinks"
-      }
+      "mediatorRdfResolveHypermediaLinks": { "@id": "config-sets:resolve-hypermedia.json#mediatorRdfResolveHypermediaLinks" }
     }
   ]
 }
