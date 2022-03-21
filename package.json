@@ -79,6 +79,6 @@
     "version": "manual-git-changelog onversion"
   },
   "resolutions": {
-    "@types/yargs": "17.0.9"
+    "@types/yargs": "17.0.10"
   }
 }

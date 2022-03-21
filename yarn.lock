@@ -4147,7 +4147,7 @@
     "@inrupt/solid-client-authn-core" "^1.11.2"
     "@inrupt/solid-client-authn-node" "^1.11.2"
 
-"@shexjs/parser@^1.0.0-alpha.20", "@shexjs/parser@^1.0.0-alpha.21":
+"@shexjs/parser@^1.0.0-alpha.21":
   version "1.0.0-alpha.21"
   resolved "https://registry.yarnpkg.com/@shexjs/parser/-/parser-1.0.0-alpha.21.tgz#a688992f388556f34ad88f90ea4d0c1a92d5f4d5"
   integrity sha512-BrOpMtbU7J/FCY+iouMLDVIJhc//nyXnryFbtgW+MIcV9jdjx2HgfA8hUpFDi/q1p/84k9YychPPt/W86J4wIA==
@@ -4470,10 +4470,10 @@
   resolved "https://registry.yarnpkg.com/@types/yargs-parser/-/yargs-parser-21.0.0.tgz#0c60e537fa790f5f9472ed2776c2b71ec117351b"
   integrity sha512-iO9ZQHkZxHn4mSakYV0vFHAVDyEOIJQrV2uZ06HxEPcx+mt8swXoZHIbaaJ2crJYFfErySgktuTZ3BeLz+XmFA==
 
-"@types/yargs@17.0.9", "@types/yargs@^16.0.0", "@types/yargs@^17.0.2":
-  version "17.0.9"
-  resolved "https://registry.yarnpkg.com/@types/yargs/-/yargs-17.0.9.tgz#f1f931a4e5ae2c0134dea10f501088636a50b46a"
-  integrity sha512-Ci8+4/DOtkHRylcisKmVMtmVO5g7weUVCKcsu1sJvF1bn0wExTmbHmhFKj7AnEm0de800iovGhdSKzYnzbaHpg==
+"@types/yargs@17.0.10", "@types/yargs@^16.0.0", "@types/yargs@^17.0.2":
+  version "17.0.10"
+  resolved "https://registry.yarnpkg.com/@types/yargs/-/yargs-17.0.10.tgz#591522fce85d8739bca7b8bb90d048e4478d186a"
+  integrity sha512-gmEaFwpj/7f/ROdtIlci1R1VYU1J4j95m8T+Tj3iBgiBFKg1foE/PSl93bBd5T9LDXNPo8UlNN6W0qwD8O5OaA==
   dependencies:
     "@types/yargs-parser" "*"
 
