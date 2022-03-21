@@ -20,7 +20,7 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v3
       - name: Load cache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: |
             **/node_modules
@@ -58,7 +58,7 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v3
       - name: Load cache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: '**/node_modules'
           key: ${{ runner.os }}-lint-modules-v1-${{ hashFiles('**/yarn.lock') }}
@@ -80,7 +80,7 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v3
       - name: Load cache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: '**/node_modules'
           key: ${{ runner.os }}-docker-modules-v1-${{ hashFiles('**/yarn.lock') }}
@@ -110,7 +110,7 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v3
       - name: Load cache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: '**/node_modules'
           key: ${{ runner.os }}-docs-modules-v1-${{ hashFiles('**/yarn.lock') }}
@@ -139,7 +139,7 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v3
       - name: Load cache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: '**/node_modules'
           key: ${{ runner.os }}-webclients-modules-v1-${{ hashFiles('**/yarn.lock') }}
