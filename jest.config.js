@@ -11,6 +11,9 @@ module.exports = {
     'ts-jest': {
       isolatedModules: true
     },
+    window: {
+      location: new URL("http://localhost")
+    }
   },
   setupFilesAfterEnv: [ './setup-jest.js' ],
   collectCoverage: true,

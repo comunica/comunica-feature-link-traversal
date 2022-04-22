@@ -67,5 +67,73 @@ describe('ActorRdfResolveHypermediaLinksTraverse', () => {
           { url: 'http://example.org' },
         ]});
     });
+
+    it('should run and convert insecure links to https in the browser', () => {
+      global.window = { location: new URL('https://mywebapp.com') };
+      actor = new ActorRdfResolveHypermediaLinksTraverse({ name: 'actor', bus });
+      const result = actor.run({ context: new ActionContext(),
+        metadata: { traverse: [
+          { url: 'http://example.org?abc' },
+          { url: 'http://example.org' },
+        ]}});
+      global.window = { location: new URL('http://localhost') };
+      return expect(result)
+        .resolves.toMatchObject({ links: [
+          { url: 'https://example.org?abc' },
+          { url: 'https://example.org' },
+        ]});
+    });
+
+    it('should run and keep insecure links when running from an insecure context', () => {
+      global.window = { location: new URL('http://mywebapp.com') };
+      actor = new ActorRdfResolveHypermediaLinksTraverse({ name: 'actor', bus });
+      const result = actor.run({ context: new ActionContext(),
+        metadata: { traverse: [
+          { url: 'http://example.org?abc' },
+          { url: 'http://example.org' },
+        ]}});
+      global.window = { location: new URL('http://localhost') };
+      return expect(result)
+        .resolves.toMatchObject({ links: [
+          { url: 'http://example.org?abc' },
+          { url: 'http://example.org' },
+        ]});
+    });
+
+    it('should run and not convert insecure links to https when upgradeInsecureRequests is set to false', () => {
+      global.window = { location: new URL('https://mywebapp.com') };
+      actor = new ActorRdfResolveHypermediaLinksTraverse({
+        name: 'actor', bus, upgradeInsecureRequests: false,
+      });
+      const result = actor.run({ context: new ActionContext(),
+        metadata: { traverse: [
+          { url: 'http://example.org?abc' },
+          { url: 'http://example.org' },
+        ]}});
+      global.window = { location: new URL('http://localhost') };
+      return expect(result)
+        .resolves.toMatchObject({ links: [
+          { url: 'http://example.org?abc' },
+          { url: 'http://example.org' },
+        ]});
+    });
+
+    it('should run and convert insecure links to https when upgradeInsecureRequests is set to true', () => {
+      global.window = { location: new URL('http://mywebapp.com') };
+      actor = new ActorRdfResolveHypermediaLinksTraverse({
+        name: 'actor', bus, upgradeInsecureRequests: true,
+      });
+      const result = actor.run({ context: new ActionContext(),
+        metadata: { traverse: [
+          { url: 'http://example.org?abc' },
+          { url: 'http://example.org' },
+        ]}});
+      global.window = { location: new URL('http://localhost') };
+      return expect(result)
+        .resolves.toMatchObject({ links: [
+          { url: 'https://example.org?abc' },
+          { url: 'https://example.org' },
+        ]});
+    });
   });
 });

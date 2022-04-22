@@ -1,6 +1,7 @@
 import type { IActionRdfResolveHypermediaLinks,
   IActorRdfResolveHypermediaLinksOutput, ILink } from '@comunica/bus-rdf-resolve-hypermedia-links';
 import { ActorRdfResolveHypermediaLinks } from '@comunica/bus-rdf-resolve-hypermedia-links';
+import { KeysHttpProxy } from '@comunica/context-entries';
 import type { IActorArgs, IActorTest } from '@comunica/core';
 import { ActionContextKey } from '@comunica/core';
 
@@ -11,10 +12,14 @@ export class ActorRdfResolveHypermediaLinksTraverse extends ActorRdfResolveHyper
   public static readonly CONTEXT_KEY_TRAVERSE =
     new ActionContextKey<boolean>('@comunica/actor-rdf-resolve-hypermedia-links-traverse:traverse');
 
+  private readonly upgradeInsecureRequests: boolean | undefined;
+
   public constructor(
-    args: IActorArgs<IActionRdfResolveHypermediaLinks, IActorTest, IActorRdfResolveHypermediaLinksOutput>,
+    args: IActorRdfResolveHypermediaLinksTraverse,
   ) {
     super(args);
+    // Overrides recommended settings
+    this.upgradeInsecureRequests = args.upgradeInsecureRequests;
   }
 
   public async test(action: IActionRdfResolveHypermediaLinks): Promise<IActorTest> {
@@ -35,8 +40,30 @@ export class ActorRdfResolveHypermediaLinksTraverse extends ActorRdfResolveHyper
         if (hashPosition >= 0) {
           fileLink.url = fileLink.url.slice(0, hashPosition);
         }
+        // Prioritize the upgradeInsecureRequests option setting
+        // default to true when using the browser in https and when
+        // there is no httpProxyHandler.
+        if (fileLink.url.startsWith('http:') &&
+          (this.upgradeInsecureRequests ??
+            (global.window &&
+              global.window.location.protocol === 'https:' &&
+              !action.context.get(KeysHttpProxy.httpProxyHandler)))) {
+          // Avoid mixed content when using https
+          fileLink.url = fileLink.url.replace('http:', 'https:');
+        }
         return fileLink;
       }),
     };
   }
+}
+
+export interface IActorRdfResolveHypermediaLinksTraverse extends IActorArgs<
+IActionRdfResolveHypermediaLinks, IActorTest, IActorRdfResolveHypermediaLinksOutput
+> {
+  /**
+   * Upgrade insecure http requests to https when performing
+   * link traversal. This setting will override the recommended
+   * settings in a secure browser context.
+   */
+  upgradeInsecureRequests?: boolean;
 }
