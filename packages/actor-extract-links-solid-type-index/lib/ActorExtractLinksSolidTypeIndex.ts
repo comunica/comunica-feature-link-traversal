@@ -123,7 +123,7 @@ export class ActorExtractLinksSolidTypeIndex extends ActorExtractLinks {
         SELECT ?class ?instance WHERE {
           _:registration a solid:TypeRegistration;
             solid:forClass ?class;
-            solid:instance ?instance.
+            (solid:instance|solid:instanceContainer) ?instance.
         }`, { sources: [ store ]})).toArray();
 
     // Collect links per type
