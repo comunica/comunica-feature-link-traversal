@@ -1,0 +1,39 @@
+{
+  "name": "@comunica/context-entries-link-traversal",
+  "version": "0.0.1",
+  "description": "A collection of reusable Comunica context key definitions for link traversal.",
+  "main": "lib/index.js",
+  "typings": "lib/index",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/comunica/comunica.git",
+    "directory": "packages/context-entries-link-traversal"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "sideEffects": false,
+  "keywords": [
+    "comunica",
+    "context",
+    "entries",
+    "keys"
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/comunica/comunica/issues"
+  },
+  "homepage": "https://comunica.dev/",
+  "files": [
+    "components",
+    "lib/**/*.d.ts",
+    "lib/**/*.js"
+  ],
+  "dependencies": {
+    "@comunica/core": "^2.2.0",
+    "@comunica/types-link-traversal": "^0.0.1"
+  },
+  "scripts": {
+    "build": "node \"../../node_modules/typescript/bin/tsc\""
+  }
+}

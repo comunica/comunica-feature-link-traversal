@@ -45,10 +45,15 @@ These engines make use of the following packages:
 * Query termination actors:
     * [Link count limit](https://github.com/comunica/comunica-feature-link-traversal/tree/master/packages/actor-rdf-resolve-hypermedia-links-queue-wrapper-limit-count): Actor that imposes a limit of the maximum number of links that can be pushed into the link queue.
     * [Link depth limit](https://github.com/comunica/comunica-feature-link-traversal/tree/master/packages/actor-rdf-resolve-hypermedia-links-queue-wrapper-limit-depth): Actor that imposes a limit of the depth of link paths that can be pushed into the link queue.
+* Source annotation actors:
+  * [Annotate Graph](https://github.com/comunica/comunica-feature-link-traversal/tree/master/packages/actor-rdf-resolve-hypermedia-links-traverse-annotate-source-graph): Annotates triples with their document's URL via the named graph.
 * Buses:
   * [Extract links](https://github.com/comunica/comunica-feature-link-traversal/tree/master/packages/bus-extract-links): Bus that determines the links to follow from a metadata quad stream.
 * Mediators:
   * [Combine array](https://github.com/comunica/comunica-feature-link-traversal/tree/master/packages/mediator-combine-array): Mediator that concatenates an array of all actor results.
+* Other:
+  * [Context entries](https://github.com/comunica/comunica-feature-link-traversal/tree/master/packages/context-entries-link-traversal): Reusable context key definitions for link traversal.
+  * [Types](https://github.com/comunica/comunica-feature-link-traversal/tree/master/packages/types-link-traversal): Reusable Typescript interfaces and types for link traversal.
 
 **Warning: All packages in this repo should be considered unstable, and breaking changes may occur at any time.**
 

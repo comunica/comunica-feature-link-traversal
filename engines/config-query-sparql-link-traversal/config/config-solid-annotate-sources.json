@@ -1,0 +1,15 @@
+{
+  "@context": [
+    "https://linkedsoftwaredependencies.org/bundles/npm/@comunica/config-query-sparql/^2.0.0/components/context.jsonld",
+    "https://linkedsoftwaredependencies.org/bundles/npm/@comunica/config-query-sparql-link-traversal/^0.0.0/components/context.jsonld"
+  ],
+  "import": [
+    "ccqslt:config/config-solid-base.json",
+    "ccqslt:config/rdf-resolve-hypermedia-links/actors/traverse-annotate-source-graph.json",
+    "ccqslt:config/extract-links/actors/predicates-common.json",
+    "ccqslt:config/extract-links/actors/predicates-ldp.json",
+    "ccqslt:config/extract-links/actors/predicates-solid.json",
+    "ccqslt:config/extract-links/actors/quad-pattern-query.json",
+    "ccqslt:config/extract-links/actors/solid-type-index.json"
+  ]
+}
