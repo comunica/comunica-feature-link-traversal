@@ -5,7 +5,10 @@
   },
   "context": {
     "lenient": true,
-    "@comunica/actor-rdf-resolve-hypermedia-links-traverse:traverse": true
+    "@comunica/actor-rdf-resolve-hypermedia-links-traverse:traverse": true,
+
+    "unionDefaultGraph": true,
+    "@comunica/bus-rdf-resolve-hypermedia-links:annotateSources": "graph"
   },
   "branding": {
     "title": "Comunica Link Traversal",
