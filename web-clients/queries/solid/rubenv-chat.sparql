@@ -1,5 +1,5 @@
 # Chat messages stored by Ruben V
-# Datasources: https://drive.verborgh.org/public/
+# Datasources: https://ruben.verborgh.org/profile/
 PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 PREFIX sioc: <http://rdfs.org/sioc/ns#>
 SELECT ?message ?author WHERE {
