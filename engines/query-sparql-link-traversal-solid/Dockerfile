@@ -1,4 +1,4 @@
-FROM node:18
+FROM node:16
 
 # Install location
 ENV dir /var/www/@comunica/query-sparql-link-traversal-solid/

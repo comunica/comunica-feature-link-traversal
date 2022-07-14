@@ -1,5 +1,6 @@
 {
   "extends": [
-    "github>rubensworks/renovate-presets:js"
+    "github>rubensworks/renovate-presets:js",
+    "docker:disable"
   ]
 }
