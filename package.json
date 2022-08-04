@@ -80,6 +80,6 @@
   },
   "resolutions": {
     "@types/yargs": "17.0.10",
-    "@comunica/actor-rdf-resolve-quad-pattern-federated": "2.3.1-alpha.23.0"
+    "@comunica/actor-rdf-resolve-quad-pattern-federated": "2.3.1-alpha.25.0"
   }
 }
