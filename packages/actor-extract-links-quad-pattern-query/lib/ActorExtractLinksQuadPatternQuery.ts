@@ -3,11 +3,14 @@ import { ActorExtractLinks } from '@comunica/bus-extract-links';
 import { KeysInitQuery } from '@comunica/context-entries';
 import type { IActorArgs, IActorTest } from '@comunica/core';
 import type { IActionContext } from '@comunica/types';
+import { DataFactory } from 'rdf-data-factory';
 import type * as RDF from 'rdf-js';
 import type { QuadTermName } from 'rdf-terms';
 import { filterQuadTermNames, getNamedNodes, getTerms, matchPatternComplete } from 'rdf-terms';
 import type { Algebra } from 'sparqlalgebrajs';
 import { Util as AlgebraUtil } from 'sparqlalgebrajs';
+
+const DF = new DataFactory<RDF.BaseQuad>();
 
 /**
  * A comunica Traverse Quad Pattern Query RDF Metadata Extract Actor.
@@ -27,13 +30,34 @@ export class ActorExtractLinksQuadPatternQuery extends ActorExtractLinks {
     return currentQueryOperation;
   }
 
-  public static matchQuadPatternInOperation(quad: RDF.Quad, operation: Algebra.Operation): Algebra.Pattern[] {
-    const matchingPatterns: Algebra.Pattern[] = [];
+  public static matchQuadPatternInOperation(quad: RDF.Quad, operation: Algebra.Operation): RDF.BaseQuad[] {
+    const matchingPatterns: RDF.BaseQuad[] = [];
     AlgebraUtil.recurseOperation(operation, {
       pattern(pattern: Algebra.Pattern) {
         if (matchPatternComplete(quad, pattern)) {
           matchingPatterns.push(pattern);
         }
+        return false;
+      },
+      path(path: Algebra.Path) {
+        AlgebraUtil.recurseOperation(path, {
+          link(link: Algebra.Link) {
+            const pattern = DF.quad(path.subject, link.iri, path.object, path.graph);
+            if (matchPatternComplete(quad, pattern)) {
+              matchingPatterns.push(pattern);
+            }
+            return false;
+          },
+          nps(nps: Algebra.Nps) {
+            for (const iri of nps.iris) {
+              const pattern = DF.quad(path.subject, iri, path.object, path.graph);
+              if (matchPatternComplete(quad, pattern)) {
+                matchingPatterns.push(pattern);
+              }
+            }
+            return false;
+          },
+        });
         return false;
       },
     });

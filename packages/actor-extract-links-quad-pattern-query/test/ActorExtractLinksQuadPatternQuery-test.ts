@@ -149,6 +149,54 @@ describe('ActorExtractLinksQuadPatternQuery', () => {
           ],
         });
     });
+
+    it('should run on a stream and return urls matching a query with link property path', () => {
+      operation = FACTORY.createPath(
+        DF.variable('s'),
+        FACTORY.createLink(DF.namedNode('ex:p')),
+        DF.variable('o'),
+        DF.namedNode('ex:g'),
+      );
+      context = new ActionContext({ [KeysInitQuery.query.name]: operation });
+      return expect(actor.run({ url: '', metadata: input, requestTime: 0, context })).resolves
+        .toEqual({
+          links: [
+            { url: 'ex:s2' },
+            { url: 'ex:p' },
+            { url: 'ex:g' },
+            { url: 'ex:s4' },
+            { url: 'ex:p' },
+            { url: 'ex:o4' },
+            { url: 'ex:g' },
+          ],
+        });
+    });
+
+    it('should run on a stream and return urls matching a query with nps property path', () => {
+      operation = FACTORY.createPath(
+        DF.variable('s'),
+        FACTORY.createNps([
+          DF.namedNode('ex:p1'),
+          DF.namedNode('ex:p'),
+          DF.namedNode('ex:p3'),
+        ]),
+        DF.variable('o'),
+        DF.namedNode('ex:g'),
+      );
+      context = new ActionContext({ [KeysInitQuery.query.name]: operation });
+      return expect(actor.run({ url: '', metadata: input, requestTime: 0, context })).resolves
+        .toEqual({
+          links: [
+            { url: 'ex:s2' },
+            { url: 'ex:p' },
+            { url: 'ex:g' },
+            { url: 'ex:s4' },
+            { url: 'ex:p' },
+            { url: 'ex:o4' },
+            { url: 'ex:g' },
+          ],
+        });
+    });
   });
 
   describe('An ActorExtractLinksQuadPatternQuery instance with onlyVariables true', () => {

@@ -36,6 +36,7 @@
     "@comunica/bus-extract-links": "^0.0.1",
     "@comunica/types": "^2.0.1",
     "@rdfjs/types": "*",
+    "rdf-data-factory": "^1.1.1",
     "rdf-terms": "^1.7.0",
     "sparqlalgebrajs": "^4.0.2"
   },
