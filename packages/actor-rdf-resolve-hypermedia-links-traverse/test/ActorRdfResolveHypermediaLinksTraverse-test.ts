@@ -1,4 +1,5 @@
 import { ActorRdfResolveHypermediaLinks } from '@comunica/bus-rdf-resolve-hypermedia-links';
+import { KeysRdfResolveHypermediaLinks } from '@comunica/context-entries-link-traversal';
 import { ActionContext, Bus } from '@comunica/core';
 import { ActorRdfResolveHypermediaLinksTraverse } from '../lib/ActorRdfResolveHypermediaLinksTraverse';
 
@@ -45,7 +46,7 @@ describe('ActorRdfResolveHypermediaLinksTraverse', () => {
 
     it('should fail to test when traverse is disable in the context', () => {
       return expect(actor.test({ context: new ActionContext({
-        [ActorRdfResolveHypermediaLinksTraverse.CONTEXT_KEY_TRAVERSE.name]: false,
+        [KeysRdfResolveHypermediaLinks.traverse.name]: false,
       }),
       metadata: { traverse: true }})).rejects
         .toThrow(new Error('Link traversal has been disabled via the context.'));

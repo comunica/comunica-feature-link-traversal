@@ -33,6 +33,7 @@
   "dependencies": {
     "@comunica/actor-init-query": "^2.0.6",
     "@comunica/context-entries": "^2.0.1",
+    "@comunica/context-entries-link-traversal": "^0.0.1",
     "@comunica/core": "^2.0.1",
     "@comunica/bus-extract-links": "^0.0.1",
     "@comunica/bus-dereference-rdf": "^2.0.1",

@@ -2,16 +2,13 @@ import type { IActionRdfResolveHypermediaLinks,
   IActorRdfResolveHypermediaLinksOutput, ILink } from '@comunica/bus-rdf-resolve-hypermedia-links';
 import { ActorRdfResolveHypermediaLinks } from '@comunica/bus-rdf-resolve-hypermedia-links';
 import { KeysHttpProxy } from '@comunica/context-entries';
+import { KeysRdfResolveHypermediaLinks } from '@comunica/context-entries-link-traversal';
 import type { IActorArgs, IActorTest } from '@comunica/core';
-import { ActionContextKey } from '@comunica/core';
 
 /**
  * A comunica Traverse RDF Resolve Hypermedia Links Actor.
  */
 export class ActorRdfResolveHypermediaLinksTraverse extends ActorRdfResolveHypermediaLinks {
-  public static readonly CONTEXT_KEY_TRAVERSE =
-    new ActionContextKey<boolean>('@comunica/actor-rdf-resolve-hypermedia-links-traverse:traverse');
-
   private readonly upgradeInsecureRequests: boolean | undefined;
 
   public constructor(
@@ -26,8 +23,8 @@ export class ActorRdfResolveHypermediaLinksTraverse extends ActorRdfResolveHyper
     if (!action.metadata.traverse) {
       throw new Error(`Actor ${this.name} requires a 'traverse' metadata entry.`);
     }
-    if (action.context.has(ActorRdfResolveHypermediaLinksTraverse.CONTEXT_KEY_TRAVERSE) &&
-      !action.context.get(ActorRdfResolveHypermediaLinksTraverse.CONTEXT_KEY_TRAVERSE)) {
+    if (action.context.has(KeysRdfResolveHypermediaLinks.traverse) &&
+      !action.context.get(KeysRdfResolveHypermediaLinks.traverse)) {
       throw new Error(`Link traversal has been disabled via the context.`);
     }
     return true;

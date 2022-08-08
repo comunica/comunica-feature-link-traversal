@@ -5,6 +5,7 @@ import type { IActionExtractLinks, IActorExtractLinksOutput } from '@comunica/bu
 import { ActorExtractLinks } from '@comunica/bus-extract-links';
 import type { ILink } from '@comunica/bus-rdf-resolve-hypermedia-links';
 import { KeysInitQuery, KeysQueryOperation } from '@comunica/context-entries';
+import { KeysRdfResolveHypermediaLinks } from '@comunica/context-entries-link-traversal';
 import type { IActorArgs, IActorTest } from '@comunica/core';
 import type { IActionContext } from '@comunica/types';
 import type * as RDF from '@rdfjs/types';
@@ -124,7 +125,10 @@ export class ActorExtractLinksSolidTypeIndex extends ActorExtractLinks {
           _:registration a solid:TypeRegistration;
             solid:forClass ?class;
             (solid:instance|solid:instanceContainer) ?instance.
-        }`, { sources: [ store ]})).toArray();
+        }`, {
+        sources: [ store ],
+        [KeysRdfResolveHypermediaLinks.traverse.name]: false,
+      })).toArray();
 
     // Collect links per type
     const typeLinks: Record<string, ILink[]> = {};
