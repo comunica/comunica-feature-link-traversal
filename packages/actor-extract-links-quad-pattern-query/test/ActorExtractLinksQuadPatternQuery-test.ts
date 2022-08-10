@@ -152,7 +152,7 @@ describe('ActorExtractLinksQuadPatternQuery', () => {
 
     it('should run on a stream and return urls matching a query with link property path', () => {
       operation = FACTORY.createPath(
-        DF.variable('s'),
+        DF.namedNode('ex:s'),
         FACTORY.createLink(DF.namedNode('ex:p')),
         DF.variable('o'),
         DF.namedNode('ex:g'),
@@ -174,7 +174,7 @@ describe('ActorExtractLinksQuadPatternQuery', () => {
 
     it('should run on a stream and return urls matching a query with nps property path', () => {
       operation = FACTORY.createPath(
-        DF.variable('s'),
+        DF.namedNode('ex:s'),
         FACTORY.createNps([
           DF.namedNode('ex:p1'),
           DF.namedNode('ex:p'),

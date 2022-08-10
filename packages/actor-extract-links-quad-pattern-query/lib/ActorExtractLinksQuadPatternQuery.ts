@@ -11,6 +11,7 @@ import type { Algebra } from 'sparqlalgebrajs';
 import { Util as AlgebraUtil } from 'sparqlalgebrajs';
 
 const DF = new DataFactory<RDF.BaseQuad>();
+const VAR = DF.variable('__comunica:pp_var');
 
 /**
  * A comunica Traverse Quad Pattern Query RDF Metadata Extract Actor.
@@ -42,7 +43,7 @@ export class ActorExtractLinksQuadPatternQuery extends ActorExtractLinks {
       path(path: Algebra.Path) {
         AlgebraUtil.recurseOperation(path, {
           link(link: Algebra.Link) {
-            const pattern = DF.quad(path.subject, link.iri, path.object, path.graph);
+            const pattern = DF.quad(VAR, link.iri, VAR, path.graph);
             if (matchPatternComplete(quad, pattern)) {
               matchingPatterns.push(pattern);
             }
@@ -50,7 +51,7 @@ export class ActorExtractLinksQuadPatternQuery extends ActorExtractLinks {
           },
           nps(nps: Algebra.Nps) {
             for (const iri of nps.iris) {
-              const pattern = DF.quad(path.subject, iri, path.object, path.graph);
+              const pattern = DF.quad(VAR, iri, VAR, path.graph);
               if (matchPatternComplete(quad, pattern)) {
                 matchingPatterns.push(pattern);
               }
