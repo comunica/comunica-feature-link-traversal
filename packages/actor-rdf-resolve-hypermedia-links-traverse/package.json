@@ -32,7 +32,7 @@
   ],
   "dependencies": {
     "@comunica/bus-rdf-resolve-hypermedia-links": "^2.0.1",
-    "@comunica/context-entries": "2.3.1-alpha.28.0",
+    "@comunica/context-entries": "2.3.1-alpha.29.0",
     "@comunica/context-entries-link-traversal": "^0.0.1",
     "@comunica/core": "^2.0.1"
   },
