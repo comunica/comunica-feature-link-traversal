@@ -25,7 +25,7 @@ describe('ActorRdfJoinEntriesSortTraversalZeroKnowledge', () => {
 
     describe('getPatternNonVocabUris', () => {
       it('return named nodes in regular patterns', () => {
-        expect(ActorRdfJoinEntriesSortTraversalZeroKnowledge.getPatternNonVocabUris(DF.quad(
+        expect(ActorRdfJoinEntriesSortTraversalZeroKnowledge.getPatternNonVocabUris(FACTORY.createPattern(
           DF.namedNode('http://example.org/s'),
           DF.namedNode('http://example.org/p'),
           DF.namedNode('http://example.org/o'),
@@ -33,7 +33,7 @@ describe('ActorRdfJoinEntriesSortTraversalZeroKnowledge', () => {
           DF.namedNode('http://example.org/s'),
           DF.namedNode('http://example.org/o'),
         ]);
-        expect(ActorRdfJoinEntriesSortTraversalZeroKnowledge.getPatternNonVocabUris(DF.quad(
+        expect(ActorRdfJoinEntriesSortTraversalZeroKnowledge.getPatternNonVocabUris(FACTORY.createPattern(
           DF.namedNode('http://example.org/s'),
           DF.namedNode('http://example.org/p'),
           DF.namedNode('http://example.org/o'),
@@ -46,14 +46,14 @@ describe('ActorRdfJoinEntriesSortTraversalZeroKnowledge', () => {
       });
 
       it('return named nodes in regular patterns with variables', () => {
-        expect(ActorRdfJoinEntriesSortTraversalZeroKnowledge.getPatternNonVocabUris(DF.quad(
+        expect(ActorRdfJoinEntriesSortTraversalZeroKnowledge.getPatternNonVocabUris(FACTORY.createPattern(
           DF.variable('s'),
           DF.namedNode('http://example.org/p'),
           DF.namedNode('http://example.org/o'),
         ))).toEqual([
           DF.namedNode('http://example.org/o'),
         ]);
-        expect(ActorRdfJoinEntriesSortTraversalZeroKnowledge.getPatternNonVocabUris(DF.quad(
+        expect(ActorRdfJoinEntriesSortTraversalZeroKnowledge.getPatternNonVocabUris(FACTORY.createPattern(
           DF.namedNode('http://example.org/s'),
           DF.namedNode('http://example.org/p'),
           DF.variable('o'),
@@ -65,14 +65,14 @@ describe('ActorRdfJoinEntriesSortTraversalZeroKnowledge', () => {
       });
 
       it('return named nodes in rdf:type patterns', () => {
-        expect(ActorRdfJoinEntriesSortTraversalZeroKnowledge.getPatternNonVocabUris(DF.quad(
+        expect(ActorRdfJoinEntriesSortTraversalZeroKnowledge.getPatternNonVocabUris(FACTORY.createPattern(
           DF.namedNode('http://example.org/s'),
           DF.namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
           DF.namedNode('http://example.org/o'),
         ))).toEqual([
           DF.namedNode('http://example.org/s'),
         ]);
-        expect(ActorRdfJoinEntriesSortTraversalZeroKnowledge.getPatternNonVocabUris(DF.quad(
+        expect(ActorRdfJoinEntriesSortTraversalZeroKnowledge.getPatternNonVocabUris(FACTORY.createPattern(
           DF.namedNode('http://example.org/s'),
           DF.namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
           DF.namedNode('http://example.org/o'),
@@ -84,16 +84,93 @@ describe('ActorRdfJoinEntriesSortTraversalZeroKnowledge', () => {
       });
 
       it('return named nodes in rdf:type patterns with variables', () => {
-        expect(ActorRdfJoinEntriesSortTraversalZeroKnowledge.getPatternNonVocabUris(DF.quad(
+        expect(ActorRdfJoinEntriesSortTraversalZeroKnowledge.getPatternNonVocabUris(FACTORY.createPattern(
           DF.namedNode('http://example.org/s'),
           DF.namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
           DF.variable('http://example.org/o'),
         ))).toEqual([
           DF.namedNode('http://example.org/s'),
         ]);
-        expect(ActorRdfJoinEntriesSortTraversalZeroKnowledge.getPatternNonVocabUris(DF.quad(
+        expect(ActorRdfJoinEntriesSortTraversalZeroKnowledge.getPatternNonVocabUris(FACTORY.createPattern(
           DF.namedNode('http://example.org/s'),
           DF.namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
+          DF.namedNode('http://example.org/o'),
+          DF.variable('http://example.org/g'),
+        ))).toEqual([
+          DF.namedNode('http://example.org/s'),
+        ]);
+      });
+
+      it('return named nodes in regular paths', () => {
+        expect(ActorRdfJoinEntriesSortTraversalZeroKnowledge.getPatternNonVocabUris(FACTORY.createPath(
+          DF.namedNode('http://example.org/s'),
+          FACTORY.createLink(DF.namedNode('http://example.org/p')),
+          DF.namedNode('http://example.org/o'),
+        ))).toEqual([
+          DF.namedNode('http://example.org/s'),
+          DF.namedNode('http://example.org/o'),
+        ]);
+        expect(ActorRdfJoinEntriesSortTraversalZeroKnowledge.getPatternNonVocabUris(FACTORY.createPath(
+          DF.namedNode('http://example.org/s'),
+          FACTORY.createNps([ DF.namedNode('http://example.org/p') ]),
+          DF.namedNode('http://example.org/o'),
+          DF.namedNode('http://example.org/g'),
+        ))).toEqual([
+          DF.namedNode('http://example.org/s'),
+          DF.namedNode('http://example.org/o'),
+          DF.namedNode('http://example.org/g'),
+        ]);
+      });
+
+      it('return named nodes in regular paths with variables', () => {
+        expect(ActorRdfJoinEntriesSortTraversalZeroKnowledge.getPatternNonVocabUris(FACTORY.createPath(
+          DF.variable('s'),
+          FACTORY.createLink(DF.namedNode('http://example.org/p')),
+          DF.namedNode('http://example.org/o'),
+        ))).toEqual([
+          DF.namedNode('http://example.org/o'),
+        ]);
+        expect(ActorRdfJoinEntriesSortTraversalZeroKnowledge.getPatternNonVocabUris(FACTORY.createPath(
+          DF.namedNode('http://example.org/s'),
+          FACTORY.createNps([ DF.namedNode('http://example.org/p') ]),
+          DF.variable('o'),
+          DF.namedNode('http://example.org/g'),
+        ))).toEqual([
+          DF.namedNode('http://example.org/s'),
+          DF.namedNode('http://example.org/g'),
+        ]);
+      });
+
+      it('return named nodes in rdf:type paths', () => {
+        expect(ActorRdfJoinEntriesSortTraversalZeroKnowledge.getPatternNonVocabUris(FACTORY.createPath(
+          DF.namedNode('http://example.org/s'),
+          FACTORY.createLink(DF.namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type')),
+          DF.namedNode('http://example.org/o'),
+        ))).toEqual([
+          DF.namedNode('http://example.org/s'),
+        ]);
+        expect(ActorRdfJoinEntriesSortTraversalZeroKnowledge.getPatternNonVocabUris(FACTORY.createPath(
+          DF.namedNode('http://example.org/s'),
+          FACTORY.createNps([ DF.namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type') ]),
+          DF.namedNode('http://example.org/o'),
+          DF.namedNode('http://example.org/g'),
+        ))).toEqual([
+          DF.namedNode('http://example.org/s'),
+          DF.namedNode('http://example.org/g'),
+        ]);
+      });
+
+      it('return named nodes in rdf:type paths with variables', () => {
+        expect(ActorRdfJoinEntriesSortTraversalZeroKnowledge.getPatternNonVocabUris(FACTORY.createPath(
+          DF.namedNode('http://example.org/s'),
+          FACTORY.createLink(DF.namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type')),
+          DF.variable('http://example.org/o'),
+        ))).toEqual([
+          DF.namedNode('http://example.org/s'),
+        ]);
+        expect(ActorRdfJoinEntriesSortTraversalZeroKnowledge.getPatternNonVocabUris(FACTORY.createPath(
+          DF.namedNode('http://example.org/s'),
+          FACTORY.createNps([ DF.namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type') ]),
           DF.namedNode('http://example.org/o'),
           DF.variable('http://example.org/g'),
         ))).toEqual([
@@ -117,7 +194,7 @@ describe('ActorRdfJoinEntriesSortTraversalZeroKnowledge', () => {
 
     describe('getScoreSeedNonVocab', () => {
       it('should be 0 for no sources', () => {
-        return expect(ActorRdfJoinEntriesSortTraversalZeroKnowledge.getScoreSeedNonVocab(DF.quad(
+        return expect(ActorRdfJoinEntriesSortTraversalZeroKnowledge.getScoreSeedNonVocab(FACTORY.createPattern(
           DF.namedNode('http://example.org/s'),
           DF.namedNode('http://example.org/p'),
           DF.namedNode('http://example.org/o'),
@@ -125,17 +202,17 @@ describe('ActorRdfJoinEntriesSortTraversalZeroKnowledge', () => {
       });
 
       it('should be 1 for one applicable sources', () => {
-        expect(ActorRdfJoinEntriesSortTraversalZeroKnowledge.getScoreSeedNonVocab(DF.quad(
+        expect(ActorRdfJoinEntriesSortTraversalZeroKnowledge.getScoreSeedNonVocab(FACTORY.createPattern(
           DF.namedNode('http://example.org/s'),
           DF.namedNode('http://example.org/p'),
           DF.namedNode('http://example.org/o'),
         ), [ 'http://example.org/s' ])).toEqual(1);
-        expect(ActorRdfJoinEntriesSortTraversalZeroKnowledge.getScoreSeedNonVocab(DF.quad(
+        expect(ActorRdfJoinEntriesSortTraversalZeroKnowledge.getScoreSeedNonVocab(FACTORY.createPattern(
           DF.namedNode('http://example.org/s'),
           DF.namedNode('http://example.org/p'),
           DF.namedNode('http://example.org/o'),
         ), [ 'http://example.org/o' ])).toEqual(1);
-        expect(ActorRdfJoinEntriesSortTraversalZeroKnowledge.getScoreSeedNonVocab(DF.quad(
+        expect(ActorRdfJoinEntriesSortTraversalZeroKnowledge.getScoreSeedNonVocab(FACTORY.createPattern(
           DF.namedNode('http://example.org/s'),
           DF.namedNode('http://example.org/p'),
           DF.namedNode('http://example.org/o'),
@@ -143,12 +220,12 @@ describe('ActorRdfJoinEntriesSortTraversalZeroKnowledge', () => {
       });
 
       it('should be 2 for two applicable sources', () => {
-        expect(ActorRdfJoinEntriesSortTraversalZeroKnowledge.getScoreSeedNonVocab(DF.quad(
+        expect(ActorRdfJoinEntriesSortTraversalZeroKnowledge.getScoreSeedNonVocab(FACTORY.createPattern(
           DF.namedNode('http://example.org/s'),
           DF.namedNode('http://example.org/p'),
           DF.namedNode('http://example.org/o'),
         ), [ 'http://example.org/s', 'http://example.org/o' ])).toEqual(2);
-        expect(ActorRdfJoinEntriesSortTraversalZeroKnowledge.getScoreSeedNonVocab(DF.quad(
+        expect(ActorRdfJoinEntriesSortTraversalZeroKnowledge.getScoreSeedNonVocab(FACTORY.createPattern(
           DF.namedNode('http://example.org/s'),
           DF.namedNode('http://example.org/p'),
           DF.namedNode('http://example.org/o'),
@@ -156,7 +233,7 @@ describe('ActorRdfJoinEntriesSortTraversalZeroKnowledge', () => {
       });
 
       it('should be 2 for repeated source presence', () => {
-        expect(ActorRdfJoinEntriesSortTraversalZeroKnowledge.getScoreSeedNonVocab(DF.quad(
+        expect(ActorRdfJoinEntriesSortTraversalZeroKnowledge.getScoreSeedNonVocab(FACTORY.createPattern(
           DF.namedNode('http://example.org/s'),
           DF.namedNode('http://example.org/p'),
           DF.namedNode('http://example.org/s#hash'),
@@ -165,28 +242,52 @@ describe('ActorRdfJoinEntriesSortTraversalZeroKnowledge', () => {
     });
 
     describe('getScoreSelectivity', () => {
-      it('should be 4 for no variables', () => {
-        return expect(ActorRdfJoinEntriesSortTraversalZeroKnowledge.getScoreSelectivity(DF.quad(
+      it('should be 4 for a pattern with no variables', () => {
+        return expect(ActorRdfJoinEntriesSortTraversalZeroKnowledge.getScoreSelectivity(FACTORY.createPattern(
           DF.namedNode('http://example.org/s'),
           DF.namedNode('http://example.org/p'),
           DF.namedNode('http://example.org/o'),
         ))).toEqual(4);
       });
 
-      it('should be 3 for 1 variable', () => {
-        return expect(ActorRdfJoinEntriesSortTraversalZeroKnowledge.getScoreSelectivity(DF.quad(
+      it('should be 3 for a pattern with 1 variable', () => {
+        return expect(ActorRdfJoinEntriesSortTraversalZeroKnowledge.getScoreSelectivity(FACTORY.createPattern(
           DF.namedNode('http://example.org/s'),
           DF.variable('p'),
           DF.namedNode('http://example.org/o'),
         ))).toEqual(3);
       });
 
-      it('should be 1 for 3 variables', () => {
-        return expect(ActorRdfJoinEntriesSortTraversalZeroKnowledge.getScoreSelectivity(DF.quad(
+      it('should be 1 for a pattern with 3 variables', () => {
+        return expect(ActorRdfJoinEntriesSortTraversalZeroKnowledge.getScoreSelectivity(FACTORY.createPattern(
           DF.variable('s'),
           DF.variable('p'),
           DF.variable('o'),
         ))).toEqual(1);
+      });
+
+      it('should be 4 for a path with no variables', () => {
+        return expect(ActorRdfJoinEntriesSortTraversalZeroKnowledge.getScoreSelectivity(FACTORY.createPath(
+          DF.namedNode('http://example.org/s'),
+          FACTORY.createLink(DF.namedNode('http://example.org/p')),
+          DF.namedNode('http://example.org/o'),
+        ))).toEqual(4);
+      });
+
+      it('should be 3 for a path with 1 variable', () => {
+        return expect(ActorRdfJoinEntriesSortTraversalZeroKnowledge.getScoreSelectivity(FACTORY.createPath(
+          DF.namedNode('http://example.org/s'),
+          FACTORY.createNps([ DF.namedNode('http://example.org/p') ]),
+          DF.variable('o'),
+        ))).toEqual(3);
+      });
+
+      it('should be 1 for a path with 2 variables', () => {
+        return expect(ActorRdfJoinEntriesSortTraversalZeroKnowledge.getScoreSelectivity(FACTORY.createPath(
+          DF.variable('s'),
+          FACTORY.createNps([ DF.namedNode('http://example.org/p1'), DF.namedNode('http://example.org/p2') ]),
+          DF.variable('o'),
+        ))).toEqual(2);
       });
     });
 

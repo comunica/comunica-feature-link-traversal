@@ -7,7 +7,7 @@ import type { IActorArgs, IActorTest } from '@comunica/core';
 import type { DataSources, IJoinEntryWithMetadata } from '@comunica/types';
 import type * as RDF from 'rdf-js';
 import { getNamedNodes, getTerms, getVariables, QUAD_TERM_NAMES } from 'rdf-terms';
-import { Algebra } from 'sparqlalgebrajs';
+import { Algebra, Util as AlgebraUtil } from 'sparqlalgebrajs';
 
 /**
  * An actor that sorts join entries based on Hartig's heuristic for plan selection in link traversal environments.
@@ -38,10 +38,29 @@ export class ActorRdfJoinEntriesSortTraversalZeroKnowledge extends ActorRdfJoinE
    * Concretely, predicates will be omitted, and objects if predicate is http://www.w3.org/1999/02/22-rdf-syntax-ns#type
    * @param pattern A quad pattern.
    */
-  public static getPatternNonVocabUris(pattern: RDF.BaseQuad): RDF.NamedNode[] {
+  public static getPatternNonVocabUris(pattern: Algebra.Pattern | Algebra.Path): RDF.NamedNode[] {
     let nonVocabTerms: RDF.Term[];
-    if (pattern.predicate.termType === 'NamedNode' &&
-      pattern.predicate.value === 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type') {
+    const predicates: RDF.Term[] = [];
+    if (pattern.type === 'pattern') {
+      predicates.push(pattern.predicate);
+    } else {
+      AlgebraUtil.recurseOperation(pattern, {
+        link(link: Algebra.Link) {
+          predicates.push(link.iri);
+          return false;
+        },
+        nps(nps: Algebra.Nps) {
+          for (const iri of nps.iris) {
+            predicates.push(iri);
+          }
+          return false;
+        },
+      });
+    }
+
+    if (predicates
+      .some(predicate => predicate.termType === 'NamedNode' &&
+        predicate.value === 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type')) {
       nonVocabTerms = [ pattern.subject, pattern.graph ];
     } else {
       nonVocabTerms = [ pattern.subject, pattern.object, pattern.graph ];
@@ -65,7 +84,7 @@ export class ActorRdfJoinEntriesSortTraversalZeroKnowledge extends ActorRdfJoinE
    * @param pattern A quad pattern.
    * @param sources An array of sources.
    */
-  public static getScoreSeedNonVocab(pattern: RDF.BaseQuad, sources: string[]): number {
+  public static getScoreSeedNonVocab(pattern: Algebra.Pattern | Algebra.Path, sources: string[]): number {
     return ActorRdfJoinEntriesSortTraversalZeroKnowledge.getPatternNonVocabUris(pattern)
       .map(term => ActorRdfJoinEntriesSortTraversalZeroKnowledge.getSourceUri(term))
       .filter(uri => sources.includes(uri))
@@ -77,8 +96,9 @@ export class ActorRdfJoinEntriesSortTraversalZeroKnowledge extends ActorRdfJoinE
    * The fewer variables, the higher the score.
    * @param pattern A quad pattern.
    */
-  public static getScoreSelectivity(pattern: RDF.BaseQuad): number {
-    return QUAD_TERM_NAMES.length - getVariables(getTerms(pattern)).length;
+  public static getScoreSelectivity(pattern: Algebra.Pattern | Algebra.Path): number {
+    const terms = pattern.type === 'pattern' ? getTerms(pattern) : [ pattern.subject, pattern.object, pattern.graph ];
+    return QUAD_TERM_NAMES.length - getVariables(terms).length;
   }
 
   /**
@@ -92,7 +112,8 @@ export class ActorRdfJoinEntriesSortTraversalZeroKnowledge extends ActorRdfJoinE
    */
   public static sortJoinEntries(entries: IJoinEntryWithMetadata[], sources: string[]): IJoinEntryWithMetadata[] {
     return [ ...entries ].sort((entryA: IJoinEntryWithMetadata, entryB: IJoinEntryWithMetadata) => {
-      if (entryA.operation.type === Algebra.types.PATTERN && entryB.operation.type === Algebra.types.PATTERN) {
+      if ((entryA.operation.type === Algebra.types.PATTERN || entryA.operation.type === Algebra.types.PATH) &&
+        (entryB.operation.type === Algebra.types.PATTERN || entryB.operation.type === Algebra.types.PATH)) {
         const compSeedNonVocab = ActorRdfJoinEntriesSortTraversalZeroKnowledge
           .getScoreSeedNonVocab(entryB.operation, sources) -
           ActorRdfJoinEntriesSortTraversalZeroKnowledge.getScoreSeedNonVocab(entryA.operation, sources);
