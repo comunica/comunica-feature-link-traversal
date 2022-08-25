@@ -7,7 +7,7 @@
     "ccqslt:config/config-solid-base.json",
     "ccqslt:config/extract-links/actors/predicates-common.json",
     "ccqslt:config/extract-links/actors/predicates-ldp.json",
-    "ccqslt:config/extract-links/actors/predicates-solid.json",
+    "ccqslt:config/extract-links/actors/predicates-solidstorage.json",
     "ccqslt:config/extract-links/actors/solid-type-index.json",
 
     "ccqslt:config/rdf-metadata-extract/actors/shapetrees.json",

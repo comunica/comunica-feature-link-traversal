@@ -12,7 +12,6 @@
       "@type": "ActorExtractLinksPredicates",
       "checkSubject": true,
       "predicateRegexes": [
-        "http://xmlns.com/foaf/0.1/isPrimaryTopicOf",
         "http://www.w3.org/ns/pim/space#storage"
       ]
     }
