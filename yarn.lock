@@ -4328,12 +4328,7 @@
     "@shexjs/writer" "^1.0.0-alpha.22"
     hierarchy-closure "^1.2.1"
 
-"@shexjs/visitor@1.0.0-alpha.21":
-  version "1.0.0-alpha.21"
-  resolved "https://registry.yarnpkg.com/@shexjs/visitor/-/visitor-1.0.0-alpha.21.tgz#c2c2a05232f3c6ea8f58ffc7610c0f099805618c"
-  integrity sha512-IeP9znEv7n1SdhGSmAu3smj7BmEDa2RyCzp/uLy7jVmVSsjtOtxtMzUtxC+O44RLBlTyaXkP6/MhY51AgxcSng==
-
-"@shexjs/visitor@^1.0.0-alpha.22":
+"@shexjs/visitor@1.0.0-alpha.22", "@shexjs/visitor@^1.0.0-alpha.22":
   version "1.0.0-alpha.22"
   resolved "https://registry.yarnpkg.com/@shexjs/visitor/-/visitor-1.0.0-alpha.22.tgz#d2e221dbe2af2efb3b4f168f9ced13a18989ca4c"
   integrity sha512-uqANt+FCAhrxocYQczT2vk5ll0A9ZSW0klVMKNkosOjrXz9mhJd5cPBo9zlosg6Pz+6O9RDWcwgmei0Reb+++Q==

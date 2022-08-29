@@ -38,7 +38,7 @@
     "@comunica/bus-rdf-metadata-extract": "^2.0.1",
     "@comunica/bus-http": "^2.0.1",
     "@shexjs/parser": "1.0.0-alpha.21",
-    "@shexjs/visitor": "1.0.0-alpha.21",
+    "@shexjs/visitor": "1.0.0-alpha.22",
     "@types/parse-link-header": "^2.0.0",
     "@types/shexj": "2.1.1",
     "parse-link-header": "^2.0.0",
