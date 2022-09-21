@@ -155,23 +155,42 @@ export class ActorExtractLinksSolidTypeIndex extends ActorExtractLinks {
     query: Algebra.Operation,
     pattern: Algebra.Operation,
   ): Promise<ILink[]> {
-    // Collect all subjects
+    // Collect all subjects, and all subjects in the original query that refer to a specific type.
     const allSubjects: Set<string> = new Set();
-
-    // Collect all subjects in the original query that refer to a specific type
     const typeSubjects: Record<string, RDF.Term[]> = {};
+
+    // Helper function for walking through query
+    function handleQueryTriple(subject: RDF.Term, predicate: RDF.Term, object: RDF.Term): void {
+      allSubjects.add(termToString(subject));
+
+      if (predicate.value === ActorExtractLinksSolidTypeIndex.RDF_TYPE && object.termType === 'NamedNode') {
+        const type = object.value;
+        if (!typeSubjects[type]) {
+          typeSubjects[type] = [];
+        }
+        typeSubjects[type].push(subject);
+      }
+    }
+
+    // Visit nodes in query to determine subjects
     AlgebraUtil.recurseOperation(query, {
       pattern(queryPattern) {
-        allSubjects.add(termToString(queryPattern.subject));
-
-        if (queryPattern.predicate.value === ActorExtractLinksSolidTypeIndex.RDF_TYPE &&
-          queryPattern.object.termType === 'NamedNode') {
-          const type = queryPattern.object.value;
-          if (!typeSubjects[type]) {
-            typeSubjects[type] = [];
-          }
-          typeSubjects[type].push(queryPattern.subject);
-        }
+        handleQueryTriple(queryPattern.subject, queryPattern.predicate, queryPattern.object);
+        return false;
+      },
+      path(path: Algebra.Path) {
+        AlgebraUtil.recurseOperation(path, {
+          link(link: Algebra.Link) {
+            handleQueryTriple(path.subject, link.iri, path.object);
+            return false;
+          },
+          nps(nps: Algebra.Nps) {
+            for (const iri of nps.iris) {
+              handleQueryTriple(path.subject, iri, path.object);
+            }
+            return false;
+          },
+        });
         return false;
       },
     });

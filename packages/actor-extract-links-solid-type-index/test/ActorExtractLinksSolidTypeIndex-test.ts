@@ -282,5 +282,73 @@ describe('ActorExtractLinksSolidTypeIndex', () => {
       expect(mediatorDereferenceRdf.mediate).toHaveBeenCalledTimes(1);
       expect(mediatorDereferenceRdf.mediate).toHaveBeenCalledWith({ url: 'ex:index1', context });
     });
+
+    it('should run on a stream with type index predicates for a link property path query', async() => {
+      input = stream([
+        quad('ex:s1', 'ex:typeIndex1', 'ex:index1'),
+        quad('ex:s3', 'ex:px', 'ex:o3', 'ex:gx'),
+        quad('ex:s4', 'ex:p', 'ex:o4', 'ex:g'),
+        quad('ex:s5', 'ex:p', 'ex:o5', 'ex:gx'),
+      ]);
+      context = new ActionContext({
+        [KeysInitQuery.query.name]: AF.createPath(
+          DF.variable('s1'),
+          AF.createLink(DF.namedNode(ActorExtractLinksSolidTypeIndex.RDF_TYPE)),
+          DF.namedNode('ex:class1'),
+        ),
+        [KeysQueryOperation.operation.name]: AF.createPattern(
+          DF.variable('s1'),
+          DF.namedNode('ex:p'),
+          DF.namedNode('ex:bla'),
+        ),
+      });
+      await expect(actor.run({ url: '', metadata: input, requestTime: 0, context })).resolves
+        .toEqual({
+          links: [
+            {
+              url: 'ex:file1',
+            },
+          ],
+        });
+
+      expect(mediatorDereferenceRdf.mediate).toHaveBeenCalledTimes(1);
+      expect(mediatorDereferenceRdf.mediate).toHaveBeenCalledWith({ url: 'ex:index1', context });
+    });
+
+    it('should run on a stream with type index predicates for an nps property path query', async() => {
+      input = stream([
+        quad('ex:s1', 'ex:typeIndex1', 'ex:index1'),
+        quad('ex:s3', 'ex:px', 'ex:o3', 'ex:gx'),
+        quad('ex:s4', 'ex:p', 'ex:o4', 'ex:g'),
+        quad('ex:s5', 'ex:p', 'ex:o5', 'ex:gx'),
+      ]);
+      context = new ActionContext({
+        [KeysInitQuery.query.name]: AF.createPath(
+          DF.variable('s1'),
+          AF.createNps([
+            DF.namedNode('ex:p1'),
+            DF.namedNode(ActorExtractLinksSolidTypeIndex.RDF_TYPE),
+            DF.namedNode('ex:p'),
+          ]),
+          DF.namedNode('ex:class1'),
+        ),
+        [KeysQueryOperation.operation.name]: AF.createPattern(
+          DF.variable('s1'),
+          DF.namedNode('ex:p'),
+          DF.namedNode('ex:bla'),
+        ),
+      });
+      await expect(actor.run({ url: '', metadata: input, requestTime: 0, context })).resolves
+        .toEqual({
+          links: [
+            {
+              url: 'ex:file1',
+            },
+          ],
+        });
+
+      expect(mediatorDereferenceRdf.mediate).toHaveBeenCalledTimes(1);
+      expect(mediatorDereferenceRdf.mediate).toHaveBeenCalledWith({ url: 'ex:index1', context });
+    });
   });
 });
