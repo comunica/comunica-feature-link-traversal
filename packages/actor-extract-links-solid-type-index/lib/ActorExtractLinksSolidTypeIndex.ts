@@ -10,7 +10,9 @@ import type { IActorArgs, IActorTest } from '@comunica/core';
 import type { IActionContext } from '@comunica/types';
 import type * as RDF from '@rdfjs/types';
 import { storeStream } from 'rdf-store-stream';
-import { Algebra, Util as AlgebraUtil } from 'sparqlalgebrajs';
+import { termToString } from 'rdf-string';
+import type { Algebra } from 'sparqlalgebrajs';
+import { Util as AlgebraUtil } from 'sparqlalgebrajs';
 
 /**
  * A comunica Solid Type Index Extract Links Actor.
@@ -153,10 +155,15 @@ export class ActorExtractLinksSolidTypeIndex extends ActorExtractLinks {
     query: Algebra.Operation,
     pattern: Algebra.Operation,
   ): Promise<ILink[]> {
+    // Collect all subjects
+    const allSubjects: Set<string> = new Set();
+
     // Collect all subjects in the original query that refer to a specific type
     const typeSubjects: Record<string, RDF.Term[]> = {};
     AlgebraUtil.recurseOperation(query, {
-      [Algebra.types.PATTERN](queryPattern) {
+      pattern(queryPattern) {
+        allSubjects.add(termToString(queryPattern.subject));
+
         if (queryPattern.predicate.value === ActorExtractLinksSolidTypeIndex.RDF_TYPE &&
           queryPattern.object.termType === 'NamedNode') {
           const type = queryPattern.object.value;
@@ -177,6 +184,17 @@ export class ActorExtractLinksSolidTypeIndex extends ActorExtractLinks {
       if (currentLinks && subjects.some(subject => subject.equals(pattern.subject))) {
         links.push(...currentLinks);
       }
+
+      // Remove subjects of this type from allSubjects
+      for (const subject of subjects) {
+        allSubjects.delete(termToString(subject));
+      }
+    }
+
+    // Abort link pruning if there is at least one subject not matching a type index.
+    // Because this means that we have an unknown type, which requires traversal over all entries.
+    if (allSubjects.size > 0) {
+      return Object.values(typeLinks).flat();
     }
 
     return links;
