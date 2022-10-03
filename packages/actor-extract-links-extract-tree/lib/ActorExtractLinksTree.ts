@@ -32,7 +32,7 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
   public async run(action: IActionExtractLinks): Promise<IActorExtractLinksOutput> {
     return {
       links: await ActorExtractLinks.collectStream(action.metadata, (quad, links) => {
-        // If it's a blank node that contain a tree:node meaning that it stand from a relation
+        // Check if it's a blank node that contain a tree:node meaning that it stand from a relation
         if (quad.subject.termType === 'BlankNode' &&
         quad.predicate.equals(ActorExtractLinksTree.aNodeType)) {
           links.push(<ILink>{ url: quad.object.value });
