@@ -12,7 +12,7 @@ const DF = new DataFactory<RDF.BaseQuad>();
 /**
  * A comunica Extract Links Tree Extract Links Actor.
  */
-export class ActorExtractLinksExtractLinksTree extends ActorExtractLinks {
+export class ActorExtractLinksTree extends ActorExtractLinks {
   public static aNodeType = DF.namedNode('tree:node');
   private static readonly rdfTypeNode = DF.namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type');
 
@@ -24,8 +24,8 @@ export class ActorExtractLinksExtractLinksTree extends ActorExtractLinks {
     const quadsStream = action.metadata;
     const store = await storeStream(quadsStream);
     const result = store.match(undefined,
-      ActorExtractLinksExtractLinksTree.rdfTypeNode,
-      ActorExtractLinksExtractLinksTree.aNodeType);
+      ActorExtractLinksTree.rdfTypeNode,
+      ActorExtractLinksTree.aNodeType);
     return result.read() !== null;
   }
 
@@ -34,7 +34,7 @@ export class ActorExtractLinksExtractLinksTree extends ActorExtractLinks {
       links: await ActorExtractLinks.collectStream(action.metadata, (quad, links) => {
         // If it's a blank node that contain a tree:node meaning that it stand from a relation
         if (quad.subject.termType === 'BlankNode' &&
-        quad.predicate.equals(ActorExtractLinksExtractLinksTree.aNodeType)) {
+        quad.predicate.equals(ActorExtractLinksTree.aNodeType)) {
           links.push(<ILink>{ url: quad.object.value });
         }
       }),

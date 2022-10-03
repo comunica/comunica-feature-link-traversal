@@ -1,5 +1,5 @@
 {
-  "name": "@comunica/actor-extract-links-extract-links-tree",
+  "name": "@comunica/actor-extract-links-tree",
   "version": "1.0.0",
   "description": "A extract-links-tree extract-links actor",
   "lsd:module": true,
@@ -8,7 +8,7 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/comunica/comunica.git",
-    "directory": "packages/actor-extract-links-extract-links-tree"
+    "directory": "packages/actor-extract-links-tree"
   },
   "publishConfig": {
     "access": "public"

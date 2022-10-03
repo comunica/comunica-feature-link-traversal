@@ -1,8 +1,8 @@
 # Comunica Extract Links Tree Extract Links Actor
 
-[![npm version](https://badge.fury.io/js/%40comunica%2Factor-extract-links-extract-links-tree.svg)](https://www.npmjs.com/package/@comunica/actor-extract-links-extract-links-tree)
+[![npm version](https://badge.fury.io/js/%40comunica%2Factor-extract-links-tree.svg)](https://www.npmjs.com/package/@comunica/actor-extract-links-tree)
 
-A comunica Extract Links Tree Extract Links Actor.
+A comunica Extract Links [TREE](https://treecg.github.io/specification/) Actor.
 
 This module is part of the [Comunica framework](https://github.com/comunica/comunica),
 and should only be used by [developers that want to build their own query engine](https://comunica.dev/docs/modify/).
@@ -12,7 +12,7 @@ and should only be used by [developers that want to build their own query engine
 ## Install
 
 ```bash
-$ yarn add @comunica/actor-extract-links-extract-links-tree
+$ yarn add @comunica/actor-extract-links-tree
 ```
 
 ## Configure
@@ -22,7 +22,7 @@ After installing, this package can be added to your engine's configuration as fo
 {
   "@context": [
     ...
-    "https://linkedsoftwaredependencies.org/bundles/npm/@comunica/actor-extract-links-extract-links-tree/^1.0.0/components/context.jsonld"  
+    "https://linkedsoftwaredependencies.org/bundles/npm/@comunica/actor-extract-links-tree/^2.0.0/components/context.jsonld"  
   ],
   "actors": [
     ...
@@ -33,9 +33,3 @@ After installing, this package can be added to your engine's configuration as fo
   ]
 }
 ```
-
-### Config Parameters
-
-TODO: fill in parameters (this section can be removed if there are none)
-
-* `someParam`: Description of the param

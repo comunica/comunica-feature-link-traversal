@@ -1,7 +1,7 @@
 import { ActionContext, Bus } from '@comunica/core';
 import { DataFactory } from 'rdf-data-factory';
 import type * as RDF from 'rdf-js';
-import { ActorExtractLinksExtractLinksTree } from '../lib/ActorExtractLinksExtractLinksTree';
+import { ActorExtractLinksTree } from '../lib/ActorExtractLinksTree';
 const stream = require('streamify-array');
 
 const DF = new DataFactory<RDF.BaseQuad>();
@@ -15,26 +15,26 @@ describe('ActorExtractLinksExtractLinksTree', () => {
 
   describe('The ActorExtractLinksExtractLinksTree module', () => {
     it('should be a function', () => {
-      expect(ActorExtractLinksExtractLinksTree).toBeInstanceOf(Function);
+      expect(ActorExtractLinksTree).toBeInstanceOf(Function);
     });
 
     it('should be a ActorExtractLinksExtractLinksTree constructor', () => {
-      expect(new (<any>ActorExtractLinksExtractLinksTree)({ name: 'actor', bus }))
-        .toBeInstanceOf(ActorExtractLinksExtractLinksTree);
-      expect(new (<any>ActorExtractLinksExtractLinksTree)({ name: 'actor', bus }))
-        .toBeInstanceOf(ActorExtractLinksExtractLinksTree);
+      expect(new (<any>ActorExtractLinksTree)({ name: 'actor', bus }))
+        .toBeInstanceOf(ActorExtractLinksTree);
+      expect(new (<any>ActorExtractLinksTree)({ name: 'actor', bus }))
+        .toBeInstanceOf(ActorExtractLinksTree);
     });
 
     it('should not be able to create new ActorExtractLinksExtractLinksTree objects without \'new\'', () => {
-      expect(() => { (<any>ActorExtractLinksExtractLinksTree)(); }).toThrow();
+      expect(() => { (<any>ActorExtractLinksTree)(); }).toThrow();
     });
   });
 
   describe('The ActorExtractLinksExtractLinksTree run method', () => {
-    let actor: ActorExtractLinksExtractLinksTree;
+    let actor: ActorExtractLinksTree;
 
     beforeEach(() => {
-      actor = new ActorExtractLinksExtractLinksTree({ name: 'actor', bus });
+      actor = new ActorExtractLinksTree({ name: 'actor', bus });
     });
 
     it('should return the links of a TREE with one relation', async() => {
@@ -95,10 +95,10 @@ describe('ActorExtractLinksExtractLinksTree', () => {
   });
 
   describe('The ActorExtractLinksExtractLinksTree test method', () => {
-    let actor: ActorExtractLinksExtractLinksTree;
+    let actor: ActorExtractLinksTree;
 
     beforeEach(() => {
-      actor = new ActorExtractLinksExtractLinksTree({ name: 'actor', bus });
+      actor = new ActorExtractLinksTree({ name: 'actor', bus });
     });
 
     it('should test when giving a TREE', async() => {
