@@ -63,6 +63,7 @@
     "test": "jest",
     "test-ci": "jest --ci --maxWorkers=4 --coverage",
     "lint": "eslint . --ext .ts --cache",
+    "lint-fix": "eslint . --ext .ts --fix",
     "clean": "rm -rf ./node_modules && rm -rf ./packages/*/node_modules",
     "build": "npm run build:ts && npm run build:components",
     "build:ts": "tsc",
