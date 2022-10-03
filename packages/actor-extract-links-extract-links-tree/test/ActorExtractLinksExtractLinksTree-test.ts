@@ -1,8 +1,7 @@
 import { ActionContext, Bus } from '@comunica/core';
-import { Readable } from 'stream';
-import { ActorExtractLinksExtractLinksTree } from '../lib/ActorExtractLinksExtractLinksTree';
-import type * as RDF from 'rdf-js';
 import { DataFactory } from 'rdf-data-factory';
+import type * as RDF from 'rdf-js';
+import { ActorExtractLinksExtractLinksTree } from '../lib/ActorExtractLinksExtractLinksTree';
 const stream = require('streamify-array');
 
 const DF = new DataFactory<RDF.BaseQuad>();
@@ -38,24 +37,24 @@ describe('ActorExtractLinksExtractLinksTree', () => {
       actor = new ActorExtractLinksExtractLinksTree({ name: 'actor', bus });
     });
 
-    it('should return the links of a TREE with one relation', async () => {
+    it('should return the links of a TREE with one relation', async() => {
       const expectedUrl = 'http://foo.com';
       const input = stream([
         DF.quad(DF.namedNode('ex:s'), DF.namedNode('ex:p'), DF.namedNode('ex:o'), DF.namedNode('ex:gx')),
         DF.quad(DF.namedNode('ex:s'), DF.namedNode('tree:foo'), DF.literal(expectedUrl), DF.namedNode('ex:gx')),
         DF.quad(DF.namedNode('ex:s'), DF.namedNode('tree:foo'), DF.literal(expectedUrl), DF.namedNode('ex:gx')),
-        DF.quad(DF.namedNode('ex:s'), DF.namedNode('tree:relation'), DF.blankNode('_:_g1'), DF.namedNode('ex:gx') ),
-        DF.quad(DF.blankNode('_:_g1'), DF.namedNode('tree:node'), DF.literal(expectedUrl), DF.namedNode('ex:gx'))
+        DF.quad(DF.namedNode('ex:s'), DF.namedNode('tree:relation'), DF.blankNode('_:_g1'), DF.namedNode('ex:gx')),
+        DF.quad(DF.blankNode('_:_g1'), DF.namedNode('tree:node'), DF.literal(expectedUrl), DF.namedNode('ex:gx')),
       ]);
       const action = { url: '', metadata: input, requestTime: 0, context: new ActionContext() };
 
       const result = await actor.run(action);
 
-      expect(result).toEqual({ links: [{ url: expectedUrl }] });
+      expect(result).toEqual({ links: [{ url: expectedUrl }]});
     });
 
-    it('should return the links of a TREE with multiple relations', async () => {
-      const expectedUrl = ['http://foo.com', 'http://bar.com', 'http://example.com', 'http://example.com' ];
+    it('should return the links of a TREE with multiple relations', async() => {
+      const expectedUrl = [ 'http://foo.com', 'http://bar.com', 'http://example.com', 'http://example.com' ];
       const input = stream([
         DF.quad(DF.namedNode('ex:s'), DF.namedNode('tree:node'), DF.blankNode('_:_g1'), DF.namedNode('ex:gx')),
         DF.quad(DF.blankNode('_:_g1'), DF.namedNode('tree:node'), DF.literal(expectedUrl[0]), DF.namedNode('ex:gx')),
@@ -73,40 +72,45 @@ describe('ActorExtractLinksExtractLinksTree', () => {
 
       const result = await actor.run(action);
 
-      expect(result).toEqual({ links: expectedUrl.map((value)=>{ return {url:value}}) });
+      expect(result).toEqual({ links: expectedUrl.map(value => { return { url: value }; }) });
     });
 
-    it('should return the links of a TREE with one complex relation', async () => {
+    it('should return the links of a TREE with one complex relation', async() => {
       const expectedUrl = 'http://foo.com';
       const input = stream([
         DF.quad(DF.namedNode('ex:s'), DF.namedNode('ex:p'), DF.namedNode('ex:o'), DF.namedNode('ex:gx')),
         DF.quad(DF.namedNode('ex:s'), DF.namedNode('tree:foo'), DF.literal(expectedUrl), DF.namedNode('ex:gx')),
         DF.quad(DF.namedNode('ex:s'), DF.namedNode('tree:foo'), DF.literal(expectedUrl), DF.namedNode('ex:gx')),
-        DF.quad(DF.namedNode('ex:s'), DF.namedNode('tree:relation'), DF.blankNode('_:_g1'), DF.namedNode('ex:gx') ),
+        DF.quad(DF.namedNode('ex:s'), DF.namedNode('tree:relation'), DF.blankNode('_:_g1'), DF.namedNode('ex:gx')),
         DF.quad(DF.blankNode('_:_g1'), DF.namedNode('tree:node'), DF.literal(expectedUrl), DF.namedNode('ex:gx')),
         DF.quad(DF.blankNode('_:_g1'), DF.namedNode('tree:value'), DF.literal('1'), DF.namedNode('ex:gx')),
-        DF.quad(DF.blankNode('_:_g1'), DF.namedNode('tree:path'), DF.literal('ex:bar'), DF.namedNode('ex:gx'))
+        DF.quad(DF.blankNode('_:_g1'), DF.namedNode('tree:path'), DF.literal('ex:bar'), DF.namedNode('ex:gx')),
       ]);
       const action = { url: '', metadata: input, requestTime: 0, context: new ActionContext() };
 
       const result = await actor.run(action);
 
-      expect(result).toEqual({ links: [{ url: expectedUrl }] });
+      expect(result).toEqual({ links: [{ url: expectedUrl }]});
     });
   });
 
   describe('The ActorExtractLinksExtractLinksTree test method', () => {
-
     let actor: ActorExtractLinksExtractLinksTree;
 
     beforeEach(() => {
       actor = new ActorExtractLinksExtractLinksTree({ name: 'actor', bus });
     });
 
-    it('should test when giving a TREE', async () => {
+    it('should test when giving a TREE', async() => {
       const input = stream([
-        DF.quad(DF.namedNode('ex:s'), DF.namedNode('ex:p'), DF.namedNode('ex:o'), DF.namedNode('ex:gx')),
-        DF.quad(DF.namedNode('ex:s'), DF.namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'), DF.namedNode('tree:node'), DF.namedNode('ex:gx')),
+        DF.quad(DF.namedNode('ex:s'),
+          DF.namedNode('ex:p'),
+          DF.namedNode('ex:o'),
+          DF.namedNode('ex:gx')),
+        DF.quad(DF.namedNode('ex:s'),
+          DF.namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
+          DF.namedNode('tree:node'),
+          DF.namedNode('ex:gx')),
       ]);
       const action = { url: '', metadata: input, requestTime: 0, context: new ActionContext() };
 
@@ -115,10 +119,16 @@ describe('ActorExtractLinksExtractLinksTree', () => {
       expect(result).toBe(true);
     });
 
-    it('should no test when not given a TREE', async () => {
+    it('should no test when not given a TREE', async() => {
       const input = stream([
-        DF.quad(DF.namedNode('ex:s'), DF.namedNode('ex:p'), DF.namedNode('ex:o'), DF.namedNode('ex:gx')),
-        DF.quad(DF.namedNode('ex:s'), DF.namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'), DF.namedNode('root:node'), DF.namedNode('ex:gx')),
+        DF.quad(DF.namedNode('ex:s'),
+          DF.namedNode('ex:p'),
+          DF.namedNode('ex:o'),
+          DF.namedNode('ex:gx')),
+        DF.quad(DF.namedNode('ex:s'),
+          DF.namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
+          DF.namedNode('root:node'),
+          DF.namedNode('ex:gx')),
       ]);
       const action = { url: '', metadata: input, requestTime: 0, context: new ActionContext() };
 
