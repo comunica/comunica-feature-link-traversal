@@ -1,0 +1,13 @@
+{
+    "@context": [
+      "https://linkedsoftwaredependencies.org/bundles/npm/@comunica/runner/^2.0.0/components/context.jsonld",
+
+      "https://linkedsoftwaredependencies.org/bundles/npm/@comunica/actor-extract-links-tree/^2.0.0/components/context.jsonld"  
+    ],
+    "actors": [
+      {
+        "@id": "urn:comunica:default:extract-links/actors#extract-links-tree",
+        "@type": "ActorExtractLinksExtractLinksTree"
+      }
+    ]
+  }
