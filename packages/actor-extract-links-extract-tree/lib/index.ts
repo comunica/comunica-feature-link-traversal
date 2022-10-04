@@ -1,1 +1,1 @@
-export * from './ActorExtractLinksExtractLinksTree';
+export * from './ActorExtractLinksTree';
