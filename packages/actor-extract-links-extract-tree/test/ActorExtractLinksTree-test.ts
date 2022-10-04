@@ -32,6 +32,7 @@ describe('ActorExtractLinksExtractLinksTree', () => {
 
   describe('The ActorExtractLinksExtractLinksTree run method', () => {
     let actor: ActorExtractLinksTree;
+    const treeUrl = 'ex:s';
 
     beforeEach(() => {
       actor = new ActorExtractLinksTree({ name: 'actor', bus });
@@ -40,16 +41,16 @@ describe('ActorExtractLinksExtractLinksTree', () => {
     it('should return the links of a TREE with one relation', async() => {
       const expectedUrl = 'http://foo.com';
       const input = stream([
-        DF.quad(DF.namedNode('ex:s'), DF.namedNode('ex:p'), DF.namedNode('ex:o'), DF.namedNode('ex:gx')),
-        DF.quad(DF.namedNode('ex:s'),
+        DF.quad(DF.namedNode(treeUrl), DF.namedNode('ex:p'), DF.namedNode('ex:o'), DF.namedNode('ex:gx')),
+        DF.quad(DF.namedNode(treeUrl),
           DF.namedNode('https://w3id.org/tree#foo'),
           DF.literal(expectedUrl),
           DF.namedNode('ex:gx')),
-        DF.quad(DF.namedNode('ex:s'),
+        DF.quad(DF.namedNode(treeUrl),
           DF.namedNode('https://w3id.org/tree#foo'),
           DF.literal(expectedUrl),
           DF.namedNode('ex:gx')),
-        DF.quad(DF.namedNode('ex:s'),
+        DF.quad(DF.namedNode(treeUrl),
           DF.namedNode('https://w3id.org/tree#relation'),
           DF.blankNode('_:_g1'),
           DF.namedNode('ex:gx')),
@@ -58,7 +59,7 @@ describe('ActorExtractLinksExtractLinksTree', () => {
           DF.literal(expectedUrl),
           DF.namedNode('ex:gx')),
       ]);
-      const action = { url: '', metadata: input, requestTime: 0, context: new ActionContext() };
+      const action = { url: treeUrl, metadata: input, requestTime: 0, context: new ActionContext() };
 
       const result = await actor.run(action);
 
@@ -68,24 +69,24 @@ describe('ActorExtractLinksExtractLinksTree', () => {
     it('should return the links of a TREE with multiple relations', async() => {
       const expectedUrl = [ 'http://foo.com', 'http://bar.com', 'http://example.com', 'http://example.com' ];
       const input = stream([
-        DF.quad(DF.namedNode('ex:s'),
-          DF.namedNode('https://w3id.org/tree#node'),
+        DF.quad(DF.namedNode(treeUrl),
+          DF.namedNode('https://w3id.org/tree#relation'),
           DF.blankNode('_:_g1'),
           DF.namedNode('ex:gx')),
         DF.quad(DF.blankNode('_:_g1'),
           DF.namedNode('https://w3id.org/tree#node')
           , DF.literal(expectedUrl[0]),
           DF.namedNode('ex:gx')),
-        DF.quad(DF.namedNode('ex:s'), DF.namedNode('ex:p'), DF.namedNode('ex:o'), DF.namedNode('ex:gx')),
-        DF.quad(DF.namedNode('ex:s'),
+        DF.quad(DF.namedNode(treeUrl), DF.namedNode('ex:p'), DF.namedNode('ex:o'), DF.namedNode('ex:gx')),
+        DF.quad(DF.namedNode(treeUrl),
           DF.namedNode('https://w3id.org/tree#foo'),
           DF.literal(expectedUrl[0]),
           DF.namedNode('ex:gx')),
-        DF.quad(DF.namedNode('ex:s'),
+        DF.quad(DF.namedNode(treeUrl),
           DF.namedNode('https://w3id.org/tree#relation'),
           DF.literal(expectedUrl[0]),
           DF.namedNode('ex:gx')),
-        DF.quad(DF.namedNode('ex:s'),
+        DF.quad(DF.namedNode(treeUrl),
           DF.namedNode('https://w3id.org/tree#relation'),
           DF.blankNode('_:_g2'),
           DF.namedNode('ex:gx')),
@@ -93,7 +94,7 @@ describe('ActorExtractLinksExtractLinksTree', () => {
           DF.namedNode('https://w3id.org/tree#node'),
           DF.literal(expectedUrl[1]),
           DF.namedNode('ex:gx')),
-        DF.quad(DF.namedNode('ex:s'),
+        DF.quad(DF.namedNode(treeUrl),
           DF.namedNode('https://w3id.org/tree#relation'),
           DF.blankNode('_:_g3'),
           DF.namedNode('ex:gx')),
@@ -101,7 +102,7 @@ describe('ActorExtractLinksExtractLinksTree', () => {
           DF.namedNode('https://w3id.org/tree#node'),
           DF.literal(expectedUrl[2]),
           DF.namedNode('ex:gx')),
-        DF.quad(DF.namedNode('ex:s'),
+        DF.quad(DF.namedNode(treeUrl),
           DF.namedNode('https://w3id.org/tree#relation'),
           DF.blankNode('_:_g4'),
           DF.namedNode('ex:gx')),
@@ -110,7 +111,7 @@ describe('ActorExtractLinksExtractLinksTree', () => {
           DF.literal(expectedUrl[3]),
           DF.namedNode('ex:gx')),
       ]);
-      const action = { url: '', metadata: input, requestTime: 0, context: new ActionContext() };
+      const action = { url: treeUrl, metadata: input, requestTime: 0, context: new ActionContext() };
 
       const result = await actor.run(action);
 
@@ -120,19 +121,19 @@ describe('ActorExtractLinksExtractLinksTree', () => {
     it('should return the links of a TREE with one complex relation', async() => {
       const expectedUrl = 'http://foo.com';
       const input = stream([
-        DF.quad(DF.namedNode('ex:s'),
+        DF.quad(DF.namedNode(treeUrl),
           DF.namedNode('ex:p'),
           DF.namedNode('ex:o'),
           DF.namedNode('ex:gx')),
-        DF.quad(DF.namedNode('ex:s'),
+        DF.quad(DF.namedNode(treeUrl),
           DF.namedNode('https://w3id.org/tree#foo')
           , DF.literal(expectedUrl)
           , DF.namedNode('ex:gx')),
-        DF.quad(DF.namedNode('ex:s'),
+        DF.quad(DF.namedNode(treeUrl),
           DF.namedNode('https://w3id.org/tree#foo'),
           DF.literal(expectedUrl),
           DF.namedNode('ex:gx')),
-        DF.quad(DF.namedNode('ex:s'),
+        DF.quad(DF.namedNode(treeUrl),
           DF.namedNode('https://w3id.org/tree#relation'),
           DF.blankNode('_:_g1'),
           DF.namedNode('ex:gx')),
@@ -149,16 +150,68 @@ describe('ActorExtractLinksExtractLinksTree', () => {
           DF.literal('ex:bar'),
           DF.namedNode('ex:gx')),
       ]);
-      const action = { url: '', metadata: input, requestTime: 0, context: new ActionContext() };
+      const action = { url: treeUrl, metadata: input, requestTime: 0, context: new ActionContext() };
 
       const result = await actor.run(action);
 
       expect(result).toEqual({ links: [{ url: expectedUrl }]});
     });
-  });
 
+    it('should return the links of a TREE with multiple relations combining blank nodes and named nodes', async() => {
+      const expectedUrl = [ 'http://foo.com', 'http://bar.com', 'http://example.com', 'http://example.com' ];
+      const input = stream([
+        DF.quad(DF.namedNode(treeUrl),
+          DF.namedNode('https://w3id.org/tree#relation'),
+          DF.blankNode('_:_g1'),
+          DF.namedNode('ex:gx')),
+        DF.quad(DF.blankNode('_:_g1'),
+          DF.namedNode('https://w3id.org/tree#node')
+          , DF.literal(expectedUrl[0]),
+          DF.namedNode('ex:gx')),
+        DF.quad(DF.namedNode(treeUrl), DF.namedNode('ex:p'), DF.namedNode('ex:o'), DF.namedNode('ex:gx')),
+        DF.quad(DF.namedNode(treeUrl),
+          DF.namedNode('https://w3id.org/tree#foo'),
+          DF.literal(expectedUrl[0]),
+          DF.namedNode('ex:gx')),
+        DF.quad(DF.namedNode(treeUrl),
+          DF.namedNode('https://w3id.org/tree#relation'),
+          DF.literal(expectedUrl[0]),
+          DF.namedNode('ex:gx')),
+        DF.quad(DF.namedNode(treeUrl),
+          DF.namedNode('https://w3id.org/tree#relation'),
+          DF.blankNode('ex:r1'),
+          DF.namedNode('ex:gx')),
+        DF.quad(DF.blankNode('ex:r1'),
+          DF.namedNode('https://w3id.org/tree#node'),
+          DF.literal(expectedUrl[1]),
+          DF.namedNode('ex:gx')),
+        DF.quad(DF.namedNode(treeUrl),
+          DF.namedNode('https://w3id.org/tree#relation'),
+          DF.blankNode('ex:r2'),
+          DF.namedNode('ex:gx')),
+        DF.quad(DF.blankNode('ex:r2'),
+          DF.namedNode('https://w3id.org/tree#node'),
+          DF.literal(expectedUrl[2]),
+          DF.namedNode('ex:gx')),
+        DF.quad(DF.namedNode(treeUrl),
+          DF.namedNode('https://w3id.org/tree#relation'),
+          DF.blankNode('_:_g2'),
+          DF.namedNode('ex:gx')),
+        DF.quad(DF.blankNode('_:_g2'),
+          DF.namedNode('https://w3id.org/tree#node'),
+          DF.literal(expectedUrl[3]),
+          DF.namedNode('ex:gx')),
+      ]);
+      const action = { url: treeUrl, metadata: input, requestTime: 0, context: new ActionContext() };
+
+      const result = await actor.run(action);
+
+      expect(result).toEqual({ links: expectedUrl.map(value => { return { url: value }; }) });
+    });
+  });
   describe('The ActorExtractLinksExtractLinksTree test method', () => {
     let actor: ActorExtractLinksTree;
+    const treeUrl = 'ex:s';
 
     beforeEach(() => {
       actor = new ActorExtractLinksTree({ name: 'actor', bus });
@@ -166,11 +219,11 @@ describe('ActorExtractLinksExtractLinksTree', () => {
 
     it('should test when giving a TREE', async() => {
       const input = stream([
-        DF.quad(DF.namedNode('ex:s'),
+        DF.quad(DF.namedNode(treeUrl),
           DF.namedNode('ex:p'),
           DF.namedNode('ex:o'),
           DF.namedNode('ex:gx')),
-        DF.quad(DF.namedNode('ex:s'),
+        DF.quad(DF.namedNode(treeUrl),
           DF.namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
           DF.namedNode('https://w3id.org/tree#node'),
           DF.namedNode('ex:gx')),
@@ -182,13 +235,13 @@ describe('ActorExtractLinksExtractLinksTree', () => {
       expect(result).toBe(true);
     });
 
-    it('should no test when not given a TREE', async() => {
+    it('should test when not given a TREE', async() => {
       const input = stream([
-        DF.quad(DF.namedNode('ex:s'),
+        DF.quad(DF.namedNode(treeUrl),
           DF.namedNode('ex:p'),
           DF.namedNode('ex:o'),
           DF.namedNode('ex:gx')),
-        DF.quad(DF.namedNode('ex:s'),
+        DF.quad(DF.namedNode(treeUrl),
           DF.namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
           DF.namedNode('root:node'),
           DF.namedNode('ex:gx')),
@@ -197,7 +250,7 @@ describe('ActorExtractLinksExtractLinksTree', () => {
 
       const result = await actor.test(action);
 
-      expect(result).toBe(false);
+      expect(result).toBe(true);
     });
   });
 });

@@ -1,11 +1,12 @@
-import type { IActionExtractLinks,
-  IActorExtractLinksOutput, IActorExtractLinksArgs } from '@comunica/bus-extract-links';
+import type {
+  IActionExtractLinks,
+  IActorExtractLinksOutput, IActorExtractLinksArgs,
+} from '@comunica/bus-extract-links';
 import { ActorExtractLinks } from '@comunica/bus-extract-links';
 import type { ILink } from '@comunica/bus-rdf-resolve-hypermedia-links';
 import type { IActorTest } from '@comunica/core';
 import { DataFactory } from 'rdf-data-factory';
 import type * as RDF from 'rdf-js';
-import { storeStream } from 'rdf-store-stream';
 
 const DF = new DataFactory<RDF.BaseQuad>();
 
@@ -14,6 +15,7 @@ const DF = new DataFactory<RDF.BaseQuad>();
  */
 export class ActorExtractLinksTree extends ActorExtractLinks {
   public static aNodeType = DF.namedNode('https://w3id.org/tree#node');
+  public static aRelation = DF.namedNode('https://w3id.org/tree#relation');
   private static readonly rdfTypeNode = DF.namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type');
 
   public constructor(args: IActorExtractLinksArgs) {
@@ -21,23 +23,46 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
   }
 
   public async test(action: IActionExtractLinks): Promise<IActorTest> {
-    const quadsStream = action.metadata;
-    const store = await storeStream(quadsStream);
-    const result = store.match(undefined,
-      ActorExtractLinksTree.rdfTypeNode,
-      ActorExtractLinksTree.aNodeType);
-    return result.read() !== null;
+    return true;
   }
 
   public async run(action: IActionExtractLinks): Promise<IActorExtractLinksOutput> {
-    return {
-      links: await ActorExtractLinks.collectStream(action.metadata, (quad, links) => {
-        // Check if it's a blank node that contain a tree:node meaning that it stand from a relation
-        if (quad.subject.termType === 'BlankNode' &&
-        quad.predicate.equals(ActorExtractLinksTree.aNodeType)) {
-          links.push(<ILink>{ url: quad.object.value });
+    const metadata = action.metadata;
+    const rootUrl = action.url;
+    return new Promise((resolve, reject) => {
+      const relationObject: Map<string, boolean> = new Map();
+      const nodeUrl: (ILink | string)[][] = [];
+      const links: ILink[] = [];
+
+      // Forward errors
+      metadata.on('error', reject);
+
+      // Invoke callback on each metadata quad
+      metadata.on('data', (quad: RDF.Quad) => this.getTreeNodesAndUrl(quad, rootUrl, relationObject, nodeUrl));
+
+      // Resolve to discovered links
+      metadata.on('end', () => {
+        // Validate if the node forward have the current node as implicit subject
+        for (const [ node, link ] of nodeUrl) {
+          if (typeof relationObject.get(<string>node) !== 'undefined') {
+            links.push({ url: <string>link });
+          }
         }
-      }),
-    };
+        resolve({ links });
+      });
+    });
+  }
+
+  private getTreeNodesAndUrl(quad: RDF.Quad,
+    rootUrl: string,
+    relationObject: Map<string, boolean>,
+    nodeUrl: any[2][]): void {
+    // If it's a relation of the current node
+    if (quad.subject.value === rootUrl && quad.predicate.equals(ActorExtractLinksTree.aRelation)) {
+      relationObject.set(quad.object.value, true);
+      // If it's a node forward
+    } else if (quad.predicate.equals(ActorExtractLinksTree.aNodeType)) {
+      nodeUrl.push([ quad.subject.value, quad.object.value ]);
+    }
   }
 }
