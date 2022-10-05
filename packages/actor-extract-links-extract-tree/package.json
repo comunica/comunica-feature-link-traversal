@@ -34,7 +34,8 @@
     "@comunica/core": "^2.4.0",
     "@comunica/bus-extract-links": "^0.0.1",
     "rdf-data-factory": "^1.1.1",
-    "rdf-store-stream": "^1.3.0"
+    "rdf-store-stream": "^1.3.0",
+    "@comunica/context-entries": "^2.4.0"
   },
   "scripts": {
     "build": "npm run build:ts && npm run build:components",
