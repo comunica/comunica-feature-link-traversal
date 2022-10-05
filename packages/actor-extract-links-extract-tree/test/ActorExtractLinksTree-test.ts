@@ -1,3 +1,4 @@
+import { KeysRdfResolveQuadPattern } from '@comunica/context-entries';
 import { ActionContext, Bus } from '@comunica/core';
 import { DataFactory } from 'rdf-data-factory';
 import type * as RDF from 'rdf-js';
@@ -33,6 +34,9 @@ describe('ActorExtractLinksExtractLinksTree', () => {
   describe('The ActorExtractLinksExtractLinksTree run method', () => {
     let actor: ActorExtractLinksTree;
     const treeUrl = 'ex:s';
+    const context = new ActionContext({
+      [KeysRdfResolveQuadPattern.source.name]: treeUrl,
+    });
 
     beforeEach(() => {
       actor = new ActorExtractLinksTree({ name: 'actor', bus });
@@ -59,7 +63,7 @@ describe('ActorExtractLinksExtractLinksTree', () => {
           DF.literal(expectedUrl),
           DF.namedNode('ex:gx')),
       ]);
-      const action = { url: treeUrl, metadata: input, requestTime: 0, context: new ActionContext() };
+      const action = { url: treeUrl, metadata: input, requestTime: 0, context };
 
       const result = await actor.run(action);
 
@@ -111,7 +115,7 @@ describe('ActorExtractLinksExtractLinksTree', () => {
           DF.literal(expectedUrl[3]),
           DF.namedNode('ex:gx')),
       ]);
-      const action = { url: treeUrl, metadata: input, requestTime: 0, context: new ActionContext() };
+      const action = { url: treeUrl, metadata: input, requestTime: 0, context };
 
       const result = await actor.run(action);
 
@@ -150,7 +154,7 @@ describe('ActorExtractLinksExtractLinksTree', () => {
           DF.literal('ex:bar'),
           DF.namedNode('ex:gx')),
       ]);
-      const action = { url: treeUrl, metadata: input, requestTime: 0, context: new ActionContext() };
+      const action = { url: treeUrl, metadata: input, requestTime: 0, context };
 
       const result = await actor.run(action);
 
@@ -202,11 +206,142 @@ describe('ActorExtractLinksExtractLinksTree', () => {
           DF.literal(expectedUrl[3]),
           DF.namedNode('ex:gx')),
       ]);
-      const action = { url: treeUrl, metadata: input, requestTime: 0, context: new ActionContext() };
+      const action = { url: treeUrl, metadata: input, requestTime: 0, context };
 
       const result = await actor.run(action);
 
       expect(result).toEqual({ links: expectedUrl.map(value => { return { url: value }; }) });
+    });
+
+    it('should return the links of a TREE with one relation with an object source', async() => {
+      const expectedUrl = 'http://foo.com';
+      const input = stream([
+        DF.quad(DF.namedNode(treeUrl), DF.namedNode('ex:p'), DF.namedNode('ex:o'), DF.namedNode('ex:gx')),
+        DF.quad(DF.namedNode(treeUrl),
+          DF.namedNode('https://w3id.org/tree#foo'),
+          DF.literal(expectedUrl),
+          DF.namedNode('ex:gx')),
+        DF.quad(DF.namedNode(treeUrl),
+          DF.namedNode('https://w3id.org/tree#foo'),
+          DF.literal(expectedUrl),
+          DF.namedNode('ex:gx')),
+        DF.quad(DF.namedNode(treeUrl),
+          DF.namedNode('https://w3id.org/tree#relation'),
+          DF.blankNode('_:_g1'),
+          DF.namedNode('ex:gx')),
+        DF.quad(DF.blankNode('_:_g1'),
+          DF.namedNode('https://w3id.org/tree#node'),
+          DF.literal(expectedUrl),
+          DF.namedNode('ex:gx')),
+      ]);
+      const action = { url: treeUrl,
+        metadata: input,
+        requestTime: 0,
+        context: new ActionContext({
+          [KeysRdfResolveQuadPattern.source.name]: { value: treeUrl },
+        }) };
+
+      const result = await actor.run(action);
+
+      expect(result).toEqual({ links: [{ url: expectedUrl }]});
+    });
+
+    it('should return nothing when provided a RDF.Source source', async() => {
+      const expectedUrl = 'http://foo.com';
+      const input = stream([
+        DF.quad(DF.namedNode(treeUrl), DF.namedNode('ex:p'), DF.namedNode('ex:o'), DF.namedNode('ex:gx')),
+        DF.quad(DF.namedNode(treeUrl),
+          DF.namedNode('https://w3id.org/tree#foo'),
+          DF.literal(expectedUrl),
+          DF.namedNode('ex:gx')),
+        DF.quad(DF.namedNode(treeUrl),
+          DF.namedNode('https://w3id.org/tree#foo'),
+          DF.literal(expectedUrl),
+          DF.namedNode('ex:gx')),
+        DF.quad(DF.namedNode(treeUrl),
+          DF.namedNode('https://w3id.org/tree#relation'),
+          DF.blankNode('_:_g1'),
+          DF.namedNode('ex:gx')),
+        DF.quad(DF.blankNode('_:_g1'),
+          DF.namedNode('https://w3id.org/tree#node'),
+          DF.literal(expectedUrl),
+          DF.namedNode('ex:gx')),
+      ]);
+      const action = { url: treeUrl,
+        metadata: input,
+        requestTime: 0,
+        context: new ActionContext({
+          [KeysRdfResolveQuadPattern.source.name]: <RDF.Source> input,
+        }) };
+
+      const result = await actor.run(action);
+
+      expect(result).toEqual({ links: []});
+    });
+
+    it('should return nothing when provided  the source is not valid', async() => {
+      const expectedUrl = 'http://foo.com';
+      const input = stream([
+        DF.quad(DF.namedNode(treeUrl), DF.namedNode('ex:p'), DF.namedNode('ex:o'), DF.namedNode('ex:gx')),
+        DF.quad(DF.namedNode(treeUrl),
+          DF.namedNode('https://w3id.org/tree#foo'),
+          DF.literal(expectedUrl),
+          DF.namedNode('ex:gx')),
+        DF.quad(DF.namedNode(treeUrl),
+          DF.namedNode('https://w3id.org/tree#foo'),
+          DF.literal(expectedUrl),
+          DF.namedNode('ex:gx')),
+        DF.quad(DF.namedNode(treeUrl),
+          DF.namedNode('https://w3id.org/tree#relation'),
+          DF.blankNode('_:_g1'),
+          DF.namedNode('ex:gx')),
+        DF.quad(DF.blankNode('_:_g1'),
+          DF.namedNode('https://w3id.org/tree#node'),
+          DF.literal(expectedUrl),
+          DF.namedNode('ex:gx')),
+      ]);
+      const action = { url: treeUrl,
+        metadata: input,
+        requestTime: 0,
+        context: new ActionContext({
+        }) };
+
+      const result = await actor.run(action);
+
+      expect(result).toEqual({ links: []});
+    });
+
+    it('should return nothing when provided a source object with an RDF.Source values', async() => {
+      const expectedUrl = 'http://foo.com';
+      const input = stream([
+        DF.quad(DF.namedNode(treeUrl), DF.namedNode('ex:p'), DF.namedNode('ex:o'), DF.namedNode('ex:gx')),
+        DF.quad(DF.namedNode(treeUrl),
+          DF.namedNode('https://w3id.org/tree#foo'),
+          DF.literal(expectedUrl),
+          DF.namedNode('ex:gx')),
+        DF.quad(DF.namedNode(treeUrl),
+          DF.namedNode('https://w3id.org/tree#foo'),
+          DF.literal(expectedUrl),
+          DF.namedNode('ex:gx')),
+        DF.quad(DF.namedNode(treeUrl),
+          DF.namedNode('https://w3id.org/tree#relation'),
+          DF.blankNode('_:_g1'),
+          DF.namedNode('ex:gx')),
+        DF.quad(DF.blankNode('_:_g1'),
+          DF.namedNode('https://w3id.org/tree#node'),
+          DF.literal(expectedUrl),
+          DF.namedNode('ex:gx')),
+      ]);
+      const action = { url: treeUrl,
+        metadata: input,
+        requestTime: 0,
+        context: new ActionContext({
+          [KeysRdfResolveQuadPattern.source.name]: { value: <RDF.Source> input },
+        }) };
+
+      const result = await actor.run(action);
+
+      expect(result).toEqual({ links: []});
     });
   });
   describe('The ActorExtractLinksExtractLinksTree test method', () => {
