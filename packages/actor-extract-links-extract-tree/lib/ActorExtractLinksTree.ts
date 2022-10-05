@@ -31,7 +31,7 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
     const rootUrl = action.url;
     return new Promise((resolve, reject) => {
       const relationObject: Map<string, boolean> = new Map();
-      const nodeUrl: (ILink | string)[][] = [];
+      const nodeUrl: [string, string][] = [];
       const links: ILink[] = [];
 
       // Forward errors
@@ -44,9 +44,9 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
       // Resolve to discovered links
       metadata.on('end', () => {
         // Validate if the node forward have the current node as implicit subject
-        for (const [ node, link ] of nodeUrl) {
-          if (typeof relationObject.get(<string>node) !== 'undefined') {
-            links.push({ url: <string>link });
+        for (const [ nodeValue, link ] of nodeUrl) {
+          if (typeof relationObject.get(nodeValue) !== 'undefined') {
+            links.push({ url: link });
           }
         }
         resolve({ links });
@@ -58,7 +58,7 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
     quad: RDF.Quad,
     rootUrl: string,
     relationObject: Map<string, boolean>,
-    nodeUrl: any[2][],
+    nodeUrl: [string, string][],
   ): void {
     // If it's a relation of the current node
     if (quad.subject.value === rootUrl && quad.predicate.equals(ActorExtractLinksTree.aRelation)) {
