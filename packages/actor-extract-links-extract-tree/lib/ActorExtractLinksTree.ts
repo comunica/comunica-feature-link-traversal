@@ -4,9 +4,7 @@ import type {
 } from '@comunica/bus-extract-links';
 import { ActorExtractLinks } from '@comunica/bus-extract-links';
 import type { ILink } from '@comunica/bus-rdf-resolve-hypermedia-links';
-import { KeysRdfResolveQuadPattern } from '@comunica/context-entries';
 import type { IActorTest } from '@comunica/core';
-import type { IDataSource } from '@comunica/types';
 import { DataFactory } from 'rdf-data-factory';
 import type * as RDF from 'rdf-js';
 
@@ -29,17 +27,9 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
   }
 
   public async run(action: IActionExtractLinks): Promise<IActorExtractLinksOutput> {
-    const metadata = action.metadata;
-    let rootUrl = '';
-    const source: IDataSource = action.context.get(KeysRdfResolveQuadPattern.source)!;
-    if (typeof source !== 'undefined') {
-      if (typeof source === 'string') {
-        rootUrl = source;
-      } else if ('value' in source) {
-        rootUrl = typeof source.value === 'string' ? source.value : '';
-      }
-    }
     return new Promise((resolve, reject) => {
+      const metadata = action.metadata;
+      const rootUrl = action.url;
       const relationObject: Map<string, boolean> = new Map();
       const nodeUrl: [string, string][] = [];
       const links: ILink[] = [];
