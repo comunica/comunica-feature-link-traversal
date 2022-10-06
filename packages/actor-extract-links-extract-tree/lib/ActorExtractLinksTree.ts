@@ -30,8 +30,8 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
     return new Promise((resolve, reject) => {
       const metadata = action.metadata;
       const rootUrl = action.url;
-      const relationObject: Map<string, boolean> = new Map();
-      const nodeUrl: [string, string][] = [];
+      const relationNodeWithCurrentNodeHasSubject: Map<string, boolean> = new Map();
+      const nextNodeUrl: [string, string][] = [];
       const links: ILink[] = [];
 
       // Forward errors
@@ -39,13 +39,16 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
 
       // Invoke callback on each metadata quad
       metadata.on('data', (quad: RDF.Quad) =>
-        this.getTheRelationshipOfTheCurrentNodeAndUrlOfTheNextNode(quad, rootUrl, relationObject, nodeUrl));
+        this.getTheRelationshipOfTheCurrentNodeAndUrlOfTheNextNode(quad,
+          rootUrl,
+          relationNodeWithCurrentNodeHasSubject,
+          nextNodeUrl));
 
       // Resolve to discovered links
       metadata.on('end', () => {
         // Validate if the node forward have the current node as implicit subject
-        for (const [ nodeValue, link ] of nodeUrl) {
-          if (typeof relationObject.get(nodeValue) !== 'undefined') {
+        for (const [ nodeValue, link ] of nextNodeUrl) {
+          if (typeof relationNodeWithCurrentNodeHasSubject.get(nodeValue) !== 'undefined') {
             links.push({ url: link });
           }
         }
@@ -57,15 +60,15 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
   private getTheRelationshipOfTheCurrentNodeAndUrlOfTheNextNode(
     quad: RDF.Quad,
     rootUrl: string,
-    relationObject: Map<string, boolean>,
-    nodeUrl: [string, string][],
+    relationNodeWithCurrentNodeHasSubject: Map<string, boolean>,
+    nextNodeUrl: [string, string][],
   ): void {
     // If it's a relation of the current node
     if (quad.subject.value === rootUrl && quad.predicate.equals(ActorExtractLinksTree.aRelation)) {
-      relationObject.set(quad.object.value, true);
+      relationNodeWithCurrentNodeHasSubject.set(quad.object.value, true);
       // If it's a node forward
     } else if (quad.predicate.equals(ActorExtractLinksTree.aNodeType)) {
-      nodeUrl.push([ quad.subject.value, quad.object.value ]);
+      nextNodeUrl.push([ quad.subject.value, quad.object.value ]);
     }
   }
 }
