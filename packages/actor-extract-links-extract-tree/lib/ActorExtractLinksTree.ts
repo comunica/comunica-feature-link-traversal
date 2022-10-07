@@ -14,8 +14,8 @@ const DF = new DataFactory<RDF.BaseQuad>();
  * A comunica Extract Links Tree Extract Links Actor.
  */
 export class ActorExtractLinksTree extends ActorExtractLinks {
-  public static aNodeType = DF.namedNode('https://w3id.org/tree#node');
-  public static aRelation = DF.namedNode('https://w3id.org/tree#relation');
+  public static readonly aNodeType = DF.namedNode('https://w3id.org/tree#node');
+  public static readonly aRelation = DF.namedNode('https://w3id.org/tree#relation');
   private static readonly rdfTypeNode = DF.namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type');
 
   public constructor(args: IActorExtractLinksArgs) {
