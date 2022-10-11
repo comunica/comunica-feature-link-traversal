@@ -1,0 +1,5 @@
+# 9. SNCB connections LDES
+# Datasources: https://graph.irail.be/sncb/connections/feed
+SELECT * WHERE {
+    ?s <http://semweb.mmlab.be/ns/linkedconnections#departureStop> ?o.
+}

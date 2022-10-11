@@ -1,0 +1,6 @@
+# 7. Flanders street registry
+# Datasources: https://tree.linkeddatafragments.org/data/addressregister/streetnames/
+SELECT * WHERE {
+    ?s <http://www.w3.org/2000/01/rdf-schema#label> ?o.
+    FILTER(LANG(?o) = "nl")
+}
