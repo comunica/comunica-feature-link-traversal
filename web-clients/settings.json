@@ -84,6 +84,18 @@
     {
       "name": "Harvard Library",
       "url": "//data.linkeddatafragments.org/harvard"
+    },
+    {
+      "name": "Cultural Heritage Thesaurus",
+      "url": "https://treecg.github.io/demo_data/cht.ttl"
+    },
+    {
+      "name": "Flanders street registry",
+      "url": "https://tree.linkeddatafragments.org/data/addressregister/streetnames/"
+    },
+    {
+      "name": "SNCB connections LDES",
+      "url": "https://graph.irail.be/sncb/connections/feed"
     }
   ],
   "prefixes": {
@@ -103,7 +115,9 @@
     "schema":      "http://schema.org/",
     "bow":         "https://betweenourworlds.org/ontology/",
     "lc":          "http://semweb.mmlab.be/ns/linkedconnections#",
-    "mf":          "http://www.w3.org/2001/sw/DataAccess/tests/test-manifest#"
+    "mf":          "http://www.w3.org/2001/sw/DataAccess/tests/test-manifest#",
+    "tree":        "https://w3id.org/tree#",
+    "ldes":        "https://w3id.org/ldes#"
   },
   "queries": "(Will be generated from the 'queries' folder by running the './queries-to-json' script.)"
 }
