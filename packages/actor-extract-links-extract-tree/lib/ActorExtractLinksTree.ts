@@ -39,7 +39,7 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
 
       // Invoke callback on each metadata quad
       metadata.on('data', (quad: RDF.Quad) =>
-        this.getTheRelationshipOfTheCurrentNodeAndUrlOfTheNextNode(quad,
+        this.getTreeQuadsRawRelations(quad,
           currentNodeUrl,
           pageRelationNodes,
           nextNodeUrl));
@@ -57,7 +57,7 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
     });
   }
 
-  private getTheRelationshipOfTheCurrentNodeAndUrlOfTheNextNode(
+  private getTreeQuadsRawRelations(
     quad: RDF.Quad,
     rootUrl: string,
     relationNodeWithCurrentNodeHasSubject: Set<string>,
