@@ -59,7 +59,7 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
 
   /**
    * A helper function to find all the relations of a TREE document and the possible next nodes to visit.
-   * The next nodes are not guaranteed to have as subject the node of the current page,
+   * The next nodes are not guaranteed to have as subject the URL of the current page,
    * so filtering is necessary afterward.
    * @param quad the current quad.
    * @param url url of the page
