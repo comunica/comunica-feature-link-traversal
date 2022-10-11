@@ -48,7 +48,7 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
       metadata.on('end', () => {
         // Validate if the node forward have the current node as implicit subject
         for (const [ nodeValue, link ] of nodeLinks) {
-          if (typeof pageRelationNodes.has(nodeValue) !== 'undefined') {
+          if (pageRelationNodes.has(nodeValue)) {
             links.push({ url: link });
           }
         }

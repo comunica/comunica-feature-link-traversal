@@ -81,6 +81,10 @@ describe('ActorExtractLinksExtractLinksTree', () => {
           DF.namedNode('https://w3id.org/tree#node')
           , DF.literal(expectedUrl[0]),
           DF.namedNode('ex:gx')),
+        DF.quad(DF.blankNode('ex:s2'),
+          DF.namedNode('https://w3id.org/tree#node')
+          , DF.literal(expectedUrl[0]),
+          DF.namedNode('ex:gx')),
         DF.quad(DF.namedNode(treeUrl), DF.namedNode('ex:p'), DF.namedNode('ex:o'), DF.namedNode('ex:gx')),
         DF.quad(DF.namedNode(treeUrl),
           DF.namedNode('https://w3id.org/tree#foo'),
