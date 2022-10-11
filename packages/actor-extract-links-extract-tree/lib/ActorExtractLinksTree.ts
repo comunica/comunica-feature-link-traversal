@@ -30,7 +30,7 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
     return new Promise((resolve, reject) => {
       const metadata = action.metadata;
       const currentNodeUrl = action.url;
-      const relationNodeWithCurrentNodeHasSubject: Map<string, boolean> = new Map();
+      const pageRelationNodes: Set<string> = new Set();
       const nextNodeUrl: [string, string][] = [];
       const links: ILink[] = [];
 
@@ -41,14 +41,14 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
       metadata.on('data', (quad: RDF.Quad) =>
         this.getTheRelationshipOfTheCurrentNodeAndUrlOfTheNextNode(quad,
           currentNodeUrl,
-          relationNodeWithCurrentNodeHasSubject,
+          pageRelationNodes,
           nextNodeUrl));
 
       // Resolve to discovered links
       metadata.on('end', () => {
         // Validate if the node forward have the current node as implicit subject
         for (const [ nodeValue, link ] of nextNodeUrl) {
-          if (typeof relationNodeWithCurrentNodeHasSubject.get(nodeValue) !== 'undefined') {
+          if (typeof pageRelationNodes.has(nodeValue) !== 'undefined') {
             links.push({ url: link });
           }
         }
@@ -60,12 +60,12 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
   private getTheRelationshipOfTheCurrentNodeAndUrlOfTheNextNode(
     quad: RDF.Quad,
     rootUrl: string,
-    relationNodeWithCurrentNodeHasSubject: Map<string, boolean>,
+    relationNodeWithCurrentNodeHasSubject: Set<string>,
     nextNodeUrl: [string, string][],
   ): void {
     // If it's a relation of the current node
     if (quad.subject.value === rootUrl && quad.predicate.equals(ActorExtractLinksTree.aRelation)) {
-      relationNodeWithCurrentNodeHasSubject.set(quad.object.value, true);
+      relationNodeWithCurrentNodeHasSubject.add(quad.object.value);
       // If it's a node forward
     } else if (quad.predicate.equals(ActorExtractLinksTree.aNodeType)) {
       nextNodeUrl.push([ quad.subject.value, quad.object.value ]);
