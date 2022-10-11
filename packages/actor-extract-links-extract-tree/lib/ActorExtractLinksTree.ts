@@ -57,15 +57,25 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
     });
   }
 
+  /**
+   * A helper function to find all the relation of the page and the possible next node to visit.
+   * The next nodes are not guaranteed to have as subject the node of the current page,
+   * so filtering is necessary afterward.
+   * @param quad the current quad.
+   * @param url url of the page
+   * @param pageRelationNodes the url of the relation node of the page that have as subject the node of the page
+   * @param nextNodeUrl the url of the next potential page that has to be visited,
+   *  regardless if the implicit subject is the node of the page
+   */
   private getTreeQuadsRawRelations(
     quad: RDF.Quad,
-    rootUrl: string,
-    relationNodeWithCurrentNodeHasSubject: Set<string>,
+    url: string,
+    pageRelationNodes: Set<string>,
     nextNodeUrl: [string, string][],
   ): void {
     // If it's a relation of the current node
-    if (quad.subject.value === rootUrl && quad.predicate.equals(ActorExtractLinksTree.aRelation)) {
-      relationNodeWithCurrentNodeHasSubject.add(quad.object.value);
+    if (quad.subject.value === url && quad.predicate.equals(ActorExtractLinksTree.aRelation)) {
+      pageRelationNodes.add(quad.object.value);
       // If it's a node forward
     } else if (quad.predicate.equals(ActorExtractLinksTree.aNodeType)) {
       nextNodeUrl.push([ quad.subject.value, quad.object.value ]);
