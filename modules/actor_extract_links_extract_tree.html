@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>engines/query-sparql-link-traversal-solid/node_modules/@comunica/actor-init-query/lib/ActorInitQueryBase | Comunica Link Traversal</title>
+	<title>actor-extract-links-extract-tree | Comunica Link Traversal</title>
 	<meta name="description" content="Documentation for Comunica Link Traversal">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -55,30 +55,59 @@
 					<a href="../modules.html">Comunica Link Traversal</a>
 				</li>
 				<li>
-					<a href="engines_query_sparql_link_traversal_solid_node_modules__comunica_actor_init_query_lib_ActorInitQueryBase.html">engines/query-sparql-link-traversal-solid/node_modules/@comunica/actor-init-query/lib/ActorInitQueryBase</a>
+					<a href="actor_extract_links_extract_tree.html">actor-extract-links-extract-tree</a>
 				</li>
 			</ul>
-			<h1>Module engines/query-sparql-link-traversal-solid/node_modules/@comunica/actor-init-query/lib/ActorInitQueryBase</h1>
+			<h1>Module actor-extract-links-extract-tree</h1>
 		</div>
 	</div>
 </header>
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<a href="#comunica-extract-links-tree-extract-links-actor" id="comunica-extract-links-tree-extract-links-actor" style="color: inherit; text-decoration: none;">
+						<h1>Comunica Extract Links Tree Extract Links Actor</h1>
+					</a>
+					<p><a href="https://www.npmjs.com/package/@comunica/actor-extract-links-tree"><img src="https://badge.fury.io/js/%40comunica%2Factor-extract-links-tree.svg" alt="npm version"></a></p>
+					<p>A comunica <a href="https://github.com/comunica/comunica-feature-link-traversal/tree/master/packages/bus-extract-links">Extract Links</a> <a href="https://treecg.github.io/specification/">TREE</a> Actor.</p>
+					<p>This module is part of the <a href="https://github.com/comunica/comunica">Comunica framework</a>,
+					and should only be used by <a href="https://comunica.dev/docs/modify/">developers that want to build their own query engine</a>.</p>
+					<p><a href="https://comunica.dev/docs/query/">Click here if you just want to query with Comunica</a>.</p>
+					<a href="#install" id="install" style="color: inherit; text-decoration: none;">
+						<h2>Install</h2>
+					</a>
+					<pre><code class="language-bash"><span style="color: #000000">$ yarn add @comunica/actor-extract-links-tree</span>
+</code></pre>
+					<a href="#configure" id="configure" style="color: inherit; text-decoration: none;">
+						<h2>Configure</h2>
+					</a>
+					<p>After installing, this package can be added to your engine&#39;s configuration as follows:</p>
+					<pre><code class="language-text">{
+  &quot;@context&quot;: [
+    ...
+    &quot;https://linkedsoftwaredependencies.org/bundles/npm/@comunica/actor-extract-links-tree/^2.0.0/components/context.jsonld&quot;  
+  ],
+  &quot;actors&quot;: [
+    ...
+    {
+      &quot;@id&quot;: &quot;urn:comunica:default:extract-links/actors#extract-links-tree&quot;,
+      &quot;@type&quot;: &quot;ActorExtractLinksTree&quot;
+    }
+  ]
+}
+</code></pre>
+				</div>
+			</section>
 			<section class="tsd-panel-group tsd-index-group">
 				<h2>Index</h2>
 				<section class="tsd-panel tsd-index-panel">
 					<div class="tsd-index-content">
-						<section class="tsd-index-section tsd-is-external">
+						<section class="tsd-index-section ">
 							<h3>Classes</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-class tsd-parent-kind-module tsd-is-external"><a href="../classes/engines_query_sparql_link_traversal_solid_node_modules__comunica_actor_init_query_lib_ActorInitQueryBase.ActorInitQueryBase.html" class="tsd-kind-icon">Actor<wbr>Init<wbr>Query<wbr>Base</a></li>
-							</ul>
-						</section>
-						<section class="tsd-index-section tsd-is-external">
-							<h3>Interfaces</h3>
-							<ul class="tsd-index-list">
-								<li class="tsd-kind-interface tsd-parent-kind-module tsd-is-external"><a href="../interfaces/engines_query_sparql_link_traversal_solid_node_modules__comunica_actor_init_query_lib_ActorInitQueryBase.IActorInitQueryBaseArgs.html" class="tsd-kind-icon">IActor<wbr>Init<wbr>Query<wbr>Base<wbr>Args</a></li>
+								<li class="tsd-kind-class tsd-parent-kind-module"><a href="../classes/actor_extract_links_extract_tree.ActorExtractLinksTree.html" class="tsd-kind-icon">Actor<wbr>Extract<wbr>Links<wbr>Tree</a></li>
 							</ul>
 						</section>
 					</div>
@@ -91,8 +120,8 @@
 					<li class=" ">
 						<a href="../modules.html">Modules</a>
 					</li>
-					<li class="current tsd-kind-module tsd-is-external">
-						<a href="engines_query_sparql_link_traversal_solid_node_modules__comunica_actor_init_query_lib_ActorInitQueryBase.html">engines/query-<wbr>sparql-<wbr>link-<wbr>traversal-<wbr>solid/node_<wbr>modules/@comunica/actor-<wbr>init-<wbr>query/lib/<wbr>Actor<wbr>Init<wbr>Query<wbr>Base</a>
+					<li class="current tsd-kind-module">
+						<a href="actor_extract_links_extract_tree.html">actor-<wbr>extract-<wbr>links-<wbr>extract-<wbr>tree</a>
 					</li>
 				</ul>
 			</nav>
@@ -104,9 +133,18 @@
 					<li class=" tsd-kind-module">
 						<a href="actor_extract_links_content_policies.html" class="tsd-kind-icon">actor-<wbr>extract-<wbr>links-<wbr>content-<wbr>policies</a>
 					</li>
-					<li class=" tsd-kind-module">
+				</ul>
+				<ul class="current">
+					<li class="current tsd-kind-module">
 						<a href="actor_extract_links_extract_tree.html" class="tsd-kind-icon">actor-<wbr>extract-<wbr>links-<wbr>extract-<wbr>tree</a>
+						<ul>
+							<li class=" tsd-kind-class tsd-parent-kind-module">
+								<a href="../classes/actor_extract_links_extract_tree.ActorExtractLinksTree.html" class="tsd-kind-icon">Actor<wbr>Extract<wbr>Links<wbr>Tree</a>
+							</li>
+						</ul>
 					</li>
+				</ul>
+				<ul class="after-current">
 					<li class=" tsd-kind-module">
 						<a href="actor_extract_links_predicates.html" class="tsd-kind-icon">actor-<wbr>extract-<wbr>links-<wbr>predicates</a>
 					</li>
@@ -176,21 +214,9 @@
 					<li class=" tsd-kind-module tsd-is-external">
 						<a href="engines_query_sparql_link_traversal_solid_node_modules__comunica_actor_init_query_lib_ActorInitQuery.html" class="tsd-kind-icon">engines/query-<wbr>sparql-<wbr>link-<wbr>traversal-<wbr>solid/node_<wbr>modules/@comunica/actor-<wbr>init-<wbr>query/lib/<wbr>Actor<wbr>Init<wbr>Query</a>
 					</li>
-				</ul>
-				<ul class="current">
-					<li class="current tsd-kind-module tsd-is-external">
+					<li class=" tsd-kind-module tsd-is-external">
 						<a href="engines_query_sparql_link_traversal_solid_node_modules__comunica_actor_init_query_lib_ActorInitQueryBase.html" class="tsd-kind-icon">engines/query-<wbr>sparql-<wbr>link-<wbr>traversal-<wbr>solid/node_<wbr>modules/@comunica/actor-<wbr>init-<wbr>query/lib/<wbr>Actor<wbr>Init<wbr>Query<wbr>Base</a>
-						<ul>
-							<li class=" tsd-kind-class tsd-parent-kind-module tsd-is-external">
-								<a href="../classes/engines_query_sparql_link_traversal_solid_node_modules__comunica_actor_init_query_lib_ActorInitQueryBase.ActorInitQueryBase.html" class="tsd-kind-icon">Actor<wbr>Init<wbr>Query<wbr>Base</a>
-							</li>
-							<li class=" tsd-kind-interface tsd-parent-kind-module tsd-is-external">
-								<a href="../interfaces/engines_query_sparql_link_traversal_solid_node_modules__comunica_actor_init_query_lib_ActorInitQueryBase.IActorInitQueryBaseArgs.html" class="tsd-kind-icon">IActor<wbr>Init<wbr>Query<wbr>Base<wbr>Args</a>
-							</li>
-						</ul>
 					</li>
-				</ul>
-				<ul class="after-current">
 					<li class=" tsd-kind-module tsd-is-external">
 						<a href="engines_query_sparql_link_traversal_solid_node_modules__comunica_actor_init_query_lib_HttpServiceSparqlEndpoint.html" class="tsd-kind-icon">engines/query-<wbr>sparql-<wbr>link-<wbr>traversal-<wbr>solid/node_<wbr>modules/@comunica/actor-<wbr>init-<wbr>query/lib/<wbr>Http<wbr>Service<wbr>Sparql<wbr>Endpoint</a>
 					</li>
