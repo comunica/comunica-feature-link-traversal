@@ -31,7 +31,7 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
       const metadata = action.metadata;
       const currentNodeUrl = action.url;
       const pageRelationNodes: Set<string> = new Set();
-      const nextNodeUrl: [string, string][] = [];
+      const nodeLinks: [string, string][] = [];
       const links: ILink[] = [];
 
       // Forward errors
@@ -42,12 +42,12 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
         this.getTreeQuadsRawRelations(quad,
           currentNodeUrl,
           pageRelationNodes,
-          nextNodeUrl));
+          nodeLinks));
 
       // Resolve to discovered links
       metadata.on('end', () => {
         // Validate if the node forward have the current node as implicit subject
-        for (const [ nodeValue, link ] of nextNodeUrl) {
+        for (const [ nodeValue, link ] of nodeLinks) {
           if (typeof pageRelationNodes.has(nodeValue) !== 'undefined') {
             links.push({ url: link });
           }
@@ -64,21 +64,21 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
    * @param quad the current quad.
    * @param url url of the page
    * @param pageRelationNodes the url of the relation node of the page that have as subject the node of the page
-   * @param nextNodeUrl the url of the next potential page that has to be visited,
+   * @param nodeLinks the url of the next potential page that has to be visited,
    *  regardless if the implicit subject is the node of the page
    */
   private getTreeQuadsRawRelations(
     quad: RDF.Quad,
     url: string,
     pageRelationNodes: Set<string>,
-    nextNodeUrl: [string, string][],
+    nodeLinks: [string, string][],
   ): void {
     // If it's a relation of the current node
     if (quad.subject.value === url && quad.predicate.equals(ActorExtractLinksTree.aRelation)) {
       pageRelationNodes.add(quad.object.value);
       // If it's a node forward
     } else if (quad.predicate.equals(ActorExtractLinksTree.aNodeType)) {
-      nextNodeUrl.push([ quad.subject.value, quad.object.value ]);
+      nodeLinks.push([ quad.subject.value, quad.object.value ]);
     }
   }
 }
