@@ -63,7 +63,7 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
    * so filtering is necessary afterward.
    * @param quad the current quad.
    * @param url url of the page
-   * @param pageRelationNodes the url of the relation node of the page that have as subject the node of the page
+   * @param pageRelationNodes the url of the relation node of the page that have as subject the URL of the page
    * @param nodeLinks the url of the next potential page that has to be visited,
    *  regardless if the implicit subject is the node of the page
    */
