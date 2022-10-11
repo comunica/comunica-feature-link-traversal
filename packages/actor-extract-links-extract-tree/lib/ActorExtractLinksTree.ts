@@ -29,7 +29,7 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
   public async run(action: IActionExtractLinks): Promise<IActorExtractLinksOutput> {
     return new Promise((resolve, reject) => {
       const metadata = action.metadata;
-      const rootUrl = action.url;
+      const currentNodeUrl = action.url;
       const relationNodeWithCurrentNodeHasSubject: Map<string, boolean> = new Map();
       const nextNodeUrl: [string, string][] = [];
       const links: ILink[] = [];
@@ -40,7 +40,7 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
       // Invoke callback on each metadata quad
       metadata.on('data', (quad: RDF.Quad) =>
         this.getTheRelationshipOfTheCurrentNodeAndUrlOfTheNextNode(quad,
-          rootUrl,
+          currentNodeUrl,
           relationNodeWithCurrentNodeHasSubject,
           nextNodeUrl));
 
