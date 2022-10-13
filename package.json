@@ -35,7 +35,7 @@
     "cross-fetch": "^3.0.5",
     "jest": "^29.0.0",
     "jest-rdf": "^1.7.0",
-    "lerna": "^5.0.0",
+    "lerna": "^6.0.0",
     "lodash.assign": "^4.2.0",
     "manual-git-changelog": "^1.0.0",
     "node-polyfill-webpack-plugin": "^2.0.0",
