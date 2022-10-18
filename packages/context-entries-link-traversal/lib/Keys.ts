@@ -1,6 +1,5 @@
 import { ActionContextKey } from '@comunica/core';
-import type { AnnotateSourcesType } from '@comunica/types-link-traversal';
-
+import type { AnnotateSourcesType, LinkTraversalOptimizationLinkFilter } from '@comunica/types-link-traversal';
 /**
  * When adding entries to this file, also add a shortcut for them in the contextKeyShortcuts TSDoc comment in
  * ActorIniQueryBase in @comunica/actor-init-query if it makes sense to use this entry externally.
@@ -18,4 +17,11 @@ export const KeysRdfResolveHypermediaLinks = {
   annotateSources: new ActionContextKey<AnnotateSourcesType>(
     '@comunica/bus-rdf-resolve-hypermedia-links:annotateSources',
   ),
+};
+
+export const KeyOptimizationLinkTraversal = {
+  /**
+   * Filter function to optimized the link traversal
+   */
+  filterFunctions: new ActionContextKey<LinkTraversalOptimizationLinkFilter[]>('@comunica/optimization-link-traversal:filterFunction'),
 };
