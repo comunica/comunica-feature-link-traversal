@@ -19,7 +19,7 @@ $ yarn add @comunica/bus-optimize-link-traversal
 
 ## Bus usage
 
-* **Context**: `"https://linkedsoftwaredependencies.org/bundles/npm/@comunica/bus-optimize-link-traversal/^1.0.0/components/context.jsonld"`
+* **Context**: `"https://linkedsoftwaredependencies.org/bundles/npm/@comunica/bus-optimize-link-traversal/^0.0.0/components/context.jsonld"`
 * **Bus name**: `ActorOptimizeLinkTraversal:_default_bus`
 
 ## Creating actors on this bus

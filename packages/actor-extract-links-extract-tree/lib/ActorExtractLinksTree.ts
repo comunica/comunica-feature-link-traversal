@@ -3,7 +3,9 @@ import type {
   IActorExtractLinksOutput, IActorExtractLinksArgs,
 } from '@comunica/bus-extract-links';
 import { ActorExtractLinks } from '@comunica/bus-extract-links';
+import type { MediatorOptimizeLinkTraversal } from '@comunica/bus-optimize-link-traversal';
 import type { ILink } from '@comunica/bus-rdf-resolve-hypermedia-links';
+import { KeysInitQuery } from '@comunica/context-entries';
 import { KeyOptimizationLinkTraversal } from '@comunica/context-entries-link-traversal';
 import type { IActorTest } from '@comunica/core';
 import type { LinkTraversalOptimizationLinkFilter } from '@comunica/types-link-traversal';
@@ -56,7 +58,9 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
     ActorExtractLinksTree.treeGreaterThan,
   ];
 
-  public constructor(args: IActorExtractLinksArgs) {
+  private readonly mediatorOptimizeLinkTraversal: MediatorOptimizeLinkTraversal;
+
+  public constructor(args: IActorExtractLinksTree) {
     super(args);
   }
 
@@ -65,6 +69,10 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
   }
 
   public async run(action: IActionExtractLinks): Promise<IActorExtractLinksOutput> {
+    if (action.context.get(KeysInitQuery.query) !== undefined) {
+      await this.mediatorOptimizeLinkTraversal.mediate({ operations: action.context.get(KeysInitQuery.query)!,
+        context: action.context });
+    }
     return new Promise((resolve, reject) => {
       const metadata = action.metadata;
       const currentNodeUrl = action.url;
@@ -72,9 +80,9 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
       const relationDescriptions: Map<string, IRelationDescription> = new Map();
       const nodeLinks: [string, string][] = [];
       const filterFunctions: LinkTraversalOptimizationLinkFilter[] =
-      typeof action.context.get(KeyOptimizationLinkTraversal.filterFunctions) !== 'undefined' ?
-        action.context.get(KeyOptimizationLinkTraversal.filterFunctions)! :
-        [];
+        typeof action.context.get(KeyOptimizationLinkTraversal.filterFunctions) !== 'undefined' ?
+          action.context.get(KeyOptimizationLinkTraversal.filterFunctions)! :
+          [];
       const links: ILink[] = [];
 
       // Forward errors
@@ -167,19 +175,26 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
     } else {
       switch (field) {
         case 'value': {
-          newDescription[<keyof typeof newDescription> field] = value;
+          newDescription[<keyof typeof newDescription>field] = value;
           break;
         }
         case 'subject': {
-          newDescription[<keyof typeof newDescription> field] = subject;
+          newDescription[<keyof typeof newDescription>field] = subject;
           break;
         }
         case 'operator': {
-          newDescription[<keyof typeof newDescription> field] = operator;
+          newDescription[<keyof typeof newDescription>field] = operator;
           break;
         }
       }
       relationDescriptions.set(quad.subject.value, newDescription);
     }
   }
+}
+
+export interface IActorExtractLinksTree extends IActorExtractLinksArgs {
+  /**
+   * The optmize link traversal mediator
+   */
+  mediatorOptimizeLinkTraversal: MediatorOptimizeLinkTraversal;
 }

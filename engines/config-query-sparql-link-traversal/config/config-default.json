@@ -8,6 +8,9 @@
     "ccqslt:config/extract-links/actors/content-policies-conditional.json",
     "ccqslt:config/extract-links/actors/quad-pattern-query.json",
     "ccqslt:config/rdf-resolve-hypermedia-links/actors/traverse-replace-conditional.json",
-    "ccqslt:config/rdf-resolve-hypermedia-links-queue/actors/wrapper-limit-count.json"
+    "ccqslt:config/rdf-resolve-hypermedia-links-queue/actors/wrapper-limit-count.json",
+    "ccqslt:config/extract-links/actors/tree.json",
+    "ccqslt:config/optimize-link-traversal/mediators.json",
+    "ccqslt:config/optimize-link-traversal/actors/filter-tree.json"
   ]
 }
