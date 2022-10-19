@@ -1,13 +1,11 @@
 import { KeysRdfResolveQuadPattern, KeysInitQuery } from '@comunica/context-entries';
 import { KeyOptimizationLinkTraversal } from '@comunica/context-entries-link-traversal';
 import { ActionContext, Bus } from '@comunica/core';
-import { LinkTraversalFilterOperator, LinkTraversalOptimizationLinkFilter } from '@comunica/types-link-traversal';
+import type { LinkTraversalOptimizationLinkFilter } from '@comunica/types-link-traversal';
+import { LinkTraversalFilterOperator } from '@comunica/types-link-traversal';
 import { DataFactory } from 'rdf-data-factory';
 import type * as RDF from 'rdf-js';
-import { ActorExtractLinksTree, IActorExtractLinksTree } from '../lib/ActorExtractLinksTree';
-import { MediatorOptimizeLinkTraversal } from '@comunica/bus-optimize-link-traversal';
-import type { Algebra } from 'sparqlalgebrajs';
-
+import { ActorExtractLinksTree } from '../lib/ActorExtractLinksTree';
 
 const stream = require('streamify-array');
 
@@ -23,10 +21,10 @@ describe('ActorExtractLinksExtractLinksTree', () => {
       mediate(arg: any) {
         return Promise.resolve(
           {
-            filters: <LinkTraversalOptimizationLinkFilter[]>[]
-          }
-        )
-      }
+            filters: <LinkTraversalOptimizationLinkFilter[]>[],
+          },
+        );
+      },
     };
     spyMockMediator = jest.spyOn(mockMediator, 'mediate');
     bus = new Bus({ name: 'bus' });
@@ -55,11 +53,9 @@ describe('ActorExtractLinksExtractLinksTree', () => {
     const context = new ActionContext({
       [KeysRdfResolveQuadPattern.source.name]: treeUrl,
     });
-    
-    
 
     beforeEach(() => {
-      actor = new ActorExtractLinksTree({ name: 'actor', mediatorOptimizeLinkTraversal: mockMediator, bus  });
+      actor = new ActorExtractLinksTree({ name: 'actor', mediatorOptimizeLinkTraversal: mockMediator, bus });
     });
 
     it('should return the links of a TREE with one relation', async() => {
@@ -243,7 +239,7 @@ describe('ActorExtractLinksExtractLinksTree', () => {
     const treeUrl = 'ex:s';
 
     beforeEach(() => {
-      actor = new ActorExtractLinksTree({ name: 'actor',  mediatorOptimizeLinkTraversal: mockMediator, bus });
+      actor = new ActorExtractLinksTree({ name: 'actor', mediatorOptimizeLinkTraversal: mockMediator, bus });
     });
 
     it('should return the links of a TREE with one relation and filter that returns always true', async() => {
@@ -466,70 +462,70 @@ describe('ActorExtractLinksExtractLinksTree', () => {
         }
       });
 
-      it('should call the mediator when a query is defined', async() => {
-        const expectedUrl = 'http://foo.com';
-        const input = stream([
-          DF.quad(DF.namedNode(treeUrl), DF.namedNode('ex:p'), DF.namedNode('ex:o'), DF.namedNode('ex:gx')),
-          DF.quad(DF.namedNode(treeUrl),
-            DF.namedNode('https://w3id.org/tree#foo'),
-            DF.literal(expectedUrl),
-            DF.namedNode('ex:gx')),
-          DF.quad(DF.namedNode(treeUrl),
-            DF.namedNode('https://w3id.org/tree#foo'),
-            DF.literal(expectedUrl),
-            DF.namedNode('ex:gx')),
-          DF.quad(DF.namedNode(treeUrl),
-            DF.namedNode('https://w3id.org/tree#relation'),
-            DF.blankNode('_:_g1'),
-            DF.namedNode('ex:gx')),
-          DF.quad(DF.blankNode('_:_g1'),
-            DF.namedNode('https://w3id.org/tree#node'),
-            DF.literal(expectedUrl),
-            DF.namedNode('ex:gx')),
-        ]);
+    it('should call the mediator when a query is defined', async() => {
+      const expectedUrl = 'http://foo.com';
+      const input = stream([
+        DF.quad(DF.namedNode(treeUrl), DF.namedNode('ex:p'), DF.namedNode('ex:o'), DF.namedNode('ex:gx')),
+        DF.quad(DF.namedNode(treeUrl),
+          DF.namedNode('https://w3id.org/tree#foo'),
+          DF.literal(expectedUrl),
+          DF.namedNode('ex:gx')),
+        DF.quad(DF.namedNode(treeUrl),
+          DF.namedNode('https://w3id.org/tree#foo'),
+          DF.literal(expectedUrl),
+          DF.namedNode('ex:gx')),
+        DF.quad(DF.namedNode(treeUrl),
+          DF.namedNode('https://w3id.org/tree#relation'),
+          DF.blankNode('_:_g1'),
+          DF.namedNode('ex:gx')),
+        DF.quad(DF.blankNode('_:_g1'),
+          DF.namedNode('https://w3id.org/tree#node'),
+          DF.literal(expectedUrl),
+          DF.namedNode('ex:gx')),
+      ]);
 
-        const operation = {
-          "type": "project",
-            "input": {
-            "type": "graph",
-              "input": {
-              "type": "bgp",
-                "patterns": [{
-                  "type": "pattern",
-                  "termType": "Quad",
-                  "subject": { "termType": "Variable", "value": "x" },
-                  "predicate": { "termType": "Variable", "value": "y" },
-                  "object": { "termType": "Variable", "value": "z" },
-                  "graph": { "termType": "DefaultGraph", "value": "" }
-                }]
-            },
-            "name": { "termType": "Variable", "value": "g" }
+      const operation = {
+        type: 'project',
+        input: {
+          type: 'graph',
+          input: {
+            type: 'bgp',
+            patterns: [{
+              type: 'pattern',
+              termType: 'Quad',
+              subject: { termType: 'Variable', value: 'x' },
+              predicate: { termType: 'Variable', value: 'y' },
+              object: { termType: 'Variable', value: 'z' },
+              graph: { termType: 'DefaultGraph', value: '' },
+            }],
           },
-          "variables": [{ "termType": "Variable", "value": "x" }]
-        };
+          name: { termType: 'Variable', value: 'g' },
+        },
+        variables: [{ termType: 'Variable', value: 'x' }],
+      };
 
-        const context = new ActionContext({
-          [KeysRdfResolveQuadPattern.source.name]: treeUrl,
-          [KeysInitQuery.query.name]: operation
-        });
-
-        const action = { url: treeUrl, metadata: input, requestTime: 0, context };
-  
-        const result = await actor.run(action);
-  
-        expect(result).toEqual({ links: [{ url: expectedUrl }]});
-
-        expect(spyMockMediator).toBeCalledWith(expect.objectContaining({
-          operations: operation,
-        }));
+      const context = new ActionContext({
+        [KeysRdfResolveQuadPattern.source.name]: treeUrl,
+        [KeysInitQuery.query.name]: operation,
       });
+
+      const action = { url: treeUrl, metadata: input, requestTime: 0, context };
+
+      const result = await actor.run(action);
+
+      expect(result).toEqual({ links: [{ url: expectedUrl }]});
+
+      expect(spyMockMediator).toBeCalledWith(expect.objectContaining({
+        operations: operation,
+      }));
+    });
   });
   describe('The ActorExtractLinksExtractLinksTree test method', () => {
     let actor: ActorExtractLinksTree;
     const treeUrl = 'ex:s';
 
     beforeEach(() => {
-      actor = new ActorExtractLinksTree({ name: 'actor',  mediatorOptimizeLinkTraversal: mockMediator, bus });
+      actor = new ActorExtractLinksTree({ name: 'actor', mediatorOptimizeLinkTraversal: mockMediator, bus });
     });
 
     it('should test when giving a TREE', async() => {
