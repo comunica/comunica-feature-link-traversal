@@ -21,7 +21,7 @@ describe('ActorExtractLinksExtractLinksTree', () => {
       mediate(arg: any) {
         return Promise.resolve(
           {
-            filters: <LinkTraversalOptimizationLinkFilter[]>[],
+            filters: <Map<string, LinkTraversalOptimizationLinkFilter>> new Map(),
           },
         );
       },
@@ -281,16 +281,16 @@ describe('ActorExtractLinksExtractLinksTree', () => {
       const mock_filter = jest.fn((_subject, _value, _operator) => true);
       const context = new ActionContext({
         [KeysRdfResolveQuadPattern.source.name]: treeUrl,
-        [KeyOptimizationLinkTraversal.filterFunctions.name]: [ mock_filter ],
+        [KeyOptimizationLinkTraversal.filterFunctions.name]: new Map([[ 'ex:path', [ mock_filter ]]]),
       });
 
       const action = { url: treeUrl, metadata: input, requestTime: 0, context };
 
       const result = await actor.run(action);
 
+      expect(mock_filter).toBeCalledWith('ex:path', 'value', LinkTraversalFilterOperator.GreaterThan);
       expect(result).toEqual({ links: [{ url: expectedUrl }]});
       expect(mock_filter).toBeCalledTimes(1);
-      expect(mock_filter).toBeCalledWith('ex:path', 'value', LinkTraversalFilterOperator.GreaterThan);
     });
 
     it('should return no links of a TREE with one relation  and filter that returns always false', async() => {
@@ -333,7 +333,7 @@ describe('ActorExtractLinksExtractLinksTree', () => {
       const mock_filter = jest.fn((_subject, _value, _operator) => false);
       const context = new ActionContext({
         [KeysRdfResolveQuadPattern.source.name]: treeUrl,
-        [KeyOptimizationLinkTraversal.filterFunctions.name]: [ mock_filter ],
+        [KeyOptimizationLinkTraversal.filterFunctions.name]: new Map([[ 'ex:path', [ mock_filter ]]]),
       });
 
       const action = { url: treeUrl, metadata: input, requestTime: 0, context };
@@ -381,12 +381,12 @@ describe('ActorExtractLinksExtractLinksTree', () => {
           DF.namedNode('ex:path'),
           DF.namedNode('ex:gx')),
       ]);
-      const mock_filters = [
-        jest.fn((_subject, _value, _operator) => true),
-        jest.fn((_subject, _value, _operator) => true),
-        jest.fn((_subject, _value, _operator) => true),
-        jest.fn((_subject, _value, _operator) => true),
-      ];
+      const mock_filters = new Map([
+        [ 'ex:path', [ jest.fn((_subject, _value, _operator) => true),
+          jest.fn((_subject, _value, _operator) => true),
+          jest.fn((_subject, _value, _operator) => true),
+          jest.fn((_subject, _value, _operator) => true) ]],
+      ]);
       const context = new ActionContext({
         [KeysRdfResolveQuadPattern.source.name]: treeUrl,
         [KeyOptimizationLinkTraversal.filterFunctions.name]: mock_filters,
@@ -397,9 +397,11 @@ describe('ActorExtractLinksExtractLinksTree', () => {
       const result = await actor.run(action);
 
       expect(result).toEqual({ links: [{ url: expectedUrl }]});
-      for (const mock of mock_filters) {
-        expect(mock).toBeCalledTimes(1);
-        expect(mock).toBeCalledWith('ex:path', 'value', LinkTraversalFilterOperator.GreaterThan);
+      for (const mockList of mock_filters.values()) {
+        for (const mock of mockList) {
+          expect(mock).toBeCalledTimes(1);
+          expect(mock).toBeCalledWith('ex:path', 'value', LinkTraversalFilterOperator.GreaterThan);
+        }
       }
     });
 
@@ -440,26 +442,33 @@ describe('ActorExtractLinksExtractLinksTree', () => {
             DF.namedNode('https://w3id.org/tree#GreaterThanRelation'),
             DF.namedNode('ex:gx')),
         ]);
-        const mock_filters = [
-          jest.fn((_subject, _value, _operator) => true),
-          jest.fn((_subject, _value, _operator) => true),
-          jest.fn((_subject, _value, _operator) => false),
-          jest.fn((_subject, _value, _operator) => true),
-        ];
+        const mockFilters = new Map([
+          [ 'ex:path', [
+            jest.fn((_subject, _value, _operator) => true),
+            jest.fn((_subject, _value, _operator) => true),
+            jest.fn((_subject, _value, _operator) => false),
+            jest.fn((_subject, _value, _operator) => true),
+          ],
+
+          ],
+        ]);
         const context = new ActionContext({
           [KeysRdfResolveQuadPattern.source.name]: treeUrl,
-          [KeyOptimizationLinkTraversal.filterFunctions.name]: mock_filters,
+          [KeyOptimizationLinkTraversal.filterFunctions.name]: mockFilters,
         });
 
         const action = { url: treeUrl, metadata: input, requestTime: 0, context };
 
         const result = await actor.run(action);
 
-        expect(result).toEqual({ links: []});
-        for (const mock of mock_filters) {
-          expect(mock).toBeCalledTimes(1);
-          expect(mock).toBeCalledWith('ex:path', 'value', LinkTraversalFilterOperator.GreaterThan);
+        for (const mockList of mockFilters.values()) {
+          for (const mock of mockList) {
+            expect(mock).toBeCalledTimes(1);
+            expect(mock).toBeCalledWith('ex:path', 'value', LinkTraversalFilterOperator.GreaterThan);
+          }
         }
+
+        expect(result).toEqual({ links: []});
       });
 
     it('should call the mediator when a query is defined', async() => {

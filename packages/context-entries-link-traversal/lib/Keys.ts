@@ -23,7 +23,7 @@ export const KeyOptimizationLinkTraversal = {
   /**
    * Filter function to optimized the link traversal
    */
-  filterFunctions: new ActionContextKey<LinkTraversalOptimizationLinkFilter[]>(
+  filterFunctions: new ActionContextKey<Map<string, LinkTraversalOptimizationLinkFilter[]>>(
     '@comunica/optimization-link-traversal:filterFunction',
   ),
 };

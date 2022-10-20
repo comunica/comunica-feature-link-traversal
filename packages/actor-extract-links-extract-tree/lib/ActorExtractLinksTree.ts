@@ -70,8 +70,10 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
 
   public async run(action: IActionExtractLinks): Promise<IActorExtractLinksOutput> {
     if (action.context.get(KeysInitQuery.query) !== undefined) {
-      await this.mediatorOptimizeLinkTraversal.mediate({ operations: action.context.get(KeysInitQuery.query)!,
-        context: action.context });
+      await this.mediatorOptimizeLinkTraversal.mediate({
+        operations: action.context.get(KeysInitQuery.query)!,
+        context: action.context,
+      });
     }
     return new Promise((resolve, reject) => {
       const metadata = action.metadata;
@@ -79,10 +81,10 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
       const pageRelationNodes: Set<string> = new Set();
       const relationDescriptions: Map<string, IRelationDescription> = new Map();
       const nodeLinks: [string, string][] = [];
-      const filterFunctions: LinkTraversalOptimizationLinkFilter[] =
+      const filterFunctions: Map<string, LinkTraversalOptimizationLinkFilter[]> =
         typeof action.context.get(KeyOptimizationLinkTraversal.filterFunctions) !== 'undefined' ?
           action.context.get(KeyOptimizationLinkTraversal.filterFunctions)! :
-          [];
+          new Map();
       const links: ILink[] = [];
 
       // Forward errors
@@ -102,14 +104,26 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
         for (const [ nodeValue, link ] of nodeLinks) {
           if (pageRelationNodes.has(nodeValue)) {
             const relationDescription = relationDescriptions.get(nodeValue);
-            if (typeof relationDescription !== 'undefined' && filterFunctions.length > 0) {
+            if (typeof relationDescription !== 'undefined' && filterFunctions.size > 0) {
               let addLink = true;
-              for (const filter of filterFunctions) {
-                if (!filter(relationDescription.subject, relationDescription.value, relationDescription.operator)) {
-                  addLink = false;
+              let nFilterApplied = 0;
+              for (const [ key, filterList ] of filterFunctions.entries()) {
+                // If the filter is to be apply to the subject and the filter is not respected
+                if (relationDescription.subject === key) {
+                  for (const filter of filterList) {
+                    if (!filter(
+                      relationDescription.subject,
+                      relationDescription.value,
+                      relationDescription.operator,
+                    )) {
+                      addLink = false;
+                    } else {
+                      nFilterApplied += 1;
+                    }
+                  }
                 }
               }
-              if (addLink) {
+              if (addLink && nFilterApplied !== 0) {
                 links.push({ url: link });
               }
             } else {
