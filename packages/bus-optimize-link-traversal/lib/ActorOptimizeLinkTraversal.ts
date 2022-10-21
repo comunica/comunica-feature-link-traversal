@@ -32,7 +32,7 @@ export interface IActorOptimizeLinkTraversalOutput extends IActorOutput {
   /**
    * The filter functions to exclude links when traversing links
    */
-  filters: LinkTraversalOptimizationLinkFilter[];
+  filters: Map<string, LinkTraversalOptimizationLinkFilter[]>;
 }
 
 export type IActorOptimizeLinkTraversalArgs = IActorArgs<

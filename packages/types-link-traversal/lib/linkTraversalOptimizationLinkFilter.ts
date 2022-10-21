@@ -3,12 +3,12 @@ export type LinkTraversalOptimizationLinkFilter = (subject: string,
   operator: LinkTraversalFilterOperator) => boolean;
 
 export enum LinkTraversalFilterOperator {
-  GreaterThan,
-  GreaterThanOrEqual,
+  GreaterThan = '>',
+  GreaterThanOrEqual = '>=',
 
-  LowerThan,
-  LowerThanOrEqual,
+  LowerThan = '<',
+  LowerThanOrEqual = '<=',
 
-  Equal,
-  Not
+  Equal = '==',
+  Not = '!'
 }
