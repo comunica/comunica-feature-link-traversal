@@ -21,22 +21,6 @@ export enum TreeNodes {
   RemainingItems = 'https://w3id.org/tree#remainingItems'
 }
 
-export interface INode {
-  '@context'?: string | object;
-  '@id': string;
-  '@type'?: string[];
-  // Note hydra:next
-  // as:next links are added as Relations of type tree:relation with the target node as the target of the next relation
-  'relation'?: IURI[];
-  'search'?: IIriTemplate[];
-  'retentionPolicy'?: IRetentionPolicy[];
-  'import'?: IURI[];
-  'importStream'?: IURI[];
-  'conditionalImport'?: IConditionalImport[];
-  [property: string]: any;
-
-}
-
 export interface IRelation {
   '@type'?: string;
   'remainingItems'?: number;
@@ -46,38 +30,10 @@ export interface IRelation {
   'conditionalImport'?: IConditionalImport;
 }
 
-export interface IMember {
-  '@id'?: string;
-  [property: string]: any;
-}
-
-export interface IIriTemplate {
-  '@id'?: string;
-  [property: string]: any;
-}
 export interface IConditionalImport {
   'path'?: string;
   'import'?: string;
   'importStream'?: string;
-}
-
-export interface IRetentionPolicy {
-  '@id'?: string;
-  '@type'?: string[];
-  'amount'?: ILiteral[];
-  'versionKey'?: string[];
-  'path'?: any[];
-  'value'?: any[];
-}
-
-export interface ILiteral {
-  '@value': string;
-  '@type'?: string;
-  '@language'?: string;
-}
-
-export interface IURI {
-  '@id': string;
 }
 export interface IRelationDescription {
   subject?: string; value?: any; operator?: RelationOperator; remainingItems?: number;
