@@ -4,60 +4,19 @@ import type {
 } from '@comunica/bus-extract-links';
 import { ActorExtractLinks } from '@comunica/bus-extract-links';
 import type { MediatorOptimizeLinkTraversal } from '@comunica/bus-optimize-link-traversal';
-import type { ILink } from '@comunica/bus-rdf-resolve-hypermedia-links';
-import { KeysInitQuery } from '@comunica/context-entries';
-import { KeyOptimizationLinkTraversal } from '@comunica/context-entries-link-traversal';
 import type { IActorTest } from '@comunica/core';
-import type { LinkTraversalOptimizationLinkFilter } from '@comunica/types-link-traversal';
-import { LinkTraversalFilterOperator } from '@comunica/types-link-traversal';
 import { DataFactory } from 'rdf-data-factory';
 import type * as RDF from 'rdf-js';
+import { buildRelations, collectRelation } from './treeMetadataExtraction';
+import type { IRelationDescription, IRelation } from './typeTreeMetadataExtraction';
+import { TreeNodes } from './typeTreeMetadataExtraction';
 
 const DF = new DataFactory<RDF.BaseQuad>();
-
-interface IRelationDescription {
-  subject: string; value: any; operator: LinkTraversalFilterOperator;
-}
 
 /**
  * A comunica Extract Links Tree Extract Links Actor.
  */
 export class ActorExtractLinksTree extends ActorExtractLinks {
-  public static readonly aNodeType = DF.namedNode('https://w3id.org/tree#node');
-  public static readonly aRelation = DF.namedNode('https://w3id.org/tree#relation');
-
-  private static readonly rdfTypeNode = DF.namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type');
-  private static readonly aTreePath = DF.namedNode('https://w3id.org/tree#path');
-  private static readonly aTreeValue = DF.namedNode('https://w3id.org/tree#value');
-
-  private static readonly treeGreaterThan: [RDF.NamedNode, LinkTraversalFilterOperator] = [
-    DF.namedNode('https://w3id.org/tree#GreaterThanRelation'),
-    LinkTraversalFilterOperator.GreaterThan ];
-
-  private static readonly treeGreaterThanOrEqual: [RDF.NamedNode, LinkTraversalFilterOperator] = [
-    DF.namedNode('https://w3id.org/tree#GreaterThanOrEqualToRelation'),
-    LinkTraversalFilterOperator.GreaterThanOrEqual ];
-
-  private static readonly treeLessThan: [RDF.NamedNode, LinkTraversalFilterOperator] = [
-    DF.namedNode('https://w3id.org/tree#LessThanRelation'),
-    LinkTraversalFilterOperator.LowerThan ];
-
-  private static readonly treeLessThanEqual: [RDF.NamedNode, LinkTraversalFilterOperator] = [
-    DF.namedNode('https://w3id.org/tree#LessThanOrEqualToRelation'),
-    LinkTraversalFilterOperator.LowerThanOrEqual ];
-
-  private static readonly treeEqual: [RDF.NamedNode, LinkTraversalFilterOperator] = [
-    DF.namedNode('https://w3id.org/tree#EqualToRelation'),
-    LinkTraversalFilterOperator.Equal ];
-
-  private static readonly treeOperators: [RDF.NamedNode, LinkTraversalFilterOperator][] = [
-    ActorExtractLinksTree.treeEqual,
-    ActorExtractLinksTree.treeLessThanEqual,
-    ActorExtractLinksTree.treeLessThan,
-    ActorExtractLinksTree.treeGreaterThanOrEqual,
-    ActorExtractLinksTree.treeGreaterThan,
-  ];
-
   private readonly mediatorOptimizeLinkTraversal: MediatorOptimizeLinkTraversal;
 
   public constructor(args: IActorExtractLinksTree) {
@@ -69,23 +28,13 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
   }
 
   public async run(action: IActionExtractLinks): Promise<IActorExtractLinksOutput> {
-    if (action.context.get(KeysInitQuery.query) !== undefined) {
-      await this.mediatorOptimizeLinkTraversal.mediate({
-        operations: action.context.get(KeysInitQuery.query)!,
-        context: action.context,
-      });
-    }
     return new Promise((resolve, reject) => {
       const metadata = action.metadata;
       const currentNodeUrl = action.url;
       const pageRelationNodes: Set<string> = new Set();
       const relationDescriptions: Map<string, IRelationDescription> = new Map();
+      const relations: IRelation[] = [];
       const nodeLinks: [string, string][] = [];
-      const filterFunctions: Map<string, LinkTraversalOptimizationLinkFilter[]> =
-        typeof action.context.get(KeyOptimizationLinkTraversal.filterFunctions) !== 'undefined' ?
-          action.context.get(KeyOptimizationLinkTraversal.filterFunctions)! :
-          new Map();
-      const links: ILink[] = [];
 
       // Forward errors
       metadata.on('error', reject);
@@ -104,34 +53,14 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
         for (const [ nodeValue, link ] of nodeLinks) {
           if (pageRelationNodes.has(nodeValue)) {
             const relationDescription = relationDescriptions.get(nodeValue);
-            if (typeof relationDescription !== 'undefined' && filterFunctions.size > 0) {
-              let addLink = true;
-              let nFilterApplied = 0;
-              for (const [ key, filterList ] of filterFunctions.entries()) {
-                // If the filter is to be apply to the subject and the filter is not respected
-                if (relationDescription.subject === key) {
-                  for (const filter of filterList) {
-                    if (!filter(
-                      relationDescription.subject,
-                      relationDescription.value,
-                      relationDescription.operator,
-                    )) {
-                      addLink = false;
-                    } else {
-                      nFilterApplied += 1;
-                    }
-                  }
-                }
-              }
-              if (addLink && nFilterApplied !== 0) {
-                links.push({ url: link });
-              }
+            if (typeof relationDescription !== 'undefined') {
+              relations.push(collectRelation(relationDescription, link));
             } else {
-              links.push({ url: link });
+              relations.push(collectRelation({}, link));
             }
           }
         }
-        resolve({ links });
+        resolve({ links: relations.map(el => ({ url: el.node })) });
       });
     });
   }
@@ -154,55 +83,13 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
     relationDescriptions: Map<string, IRelationDescription>,
   ): void {
     // If it's a relation of the current node
-    if (quad.subject.value === url && quad.predicate.equals(ActorExtractLinksTree.aRelation)) {
+    if (quad.subject.value === url && quad.predicate.value === TreeNodes.Relation) {
       pageRelationNodes.add(quad.object.value);
       // If it's a node forward
-    } else if (quad.predicate.equals(ActorExtractLinksTree.aNodeType)) {
+    } else if (quad.predicate.value === TreeNodes.Node) {
       nodeLinks.push([ quad.subject.value, quad.object.value ]);
-    } else if (quad.predicate.equals(ActorExtractLinksTree.rdfTypeNode)) {
-      // Set the operator of the relation
-      let operator: LinkTraversalFilterOperator = LinkTraversalFilterOperator.Equal;
-      for (const treeOperator of ActorExtractLinksTree.treeOperators) {
-        if (quad.object.equals(treeOperator[0])) {
-          operator = treeOperator[1];
-        }
-      }
-      this.addRelationDescription(relationDescriptions, 'operator', quad, undefined, '', operator);
-    } else if (quad.predicate.equals(ActorExtractLinksTree.aTreePath)) {
-      // Set the subject of the relation condition
-      this.addRelationDescription(relationDescriptions, 'subject', quad, undefined, quad.object.value);
-    } else if (quad.predicate.equals(ActorExtractLinksTree.aTreeValue)) {
-      // Set the value of the relation condition
-      this.addRelationDescription(relationDescriptions, 'value', quad, quad.object.value);
     }
-  }
-
-  private addRelationDescription(relationDescriptions: Map<string, IRelationDescription>,
-    field: string,
-    quad: RDF.Quad,
-    value: any,
-    subject = '',
-    operator: LinkTraversalFilterOperator = LinkTraversalFilterOperator.Equal): void {
-    const newDescription = relationDescriptions.get(quad.subject.value);
-    if (typeof newDescription === 'undefined') {
-      relationDescriptions.set(quad.subject.value, { value, subject, operator });
-    } else {
-      switch (field) {
-        case 'value': {
-          newDescription[<keyof typeof newDescription>field] = value;
-          break;
-        }
-        case 'subject': {
-          newDescription[<keyof typeof newDescription>field] = subject;
-          break;
-        }
-        case 'operator': {
-          newDescription[<keyof typeof newDescription>field] = operator;
-          break;
-        }
-      }
-      relationDescriptions.set(quad.subject.value, newDescription);
-    }
+    buildRelations(relationDescriptions, quad);
   }
 }
 
