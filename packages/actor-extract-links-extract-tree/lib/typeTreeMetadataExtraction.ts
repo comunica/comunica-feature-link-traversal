@@ -35,6 +35,8 @@ export interface IConditionalImport {
   'import'?: string;
   'importStream'?: string;
 }
+
+// An helper to build the relation from a stream
 export interface IRelationDescription {
   subject?: string; value?: any; operator?: RelationOperator; remainingItems?: number;
 }
