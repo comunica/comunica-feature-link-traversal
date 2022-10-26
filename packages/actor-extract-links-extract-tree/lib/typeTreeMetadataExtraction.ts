@@ -27,13 +27,6 @@ export interface IRelation {
   'path'?: any;
   'value'?: any;
   'node': string;
-  'conditionalImport'?: IConditionalImport;
-}
-
-export interface IConditionalImport {
-  'path'?: string;
-  'import'?: string;
-  'importStream'?: string;
 }
 
 // An helper to build the relation from a stream
