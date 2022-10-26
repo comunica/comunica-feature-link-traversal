@@ -2,6 +2,7 @@ import type { IAction, IActorArgs, IActorOutput, IActorTest, Mediate } from '@co
 import { Actor } from '@comunica/core';
 import type { LinkTraversalOptimizationLinkFilter } from '@comunica/types-link-traversal';
 import type { Algebra } from 'sparqlalgebrajs';
+import { BindingsStream } from '@comunica/types';
 /**
  * A comunica actor for optimization of link traversal
  *
@@ -26,13 +27,14 @@ IActorOptimizeLinkTraversalOutput> {
 
 export interface IActionOptimizeLinkTraversal extends IAction {
   operations: Algebra.Operation;
+  decisionZoneBindingStream: BindingsStream[];
 }
 
 export interface IActorOptimizeLinkTraversalOutput extends IActorOutput {
   /**
-   * The filter functions to exclude links when traversing links
+   * The decision weith the link specific link should be follow
    */
-  filters: Map<string, LinkTraversalOptimizationLinkFilter[]>;
+  filters: Map<string, boolean>;
 }
 
 export type IActorOptimizeLinkTraversalArgs = IActorArgs<

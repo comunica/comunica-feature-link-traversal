@@ -7,6 +7,10 @@ import { ActorOptimizeLinkTraversal } from '@comunica/bus-optimize-link-traversa
 import type { IActorTest } from '@comunica/core';
 import type { LinkTraversalOptimizationLinkFilter, LinkTraversalFilterOperator } from '@comunica/types-link-traversal';
 import { Algebra } from 'sparqlalgebrajs';
+import { AsyncEvaluator, isExpressionError } from 'sparqlee';
+import { Bindings } from '@comunica/types';
+import { bindingsToString } from '@comunica/bindings-factory';
+
 
 /**
  * A comunica Link traversal optimizer that filter link of document
@@ -14,99 +18,69 @@ import { Algebra } from 'sparqlalgebrajs';
  */
 
 export class ActorOptimizeLinkTraversalFilterTreeLinks extends ActorOptimizeLinkTraversal {
-  private static readonly dateTimeDataType = 'http://www.w3.org/2001/XMLSchema#dateTime';
   public constructor(args: IActorOptimizeLinkTraversalArgs) {
     super(args);
   }
 
   public async test(action: IActionOptimizeLinkTraversal): Promise<IActorTest> {
-    return typeof this.findFilterOperation(action) !== 'undefined';
+    return this.findFilterOperation(action, true).length === 1;
   }
 
   public async run(action: IActionOptimizeLinkTraversal): Promise<IActorOptimizeLinkTraversalOutput> {
-    const filter = this.findFilterOperation(action)!;
-    const operator = filter.expression.operator;
-    const target = filter.expression.args[0].term.value;
-    const value = filter.expression.args[1].term.value;
-    const valueDatatype = filter.expression.args[1].term.datatype.value;
+    const filters = this.findFilterOperation(action);
+    const filterMap: Map<string, boolean> = new Map();
+    for (const bindingsStream of action.decisionZoneBindingStream) {
+      for (const filter of filters) {
+        const evaluator = new AsyncEvaluator(filter.expression);
 
-    const filterFunction = this.selectFilters(
-      valueDatatype,
-      operator,
-      target,
-      value,
-    );
-    if (typeof filterFunction === 'undefined') {
-      return { filters: new Map() };
-    }
-
-    return { filters: new Map([[ target, [ filterFunction ]]]) };
-  }
-
-  private selectFilters(
-    valueDatatype: string,
-    operatorFilter: any,
-    target: any,
-    valueFilter: any,
-  ): LinkTraversalOptimizationLinkFilter | undefined {
-    switch (valueDatatype) {
-      case ActorOptimizeLinkTraversalFilterTreeLinks.dateTimeDataType: {
-        return this.timeFilter(operatorFilter, target, valueFilter);
+        const transform = async(item: Bindings, next: any, push: (bindings: Bindings) => void): Promise<void> => {
+          try {
+            const result = await evaluator.evaluateAsEBV(item);
+            if (result) {
+              push(item);
+            }
+          } catch (error: unknown) {
+            // We ignore all Expression errors.
+            // Other errors (likely programming mistakes) are still propagated.
+            //
+            // > Specifically, FILTERs eliminate any solutions that,
+            // > when substituted into the expression, either result in
+            // > an effective boolean value of false or produce an error.
+            // > ...
+            // > These errors have no effect outside of FILTER evaluation.
+            // https://www.w3.org/TR/sparql11-query/#expressions
+            if (isExpressionError(<Error> error)) {
+              // In many cases, this is a user error, where the user should manually cast the variable to a string.
+              // In order to help users debug this, we should report these errors via the logger as warnings.
+              this.logWarn(action.context, 'Error occurred while filtering.', () => ({ error, bindings: bindingsToString(item) }));
+            } else {
+              bindingsStream.emit('error', error);
+            }
+          }
+          next();
+        };
+        const result = bindingsStream.transform<Bindings>({ transform });
       }
     }
-    return undefined;
-  }
 
-  private timeFilter(operatorFilter: any, target: any, valueFilter: any):
-  LinkTraversalOptimizationLinkFilter | undefined {
-    return this.generateFilterFunction(operatorFilter,
-      target,
-      valueFilter,
-      (variable: any) => new Date(variable).getTime());
   }
+  
 
-  private findFilterOperation(action: IActionOptimizeLinkTraversal): Algebra.Operation | undefined {
+ 
+  private findFilterOperation(action: IActionOptimizeLinkTraversal, oneResult=false): Algebra.Operation[]  {
     let nestedOperation = action.operations;
+    const filters: Algebra.Operation[]  = []
     while ('input' in nestedOperation) {
       if (nestedOperation.type === Algebra.types.FILTER) {
-        return nestedOperation;
+        filters.push(nestedOperation);
+        if (oneResult) {
+          break;
+        }
       }
       nestedOperation = nestedOperation.input;
     }
-    return undefined;
+    return filters
   }
 
-  private generateFilterFunction(operatorFilter: any,
-    target: any,
-    valueFilter: any,
-    modifierFunction: any): LinkTraversalOptimizationLinkFilter | undefined {
-    switch (operatorFilter) {
-      case '>': {
-        return (_subject: string,
-          value: any,
-          _operator: LinkTraversalFilterOperator) => modifierFunction(value) > modifierFunction(valueFilter);
-      }
-      case '<': {
-        return (_subject: string,
-          value: any,
-          _operator: LinkTraversalFilterOperator) => modifierFunction(value) < modifierFunction(valueFilter);
-      }
-      case '<=': {
-        return (_subject: string,
-          value: any,
-          _operator: LinkTraversalFilterOperator) => modifierFunction(value) <= modifierFunction(valueFilter);
-      }
-      case '>=': {
-        return (_subject: string,
-          value: any,
-          _operator: LinkTraversalFilterOperator) => modifierFunction(value) >= modifierFunction(valueFilter);
-      }
-      case '==': {
-        return (_subject: string,
-          value: any,
-          _operator: LinkTraversalFilterOperator) => modifierFunction(value) === modifierFunction(valueFilter);
-      }
-    }
-  }
 }
 
