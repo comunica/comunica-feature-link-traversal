@@ -53,7 +53,7 @@ describe('ActorExtractLinksExtractLinksTree', () => {
     });
 
     beforeEach(() => {
-      actor = new ActorExtractLinksTree({ name: 'actor', mediatorOptimizeLinkTraversal: mockMediator, bus });
+      actor = new ActorExtractLinksTree({ name: 'actor', bus });
     });
 
     it('should return the links of a TREE with one relation', async() => {
@@ -237,7 +237,7 @@ describe('ActorExtractLinksExtractLinksTree', () => {
     const treeUrl = 'ex:s';
 
     beforeEach(() => {
-      actor = new ActorExtractLinksTree({ name: 'actor', mediatorOptimizeLinkTraversal: mockMediator, bus });
+      actor = new ActorExtractLinksTree({ name: 'actor', bus });
     });
 
     it('should test when giving a TREE', async() => {

@@ -1,2 +1,2 @@
 export * from './AnnotateSourcesType';
-export * from './linkTraversalOptimizationLinkFilter';
+export * from './TreeMetadata';

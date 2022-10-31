@@ -1,6 +1,6 @@
 import type { IAction, IActorArgs, IActorOutput, IActorTest, Mediate } from '@comunica/core';
 import { Actor } from '@comunica/core';
-import type { LinkTraversalOptimizationLinkFilter } from '@comunica/types-link-traversal';
+import type { INode, IRelation } from '@comunica/types-link-traversal';
 import type { Algebra } from 'sparqlalgebrajs';
 import { BindingsStream } from '@comunica/types';
 /**
@@ -26,15 +26,14 @@ IActorOptimizeLinkTraversalOutput> {
 }
 
 export interface IActionOptimizeLinkTraversal extends IAction {
-  operations: Algebra.Operation;
-  decisionZoneBindingStream: BindingsStream[];
+  treeMetadata?: INode;
 }
 
 export interface IActorOptimizeLinkTraversalOutput extends IActorOutput {
   /**
-   * The decision weith the link specific link should be follow
+   * decision map whether the link should be filter or not 
    */
-  filters: Map<string, boolean>;
+  filters?: Map<IRelation, boolean>;
 }
 
 export type IActorOptimizeLinkTraversalArgs = IActorArgs<

@@ -5,12 +5,15 @@ import type {
 } from '@comunica/bus-optimize-link-traversal';
 import { ActorOptimizeLinkTraversal } from '@comunica/bus-optimize-link-traversal';
 import type { IActorTest } from '@comunica/core';
-import type { LinkTraversalOptimizationLinkFilter, LinkTraversalFilterOperator } from '@comunica/types-link-traversal';
 import { Algebra } from 'sparqlalgebrajs';
 import { AsyncEvaluator, isExpressionError } from 'sparqlee';
 import { Bindings } from '@comunica/types';
-import { bindingsToString } from '@comunica/bindings-factory';
-
+import { BindingsFactory } from '@comunica/bindings-factory';
+import { KeysInitQuery } from '@comunica/context-entries';
+import { IRelation } from '@comunica/types-link-traversal';
+import type * as RDF from 'rdf-js';
+import { stringToTerm } from "rdf-string";
+import { Literal } from 'rdf-data-factory';
 
 /**
  * A comunica Link traversal optimizer that filter link of document
@@ -23,64 +26,55 @@ export class ActorOptimizeLinkTraversalFilterTreeLinks extends ActorOptimizeLink
   }
 
   public async test(action: IActionOptimizeLinkTraversal): Promise<IActorTest> {
-    return this.findFilterOperation(action, true).length === 1;
+    const query = <Algebra.Operation>action.context.get(KeysInitQuery.query);
+    const relations: IRelation[] = typeof action.treeMetadata !== 'undefined'? 
+    (typeof action.treeMetadata.relation !== 'undefined'? action.treeMetadata.relation:[]):[]
+
+    return query.type === Algebra.types.FILTER && relations.length !== 0;
   }
 
   public async run(action: IActionOptimizeLinkTraversal): Promise<IActorOptimizeLinkTraversalOutput> {
-    const filters = this.findFilterOperation(action);
-    const filterMap: Map<string, boolean> = new Map();
-    for (const bindingsStream of action.decisionZoneBindingStream) {
-      for (const filter of filters) {
-        const evaluator = new AsyncEvaluator(filter.expression);
+    const filterMap: Map<IRelation, boolean> = new Map();
 
-        const transform = async(item: Bindings, next: any, push: (bindings: Bindings) => void): Promise<void> => {
-          try {
-            const result = await evaluator.evaluateAsEBV(item);
-            if (result) {
-              push(item);
-            }
-          } catch (error: unknown) {
-            // We ignore all Expression errors.
-            // Other errors (likely programming mistakes) are still propagated.
-            //
-            // > Specifically, FILTERs eliminate any solutions that,
-            // > when substituted into the expression, either result in
-            // > an effective boolean value of false or produce an error.
-            // > ...
-            // > These errors have no effect outside of FILTER evaluation.
-            // https://www.w3.org/TR/sparql11-query/#expressions
-            if (isExpressionError(<Error> error)) {
-              // In many cases, this is a user error, where the user should manually cast the variable to a string.
-              // In order to help users debug this, we should report these errors via the logger as warnings.
-              this.logWarn(action.context, 'Error occurred while filtering.', () => ({ error, bindings: bindingsToString(item) }));
-            } else {
-              bindingsStream.emit('error', error);
-            }
-          }
-          next();
-        };
-        const result = bindingsStream.transform<Bindings>({ transform });
+    const filterExpression = (<Algebra.Operation> action.context.get(KeysInitQuery.query)).input.expression;
+    const queryBody =  (<Algebra.Operation> action.context.get(KeysInitQuery.query)).input.input.input;
+    const relations: IRelation[] = <IRelation[]> action.treeMetadata?.relation;
+
+    for (const relation of relations ) {
+      if (typeof relation.path !== 'undefined' && typeof relation.value !== 'undefined') {
+        const evaluator = new AsyncEvaluator(filterExpression);
+        const relevantQuads = this.findRelavantQuad(queryBody, relation.path.value);
+        const bindings = this.createBinding(relevantQuads, relation.value.quad);
+        const result: boolean = await evaluator.evaluateAsEBV(bindings);
+        filterMap.set(relation, result);     
       }
     }
-
+    return { filters: filterMap };
   }
-  
 
- 
-  private findFilterOperation(action: IActionOptimizeLinkTraversal, oneResult=false): Algebra.Operation[]  {
-    let nestedOperation = action.operations;
-    const filters: Algebra.Operation[]  = []
-    while ('input' in nestedOperation) {
-      if (nestedOperation.type === Algebra.types.FILTER) {
-        filters.push(nestedOperation);
-        if (oneResult) {
-          break;
-        }
+  private findRelavantQuad(queryBody: RDF.Quad[], path: string): RDF.Quad[] {
+    const resp: RDF.Quad[] = [];
+    for (const quad of queryBody) {
+      if( quad.predicate.value === path && quad.object.termType ==='Variable'){
+        resp.push(quad);
       }
-      nestedOperation = nestedOperation.input;
     }
-    return filters
+    return resp;
   }
 
+  private createBinding(relevantQuad: RDF.Quad[], relationValue: RDF.Quad): Bindings {
+    let binding: Bindings = new BindingsFactory().bindings();
+    for (const quad of relevantQuad ) {
+      const object = quad.object.value;
+      const value:string = relationValue.object.termType ==='Literal'?
+      ((<RDF.Literal>relationValue.object).datatype.value !== ''?
+       `${relationValue.object.value}^^${(<RDF.Literal>relationValue.object).datatype.value}`:relationValue.object.value):
+       relationValue.object.value;
+
+       binding = binding.set(`?${object}`, stringToTerm(value));
+      
+    }
+    return binding;
+  }
 }
 

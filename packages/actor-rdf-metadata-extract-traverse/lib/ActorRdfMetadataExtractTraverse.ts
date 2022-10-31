@@ -19,6 +19,7 @@ export class ActorRdfMetadataExtractTraverse extends ActorRdfMetadataExtract {
 
   public async run(action: IActionRdfMetadataExtract): Promise<IActorRdfMetadataExtractOutput> {
     const result = await this.mediatorExtractLinks.mediate(action);
+    // here
     return {
       metadata: {
         traverse: result.links,

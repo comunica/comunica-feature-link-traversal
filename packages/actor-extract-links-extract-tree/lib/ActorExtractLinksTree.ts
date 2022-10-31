@@ -6,10 +6,12 @@ import { ActorExtractLinks } from '@comunica/bus-extract-links';
 import type { MediatorOptimizeLinkTraversal } from '@comunica/bus-optimize-link-traversal';
 import type { IActorTest } from '@comunica/core';
 import { DataFactory } from 'rdf-data-factory';
-import type * as RDF from 'rdf-js';
+import * as RDF from 'rdf-js';
 import { buildRelations, collectRelation } from './treeMetadataExtraction';
-import type { IRelationDescription, IRelation } from './typeTreeMetadataExtraction';
-import { TreeNodes } from './typeTreeMetadataExtraction';
+import type { IRelationDescription, IRelation, INode } from '@comunica/types-link-traversal';
+import { TreeNodes } from '@comunica/types-link-traversal';
+import { url } from 'inspector';
+const streamifyArray = require('streamify-array');
 
 const DF = new DataFactory<RDF.BaseQuad>();
 
@@ -60,6 +62,9 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
             }
           }
         }
+
+        const node:INode = {relation: relations, subject: currentNodeUrl}; 
+        this.mediatorOptimizeLinkTraversal.mediate({treeMetadata:node, context:action.context});
         resolve({ links: relations.map(el => ({ url: el.node })) });
       });
     });
@@ -97,5 +102,6 @@ export interface IActorExtractLinksTree extends IActorExtractLinksArgs {
   /**
    * The optmize link traversal mediator
    */
-  mediatorOptimizeLinkTraversal: MediatorOptimizeLinkTraversal;
-}
+   mediatorOptimizeLinkTraversal: MediatorOptimizeLinkTraversal;
+  }
+  

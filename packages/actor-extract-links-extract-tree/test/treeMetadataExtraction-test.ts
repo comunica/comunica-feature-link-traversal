@@ -10,11 +10,15 @@ describe('treeMetadataExtraction', () => {
   describe('addRelationDescription', () => {
     it('should add relation to the map when an operator is provided and the relation map is empty',
       () => {
-        const quad: RDF.Quad = DF.quad(DF.namedNode('ex:s'),
+        const quad: RDF.Quad = DF.quad(
+          DF.namedNode('ex:s'),
           DF.namedNode(TreeNodes.RDFTypeNode),
-          DF.namedNode(RelationOperator.EqualThanRelation));
+          DF.namedNode(RelationOperator.EqualThanRelation
+            ));
         const relationDescriptions: Map<string, IRelationDescription> = new Map();
         addRelationDescription({ relationDescriptions, quad, operator: RelationOperator.EqualThanRelation });
+
+
         expect(relationDescriptions.size).toBe(1);
       });
 
@@ -49,7 +53,7 @@ describe('treeMetadataExtraction', () => {
     it('should add relation to the map when a value is provided and the relation map at the current key is not empty',
       () => {
         const quad: RDF.Quad = DF.quad(DF.namedNode('ex:s'), DF.namedNode(TreeNodes.Value), DF.namedNode('5'));
-        const relationDescriptions: Map<string, IRelationDescription> = new Map([[ 'ex:s', { subject: 'ex:s' }]]);
+        const relationDescriptions: Map<string, IRelationDescription> = new Map([[ 'ex:s', { subject: ['ex:s', quad] }]]);
         addRelationDescription({ relationDescriptions, quad, value: '5' });
         expect(relationDescriptions.size).toBe(1);
       });
@@ -72,7 +76,7 @@ describe('treeMetadataExtraction', () => {
     it('should add relation to the map when a subject is provided and the relation map at the current key is not empty',
       () => {
         const quad: RDF.Quad = DF.quad(DF.namedNode('ex:s'), DF.namedNode(TreeNodes.Path), DF.namedNode('ex:path'));
-        const relationDescriptions: Map<string, IRelationDescription> = new Map([[ 'ex:s', { subject: 'ex:s' }]]);
+        const relationDescriptions: Map<string, IRelationDescription> = new Map([[ 'ex:s', { subject: ['ex:s', quad] }]]);
         addRelationDescription({ relationDescriptions, quad, subject: 'ex:path' });
         expect(relationDescriptions.size).toBe(1);
       });
@@ -92,6 +96,7 @@ describe('treeMetadataExtraction', () => {
         const quad: RDF.Quad = DF.quad(DF.namedNode('ex:s'), DF.namedNode('ex:p'), DF.namedNode('ex:o'));
         const relationDescriptions: Map<string, IRelationDescription> = new Map();
         buildRelations(relationDescriptions, quad);
+
         expect(relationDescriptions.size).toBe(0);
       });
 
@@ -102,7 +107,7 @@ describe('treeMetadataExtraction', () => {
           DF.namedNode(RelationOperator.EqualThanRelation));
         const relationDescriptions: Map<string, IRelationDescription> = new Map();
 
-        const expectedDescription = new Map([[ 'ex:s', { operator: RelationOperator.EqualThanRelation,
+        const expectedDescription = new Map([[ 'ex:s', { operator: [RelationOperator.EqualThanRelation, quad],
           subject: undefined,
           value: undefined,
           remainingItems: undefined }]]);
@@ -131,10 +136,12 @@ describe('treeMetadataExtraction', () => {
         const relationDescriptions: Map<string, IRelationDescription> = new Map([[ 'ex:s2', {}]]);
         const expectedDescription: Map<string, IRelationDescription> = new Map([[ 'ex:s2', {}],
           [ 'ex:s',
-            { operator: RelationOperator.EqualThanRelation,
+            { operator: [RelationOperator.EqualThanRelation, quad],
               subject: undefined,
               value: undefined,
               remainingItems: undefined }]]);
+        const relationQuads: Map<string, RDF.Quad> = new Map();
+
 
         buildRelations(relationDescriptions, quad);
         expect(relationDescriptions.size).toBe(2);
@@ -148,10 +155,10 @@ describe('treeMetadataExtraction', () => {
         DF.namedNode(TreeNodes.RDFTypeNode),
         DF.namedNode(RelationOperator.EqualThanRelation));
       const relationDescriptions: Map<string, IRelationDescription> = new Map([[ 'ex:s',
-        { subject: 'ex:path', value: undefined, remainingItems: undefined }]]);
+        { subject: ['ex:path', quad], value: undefined, remainingItems: undefined }]]);
       const expectedDescription: Map<string, IRelationDescription> = new Map([[ 'ex:s',
-        { operator: RelationOperator.EqualThanRelation,
-          subject: 'ex:path',
+        { operator: [RelationOperator.EqualThanRelation, quad],
+          subject: ['ex:path', quad],
           value: undefined,
           remainingItems: undefined }]]);
 
@@ -167,7 +174,7 @@ describe('treeMetadataExtraction', () => {
           DF.namedNode('bar'),
           DF.namedNode(RelationOperator.EqualThanRelation));
         const relationDescriptions: Map<string, IRelationDescription> = new Map([[ 'ex:s',
-          { subject: 'ex:path',
+          { subject: ['ex:path', quad],
             value: undefined,
             remainingItems: undefined }]]);
         const expectedDescription: Map<string, IRelationDescription> = relationDescriptions;
@@ -184,11 +191,11 @@ describe('treeMetadataExtraction', () => {
           DF.namedNode(TreeNodes.RemainingItems),
           DF.namedNode('45'));
         const relationDescriptions: Map<string, IRelationDescription> = new Map([[ 'ex:s',
-          { subject: 'ex:path',
+          { subject: ['ex:path', quad],
             value: undefined,
             remainingItems: undefined }]]);
         const expectedDescription: Map<string, IRelationDescription> = new Map([[ 'ex:s',
-          { subject: 'ex:path', value: undefined, remainingItems: 45 }]]);
+          { subject: ['ex:path', quad], value: undefined, remainingItems: [45, quad] }]]);
 
         buildRelations(relationDescriptions, quad);
 
@@ -202,7 +209,6 @@ describe('treeMetadataExtraction', () => {
           DF.namedNode(TreeNodes.RemainingItems),
           DF.namedNode('foo'));
         const relationDescriptions: Map<string, IRelationDescription> = new Map();
-
         buildRelations(relationDescriptions, quad);
 
         expect(relationDescriptions.size).toBe(0);

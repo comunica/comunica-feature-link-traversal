@@ -1,3 +1,4 @@
+import type * as RDF from 'rdf-js';
 // From
 // https://github.com/TREEcg/tree-metadata-extraction/blob/42be38925cf6a033ddadaca5ecce929902ef1545/src/util/Util.ts
 export enum RelationOperator {
@@ -21,16 +22,35 @@ export enum TreeNodes {
   RemainingItems = 'https://w3id.org/tree#remainingItems'
 }
 
+export interface INode {
+  relation?: IRelation[];
+  subject: string;
+}
+
 export interface IRelation {
-  '@type'?: string;
-  'remainingItems'?: number;
-  'path'?: any;
-  'value'?: any;
-  'node': string;
+  '@type'?:{
+    value: string,
+    quad:RDF.Quad
+  };
+  'remainingItems'?: {
+    value: number,
+    quad:RDF.Quad
+  };
+  'path'?: {
+    value: string,
+    quad:RDF.Quad
+  };
+  'value'?: {
+    value: any,
+    quad:RDF.Quad
+  };
+  'node': string ;
 }
 
 // An helper to build the relation from a stream
 export interface IRelationDescription {
-  subject?: string; value?: any; operator?: RelationOperator; remainingItems?: number;
+  subject?: [string | undefined, RDF.Quad];
+  value?: any;
+  operator?: [RelationOperator | undefined, RDF.Quad];
+  remainingItems?: [number | undefined, RDF.Quad];
 }
-
