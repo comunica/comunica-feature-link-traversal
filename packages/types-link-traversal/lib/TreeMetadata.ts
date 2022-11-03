@@ -1,6 +1,10 @@
+/**
+ * inspired from
+ * https://github.com/TREEcg/tree-metadata-extraction/blob/42be38925cf6a033ddadaca5ecce929902ef1545/src/util/Util.ts
+ */
+
 import type * as RDF from 'rdf-js';
-// From
-// https://github.com/TREEcg/tree-metadata-extraction/blob/42be38925cf6a033ddadaca5ecce929902ef1545/src/util/Util.ts
+
 export enum RelationOperator {
   PrefixRelation = 'https://w3id.org/tree#PrefixRelation',
   SubstringRelation = 'https://w3id.org/tree#SubstringRelation',
