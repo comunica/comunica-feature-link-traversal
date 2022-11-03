@@ -5,11 +5,10 @@ import type {
 import { ActorExtractLinks } from '@comunica/bus-extract-links';
 import type { MediatorOptimizeLinkTraversal } from '@comunica/bus-optimize-link-traversal';
 import type { IActorTest } from '@comunica/core';
-import { DataFactory } from 'rdf-data-factory';
-import * as RDF from 'rdf-js';
-import { buildRelations, collectRelation } from './treeMetadataExtraction';
 import type { IRelationDescription, IRelation, INode } from '@comunica/types-link-traversal';
 import { TreeNodes } from '@comunica/types-link-traversal';
+import type * as RDF from 'rdf-js';
+import { buildRelations, collectRelation } from './treeMetadataExtraction';
 
 /**
  * A comunica Extract Links Tree Extract Links Actor.
@@ -46,7 +45,7 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
           relationDescriptions));
 
       // Resolve to discovered links
-      metadata.on('end', async () => {
+      metadata.on('end', async() => {
         // Validate if the node forward have the current node as implicit subject
         for (const [ nodeValue, link ] of nodeLinks) {
           if (pageRelationNodes.has(nodeValue)) {
@@ -59,14 +58,14 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
           }
         }
 
-        const node:INode = {relation: relations, subject: currentNodeUrl}; 
-        const linkTraversalOptimisation = await this.mediatorOptimizeLinkTraversal.mediate({treeMetadata:node, context:action.context});
+        const node: INode = { relation: relations, subject: currentNodeUrl };
+        const linkTraversalOptimisation = await this.mediatorOptimizeLinkTraversal.mediate(
+          { treeMetadata: node, context: action.context },
+        );
         let acceptedRelation = relations;
-        if(typeof linkTraversalOptimisation.filters !== 'undefined') {
-          acceptedRelation = relations.filter((relation)=>{ 
-            return linkTraversalOptimisation.filters?.get(relation);
-          });
-        }        
+        if (typeof linkTraversalOptimisation.filters !== 'undefined') {
+          acceptedRelation = relations.filter(relation => linkTraversalOptimisation.filters?.get(relation));
+        }
         resolve({ links: acceptedRelation.map(el => ({ url: el.node })) });
       });
     });
@@ -104,6 +103,6 @@ export interface IActorExtractLinksTree extends IActorExtractLinksArgs {
   /**
    * The optmize link traversal mediator
    */
-   mediatorOptimizeLinkTraversal: MediatorOptimizeLinkTraversal;
-  }
-  
+  mediatorOptimizeLinkTraversal: MediatorOptimizeLinkTraversal;
+}
+

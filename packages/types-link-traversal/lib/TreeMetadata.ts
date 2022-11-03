@@ -1,5 +1,5 @@
 /**
- * inspired from
+ * Inspired from
  * https://github.com/TREEcg/tree-metadata-extraction/blob/42be38925cf6a033ddadaca5ecce929902ef1545/src/util/Util.ts
  */
 
@@ -32,21 +32,21 @@ export interface INode {
 }
 
 export interface IRelation {
-  '@type'?:{
-    value: string,
-    quad:RDF.Quad
+  '@type'?: {
+    value: string;
+    quad: RDF.Quad;
   };
   'remainingItems'?: {
-    value: number,
-    quad:RDF.Quad
+    value: number;
+    quad: RDF.Quad;
   };
   'path'?: {
-    value: string,
-    quad:RDF.Quad
+    value: string;
+    quad: RDF.Quad;
   };
   'value'?: {
-    value: any,
-    quad:RDF.Quad
+    value: any;
+    quad: RDF.Quad;
   };
   'node': string ;
 }
