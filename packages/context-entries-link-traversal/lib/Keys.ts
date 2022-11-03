@@ -1,6 +1,5 @@
 import { ActionContextKey } from '@comunica/core';
 import type { AnnotateSourcesType } from '@comunica/types-link-traversal';
-import * as RDF from 'rdf-js';
 /**
  * When adding entries to this file, also add a shortcut for them in the contextKeyShortcuts TSDoc comment in
  * ActorIniQueryBase in @comunica/actor-init-query if it makes sense to use this entry externally.
@@ -17,14 +16,5 @@ export const KeysRdfResolveHypermediaLinks = {
    */
   annotateSources: new ActionContextKey<AnnotateSourcesType>(
     '@comunica/bus-rdf-resolve-hypermedia-links:annotateSources',
-  ),
-};
-
-export const KeyFilterLinksTraversal = {
-  /**
-   * Filter function to optimized the link traversal
-   */
-  zoneOfInterest: new ActionContextKey<Map<string, RDF.Stream[]>>(
-    '@comunica/filter-links-traversal:zoneOfInterest',
   ),
 };
