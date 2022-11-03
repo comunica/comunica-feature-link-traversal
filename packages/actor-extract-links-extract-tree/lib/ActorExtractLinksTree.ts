@@ -10,10 +10,6 @@ import * as RDF from 'rdf-js';
 import { buildRelations, collectRelation } from './treeMetadataExtraction';
 import type { IRelationDescription, IRelation, INode } from '@comunica/types-link-traversal';
 import { TreeNodes } from '@comunica/types-link-traversal';
-import { url } from 'inspector';
-const streamifyArray = require('streamify-array');
-
-const DF = new DataFactory<RDF.BaseQuad>();
 
 /**
  * A comunica Extract Links Tree Extract Links Actor.
@@ -50,7 +46,7 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
           relationDescriptions));
 
       // Resolve to discovered links
-      metadata.on('end', () => {
+      metadata.on('end', async () => {
         // Validate if the node forward have the current node as implicit subject
         for (const [ nodeValue, link ] of nodeLinks) {
           if (pageRelationNodes.has(nodeValue)) {
@@ -64,8 +60,14 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
         }
 
         const node:INode = {relation: relations, subject: currentNodeUrl}; 
-        this.mediatorOptimizeLinkTraversal.mediate({treeMetadata:node, context:action.context});
-        resolve({ links: relations.map(el => ({ url: el.node })) });
+        const linkTraversalOptimisation = await this.mediatorOptimizeLinkTraversal.mediate({treeMetadata:node, context:action.context});
+        let acceptedRelation = relations;
+        if(typeof linkTraversalOptimisation.filters !== 'undefined') {
+          acceptedRelation = relations.filter((relation)=>{ 
+            return linkTraversalOptimisation.filters?.get(relation);
+          });
+        }        
+        resolve({ links: acceptedRelation.map(el => ({ url: el.node })) });
       });
     });
   }
