@@ -36,7 +36,7 @@ export class ActorOptimizeLinkTraversalFilterTreeLinks extends ActorOptimizeLink
   }
 
   public async run(action: IActionOptimizeLinkTraversal): Promise<IActorOptimizeLinkTraversalOutput> {
-    const filterMap: Map<IRelation, boolean> = new Map();
+    const filterMap: Map<String, boolean> = new Map();
 
     const filterOperation: Algebra.Expression = JSON.parse(JSON.stringify(action.context.get(KeysInitQuery.query)))
       .input.expression;
@@ -55,9 +55,9 @@ export class ActorOptimizeLinkTraversalFilterTreeLinks extends ActorOptimizeLink
         if (filterExpression.args.length > 0) {
           const evaluator = new AsyncEvaluator(filterExpression);
           const result: boolean = await evaluator.evaluateAsEBV(bindings);
-          filterMap.set(relation, result);
+          filterMap.set(relation.node, result);
         } else {
-          filterMap.set(relation, false);
+          filterMap.set(relation.node, false);
         }
       }
     }

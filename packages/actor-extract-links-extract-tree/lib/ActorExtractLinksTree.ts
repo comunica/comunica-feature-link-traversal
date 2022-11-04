@@ -64,8 +64,9 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
         );
         let acceptedRelation = relations;
         if (typeof linkTraversalOptimisation.filters !== 'undefined') {
-          acceptedRelation = relations.filter(relation => linkTraversalOptimisation.filters?.get(relation));
-        }
+          acceptedRelation = linkTraversalOptimisation.filters.size !==0?
+            relations.filter(relation => linkTraversalOptimisation.filters?.get(relation.node)): acceptedRelation;
+          }
         resolve({ links: acceptedRelation.map(el => ({ url: el.node })) });
       });
     });

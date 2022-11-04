@@ -31,7 +31,7 @@ export interface IActorOptimizeLinkTraversalOutput extends IActorOutput {
   /**
    * Decision map whether the link should be filter or not
    */
-  filters?: Map<IRelation, boolean>;
+  filters?: Map<String, boolean>;
 }
 
 export type IActorOptimizeLinkTraversalArgs = IActorArgs<

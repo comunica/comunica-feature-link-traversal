@@ -1,9 +1,10 @@
 import { KeysRdfResolveQuadPattern } from '@comunica/context-entries';
 import { ActionContext, Bus } from '@comunica/core';
-import type { LinkTraversalOptimizationLinkFilter } from '@comunica/types-link-traversal';
+import type { INode, IRelation } from '@comunica/types-link-traversal';
 import { DataFactory } from 'rdf-data-factory';
 import type * as RDF from 'rdf-js';
 import { ActorExtractLinksTree } from '../lib/ActorExtractLinksTree';
+import { IActorOptimizeLinkTraversalOutput } from '@comunica/bus-optimize-link-traversal';
 
 const stream = require('streamify-array');
 
@@ -19,7 +20,7 @@ describe('ActorExtractLinksExtractLinksTree', () => {
       mediate(arg: any) {
         return Promise.resolve(
           {
-            filters: <Map<string, LinkTraversalOptimizationLinkFilter>> new Map(),
+            filters: <Map<IRelation, boolean>> new Map(),
           },
         );
       },
@@ -53,7 +54,7 @@ describe('ActorExtractLinksExtractLinksTree', () => {
     });
 
     beforeEach(() => {
-      actor = new ActorExtractLinksTree({ name: 'actor', bus });
+      actor = new ActorExtractLinksTree({ name: 'actor', bus, mediatorOptimizeLinkTraversal:mockMediator });
     });
 
     it('should return the links of a TREE with one relation', async() => {
@@ -78,10 +79,10 @@ describe('ActorExtractLinksExtractLinksTree', () => {
           DF.namedNode('ex:gx')),
       ]);
       const action = { url: treeUrl, metadata: input, requestTime: 0, context };
-
       const result = await actor.run(action);
 
       expect(result).toEqual({ links: [{ url: expectedUrl }]});
+      expect(spyMockMediator).toBeCalledTimes(1);
     });
 
     it('should return the links of a TREE with multiple relations', async() => {
@@ -138,6 +139,7 @@ describe('ActorExtractLinksExtractLinksTree', () => {
       const result = await actor.run(action);
 
       expect(result).toEqual({ links: expectedUrl.map(value => { return { url: value }; }) });
+      expect(spyMockMediator).toBeCalledTimes(1);
     });
 
     it('should return the links of a TREE with one complex relation', async() => {
@@ -177,6 +179,7 @@ describe('ActorExtractLinksExtractLinksTree', () => {
       const result = await actor.run(action);
 
       expect(result).toEqual({ links: [{ url: expectedUrl }]});
+      expect(spyMockMediator).toBeCalledTimes(1);
     });
 
     it('should return the links of a TREE with multiple relations combining blank nodes and named nodes', async() => {
@@ -229,7 +232,73 @@ describe('ActorExtractLinksExtractLinksTree', () => {
       const result = await actor.run(action);
 
       expect(result).toEqual({ links: expectedUrl.map(value => { return { url: value }; }) });
+      expect(spyMockMediator).toBeCalledTimes(1);
     });
+
+    it('should prune the filtered link', async () =>{
+      const expectedUrl = 'http://foo.com';
+      const prunedUrl = 'http://bar.com';
+      const input = stream([
+        DF.quad(DF.namedNode(treeUrl), DF.namedNode('ex:p'), DF.namedNode('ex:o'), DF.namedNode('ex:gx')),
+        DF.quad(DF.namedNode(treeUrl),
+          DF.namedNode('https://w3id.org/tree#foo'),
+          DF.literal(expectedUrl),
+          DF.namedNode('ex:gx')),
+        DF.quad(DF.namedNode(treeUrl),
+          DF.namedNode('https://w3id.org/tree#foo'),
+          DF.literal(expectedUrl),
+          DF.namedNode('ex:gx')),
+        DF.quad(DF.namedNode(treeUrl),
+          DF.namedNode('https://w3id.org/tree#relation'),
+          DF.blankNode('_:_g1'),
+          DF.namedNode('ex:gx')),
+        DF.quad(DF.blankNode('_:_g1'),
+          DF.namedNode('https://w3id.org/tree#node'),
+          DF.literal(prunedUrl),
+          DF.namedNode('ex:gx')),
+        DF.quad(DF.namedNode(treeUrl),
+          DF.namedNode('https://w3id.org/tree#relation'),
+          DF.blankNode('_:_g2'),
+          DF.namedNode('ex:gx')),
+        DF.quad(DF.blankNode('_:_g2'),
+          DF.namedNode('https://w3id.org/tree#node'),
+          DF.literal(expectedUrl),
+          DF.namedNode('ex:gx')),
+      ]);
+      const action = { url: treeUrl, metadata: input, requestTime: 0, context };
+      const relations:IRelation[] =[
+        {
+          node:prunedUrl
+        },
+        {
+          node:expectedUrl
+        },
+      ];
+      const expectedNode: INode = {
+        relation: relations,
+        subject: treeUrl,
+      };
+      const mediationOutput: Promise<IActorOptimizeLinkTraversalOutput> = Promise.resolve(
+        {
+          filters: <Map<String, boolean>> new Map([[relations[0].node, false], [relations[1].node, true]]),
+        },
+      );
+      const mediator: any = {
+        mediate(arg: any) {
+          return mediationOutput
+        },
+      };
+      const spyMock = jest.spyOn(mediator, 'mediate');
+      const actor = new ActorExtractLinksTree({ name: 'actor', bus, mediatorOptimizeLinkTraversal:mediator });
+
+      const result = await actor.run(action);
+      expect(spyMock).toBeCalledTimes(1);
+      expect(spyMock).toBeCalledWith({context: action.context, treeMetadata:expectedNode});
+      expect(spyMock).toHaveReturnedWith(mediationOutput);
+      
+      expect(result).toEqual({ links: [{ url: expectedUrl }]});
+    });
+
   });
 
   describe('The ActorExtractLinksExtractLinksTree test method', () => {
@@ -237,7 +306,7 @@ describe('ActorExtractLinksExtractLinksTree', () => {
     const treeUrl = 'ex:s';
 
     beforeEach(() => {
-      actor = new ActorExtractLinksTree({ name: 'actor', bus });
+      actor = new ActorExtractLinksTree({ name: 'actor', bus, mediatorOptimizeLinkTraversal:mockMediator });
     });
 
     it('should test when giving a TREE', async() => {
