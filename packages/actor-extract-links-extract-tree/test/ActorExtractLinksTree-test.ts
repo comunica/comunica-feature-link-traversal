@@ -1,10 +1,10 @@
+import type { IActorOptimizeLinkTraversalOutput } from '@comunica/bus-optimize-link-traversal';
 import { KeysRdfResolveQuadPattern } from '@comunica/context-entries';
 import { ActionContext, Bus } from '@comunica/core';
 import type { INode, IRelation } from '@comunica/types-link-traversal';
 import { DataFactory } from 'rdf-data-factory';
 import type * as RDF from 'rdf-js';
 import { ActorExtractLinksTree } from '../lib/ActorExtractLinksTree';
-import { IActorOptimizeLinkTraversalOutput } from '@comunica/bus-optimize-link-traversal';
 
 const stream = require('streamify-array');
 
@@ -54,7 +54,7 @@ describe('ActorExtractLinksExtractLinksTree', () => {
     });
 
     beforeEach(() => {
-      actor = new ActorExtractLinksTree({ name: 'actor', bus, mediatorOptimizeLinkTraversal:mockMediator });
+      actor = new ActorExtractLinksTree({ name: 'actor', bus, mediatorOptimizeLinkTraversal: mockMediator });
     });
 
     it('should return the links of a TREE with one relation', async() => {
@@ -235,7 +235,7 @@ describe('ActorExtractLinksExtractLinksTree', () => {
       expect(spyMockMediator).toBeCalledTimes(1);
     });
 
-    it('should prune the filtered link', async () =>{
+    it('should prune the filtered link', async() => {
       const expectedUrl = 'http://foo.com';
       const prunedUrl = 'http://bar.com';
       const input = stream([
@@ -266,12 +266,12 @@ describe('ActorExtractLinksExtractLinksTree', () => {
           DF.namedNode('ex:gx')),
       ]);
       const action = { url: treeUrl, metadata: input, requestTime: 0, context };
-      const relations:IRelation[] =[
+      const relations: IRelation[] = [
         {
-          node:prunedUrl
+          node: prunedUrl,
         },
         {
-          node:expectedUrl
+          node: expectedUrl,
         },
       ];
       const expectedNode: INode = {
@@ -280,25 +280,26 @@ describe('ActorExtractLinksExtractLinksTree', () => {
       };
       const mediationOutput: Promise<IActorOptimizeLinkTraversalOutput> = Promise.resolve(
         {
-          filters: <Map<String, boolean>> new Map([[relations[0].node, false], [relations[1].node, true]]),
+          filters: new Map([[ relations[0].node, false ], [ relations[1].node, true ]]),
         },
       );
       const mediator: any = {
         mediate(arg: any) {
-          return mediationOutput
+          return mediationOutput;
         },
       };
       const spyMock = jest.spyOn(mediator, 'mediate');
-      const actor = new ActorExtractLinksTree({ name: 'actor', bus, mediatorOptimizeLinkTraversal:mediator });
+      const actorWithCustomMediator = new ActorExtractLinksTree(
+        { name: 'actor', bus, mediatorOptimizeLinkTraversal: mediator },
+      );
 
-      const result = await actor.run(action);
+      const result = await actorWithCustomMediator.run(action);
       expect(spyMock).toBeCalledTimes(1);
-      expect(spyMock).toBeCalledWith({context: action.context, treeMetadata:expectedNode});
+      expect(spyMock).toBeCalledWith({ context: action.context, treeMetadata: expectedNode });
       expect(spyMock).toHaveReturnedWith(mediationOutput);
-      
+
       expect(result).toEqual({ links: [{ url: expectedUrl }]});
     });
-
   });
 
   describe('The ActorExtractLinksExtractLinksTree test method', () => {
@@ -306,7 +307,7 @@ describe('ActorExtractLinksExtractLinksTree', () => {
     const treeUrl = 'ex:s';
 
     beforeEach(() => {
-      actor = new ActorExtractLinksTree({ name: 'actor', bus, mediatorOptimizeLinkTraversal:mockMediator });
+      actor = new ActorExtractLinksTree({ name: 'actor', bus, mediatorOptimizeLinkTraversal: mockMediator });
     });
 
     it('should test when giving a TREE', async() => {

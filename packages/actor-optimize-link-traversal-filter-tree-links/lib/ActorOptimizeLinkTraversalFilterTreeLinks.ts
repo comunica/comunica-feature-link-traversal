@@ -36,7 +36,7 @@ export class ActorOptimizeLinkTraversalFilterTreeLinks extends ActorOptimizeLink
   }
 
   public async run(action: IActionOptimizeLinkTraversal): Promise<IActorOptimizeLinkTraversalOutput> {
-    const filterMap: Map<String, boolean> = new Map();
+    const filterMap: Map<string, boolean> = new Map();
 
     const filterOperation: Algebra.Expression = JSON.parse(JSON.stringify(action.context.get(KeysInitQuery.query)))
       .input.expression;

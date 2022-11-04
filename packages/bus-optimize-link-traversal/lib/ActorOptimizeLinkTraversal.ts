@@ -1,6 +1,6 @@
 import type { IAction, IActorArgs, IActorOutput, IActorTest, Mediate } from '@comunica/core';
 import { Actor } from '@comunica/core';
-import type { INode, IRelation } from '@comunica/types-link-traversal';
+import type { INode } from '@comunica/types-link-traversal';
 /**
  * A comunica actor for optimization of link traversal
  *
@@ -31,7 +31,7 @@ export interface IActorOptimizeLinkTraversalOutput extends IActorOutput {
   /**
    * Decision map whether the link should be filter or not
    */
-  filters?: Map<String, boolean>;
+  filters?: Map<string, boolean>;
 }
 
 export type IActorOptimizeLinkTraversalArgs = IActorArgs<
