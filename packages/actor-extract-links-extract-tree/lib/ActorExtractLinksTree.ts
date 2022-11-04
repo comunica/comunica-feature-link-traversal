@@ -3,7 +3,8 @@ import type {
   IActorExtractLinksOutput, IActorExtractLinksArgs,
 } from '@comunica/bus-extract-links';
 import { ActorExtractLinks } from '@comunica/bus-extract-links';
-import type { MediatorOptimizeLinkTraversal } from '@comunica/bus-optimize-link-traversal';
+import type { MediatorOptimizeLinkTraversal,
+  IActorOptimizeLinkTraversalOutput } from '@comunica/bus-optimize-link-traversal';
 import type { IActorTest } from '@comunica/core';
 import type { IRelationDescription, IRelation, INode } from '@comunica/types-link-traversal';
 import { TreeNodes } from '@comunica/types-link-traversal';
@@ -63,14 +64,23 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
           { treeMetadata: node, context: action.context },
         );
         let acceptedRelation = relations;
-        if (typeof linkTraversalOptimisation.filters !== 'undefined') {
-          acceptedRelation = linkTraversalOptimisation.filters.size > 0 ?
-            relations.filter(relation => linkTraversalOptimisation.filters?.get(relation.node)) :
-            acceptedRelation;
+        if (typeof linkTraversalOptimisation !== 'undefined') {
+          acceptedRelation = this.handleOptimization(linkTraversalOptimisation, relations);
         }
+
         resolve({ links: acceptedRelation.map(el => ({ url: el.node })) });
       });
     });
+  }
+
+  private handleOptimization(linkTraversalOptimisation: IActorOptimizeLinkTraversalOutput,
+    relations: IRelation[]): IRelation[] {
+    if (typeof linkTraversalOptimisation.filters !== 'undefined') {
+      return linkTraversalOptimisation.filters.size > 0 ?
+        relations.filter(relation => linkTraversalOptimisation.filters?.get(relation.node)) :
+        relations;
+    }
+    return relations;
   }
 
   /**

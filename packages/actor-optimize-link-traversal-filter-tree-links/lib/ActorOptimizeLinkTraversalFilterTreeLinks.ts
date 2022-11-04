@@ -32,12 +32,16 @@ export class ActorOptimizeLinkTraversalFilterTreeLinks extends ActorOptimizeLink
       }
       return [];
     })();
-    return query.type === Algebra.types.FILTER && relations.length > 0;
+    const filterExist: boolean = this.doesNodeExist(query, Algebra.types.FILTER);
+    return filterExist && relations.length > 0 ?
+      Promise.resolve(true) :
+      Promise.reject(new Error(
+        'the action must contain TREE relation and the query must contain at least a filter',
+      ));
   }
 
   public async run(action: IActionOptimizeLinkTraversal): Promise<IActorOptimizeLinkTraversalOutput> {
     const filterMap: Map<string, boolean> = new Map();
-
     const filterOperation: Algebra.Expression = JSON.parse(JSON.stringify(action.context.get(KeysInitQuery.query)))
       .input.expression;
     const queryBody: RDF.Quad[] = this.findBgp(action.context.get(KeysInitQuery.query)!);
@@ -61,6 +65,7 @@ export class ActorOptimizeLinkTraversalFilterTreeLinks extends ActorOptimizeLink
         }
       }
     }
+
     return { filters: filterMap };
   }
 
@@ -118,9 +123,24 @@ export class ActorOptimizeLinkTraversalFilterTreeLinks extends ActorOptimizeLink
       if (currentNode.type === 'join') {
         return currentNode.input;
       }
-      currentNode = currentNode.input;
+      if ('input' in currentNode) {
+        currentNode = currentNode.input;
+      }
     } while ('input' in currentNode);
     return [];
+  }
+
+  private doesNodeExist(query: Algebra.Operation, node: string): boolean {
+    let currentNode = query;
+    do {
+      if (currentNode.type === node) {
+        return true;
+      }
+      if ('input' in currentNode) {
+        currentNode = currentNode.input;
+      }
+    } while ('input' in currentNode);
+    return false;
   }
 }
 

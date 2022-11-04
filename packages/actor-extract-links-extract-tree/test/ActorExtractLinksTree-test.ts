@@ -334,6 +334,104 @@ describe('ActorExtractLinksExtractLinksTree', () => {
 
       expect(result).toEqual({ links: [{ url: expectedUrl }]});
     });
+
+    it('should not filter the links if the mediator return an undefined filters', async() => {
+      const expectedUrl = 'http://foo.com';
+      const secondExpectedLink = 'http://bar.com';
+      const input = stream([
+        DF.quad(DF.namedNode(treeUrl), DF.namedNode('ex:p'), DF.namedNode('ex:o'), DF.namedNode('ex:gx')),
+        DF.quad(DF.namedNode(treeUrl),
+          DF.namedNode('https://w3id.org/tree#foo'),
+          DF.literal(expectedUrl),
+          DF.namedNode('ex:gx')),
+        DF.quad(DF.namedNode(treeUrl),
+          DF.namedNode('https://w3id.org/tree#foo'),
+          DF.literal(expectedUrl),
+          DF.namedNode('ex:gx')),
+        DF.quad(DF.namedNode(treeUrl),
+          DF.namedNode('https://w3id.org/tree#relation'),
+          DF.blankNode('_:_g1'),
+          DF.namedNode('ex:gx')),
+        DF.quad(DF.blankNode('_:_g1'),
+          DF.namedNode('https://w3id.org/tree#node'),
+          DF.literal(secondExpectedLink),
+          DF.namedNode('ex:gx')),
+        DF.quad(DF.blankNode('_:_g1'),
+          DF.namedNode('https://w3id.org/tree#remainingItems'),
+          DF.literal('66'),
+          DF.namedNode('ex:gx')),
+        DF.quad(DF.blankNode('_:_g1'),
+          DF.namedNode('https://w3id.org/tree#value'),
+          DF.literal('66'),
+          DF.namedNode('ex:gx')),
+        DF.quad(DF.blankNode('_:_g1'),
+          DF.namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
+          DF.namedNode('https://w3id.org/tree#GreaterThanRelation'),
+          DF.namedNode('ex:gx')),
+        DF.quad(DF.namedNode(treeUrl),
+          DF.namedNode('https://w3id.org/tree#relation'),
+          DF.blankNode('_:_g2'),
+          DF.namedNode('ex:gx')),
+        DF.quad(DF.blankNode('_:_g2'),
+          DF.namedNode('https://w3id.org/tree#node'),
+          DF.literal(expectedUrl),
+          DF.namedNode('ex:gx')),
+      ]);
+      const action = { url: treeUrl, metadata: input, requestTime: 0, context };
+      const relations: IRelation[] = [
+        {
+          node: secondExpectedLink,
+          remainingItems: {
+            value: 66,
+            quad: <RDF.Quad> DF.quad(DF.blankNode('_:_g1'),
+              DF.namedNode('https://w3id.org/tree#remainingItems'),
+              DF.literal('66'),
+              DF.namedNode('ex:gx')),
+          },
+          '@type': {
+            value: RelationOperator.GreaterThanRelation,
+            quad: <RDF.Quad> DF.quad(DF.blankNode('_:_g1'),
+              DF.namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
+              DF.namedNode('https://w3id.org/tree#GreaterThanRelation'),
+              DF.namedNode('ex:gx')),
+          },
+          value: {
+            value: '66',
+            quad: <RDF.Quad> DF.quad(DF.blankNode('_:_g1'),
+              DF.namedNode('https://w3id.org/tree#value'),
+              DF.literal('66'),
+              DF.namedNode('ex:gx')),
+          },
+        },
+        {
+          node: expectedUrl,
+        },
+      ];
+      const expectedNode: INode = {
+        relation: relations,
+        subject: treeUrl,
+      };
+      const mediationOutput: Promise<IActorOptimizeLinkTraversalOutput> = Promise.resolve(
+        {
+        },
+      );
+      const mediator: any = {
+        mediate(arg: any) {
+          return mediationOutput;
+        },
+      };
+      const spyMock = jest.spyOn(mediator, 'mediate');
+      const actorWithCustomMediator = new ActorExtractLinksTree(
+        { name: 'actor', bus, mediatorOptimizeLinkTraversal: mediator },
+      );
+
+      const result = await actorWithCustomMediator.run(action);
+      expect(spyMock).toBeCalledTimes(1);
+      expect(spyMock).toBeCalledWith({ context: action.context, treeMetadata: expectedNode });
+      expect(spyMock).toHaveReturnedWith(mediationOutput);
+
+      expect(result).toEqual({ links: [{ url: secondExpectedLink }, { url: expectedUrl }]});
+    });
   });
 
   describe('The ActorExtractLinksExtractLinksTree test method', () => {
