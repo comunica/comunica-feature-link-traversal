@@ -2,6 +2,7 @@ import type { IActorOptimizeLinkTraversalOutput } from '@comunica/bus-optimize-l
 import { KeysRdfResolveQuadPattern } from '@comunica/context-entries';
 import { ActionContext, Bus } from '@comunica/core';
 import type { INode, IRelation } from '@comunica/types-link-traversal';
+import { RelationOperator } from '@comunica/types-link-traversal';
 import { DataFactory } from 'rdf-data-factory';
 import type * as RDF from 'rdf-js';
 import { ActorExtractLinksTree } from '../lib/ActorExtractLinksTree';
@@ -256,6 +257,18 @@ describe('ActorExtractLinksExtractLinksTree', () => {
           DF.namedNode('https://w3id.org/tree#node'),
           DF.literal(prunedUrl),
           DF.namedNode('ex:gx')),
+        DF.quad(DF.blankNode('_:_g1'),
+          DF.namedNode('https://w3id.org/tree#remainingItems'),
+          DF.literal('66'),
+          DF.namedNode('ex:gx')),
+        DF.quad(DF.blankNode('_:_g1'),
+          DF.namedNode('https://w3id.org/tree#value'),
+          DF.literal('66'),
+          DF.namedNode('ex:gx')),
+        DF.quad(DF.blankNode('_:_g1'),
+          DF.namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
+          DF.namedNode('https://w3id.org/tree#GreaterThanRelation'),
+          DF.namedNode('ex:gx')),
         DF.quad(DF.namedNode(treeUrl),
           DF.namedNode('https://w3id.org/tree#relation'),
           DF.blankNode('_:_g2'),
@@ -269,6 +282,27 @@ describe('ActorExtractLinksExtractLinksTree', () => {
       const relations: IRelation[] = [
         {
           node: prunedUrl,
+          remainingItems: {
+            value: 66,
+            quad: <RDF.Quad> DF.quad(DF.blankNode('_:_g1'),
+              DF.namedNode('https://w3id.org/tree#remainingItems'),
+              DF.literal('66'),
+              DF.namedNode('ex:gx')),
+          },
+          '@type': {
+            value: RelationOperator.GreaterThanRelation,
+            quad: <RDF.Quad> DF.quad(DF.blankNode('_:_g1'),
+              DF.namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
+              DF.namedNode('https://w3id.org/tree#GreaterThanRelation'),
+              DF.namedNode('ex:gx')),
+          },
+          value: {
+            value: '66',
+            quad: <RDF.Quad> DF.quad(DF.blankNode('_:_g1'),
+              DF.namedNode('https://w3id.org/tree#value'),
+              DF.literal('66'),
+              DF.namedNode('ex:gx')),
+          },
         },
         {
           node: expectedUrl,
