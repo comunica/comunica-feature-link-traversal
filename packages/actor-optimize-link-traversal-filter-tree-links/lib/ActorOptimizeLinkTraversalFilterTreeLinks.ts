@@ -9,6 +9,7 @@ import { KeysInitQuery } from '@comunica/context-entries';
 import type { IActorTest } from '@comunica/core';
 import type { Bindings } from '@comunica/types';
 import type { IRelation } from '@comunica/types-link-traversal';
+import { join } from 'path';
 import type * as RDF from 'rdf-js';
 import { stringToTerm } from 'rdf-string';
 import { Algebra } from 'sparqlalgebrajs';
@@ -52,20 +53,25 @@ export class ActorOptimizeLinkTraversalFilterTreeLinks extends ActorOptimizeLink
       return [];
     })();
     for (const relation of relations) {
-      if (typeof relation.path !== 'undefined' && typeof relation.value !== 'undefined') {
-        const relevantQuads = this.findRelavantQuad(queryBody, relation.path.value);
-        const bindings = this.createBinding(relevantQuads, relation.value.quad);
-        const filterExpression: Algebra.Operation = this.deleteUnrelevantFilter(filterOperation, bindings);
-        if (filterExpression.args.length > 0) {
-          const evaluator = new AsyncEvaluator(filterExpression);
-          const result: boolean = await evaluator.evaluateAsEBV(bindings);
-          filterMap.set(relation.node, result);
-        } else {
-          filterMap.set(relation.node, false);
-        }
+      if (typeof relation.path === 'undefined' || typeof relation.value === 'undefined') {
+        filterMap.set(relation.node, true);
+        continue;
       }
+      const relevantQuads = this.findRelavantQuad(queryBody, relation.path.value);
+      if (relevantQuads.length === 0) {
+        filterMap.set(relation.node, true);
+        continue;
+      }
+      const bindings = this.createBinding(relevantQuads, relation.value.quad);
+      const filterExpression: Algebra.Operation = this.deleteUnrelevantFilter(filterOperation, bindings);
+      if (filterExpression.args.length === 0) {
+        filterMap.set(relation.node, true);
+        continue;
+      }
+      const evaluator = new AsyncEvaluator(filterExpression);
+      const result: boolean = await evaluator.evaluateAsEBV(bindings);
+      filterMap.set(relation.node, result);
     }
-
     return { filters: filterMap };
   }
 
@@ -80,15 +86,18 @@ export class ActorOptimizeLinkTraversalFilterTreeLinks extends ActorOptimizeLink
   }
 
   private deleteUnrelevantFilter(filterExpression: Algebra.Expression, binding: Bindings): Algebra.Expression {
-    if ('args.args' in filterExpression) {
+    if ('operator' in filterExpression.args[0]) {
       filterExpression.args = (<Algebra.Expression[]>filterExpression.args).filter(expression => {
         for (const arg of expression.args) {
           if ('term' in arg && arg.term.termType === 'Variable') {
             return binding.has(arg.term.value);
           }
         }
-        return true;
+        return false;
       });
+      if(filterExpression.args.length === 1 ) {
+        filterExpression = filterExpression.args[0];
+      }
     } else {
       for (const arg of (<Algebra.Expression[]>filterExpression.args)) {
         if ('term' in arg && arg.term.termType === 'Variable' && !binding.has(arg.term.value)) {
@@ -104,14 +113,9 @@ export class ActorOptimizeLinkTraversalFilterTreeLinks extends ActorOptimizeLink
     let binding: Bindings = new BindingsFactory().bindings();
     for (const quad of relevantQuad) {
       const object = quad.object.value;
-      const value: string = (() => {
-        if (relationValue.object.termType === 'Literal') {
-          return relationValue.object.datatype.value !== '' ?
-            `"${relationValue.object.value}"^^${relationValue.object.datatype.value}` :
-            relationValue.object.value;
-        }
-        return relationValue.object.value;
-      })();
+      const value: string =( <RDF.Literal> relationValue.object).datatype.value !== '' ?
+      `"${relationValue.object.value}"^^${(<RDF.Literal> relationValue.object).datatype.value}` :
+      relationValue.object.value;
       binding = binding.set(object, stringToTerm(value));
     }
     return binding;
@@ -121,13 +125,27 @@ export class ActorOptimizeLinkTraversalFilterTreeLinks extends ActorOptimizeLink
     let currentNode = query.input;
     do {
       if (currentNode.type === 'join') {
-        return currentNode.input;
+        return this.formatBgp(currentNode.input);
       }
       if ('input' in currentNode) {
         currentNode = currentNode.input;
       }
     } while ('input' in currentNode);
     return [];
+  }
+
+  private formatBgp(joins: any): RDF.Quad[] {
+    const bgp: RDF.Quad[] = [];
+    if (joins.length === 0) {
+      return [];
+    }
+    if (!('input' in joins[0])) {
+      return joins;
+    }
+    for (const join of joins) {
+      bgp.push(join.input[0]);
+    }
+    return bgp;
   }
 
   private doesNodeExist(query: Algebra.Operation, node: string): boolean {
