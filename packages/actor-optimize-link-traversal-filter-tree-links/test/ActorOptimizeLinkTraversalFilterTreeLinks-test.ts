@@ -24,7 +24,7 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
     });
     describe('test method', () => {
       const treeSubject = 'tree';
-      it('should test when there is relations and a filter operation in the query', async() => {
+      it('should test when there are relations and a filter operation in the query', async() => {
         const context = new ActionContext({
           [KeysInitQuery.query.name]: { type: Algebra.types.FILTER },
         });
@@ -127,7 +127,7 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
         });
       });
 
-      it('should no test when there no filter operation in the query and no TREE relation', async() => {
+      it('should no test when there is no filter operation in the query and no TREE relation', async() => {
         const context = new ActionContext({
           [KeysInitQuery.query.name]: { type: Algebra.types.ASK },
         });
@@ -464,7 +464,7 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
         );
       });
 
-      it('should accept the relation when there is multiple filters and the query don\'t match the relation',
+      it('should accept the relation when there is multiple filters and the query path don\'t match the relation',
         async() => {
           const treeSubject = 'tree';
 
@@ -583,7 +583,7 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
         });
 
       it(`should accept the relations when the filter respect the relation
-       and a relation doesn't specify a path and/or`, async() => {
+       and a relation doesn't specify a path`, async() => {
         const treeSubject = 'tree';
 
         const node: INode = {
@@ -668,7 +668,7 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
         );
       });
 
-      it('should accept the relation when the filter are not related to the relations', async() => {
+      it('should accept the relation when the filter argument are not related to the query', async() => {
         const treeSubject = 'tree';
 
         const node: INode = {
@@ -863,7 +863,7 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
         );
       });
 
-      it('should accept the relation when the filter compare two constant', async() => {
+      it('should accept the relation when the filter compare two constants', async() => {
         const treeSubject = 'tree';
 
         const node: INode = {
