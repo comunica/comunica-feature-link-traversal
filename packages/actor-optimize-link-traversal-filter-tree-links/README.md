@@ -22,7 +22,7 @@ After installing, this package can be added to your engine's configuration as fo
 {
   "@context": [
     ...
-    "https://linkedsoftwaredependencies.org/bundles/npm/@comunica/actor-optimize-link-traversal-filter-tree-links/^1.0.0/components/context.jsonld"  
+    "https://linkedsoftwaredependencies.org/bundles/npm/@comunica/actor-optimize-link-traversal-filter-tree-links/^0.0.1/components/context.jsonld"  
   ],
   "actors": [
     ...

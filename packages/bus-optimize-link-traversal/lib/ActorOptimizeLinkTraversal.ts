@@ -5,9 +5,9 @@ import type { INode } from '@comunica/types-link-traversal';
  * A comunica actor for optimization of link traversal
  *
  * Actor types:
- * * Input:  IActionOptimizeLinkTraversal:      TODO: fill in.
+ * * Input:  IActionOptimizeLinkTraversal:      Metadata or relevant information for optimization.
  * * Test:   <none>
- * * Output: IActorOptimizeLinkTraversalOutput: TODO: fill in.
+ * * Output: IActorOptimizeLinkTraversalOutput: Links prunning or reorder information.
  *
  * @see IActionOptimizeLinkTraversal
  * @see IActorOptimizeLinkTraversalOutput
