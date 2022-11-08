@@ -1,9 +1,8 @@
-import type { IRelation } from '@comunica/types-link-traversal';
+import type { IRelation, IRelationDescription } from '@comunica/types-link-traversal';
+import { TreeNodes, RelationOperator } from '@comunica/types-link-traversal';
 import { DataFactory } from 'rdf-data-factory';
 import type * as RDF from 'rdf-js';
 import { buildRelations, addRelationDescription, collectRelation } from '../lib/treeMetadataExtraction';
-import type { IRelationDescription } from '@comunica/types-link-traversal';
-import { TreeNodes, RelationOperator } from '@comunica/types-link-traversal';
 
 const DF = new DataFactory<RDF.Quad>();
 
