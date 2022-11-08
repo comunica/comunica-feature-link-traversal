@@ -24,7 +24,7 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
     });
     describe('test method', () => {
       const treeSubject = 'tree';
-      it('should test when there is relations and a filter operation in the query', async () => {
+      it('should test when there is relations and a filter operation in the query', async() => {
         const context = new ActionContext({
           [KeysInitQuery.query.name]: { type: Algebra.types.FILTER },
         });
@@ -45,7 +45,26 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
         expect(response).toBe(true);
       });
 
-      it('should not test when there is no relations and a filter operation in the query', async () => {
+      it('should no test when the TREE relation are undefined', async() => {
+        const context = new ActionContext({
+          [KeysInitQuery.query.name]: { type: Algebra.types.FILTER },
+        });
+        const node: INode = {
+          subject: treeSubject,
+        };
+        const action: IActionOptimizeLinkTraversal = {
+          context,
+          treeMetadata: node,
+        };
+
+        await actor.test(action).then(v => {
+          expect(v).toBeUndefined();
+        }).catch(error => {
+          expect(error).toBeDefined();
+        });
+      });
+
+      it('should not test when there is no relations and a filter operation in the query', async() => {
         const context = new ActionContext({
           [KeysInitQuery.query.name]: { type: Algebra.types.FILTER },
         });
@@ -65,7 +84,7 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
         });
       });
 
-      it('should not test when there is no tree metadata and a filter operation in the query', async () => {
+      it('should not test when there is no tree metadata and a filter operation in the query', async() => {
         const context = new ActionContext({
           [KeysInitQuery.query.name]: { type: Algebra.types.FILTER },
         });
@@ -84,7 +103,7 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
         });
       });
 
-      it('should no test when there no filter operation in the query', async () => {
+      it('should no test when there no filter operation in the query', async() => {
         const context = new ActionContext({
           [KeysInitQuery.query.name]: { type: Algebra.types.ASK },
         });
@@ -108,7 +127,7 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
         });
       });
 
-      it('should no test when there no filter operation in the query and no TREE relation', async () => {
+      it('should no test when there no filter operation in the query and no TREE relation', async() => {
         const context = new ActionContext({
           [KeysInitQuery.query.name]: { type: Algebra.types.ASK },
         });
@@ -134,8 +153,7 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
         DF.namedNode('ex:p'),
         DF.namedNode('ex:o'));
 
-
-      it('should accept the relation when the filter respect the relation', async () => {
+      it('should accept the relation when the filter respect the relation', async() => {
         const treeSubject = 'tree';
 
         const node: INode = {
@@ -156,9 +174,17 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
             },
           ],
         };
-        const bgp: RDF.Quad[] = <RDF.Quad[]>[
+        const bgp = (<RDF.Quad[]>[
           DF.quad(DF.namedNode('ex:foo'), DF.namedNode('ex:path'), DF.variable('o')),
-        ];
+          DF.quad(DF.namedNode('ex:foo'), DF.namedNode('ex:p'), DF.namedNode('ex:o')),
+          DF.quad(DF.namedNode('ex:bar'), DF.namedNode('ex:p2'), DF.namedNode('ex:o2')),
+          DF.quad(DF.namedNode('ex:too'), DF.namedNode('ex:p3'), DF.namedNode('ex:o3')),
+        ]).map(quad => {
+          return {
+            input: [ quad ],
+            type: 'join',
+          };
+        });
         const filterExpression = {
           expressionType: Algebra.expressionTypes.OPERATOR,
           operator: '=',
@@ -212,11 +238,11 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
 
         expect(result.filters).toBeDefined();
         expect(result.filters).toStrictEqual(
-          new Map([['http://bar.com', true]]),
+          new Map([[ 'http://bar.com', true ]]),
         );
       });
 
-      it('should not accept the relation when the filter is not respected by the relation', async () => {
+      it('should not accept the relation when the filter is not respected by the relation', async() => {
         const treeSubject = 'tree';
 
         const node: INode = {
@@ -293,11 +319,11 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
 
         expect(result.filters).toBeDefined();
         expect(result.filters).toStrictEqual(
-          new Map([['http://bar.com', false]]),
+          new Map([[ 'http://bar.com', false ]]),
         );
       });
 
-      it('should accept the relation when the query don\'t invoke the right path', async () => {
+      it('should accept the relation when the query don\'t invoke the right path', async() => {
         const treeSubject = 'tree';
 
         const node: INode = {
@@ -374,13 +400,11 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
 
         expect(result.filters).toBeDefined();
         expect(result.filters).toStrictEqual(
-          new Map([['http://bar.com', true]]),
+          new Map([[ 'http://bar.com', true ]]),
         );
       });
 
-      it('should return an empty map when there is no relation', async () => {
-
-
+      it('should return an empty map when there is no relation', async() => {
         const bgp: RDF.Quad[] = <RDF.Quad[]>[
           DF.quad(DF.namedNode('ex:foo'), DF.namedNode('ex:superPath'), DF.variable('o')),
         ];
@@ -440,205 +464,126 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
         );
       });
 
-      it('should accept the relation when the query don\'t invoke the right path', async () => {
-        const treeSubject = 'tree';
+      it('should accept the relation when there is multiple filters and the query don\'t match the relation',
+        async() => {
+          const treeSubject = 'tree';
 
-        const node: INode = {
-          subject: treeSubject,
-          relation: [
-            {
-              node: 'http://bar.com',
-              path: {
-                value: 'ex:path',
-                quad: aQuad,
-              },
-              value: {
-                value: '5',
-                quad: <RDF.Quad>DF.quad(DF.namedNode('ex:s'),
-                  DF.namedNode('ex:p'),
-                  DF.literal('5', DF.namedNode('http://www.w3.org/2001/XMLSchema#integer'))),
-              },
-            },
-          ],
-        };
-        const bgp: RDF.Quad[] = <RDF.Quad[]>[
-          DF.quad(DF.namedNode('ex:foo'), DF.namedNode('ex:superPath'), DF.variable('o')),
-        ];
-        const filterExpression = {
-          expressionType: Algebra.expressionTypes.OPERATOR,
-          operator: '=',
-          type: Algebra.types.EXPRESSION,
-          args: [
-            {
-              expressionType: Algebra.expressionTypes.TERM,
-              type: Algebra.types.EXPRESSION,
-              term: {
-                termType: 'Variable',
-                value: 'o',
-              },
-            },
-            {
-              expressionType: Algebra.expressionTypes.TERM,
-              type: Algebra.types.EXPRESSION,
-              term: {
-                termType: 'Literal',
-                langugage: '',
-                value: '88',
-                datatype: {
-                  termType: 'namedNode',
-                  value: 'http://www.w3.org/2001/XMLSchema#integer',
+          const node: INode = {
+            subject: treeSubject,
+            relation: [
+              {
+                node: 'http://bar.com',
+                path: {
+                  value: 'ex:path',
+                  quad: aQuad,
+                },
+                value: {
+                  value: '5',
+                  quad: <RDF.Quad>DF.quad(DF.namedNode('ex:s'),
+                    DF.namedNode('ex:p'),
+                    DF.literal('5', DF.namedNode('http://www.w3.org/2001/XMLSchema#integer'))),
                 },
               },
-            },
-          ],
-        };
-        const query = {
-          type: Algebra.types.PROJECT,
-          input: {
-            type: Algebra.types.FILTER,
-            expression: filterExpression,
-            input: {
-              input: {
-                type: 'join',
-                input: bgp,
-              },
-            },
-          },
-        };
-        const context = new ActionContext({
-          [KeysInitQuery.query.name]: query,
-        });
-
-        const action: IActionOptimizeLinkTraversal = {
-          context,
-          treeMetadata: node,
-        };
-        const result = await actor.run(action);
-
-        expect(result.filters).toBeDefined();
-        expect(result.filters).toStrictEqual(
-          new Map([['http://bar.com', true]]),
-        );
-      });
-
-      it('should accept the relation when there is multiple filters and the query don\'t match the relation', async () => {
-        const treeSubject = 'tree';
-
-        const node: INode = {
-          subject: treeSubject,
-          relation: [
-            {
-              node: 'http://bar.com',
-              path: {
-                value: 'ex:path',
-                quad: aQuad,
-              },
-              value: {
-                value: '5',
-                quad: <RDF.Quad>DF.quad(DF.namedNode('ex:s'),
-                  DF.namedNode('ex:p'),
-                  DF.literal('5', DF.namedNode('http://www.w3.org/2001/XMLSchema#integer'))),
-              },
-            },
-          ],
-        };
-        const bgp: RDF.Quad[] = <RDF.Quad[]>[
-          DF.quad(DF.namedNode('ex:foo'), DF.namedNode('ex:superPath'), DF.variable('o')),
-        ];
-        const filterExpression = {
-          expressionType: 'operator',
-          operator: '&&',
-          type: 'expression',
-          args: [
-            {
-              expressionType: Algebra.expressionTypes.OPERATOR,
-              operator: '=',
-              type: Algebra.types.EXPRESSION,
-              args: [
-                {
-                  expressionType: Algebra.expressionTypes.TERM,
-                  type: Algebra.types.EXPRESSION,
-                  term: {
-                    termType: 'Variable',
-                    value: 'o',
-                  },
-                },
-                {
-                  expressionType: Algebra.expressionTypes.TERM,
-                  type: Algebra.types.EXPRESSION,
-                  term: {
-                    termType: 'Literal',
-                    langugage: '',
-                    value: '88',
-                    datatype: {
-                      termType: 'namedNode',
-                      value: 'http://www.w3.org/2001/XMLSchema#integer',
+            ],
+          };
+          const bgp: RDF.Quad[] = <RDF.Quad[]>[
+            DF.quad(DF.namedNode('ex:foo'), DF.namedNode('ex:superPath'), DF.variable('o')),
+          ];
+          const filterExpression = {
+            expressionType: 'operator',
+            operator: '&&',
+            type: 'expression',
+            args: [
+              {
+                expressionType: Algebra.expressionTypes.OPERATOR,
+                operator: '=',
+                type: Algebra.types.EXPRESSION,
+                args: [
+                  {
+                    expressionType: Algebra.expressionTypes.TERM,
+                    type: Algebra.types.EXPRESSION,
+                    term: {
+                      termType: 'Variable',
+                      value: 'o',
                     },
                   },
-                },
-              ],
-            },
-            {
-              expressionType: Algebra.expressionTypes.OPERATOR,
-              operator: '=',
-              type: Algebra.types.EXPRESSION,
-              args: [
-                {
-                  expressionType: Algebra.expressionTypes.TERM,
-                  type: Algebra.types.EXPRESSION,
-                  term: {
-                    termType: 'Variable',
-                    value: 'o',
-                  },
-                },
-                {
-                  expressionType: Algebra.expressionTypes.TERM,
-                  type: Algebra.types.EXPRESSION,
-                  term: {
-                    termType: 'Literal',
-                    langugage: '',
-                    value: '5',
-                    datatype: {
-                      termType: 'namedNode',
-                      value: 'http://www.w3.org/2001/XMLSchema#integer',
+                  {
+                    expressionType: Algebra.expressionTypes.TERM,
+                    type: Algebra.types.EXPRESSION,
+                    term: {
+                      termType: 'Literal',
+                      langugage: '',
+                      value: '88',
+                      datatype: {
+                        termType: 'namedNode',
+                        value: 'http://www.w3.org/2001/XMLSchema#integer',
+                      },
                     },
                   },
-                },
-              ],
-            }
-          ]
-        };
+                ],
+              },
+              {
+                expressionType: Algebra.expressionTypes.OPERATOR,
+                operator: '=',
+                type: Algebra.types.EXPRESSION,
+                args: [
+                  {
+                    expressionType: Algebra.expressionTypes.TERM,
+                    type: Algebra.types.EXPRESSION,
+                    term: {
+                      termType: 'Variable',
+                      value: 'o',
+                    },
+                  },
+                  {
+                    expressionType: Algebra.expressionTypes.TERM,
+                    type: Algebra.types.EXPRESSION,
+                    term: {
+                      termType: 'Literal',
+                      langugage: '',
+                      value: '5',
+                      datatype: {
+                        termType: 'namedNode',
+                        value: 'http://www.w3.org/2001/XMLSchema#integer',
+                      },
+                    },
+                  },
+                ],
+              },
+            ],
+          };
 
-        const query = {
-          type: Algebra.types.PROJECT,
-          input: {
-            type: Algebra.types.FILTER,
-            expression: filterExpression,
+          const query = {
+            type: Algebra.types.PROJECT,
             input: {
+              type: Algebra.types.FILTER,
+              expression: filterExpression,
               input: {
-                type: 'join',
-                input: bgp,
+                input: {
+                  type: 'join',
+                  input: bgp,
+                },
               },
             },
-          },
-        };
-        const context = new ActionContext({
-          [KeysInitQuery.query.name]: query,
+          };
+          const context = new ActionContext({
+            [KeysInitQuery.query.name]: query,
+          });
+
+          const action: IActionOptimizeLinkTraversal = {
+            context,
+            treeMetadata: node,
+          };
+          const result = await actor.run(action);
+
+          expect(result.filters).toBeDefined();
+          expect(result.filters).toStrictEqual(
+            new Map([[ 'http://bar.com', true ]]),
+          );
         });
 
-        const action: IActionOptimizeLinkTraversal = {
-          context,
-          treeMetadata: node,
-        };
-        const result = await actor.run(action);
-
-        expect(result.filters).toBeDefined();
-        expect(result.filters).toStrictEqual(
-          new Map([['http://bar.com', true]]),
-        );
-      });
-
-      it('should accept the relations when the filter respect the relation and a relation doesn\'t specify a path and/or', async () => {
+      it(`should accept the relations when the filter respect the relation
+       and a relation doesn't specify a path and/or`, async() => {
         const treeSubject = 'tree';
 
         const node: INode = {
@@ -719,11 +664,11 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
 
         expect(result.filters).toBeDefined();
         expect(result.filters).toStrictEqual(
-          new Map([['http://bar.com', true], ['http://foo.com', true]]),
+          new Map([[ 'http://bar.com', true ], [ 'http://foo.com', true ]]),
         );
       });
 
-      it('should accept the relation when the filter are not related to the relations', async () => {
+      it('should accept the relation when the filter are not related to the relations', async() => {
         const treeSubject = 'tree';
 
         const node: INode = {
@@ -800,11 +745,11 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
 
         expect(result.filters).toBeDefined();
         expect(result.filters).toStrictEqual(
-          new Map([['http://bar.com', true]]),
+          new Map([[ 'http://bar.com', true ]]),
         );
       });
 
-      it('should accept the relation when there is multiples filters and one is not relevant', async () => {
+      it('should accept the relation when there is multiples filters and one is not relevant', async() => {
         const treeSubject = 'tree';
 
         const node: INode = {
@@ -858,7 +803,7 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
                   },
                 },
               },
-              ]
+              ],
             },
             {
               expressionType: Algebra.expressionTypes.OPERATOR,
@@ -885,8 +830,8 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
                   },
                 },
               },
-              ]
-            }
+              ],
+            },
           ],
         };
         const query = {
@@ -914,11 +859,11 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
 
         expect(result.filters).toBeDefined();
         expect(result.filters).toStrictEqual(
-          new Map([['http://bar.com', true]]),
+          new Map([[ 'http://bar.com', true ]]),
         );
       });
 
-      it('should accept the relation when the filter compare two constant', async () => {
+      it('should accept the relation when the filter compare two constant', async() => {
         const treeSubject = 'tree';
 
         const node: INode = {
@@ -977,7 +922,7 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
                   },
                 },
               },
-              ]
+              ],
             },
             {
               expressionType: Algebra.expressionTypes.OPERATOR,
@@ -1009,8 +954,8 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
                   },
                 },
               },
-              ]
-            }
+              ],
+            },
           ],
         };
         const query = {
@@ -1038,7 +983,80 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
 
         expect(result.filters).toBeDefined();
         expect(result.filters).toStrictEqual(
-          new Map([['http://bar.com', true]]),
+          new Map([[ 'http://bar.com', true ]]),
+        );
+      });
+
+      it('should return an empty filter map if there is no bgp', async() => {
+        const treeSubject = 'tree';
+
+        const node: INode = {
+          subject: treeSubject,
+          relation: [
+            {
+              node: 'http://bar.com',
+              path: {
+                value: 'ex:path',
+                quad: aQuad,
+              },
+              value: {
+                value: '5',
+                quad: <RDF.Quad>DF.quad(DF.namedNode('ex:s'),
+                  DF.namedNode('ex:p'),
+                  DF.literal('5', DF.namedNode('http://www.w3.org/2001/XMLSchema#integer'))),
+              },
+            },
+          ],
+        };
+        const bgp: RDF.Quad[] = <RDF.Quad[]>[];
+        const filterExpression = {
+          expressionType: Algebra.expressionTypes.OPERATOR,
+          operator: '=',
+          type: Algebra.types.EXPRESSION,
+          args: [
+            {
+              expressionType: Algebra.expressionTypes.TERM,
+              type: Algebra.types.EXPRESSION,
+              term: {
+                termType: 'Variable',
+                value: 'o',
+              },
+            },
+            {
+              expressionType: Algebra.expressionTypes.TERM,
+              type: Algebra.types.EXPRESSION,
+              term: {
+                termType: 'Literal',
+                langugage: '',
+                value: '5',
+                datatype: {
+                  termType: 'namedNode',
+                  value: 'http://www.w3.org/2001/XMLSchema#integer',
+                },
+              },
+            },
+          ],
+        };
+        const query = {
+          type: Algebra.types.PROJECT,
+          input: {
+            type: Algebra.types.FILTER,
+            expression: filterExpression,
+          },
+        };
+        const context = new ActionContext({
+          [KeysInitQuery.query.name]: query,
+        });
+
+        const action: IActionOptimizeLinkTraversal = {
+          context,
+          treeMetadata: node,
+        };
+        const result = await actor.run(action);
+
+        expect(result.filters).toBeDefined();
+        expect(result.filters).toStrictEqual(
+          new Map(),
         );
       });
     });
