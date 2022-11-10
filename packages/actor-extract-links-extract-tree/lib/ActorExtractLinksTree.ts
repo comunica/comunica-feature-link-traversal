@@ -17,7 +17,7 @@ import { buildRelations, collectRelation } from './treeMetadataExtraction';
 export class ActorExtractLinksTree extends ActorExtractLinks {
   private readonly mediatorOptimizeLinkTraversal: MediatorOptimizeLinkTraversal;
 
-  public constructor(args: IActorExtractLinksTree) {
+  public constructor(args: IActorExtractLinksTreeArgs) {
     super(args);
   }
 
@@ -46,7 +46,7 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
           relationDescriptions));
 
       // Resolve to discovered links
-      metadata.on('end', async() => {
+      metadata.on('end', () => {
         // Validate if the node forward have the current node as implicit subject
         for (const [ nodeValue, link ] of nodeLinks) {
           if (pageRelationNodes.has(nodeValue)) {
@@ -60,15 +60,19 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
         }
 
         const node: INode = { relation: relations, subject: currentNodeUrl };
-        const linkTraversalOptimisation = await this.mediatorOptimizeLinkTraversal.mediate(
-          { treeMetadata: node, context: action.context },
-        );
         let acceptedRelation = relations;
-        if (typeof linkTraversalOptimisation !== 'undefined') {
-          acceptedRelation = this.handleOptimization(linkTraversalOptimisation, relations);
-        }
-
-        resolve({ links: acceptedRelation.map(el => ({ url: el.node })) });
+        this.mediatorOptimizeLinkTraversal.mediate(
+          { treeMetadata: node, context: action.context },
+        )
+          .then(linkTraversalOptimisation => {
+            if (typeof linkTraversalOptimisation !== 'undefined') {
+              acceptedRelation = this.handleOptimization(linkTraversalOptimisation, relations);
+            }
+            resolve({ links: acceptedRelation.map(el => ({ url: el.node })) });
+          })
+          .catch(() => {
+            resolve({ links: acceptedRelation.map(el => ({ url: el.node })) });
+          });
       });
     });
   }
@@ -111,7 +115,7 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
   }
 }
 
-export interface IActorExtractLinksTree extends IActorExtractLinksArgs {
+export interface IActorExtractLinksTreeArgs extends IActorExtractLinksArgs {
   /**
    * The optmize link traversal mediator
    */

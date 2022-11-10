@@ -2,7 +2,6 @@
   "name": "@comunica/context-entries-link-traversal",
   "version": "0.0.1",
   "description": "A collection of reusable Comunica context key definitions for link traversal.",
-  "lsd:module": true,
   "main": "lib/index.js",
   "typings": "lib/index",
   "repository": {

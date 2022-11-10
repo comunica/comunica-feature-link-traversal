@@ -2,6 +2,13 @@ import type { IRelation, IRelationDescription } from '@comunica/types-link-trave
 import { RelationOperator, TreeNodes } from '@comunica/types-link-traversal';
 import type * as RDF from 'rdf-js';
 
+/**
+ * @param relationDescription
+ * @param nodeLinks
+ * @returns IRelation
+ * collect the relevant values and quad capture from a IRelationDescription object
+ * to create a IRelation object
+ */
 export function collectRelation(
   relationDescription: IRelationDescription,
   nodeLinks: string,
@@ -96,7 +103,16 @@ export function buildRelations(
     }
   }
 }
-
+/**
+ * @param relationDescriptions: Map<string, IRelationDescription>
+ * @param quad: RDF.Quad
+ * @param value?: string
+ * @param subject?: string
+ * @param operator?: RelationOperator
+ * @param remainingItems?: number
+ * from a quad capture the TREE relation information and put it into
+ * a IRelationDescription map
+ */
 export function addRelationDescription({
   relationDescriptions,
   quad,

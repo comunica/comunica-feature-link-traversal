@@ -9,14 +9,18 @@ import { KeysInitQuery } from '@comunica/context-entries';
 import type { IActorTest } from '@comunica/core';
 import type { Bindings } from '@comunica/types';
 import type { IRelation } from '@comunica/types-link-traversal';
+import { DataFactory } from 'rdf-data-factory';
 import type * as RDF from 'rdf-js';
-import { stringToTerm } from 'rdf-string';
 import { Algebra } from 'sparqlalgebrajs';
 import { AsyncEvaluator } from 'sparqlee';
 
+const DF = new DataFactory<RDF.BaseQuad>();
+
 /**
  * A comunica Link traversal optimizer that filter link of document
- * following the [TREE specification](https://treecg.github.io/specification/)
+ * following the [TREE specification](https://treecg.github.io/specification/).
+ * The actor apply the filter of a query into the TREE relation to determine if a
+ * link should be follow or not
  */
 
 export class ActorOptimizeLinkTraversalFilterTreeLinks extends ActorOptimizeLinkTraversal {
@@ -42,18 +46,18 @@ export class ActorOptimizeLinkTraversalFilterTreeLinks extends ActorOptimizeLink
 
   public async run(action: IActionOptimizeLinkTraversal): Promise<IActorOptimizeLinkTraversalOutput> {
     const filterMap: Map<string, boolean> = new Map();
+    // Extract the filter expression
     const filterOperation: Algebra.Expression = JSON.parse(JSON.stringify(action.context.get(KeysInitQuery.query)))
       .input.expression;
+    // Extract the bgp of the query
     const queryBody: RDF.Quad[] = this.findBgp(action.context.get(KeysInitQuery.query)!);
     if (queryBody.length === 0) {
       return { filters: filterMap };
     }
+    // Capture the relation from the input
     const relations: IRelation[] = (() => {
       if (typeof action.treeMetadata !== 'undefined') {
-        // If the test pass the relation are defined, it's for the lint
-        /* istanbul ignore next */
-        return typeof action.treeMetadata.relation !== 'undefined' ? action.treeMetadata.relation : [];
-        /* istanbul ignore next */
+        return action.treeMetadata.relation!;
       }
       return [];
     })();
@@ -62,11 +66,14 @@ export class ActorOptimizeLinkTraversalFilterTreeLinks extends ActorOptimizeLink
         filterMap.set(relation.node, true);
         continue;
       }
+      // Find the quad from the bgp that are related to the TREE relation
       const relevantQuads = this.findRelavantQuad(queryBody, relation.path.value);
       if (relevantQuads.length === 0) {
         filterMap.set(relation.node, true);
         continue;
       }
+
+      // Create the binding in relation to the relevant quad
       const bindings = this.createBinding(relevantQuads, relation.value.quad);
       const filterExpression: Algebra.Operation = this.deleteUnrelevantFilter(filterOperation, bindings);
       if (filterExpression.args.length === 0) {
@@ -74,12 +81,20 @@ export class ActorOptimizeLinkTraversalFilterTreeLinks extends ActorOptimizeLink
         continue;
       }
       const evaluator = new AsyncEvaluator(filterExpression);
+      // Evaluate the filter with the relevant quad binding
       const result: boolean = await evaluator.evaluateAsEBV(bindings);
       filterMap.set(relation.node, result);
     }
     return { filters: filterMap };
   }
 
+  /**
+   *
+   * @param queryBody
+   * @param path
+   * @returns RDF.Quad[]
+   * find the quad that has as predicate a the TREE:path of a relation
+   */
   private findRelavantQuad(queryBody: RDF.Quad[], path: string): RDF.Quad[] {
     const resp: RDF.Quad[] = [];
     for (const quad of queryBody) {
@@ -90,6 +105,12 @@ export class ActorOptimizeLinkTraversalFilterTreeLinks extends ActorOptimizeLink
     return resp;
   }
 
+  /**
+   * @param filterExpression
+   * @param binding
+   * @returns Algebra.Expression
+   * delete the filters that are not related to TREE relation
+   */
   private deleteUnrelevantFilter(filterExpression: Algebra.Expression, binding: Bindings): Algebra.Expression {
     if ('operator' in filterExpression.args[0]) {
       filterExpression.args = (<Algebra.Expression[]>filterExpression.args).filter(expression => {
@@ -114,13 +135,18 @@ export class ActorOptimizeLinkTraversalFilterTreeLinks extends ActorOptimizeLink
     return filterExpression;
   }
 
+  /**
+   *
+   * @param relevantQuad
+   * @param relationValue
+   * @returns Bindings
+   * create the binding from quad related to the TREE:path
+   */
   private createBinding(relevantQuad: RDF.Quad[], relationValue: RDF.Quad): Bindings {
     let binding: Bindings = new BindingsFactory().bindings();
     for (const quad of relevantQuad) {
       const object = quad.object.value;
-      const value =
-        `"${relationValue.object.value}"^^${(<RDF.Literal>relationValue.object).datatype.value}`;
-      binding = binding.set(object, stringToTerm(value));
+      binding = binding.set(object, <RDF.Literal>relationValue.object);
     }
     return binding;
   }

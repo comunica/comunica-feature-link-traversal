@@ -432,6 +432,45 @@ describe('ActorExtractLinksExtractLinksTree', () => {
 
       expect(result).toEqual({ links: [{ url: secondExpectedLink }, { url: expectedUrl }]});
     });
+
+    it('should return the links of a TREE with one relation and a filter than failled to return', async() => {
+      const expectedUrl = 'http://foo.com';
+      const input = stream([
+        DF.quad(DF.namedNode(treeUrl), DF.namedNode('ex:p'), DF.namedNode('ex:o'), DF.namedNode('ex:gx')),
+        DF.quad(DF.namedNode(treeUrl),
+          DF.namedNode('https://w3id.org/tree#foo'),
+          DF.literal(expectedUrl),
+          DF.namedNode('ex:gx')),
+        DF.quad(DF.namedNode(treeUrl),
+          DF.namedNode('https://w3id.org/tree#foo'),
+          DF.literal(expectedUrl),
+          DF.namedNode('ex:gx')),
+        DF.quad(DF.namedNode(treeUrl),
+          DF.namedNode('https://w3id.org/tree#relation'),
+          DF.blankNode('_:_g1'),
+          DF.namedNode('ex:gx')),
+        DF.quad(DF.blankNode('_:_g1'),
+          DF.namedNode('https://w3id.org/tree#node'),
+          DF.literal(expectedUrl),
+          DF.namedNode('ex:gx')),
+      ]);
+      const action = { url: treeUrl, metadata: input, requestTime: 0, context };
+
+      const mediationOutput: Promise<IActorOptimizeLinkTraversalOutput> = Promise.reject(new Error('failled request'));
+      const mediator: any = {
+        mediate(arg: any) {
+          return mediationOutput;
+        },
+      };
+      const spyMock = jest.spyOn(mediator, 'mediate');
+      const actorWithCustomMediator = new ActorExtractLinksTree(
+        { name: 'actor', bus, mediatorOptimizeLinkTraversal: mediator },
+      );
+      const result = await actorWithCustomMediator.run(action);
+
+      expect(result).toEqual({ links: [{ url: expectedUrl }]});
+      expect(spyMock).toBeCalledTimes(1);
+    });
   });
 
   describe('The ActorExtractLinksExtractLinksTree test method', () => {
