@@ -47,8 +47,11 @@ export class ActorOptimizeLinkTraversalFilterTreeLinks extends ActorOptimizeLink
   public async run(action: IActionOptimizeLinkTraversal): Promise<IActorOptimizeLinkTraversalOutput> {
     const filterMap: Map<string, boolean> = new Map();
     // Extract the filter expression
-    const filterOperation: Algebra.Expression = JSON.parse(JSON.stringify(action.context.get(KeysInitQuery.query)))
-      .input.expression;
+    const filterOperation: Algebra.Expression = (() => {
+      const query: Algebra.Operation = action.context.get(KeysInitQuery.query)!;
+      return query.input.expression;
+    })();
+
     // Extract the bgp of the query
     const queryBody: RDF.Quad[] = this.findBgp(action.context.get(KeysInitQuery.query)!);
     if (queryBody.length === 0) {
