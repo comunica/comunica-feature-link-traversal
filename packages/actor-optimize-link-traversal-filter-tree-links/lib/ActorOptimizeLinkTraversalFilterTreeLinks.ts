@@ -115,8 +115,14 @@ export class ActorOptimizeLinkTraversalFilterTreeLinks extends ActorOptimizeLink
    * delete the filters that are not related to TREE relation
    */
   private deleteUnrelevantFilter(filterExpression: Algebra.Expression, binding: Bindings): Algebra.Expression {
+    let newFilterExpression: Algebra.Expression = {
+      expressionType: Algebra.expressionTypes.OPERATOR,
+      operator: filterExpression.operator,
+      type: Algebra.types.EXPRESSION,
+      args: [],
+    };
     if ('operator' in filterExpression.args[0]) {
-      filterExpression.args = (<Algebra.Expression[]>filterExpression.args).filter(expression => {
+      newFilterExpression.args = (<Algebra.Expression[]>filterExpression.args).filter(expression => {
         for (const arg of expression.args) {
           if ('term' in arg && arg.term.termType === 'Variable') {
             return binding.has(arg.term.value);
@@ -124,18 +130,19 @@ export class ActorOptimizeLinkTraversalFilterTreeLinks extends ActorOptimizeLink
         }
         return false;
       });
-      if (filterExpression.args.length === 1) {
-        filterExpression = filterExpression.args[0];
+      if (newFilterExpression.args.length === 1) {
+        newFilterExpression = newFilterExpression.args[0];
       }
     } else {
       for (const arg of (<Algebra.Expression[]>filterExpression.args)) {
         if ('term' in arg && arg.term.termType === 'Variable' && !binding.has(arg.term.value)) {
-          filterExpression.args = [];
+          newFilterExpression.args = [];
           break;
         }
+        newFilterExpression.args.push(arg);
       }
     }
-    return filterExpression;
+    return newFilterExpression;
   }
 
   /**
