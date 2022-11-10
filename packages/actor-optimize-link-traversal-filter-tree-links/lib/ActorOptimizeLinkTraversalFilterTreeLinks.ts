@@ -13,6 +13,7 @@ import { DataFactory } from 'rdf-data-factory';
 import type * as RDF from 'rdf-js';
 import { Algebra } from 'sparqlalgebrajs';
 import { AsyncEvaluator } from 'sparqlee';
+const clonedeep = require('lodash.clonedeep');
 
 const DF = new DataFactory<RDF.BaseQuad>();
 
@@ -48,7 +49,7 @@ export class ActorOptimizeLinkTraversalFilterTreeLinks extends ActorOptimizeLink
     const filterMap: Map<string, boolean> = new Map();
     // Extract the filter expression
     const filterOperation: Algebra.Expression = (() => {
-      const query: Algebra.Operation = action.context.get(KeysInitQuery.query)!;
+      const query: Algebra.Operation = clonedeep(action.context.get(KeysInitQuery.query)!);
       return query.input.expression;
     })();
 
