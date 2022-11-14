@@ -70,8 +70,8 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
             }
             resolve({ links: acceptedRelation.map(el => ({ url: el.node })) });
           })
-          .catch(() => {
-            resolve({ links: acceptedRelation.map(el => ({ url: el.node })) });
+          .catch(error => {
+            reject(error);
           });
       });
     });

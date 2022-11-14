@@ -433,7 +433,7 @@ describe('ActorExtractLinksExtractLinksTree', () => {
       expect(result).toEqual({ links: [{ url: secondExpectedLink }, { url: expectedUrl }]});
     });
 
-    it('should return the links of a TREE with one relation and a filter than failled to return', async() => {
+    it('should fail when the mediator return a fail promise', () => {
       const expectedUrl = 'http://foo.com';
       const input = stream([
         DF.quad(DF.namedNode(treeUrl), DF.namedNode('ex:p'), DF.namedNode('ex:o'), DF.namedNode('ex:gx')),
@@ -458,7 +458,7 @@ describe('ActorExtractLinksExtractLinksTree', () => {
 
       const mediationOutput: Promise<IActorOptimizeLinkTraversalOutput> = Promise.reject(new Error('failled request'));
       const mediator: any = {
-        mediate(arg: any) {
+        mediate(_arg: any) {
           return mediationOutput;
         },
       };
@@ -466,10 +466,11 @@ describe('ActorExtractLinksExtractLinksTree', () => {
       const actorWithCustomMediator = new ActorExtractLinksTree(
         { name: 'actor', bus, mediatorOptimizeLinkTraversal: mediator },
       );
-      const result = await actorWithCustomMediator.run(action);
-
-      expect(result).toEqual({ links: [{ url: expectedUrl }]});
-      expect(spyMock).toBeCalledTimes(1);
+      actorWithCustomMediator.run(action).then(res => {
+        expect(res).toBeUndefined();
+      }).catch(error => {
+        expect(error).toBeDefined();
+      });
     });
   });
 
