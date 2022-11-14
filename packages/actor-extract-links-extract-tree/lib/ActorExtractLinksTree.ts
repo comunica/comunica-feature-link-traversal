@@ -10,14 +10,14 @@ import type { IRelationDescription, IRelation, INode } from '@comunica/types-lin
 import { TreeNodes } from '@comunica/types-link-traversal';
 import type * as RDF from 'rdf-js';
 import { buildRelations, collectRelation } from './treeMetadataExtraction';
+import {FilterNode} from './FilterNode';
 
 /**
  * A comunica Extract Links Tree Extract Links Actor.
  */
 export class ActorExtractLinksTree extends ActorExtractLinks {
-  private readonly mediatorOptimizeLinkTraversal: MediatorOptimizeLinkTraversal;
 
-  public constructor(args: IActorExtractLinksTreeArgs) {
+  public constructor(args: IActorExtractLinksArgs) {
     super(args);
   }
 
@@ -61,13 +61,10 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
 
         const node: INode = { relation: relations, subject: currentNodeUrl };
         let acceptedRelation = relations;
-        this.mediatorOptimizeLinkTraversal.mediate(
-          { treeMetadata: node, context: action.context },
-        )
-          .then(linkTraversalOptimisation => {
-            if (typeof linkTraversalOptimisation !== 'undefined') {
-              acceptedRelation = this.handleOptimization(linkTraversalOptimisation, relations);
-            }
+
+        FilterNode.run(node, action.context)
+          .then(filters => {
+            acceptedRelation = this.handleOptimization(filters, relations);
             resolve({ links: acceptedRelation.map(el => ({ url: el.node })) });
           })
           .catch(error => {
@@ -77,14 +74,11 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
     });
   }
 
-  private handleOptimization(linkTraversalOptimisation: IActorOptimizeLinkTraversalOutput,
+  private handleOptimization(filters: Map<String, boolean>,
     relations: IRelation[]): IRelation[] {
-    if (linkTraversalOptimisation.filters) {
-      return linkTraversalOptimisation.filters.size > 0 ?
-        relations.filter(relation => linkTraversalOptimisation.filters?.get(relation.node)) :
+      return filters.size > 0 ?
+        relations.filter(relation => filters?.get(relation.node)) :
         relations;
-    }
-    return relations;
   }
 
   /**
@@ -114,11 +108,3 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
     buildRelations(relationDescriptions, quad);
   }
 }
-
-export interface IActorExtractLinksTreeArgs extends IActorExtractLinksArgs {
-  /**
-   * The optmize link traversal mediator
-   */
-  mediatorOptimizeLinkTraversal: MediatorOptimizeLinkTraversal;
-}
-

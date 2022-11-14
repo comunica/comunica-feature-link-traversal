@@ -17,16 +17,6 @@ describe('ActorExtractLinksExtractLinksTree', () => {
   let spyMockMediator: any;
 
   beforeEach(() => {
-    mockMediator = {
-      mediate(arg: any) {
-        return Promise.resolve(
-          {
-            filters: <Map<IRelation, boolean>> new Map(),
-          },
-        );
-      },
-    };
-    spyMockMediator = jest.spyOn(mockMediator, 'mediate');
     bus = new Bus({ name: 'bus' });
   });
 
@@ -55,7 +45,7 @@ describe('ActorExtractLinksExtractLinksTree', () => {
     });
 
     beforeEach(() => {
-      actor = new ActorExtractLinksTree({ name: 'actor', bus, mediatorOptimizeLinkTraversal: mockMediator });
+      actor = new ActorExtractLinksTree({ name: 'actor', bus });
     });
 
     it('should return the links of a TREE with one relation', async() => {
@@ -324,7 +314,7 @@ describe('ActorExtractLinksExtractLinksTree', () => {
       };
       const spyMock = jest.spyOn(mediator, 'mediate');
       const actorWithCustomMediator = new ActorExtractLinksTree(
-        { name: 'actor', bus, mediatorOptimizeLinkTraversal: mediator },
+        { name: 'actor', bus},
       );
 
       const result = await actorWithCustomMediator.run(action);
@@ -422,7 +412,7 @@ describe('ActorExtractLinksExtractLinksTree', () => {
       };
       const spyMock = jest.spyOn(mediator, 'mediate');
       const actorWithCustomMediator = new ActorExtractLinksTree(
-        { name: 'actor', bus, mediatorOptimizeLinkTraversal: mediator },
+        { name: 'actor', bus },
       );
 
       const result = await actorWithCustomMediator.run(action);
@@ -465,7 +455,7 @@ describe('ActorExtractLinksExtractLinksTree', () => {
 
       const spyMock = jest.spyOn(mediator, 'mediate');
       const actorWithCustomMediator = new ActorExtractLinksTree(
-        { name: 'actor', bus, mediatorOptimizeLinkTraversal: mediator },
+        { name: 'actor', bus },
       );
       await actorWithCustomMediator.run(action).then(res => {
         expect(res).toBeUndefined();
@@ -482,7 +472,7 @@ describe('ActorExtractLinksExtractLinksTree', () => {
     const treeUrl = 'ex:s';
 
     beforeEach(() => {
-      actor = new ActorExtractLinksTree({ name: 'actor', bus, mediatorOptimizeLinkTraversal: mockMediator });
+      actor = new ActorExtractLinksTree({ name: 'actor', bus });
     });
 
     it('should test when giving a TREE', async() => {
