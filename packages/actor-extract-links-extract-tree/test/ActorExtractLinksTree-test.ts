@@ -433,7 +433,7 @@ describe('ActorExtractLinksExtractLinksTree', () => {
       expect(result).toEqual({ links: [{ url: secondExpectedLink }, { url: expectedUrl }]});
     });
 
-    it('should fail when the mediator return a fail promise', () => {
+    it('should fail when the mediator return a fail promise', async() => {
       const expectedUrl = 'http://foo.com';
       const input = stream([
         DF.quad(DF.namedNode(treeUrl), DF.namedNode('ex:p'), DF.namedNode('ex:o'), DF.namedNode('ex:gx')),
@@ -462,15 +462,18 @@ describe('ActorExtractLinksExtractLinksTree', () => {
           return mediationOutput;
         },
       };
+
       const spyMock = jest.spyOn(mediator, 'mediate');
       const actorWithCustomMediator = new ActorExtractLinksTree(
         { name: 'actor', bus, mediatorOptimizeLinkTraversal: mediator },
       );
-      actorWithCustomMediator.run(action).then(res => {
+      await actorWithCustomMediator.run(action).then(res => {
         expect(res).toBeUndefined();
       }).catch(error => {
         expect(error).toBeDefined();
       });
+
+      expect(spyMock).toBeCalledTimes(1);
     });
   });
 

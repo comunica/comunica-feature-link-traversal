@@ -53,8 +53,8 @@ export interface IRelation {
 
 // An helper to build the relation from a stream
 export interface IRelationDescription {
-  subject?: [string | undefined, RDF.Quad];
+  subject?: [string, RDF.Quad];
   value?: any;
-  operator?: [RelationOperator | undefined, RDF.Quad];
-  remainingItems?: [number | undefined, RDF.Quad];
+  operator?: [RelationOperator, RDF.Quad];
+  remainingItems?: [number, RDF.Quad];
 }

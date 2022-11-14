@@ -29,19 +29,20 @@ export class ActorOptimizeLinkTraversalFilterTreeLinks extends ActorOptimizeLink
   }
 
   public async test(action: IActionOptimizeLinkTraversal): Promise<IActorTest> {
+    if (!action.treeMetadata) {
+      return Promise.reject(new Error('TREE metadata is not defined'));
+    }
+
+    if (!action.treeMetadata.relation) {
+      return Promise.reject(new Error('There is no relation into the node'));
+    }
+
     const query: Algebra.Operation = action.context.get(KeysInitQuery.query)!;
-    const relations: IRelation[] = (() => {
-      if (typeof action.treeMetadata !== 'undefined') {
-        return typeof action.treeMetadata.relation !== 'undefined' ? action.treeMetadata.relation : [];
-      }
-      return [];
-    })();
-    const filterExist: boolean = this.doesNodeExist(query, Algebra.types.FILTER);
-    return filterExist && relations.length > 0 ?
-      Promise.resolve(true) :
-      Promise.reject(new Error(
-        'the action must contain TREE relation and the query must contain at least a filter',
-      ));
+    if (!this.doesNodeExist(query, Algebra.types.FILTER)) {
+      return Promise.reject(new Error('there is no filter defined into the query'));
+    }
+
+    return Promise.resolve(true);
   }
 
   public async run(action: IActionOptimizeLinkTraversal): Promise<IActorOptimizeLinkTraversalOutput> {
@@ -58,12 +59,10 @@ export class ActorOptimizeLinkTraversalFilterTreeLinks extends ActorOptimizeLink
       return { filters: filterMap };
     }
     // Capture the relation from the input
-    const relations: IRelation[] = (() => {
-      if (typeof action.treeMetadata !== 'undefined') {
-        return action.treeMetadata.relation!;
-      }
-      return [];
-    })();
+    const relations: IRelation[] = typeof action?.treeMetadata?.relation !== 'undefined' ?
+      action.treeMetadata.relation :
+      [];
+
     for (const relation of relations) {
       if (typeof relation.path === 'undefined' || typeof relation.value === 'undefined') {
         filterMap.set(relation.node, true);

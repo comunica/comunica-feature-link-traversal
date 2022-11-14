@@ -14,58 +14,30 @@ export function collectRelation(
   nodeLinks: string,
 ): IRelation {
   const relation: IRelation = { node: nodeLinks };
-  const typeRelation = (() => {
-    if (typeof relationDescription.operator !== 'undefined') {
-      return typeof relationDescription.operator[0] !== 'undefined' ? relationDescription.operator[0] : undefined;
-    }
-  })();
-
-  if (typeof typeRelation !== 'undefined' && typeof relationDescription.operator !== 'undefined') {
+  if (relationDescription?.operator) {
     relation['@type'] = {
-      value: <string> typeRelation,
+      value: <string> relationDescription.operator[0],
       quad: relationDescription.operator[1],
     };
   }
-  const remainingItems = (
-    () => {
-      if (typeof relationDescription.remainingItems !== 'undefined') {
-        return typeof relationDescription.remainingItems[0] !== 'undefined' ?
-          relationDescription.remainingItems[0] :
-          undefined;
-      }
-    }
-  )();
-  if (typeof remainingItems !== 'undefined' && typeof relationDescription.remainingItems !== 'undefined') {
+
+  if (relationDescription?.remainingItems) {
     relation.remainingItems = {
-      value: remainingItems,
+      value: relationDescription.remainingItems[0],
       quad: relationDescription.remainingItems[1],
     };
   }
 
-  const path = (() => {
-    if (typeof relationDescription.subject !== 'undefined') {
-      return typeof relationDescription.subject[0] !== 'undefined' ?
-        relationDescription.subject[0] :
-        undefined;
-    }
-  })();
-  if (typeof path !== 'undefined' && typeof relationDescription.subject !== 'undefined') {
+  if (relationDescription?.subject) {
     relation.path = {
-      value: path,
+      value: relationDescription.subject[0],
       quad: relationDescription.subject[1],
     };
   }
 
-  const value = (() => {
-    if (typeof relationDescription.value !== 'undefined') {
-      return typeof relationDescription.value[0] !== 'undefined' ?
-        relationDescription.value[0] :
-        undefined;
-    }
-  })();
-  if (typeof value !== 'undefined' && typeof relationDescription.value !== 'undefined') {
+  if (relationDescription?.value) {
     relation.value = {
-      value,
+      value: relationDescription.value[0],
       quad: relationDescription.value[1],
     };
   }
@@ -128,24 +100,17 @@ export function addRelationDescription({
   operator?: RelationOperator;
   remainingItems?: number;
 }): void {
-  const currentDescription: IRelationDescription | undefined = relationDescriptions.get(quad.subject.value);
-  if (typeof currentDescription === 'undefined') {
-    relationDescriptions.set(quad.subject.value, {
-      value: typeof value !== 'undefined' ? [ value, quad ] : undefined,
-      subject: typeof subject !== 'undefined' ? [ subject, quad ] : undefined,
-      operator: typeof operator !== 'undefined' ? [ operator, quad ] : undefined,
-      remainingItems: typeof remainingItems !== 'undefined' ? [ remainingItems, quad ] : undefined,
-    });
-  } else {
-    /* eslint-disable prefer-rest-params */
-    const newDescription: IRelationDescription = currentDescription;
-    const objectArgument = arguments[0];
-    for (const [ arg, val ] of Object.entries(objectArgument)) {
-      if (typeof val !== 'undefined' && arg !== 'relationDescriptions' && arg !== 'quad') {
-        newDescription[<keyof typeof currentDescription>arg] = [ val, quad ];
-        break;
-      }
+  const newDescription: IRelationDescription = typeof relationDescriptions?.get(quad.subject.value) !== 'undefined' ?
+    relationDescriptions.get(quad.subject.value)! :
+    {};
+  /* eslint-disable prefer-rest-params */
+  const objectArgument = arguments[0];
+  for (const [ arg, val ] of Object.entries(objectArgument)) {
+    if (val && arg !== 'relationDescriptions' && arg !== 'quad') {
+      newDescription[<keyof typeof newDescription>arg] = [ val, quad ];
+      break;
     }
-    /* eslint-enable prefer-rest-params */
   }
+  /* eslint-enable prefer-rest-params */
+  relationDescriptions.set(quad.subject.value, newDescription);
 }

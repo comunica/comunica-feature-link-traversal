@@ -79,7 +79,7 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
 
   private handleOptimization(linkTraversalOptimisation: IActorOptimizeLinkTraversalOutput,
     relations: IRelation[]): IRelation[] {
-    if (typeof linkTraversalOptimisation.filters !== 'undefined') {
+    if (linkTraversalOptimisation.filters) {
       return linkTraversalOptimisation.filters.size > 0 ?
         relations.filter(relation => linkTraversalOptimisation.filters?.get(relation.node)) :
         relations;

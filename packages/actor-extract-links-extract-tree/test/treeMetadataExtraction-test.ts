@@ -1,8 +1,8 @@
-import type { IRelation, IRelationDescription } from '@comunica/types-link-traversal';
+import type { IRelationDescription } from '@comunica/types-link-traversal';
 import { TreeNodes, RelationOperator } from '@comunica/types-link-traversal';
 import { DataFactory } from 'rdf-data-factory';
 import type * as RDF from 'rdf-js';
-import { buildRelations, addRelationDescription, collectRelation } from '../lib/treeMetadataExtraction';
+import { buildRelations, addRelationDescription } from '../lib/treeMetadataExtraction';
 
 const DF = new DataFactory<RDF.Quad>();
 
@@ -213,62 +213,5 @@ describe('treeMetadataExtraction', () => {
 
         expect(relationDescriptions.size).toBe(0);
       });
-  });
-
-  describe('collectRelation with undefined description', () => {
-    const aQuad: RDF.Quad = DF.quad(DF.namedNode('ex:s'),
-      DF.namedNode('ex:p'),
-      DF.namedNode('ex:o'),
-      DF.namedNode('ex:gx'));
-    const nodeLink = 'http://aLink.com';
-
-    it('should not have the @type field when the operator field is defined but it\'s value is undefined', () => {
-      const relationDescription: IRelationDescription = {
-        operator: [ undefined, aQuad ],
-      };
-      const expectedRelation: IRelation = {
-        node: nodeLink,
-      };
-      const relation = collectRelation(relationDescription, nodeLink);
-
-      expect(relation).toStrictEqual(expectedRelation);
-    });
-
-    it('should not have the remainingItems field when the operator field is defined but it\'s value is undefined',
-      () => {
-        const relationDescription: IRelationDescription = {
-          remainingItems: [ undefined, aQuad ],
-        };
-        const expectedRelation: IRelation = {
-          node: nodeLink,
-        };
-        const relation = collectRelation(relationDescription, nodeLink);
-
-        expect(relation).toStrictEqual(expectedRelation);
-      });
-
-    it('should not have the path field when the operator field is defined but it\'s value is undefined', () => {
-      const relationDescription: IRelationDescription = {
-        subject: [ undefined, aQuad ],
-      };
-      const expectedRelation: IRelation = {
-        node: nodeLink,
-      };
-      const relation = collectRelation(relationDescription, nodeLink);
-
-      expect(relation).toStrictEqual(expectedRelation);
-    });
-
-    it('should not have the value field when the operator field is defined but it\'s value is undefined', () => {
-      const relationDescription: IRelationDescription = {
-        value: [ undefined, aQuad ],
-      };
-      const expectedRelation: IRelation = {
-        node: nodeLink,
-      };
-      const relation = collectRelation(relationDescription, nodeLink);
-
-      expect(relation).toStrictEqual(expectedRelation);
-    });
   });
 });
