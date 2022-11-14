@@ -59,8 +59,7 @@
     "@comunica/config-query-sparql-link-traversal": "^0.0.1",
     "@comunica/mediator-combine-array": "^0.0.1",
     "@comunica/actor-init-query": "^2.2.0",
-    "@comunica/runner-cli": "^2.2.0",
-    "@comunica/actor-optimize-link-traversal-filter-tree-links": "^0.0.1"
+    "@comunica/runner-cli": "^2.2.0"
   },
   "scripts": {
     "build": "npm run build:ts",

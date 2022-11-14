@@ -1,13 +1,10 @@
 import { BindingsFactory } from '@comunica/bindings-factory';
 import { KeysInitQuery } from '@comunica/context-entries';
-import type { Bindings } from '@comunica/types';
-import type { IRelation } from '@comunica/types-link-traversal';
+import type { Bindings, IActionContext } from '@comunica/types';
+import type { IRelation, INode } from '@comunica/types-link-traversal';
 import type * as RDF from 'rdf-js';
 import { Algebra } from 'sparqlalgebrajs';
 import { AsyncEvaluator } from 'sparqlee';
-import type { IActionContext } from '@comunica/types';
-import type { INode } from '@comunica/types-link-traversal';
-
 
 const BF = new BindingsFactory();
 /**
@@ -17,26 +14,30 @@ const BF = new BindingsFactory();
  * link should be follow or not
  */
 export class FilterNode {
-
-  private static test(node: INode, context:IActionContext): boolean {
-
+  public test(node: INode, context: IActionContext): boolean {
     if (!node.relation) {
-      return false
+      return false;
+    }
+
+    if (node.relation.length === 0) {
+      return false;
     }
 
     const query: Algebra.Operation = context.get(KeysInitQuery.query)!;
-    if (!this.doesNodeExist(query, Algebra.types.FILTER)) {
-      return false
+    if (!FilterNode.doesNodeExist(query, Algebra.types.FILTER)) {
+      return false;
     }
 
-    return true
+    return true;
   }
 
-  public static async run(node: INode, context: IActionContext): Promise<Map<string, boolean>> {
+  public async run(node: INode, context: IActionContext): Promise<Map<string, boolean>> {
     const filterMap: Map<string, boolean> = new Map();
-    if (this.test(node, context)){
-      return filterMap
+
+    if (!this.test(node, context)) {
+      return new Map();
     }
+
     // Extract the filter expression
     const filterOperation: Algebra.Expression = (() => {
       const query: Algebra.Operation = context.get(KeysInitQuery.query)!;
@@ -44,14 +45,12 @@ export class FilterNode {
     })();
 
     // Extract the bgp of the query
-    const queryBody: RDF.Quad[] = this.findBgp(context.get(KeysInitQuery.query)!);
+    const queryBody: RDF.Quad[] = FilterNode.findBgp(context.get(KeysInitQuery.query)!);
     if (queryBody.length === 0) {
-      return  filterMap ;
+      return new Map();
     }
     // Capture the relation from the input
-    const relations: IRelation[] = typeof node.relation !== 'undefined' ?
-      node.relation :
-      [];
+    const relations: IRelation[] = node.relation!;
 
     for (const relation of relations) {
       if (typeof relation.path === 'undefined' || typeof relation.value === 'undefined') {
@@ -59,15 +58,15 @@ export class FilterNode {
         continue;
       }
       // Find the quad from the bgp that are related to the TREE relation
-      const relevantQuads = this.findRelavantQuad(queryBody, relation.path.value);
+      const relevantQuads = FilterNode.findRelavantQuad(queryBody, relation.path.value);
       if (relevantQuads.length === 0) {
         filterMap.set(relation.node, true);
         continue;
       }
 
       // Create the binding in relation to the relevant quad
-      const bindings = this.createBinding(relevantQuads, relation.value.quad);
-      const filterExpression: Algebra.Operation = this.deleteUnrelevantFilter(filterOperation, bindings);
+      const bindings = FilterNode.createBinding(relevantQuads, relation.value.quad);
+      const filterExpression: Algebra.Operation = FilterNode.deleteUnrelevantFilter(filterOperation, bindings);
       if (filterExpression.args.length === 0) {
         filterMap.set(relation.node, true);
         continue;
@@ -77,7 +76,7 @@ export class FilterNode {
       const result: boolean = await evaluator.evaluateAsEBV(bindings);
       filterMap.set(relation.node, result);
     }
-    return  filterMap;
+    return filterMap;
   }
 
   /**
@@ -154,7 +153,7 @@ export class FilterNode {
   private static findBgp(query: Algebra.Operation): RDF.Quad[] {
     let currentNode = query.input;
     do {
-      if (currentNode.type === 'join') {
+      if (currentNode.type === Algebra.types.JOIN) {
         return this.formatBgp(currentNode.input);
       }
       if ('input' in currentNode) {
@@ -166,6 +165,9 @@ export class FilterNode {
 
   private static formatBgp(joins: any): RDF.Quad[] {
     const bgp: RDF.Quad[] = [];
+    if (joins.length === 0) {
+      return [];
+    }
     if (!('input' in joins[0])) {
       return joins;
     }

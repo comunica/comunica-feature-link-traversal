@@ -3,20 +3,19 @@ import type {
   IActorExtractLinksOutput, IActorExtractLinksArgs,
 } from '@comunica/bus-extract-links';
 import { ActorExtractLinks } from '@comunica/bus-extract-links';
-import type { MediatorOptimizeLinkTraversal,
-  IActorOptimizeLinkTraversalOutput } from '@comunica/bus-optimize-link-traversal';
+
 import type { IActorTest } from '@comunica/core';
+import type { IActionContext } from '@comunica/types';
 import type { IRelationDescription, IRelation, INode } from '@comunica/types-link-traversal';
 import { TreeNodes } from '@comunica/types-link-traversal';
 import type * as RDF from 'rdf-js';
+import { FilterNode } from './FilterNode';
 import { buildRelations, collectRelation } from './treeMetadataExtraction';
-import {FilterNode} from './FilterNode';
 
 /**
  * A comunica Extract Links Tree Extract Links Actor.
  */
 export class ActorExtractLinksTree extends ActorExtractLinks {
-
   public constructor(args: IActorExtractLinksArgs) {
     super(args);
   }
@@ -46,7 +45,7 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
           relationDescriptions));
 
       // Resolve to discovered links
-      metadata.on('end', () => {
+      metadata.on('end', async() => {
         // Validate if the node forward have the current node as implicit subject
         for (const [ nodeValue, link ] of nodeLinks) {
           if (pageRelationNodes.has(nodeValue)) {
@@ -62,23 +61,24 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
         const node: INode = { relation: relations, subject: currentNodeUrl };
         let acceptedRelation = relations;
 
-        FilterNode.run(node, action.context)
-          .then(filters => {
-            acceptedRelation = this.handleOptimization(filters, relations);
-            resolve({ links: acceptedRelation.map(el => ({ url: el.node })) });
-          })
-          .catch(error => {
-            reject(error);
-          });
+        const filters = await this.applyFilter(node, action.context);
+        acceptedRelation = this.handleFilter(filters, acceptedRelation);
+        resolve({ links: acceptedRelation.map(el => ({ url: el.node })) });
       });
     });
   }
+  
+  /* istanbul ignore next */
+  public async applyFilter(node: INode, context: IActionContext): Promise<Map<string, boolean>> {
+    return await new FilterNode().run(node, context);
+  }
+  /* istanbul ignore next */
 
-  private handleOptimization(filters: Map<String, boolean>,
-    relations: IRelation[]): IRelation[] {
-      return filters.size > 0 ?
-        relations.filter(relation => filters?.get(relation.node)) :
-        relations;
+
+  private handleFilter(filters: Map<string, boolean>, acceptedRelation: IRelation[]): IRelation[] {
+    return filters.size > 0 ?
+      acceptedRelation.filter(relation => filters?.get(relation.node)) :
+      acceptedRelation;
   }
 
   /**

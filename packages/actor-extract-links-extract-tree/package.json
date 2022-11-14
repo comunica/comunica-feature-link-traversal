@@ -38,7 +38,9 @@
     "@comunica/context-entries": "^2.4.0",
     "@comunica/context-entries-link-traversal": "^0.0.1",
     "@comunica/types-link-traversal": "^0.0.1",
-    "@comunica/bus-optimize-link-traversal": "^0.0.1"
+    "sparqlalgebrajs": "^4.0.0",
+    "sparqlee": "^2.1.0",
+    "@comunica/bindings-factory": "^2.2.0"
   },
   "scripts": {
     "build": "npm run build:ts && npm run build:components",
