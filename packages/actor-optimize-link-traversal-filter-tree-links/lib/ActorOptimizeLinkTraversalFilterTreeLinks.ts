@@ -9,13 +9,11 @@ import { KeysInitQuery } from '@comunica/context-entries';
 import type { IActorTest } from '@comunica/core';
 import type { Bindings } from '@comunica/types';
 import type { IRelation } from '@comunica/types-link-traversal';
-import { DataFactory } from 'rdf-data-factory';
 import type * as RDF from 'rdf-js';
 import { Algebra } from 'sparqlalgebrajs';
 import { AsyncEvaluator } from 'sparqlee';
 
-const DF = new DataFactory<RDF.BaseQuad>();
-
+const BF = new BindingsFactory();
 /**
  * A comunica Link traversal optimizer that filter link of document
  * following the [TREE specification](https://treecg.github.io/specification/).
@@ -120,6 +118,7 @@ export class ActorOptimizeLinkTraversalFilterTreeLinks extends ActorOptimizeLink
       type: Algebra.types.EXPRESSION,
       args: [],
     };
+
     if ('operator' in filterExpression.args[0]) {
       newFilterExpression.args = (<Algebra.Expression[]>filterExpression.args).filter(expression => {
         for (const arg of expression.args) {
@@ -152,7 +151,7 @@ export class ActorOptimizeLinkTraversalFilterTreeLinks extends ActorOptimizeLink
    * create the binding from quad related to the TREE:path
    */
   private createBinding(relevantQuad: RDF.Quad[], relationValue: RDF.Quad): Bindings {
-    let binding: Bindings = new BindingsFactory().bindings();
+    let binding: Bindings = BF.bindings();
     for (const quad of relevantQuad) {
       const object = quad.object.value;
       binding = binding.set(object, <RDF.Literal>relationValue.object);
