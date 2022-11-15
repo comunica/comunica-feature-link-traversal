@@ -1,6 +1,6 @@
 import { KeysInitQuery } from '@comunica/context-entries';
 import { ActionContext } from '@comunica/core';
-import type { INode } from '@comunica/types-link-traversal';
+import type { ITreeNode } from '@comunica/types-link-traversal';
 import { DataFactory } from 'rdf-data-factory';
 import type * as RDF from 'rdf-js';
 import { Algebra } from 'sparqlalgebrajs';
@@ -21,7 +21,7 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
         const context = new ActionContext({
           [KeysInitQuery.query.name]: { type: Algebra.types.FILTER },
         });
-        const node: INode = {
+        const node: ITreeNode = {
           subject: treeSubject,
           relation: [
             {
@@ -38,7 +38,7 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
         const context = new ActionContext({
           [KeysInitQuery.query.name]: { type: Algebra.types.FILTER },
         });
-        const node: INode = {
+        const node: ITreeNode = {
           subject: treeSubject,
         };
 
@@ -50,7 +50,7 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
         const context = new ActionContext({
           [KeysInitQuery.query.name]: { type: Algebra.types.FILTER },
         });
-        const node: INode = {
+        const node: ITreeNode = {
           subject: treeSubject,
           relation: [],
         };
@@ -62,7 +62,7 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
         const context = new ActionContext({
           [KeysInitQuery.query.name]: { type: Algebra.types.FILTER },
         });
-        const node: INode = {
+        const node: ITreeNode = {
           subject: treeSubject,
           relation: [],
         };
@@ -74,7 +74,7 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
         const context = new ActionContext({
           [KeysInitQuery.query.name]: { type: Algebra.types.ASK },
         });
-        const node: INode = {
+        const node: ITreeNode = {
           subject: treeSubject,
           relation: [
             {
@@ -90,7 +90,7 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
         const context = new ActionContext({
           [KeysInitQuery.query.name]: { type: Algebra.types.ASK },
         });
-        const node: INode = {
+        const node: ITreeNode = {
           subject: treeSubject,
           relation: [],
         };
@@ -107,7 +107,7 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
       it('should accept the relation when the filter respect the relation', async() => {
         const treeSubject = 'tree';
 
-        const node: INode = {
+        const node: ITreeNode = {
           subject: treeSubject,
           relation: [
             {
@@ -194,7 +194,7 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
       it('should not accept the relation when the filter is not respected by the relation', async() => {
         const treeSubject = 'tree';
 
-        const node: INode = {
+        const node: ITreeNode = {
           subject: treeSubject,
           relation: [
             {
@@ -270,7 +270,7 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
       it('should accept the relation when the query don\'t invoke the right path', async() => {
         const treeSubject = 'tree';
 
-        const node: INode = {
+        const node: ITreeNode = {
           subject: treeSubject,
           relation: [
             {
@@ -391,7 +391,7 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
         const context = new ActionContext({
           [KeysInitQuery.query.name]: query,
         });
-        const node: INode = { subject: 'foo' };
+        const node: ITreeNode = { subject: 'foo' };
         const result = await filterNode.run(node, context);
 
         expect(result).toStrictEqual(
@@ -403,7 +403,7 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
         async() => {
           const treeSubject = 'tree';
 
-          const node: INode = {
+          const node: ITreeNode = {
             subject: treeSubject,
             relation: [
               {
@@ -516,7 +516,7 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
        and a relation doesn't specify a path`, async() => {
         const treeSubject = 'tree';
 
-        const node: INode = {
+        const node: ITreeNode = {
           subject: treeSubject,
           relation: [
             {
@@ -596,7 +596,7 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
       it('should accept the relation when the filter argument are not related to the query', async() => {
         const treeSubject = 'tree';
 
-        const node: INode = {
+        const node: ITreeNode = {
           subject: treeSubject,
           relation: [
             {
@@ -672,7 +672,7 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
       it('should accept the relation when there is multiples filters and one is not relevant', async() => {
         const treeSubject = 'tree';
 
-        const node: INode = {
+        const node: ITreeNode = {
           subject: treeSubject,
           relation: [
             {
@@ -781,7 +781,7 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
       it('should accept the relation when the filter compare two constants', async() => {
         const treeSubject = 'tree';
 
-        const node: INode = {
+        const node: ITreeNode = {
           subject: treeSubject,
           relation: [
             {
@@ -900,7 +900,7 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
       it('should return an empty filter map if there is bgp of lenght 0', async() => {
         const treeSubject = 'tree';
 
-        const node: INode = {
+        const node: ITreeNode = {
           subject: treeSubject,
           relation: [
             {
@@ -974,7 +974,7 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
       it('should return an empty filter map if there is no bgp', async() => {
         const treeSubject = 'tree';
 
-        const node: INode = {
+        const node: ITreeNode = {
           subject: treeSubject,
           relation: [
             {

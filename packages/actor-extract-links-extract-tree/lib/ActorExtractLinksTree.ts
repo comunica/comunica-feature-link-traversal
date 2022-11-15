@@ -6,7 +6,7 @@ import { ActorExtractLinks } from '@comunica/bus-extract-links';
 
 import type { IActorTest } from '@comunica/core';
 import type { IActionContext } from '@comunica/types';
-import type { IRelationDescription, IRelation, INode } from '@comunica/types-link-traversal';
+import type { ITreeRelationDescription, ITreeRelation, ITreeNode } from '@comunica/types-link-traversal';
 import { TreeNodes } from '@comunica/types-link-traversal';
 import type * as RDF from 'rdf-js';
 import { FilterNode } from './FilterNode';
@@ -29,8 +29,8 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
       const metadata = action.metadata;
       const currentNodeUrl = action.url;
       const pageRelationNodes: Set<string> = new Set();
-      const relationDescriptions: Map<string, IRelationDescription> = new Map();
-      const relations: IRelation[] = [];
+      const relationDescriptions: Map<string, ITreeRelationDescription> = new Map();
+      const relations: ITreeRelation[] = [];
       const nodeLinks: [string, string][] = [];
 
       // Forward errors
@@ -58,7 +58,7 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
           }
         }
 
-        const node: INode = { relation: relations, subject: currentNodeUrl };
+        const node: ITreeNode = { relation: relations, subject: currentNodeUrl };
         let acceptedRelation = relations;
 
         const filters = await this.applyFilter(node, action.context);
@@ -69,12 +69,12 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
   }
 
   /* istanbul ignore next */
-  public async applyFilter(node: INode, context: IActionContext): Promise<Map<string, boolean>> {
+  public async applyFilter(node: ITreeNode, context: IActionContext): Promise<Map<string, boolean>> {
     return await new FilterNode().run(node, context);
   }
   /* istanbul ignore next */
 
-  private handleFilter(filters: Map<string, boolean>, acceptedRelation: IRelation[]): IRelation[] {
+  private handleFilter(filters: Map<string, boolean>, acceptedRelation: ITreeRelation[]): ITreeRelation[] {
     return filters.size > 0 ?
       acceptedRelation.filter(relation => filters?.get(relation.node)) :
       acceptedRelation;
@@ -95,7 +95,7 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
     url: string,
     pageRelationNodes: Set<string>,
     nodeLinks: [string, string][],
-    relationDescriptions: Map<string, IRelationDescription>,
+    relationDescriptions: Map<string, ITreeRelationDescription>,
   ): void {
     // If it's a relation of the current node
     if (quad.subject.value === url && quad.predicate.value === TreeNodes.Relation) {

@@ -26,12 +26,12 @@ export enum TreeNodes {
   RemainingItems = 'https://w3id.org/tree#remainingItems'
 }
 
-export interface INode {
-  relation?: IRelation[];
+export interface ITreeNode {
+  relation?: ITreeRelation[];
   subject: string;
 }
 
-export interface IRelation {
+export interface ITreeRelation {
   '@type'?: {
     value: string;
     quad: RDF.Quad;
@@ -52,7 +52,7 @@ export interface IRelation {
 }
 
 // An helper to build the relation from a stream
-export interface IRelationDescription {
+export interface ITreeRelationDescription {
   subject?: [string, RDF.Quad];
   value?: any;
   operator?: [RelationOperator, RDF.Quad];

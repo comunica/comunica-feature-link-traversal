@@ -1,7 +1,7 @@
 import { BindingsFactory } from '@comunica/bindings-factory';
 import { KeysInitQuery } from '@comunica/context-entries';
 import type { Bindings, IActionContext } from '@comunica/types';
-import type { IRelation, INode } from '@comunica/types-link-traversal';
+import type { ITreeRelation, ITreeNode } from '@comunica/types-link-traversal';
 import type * as RDF from 'rdf-js';
 import { Algebra } from 'sparqlalgebrajs';
 import { AsyncEvaluator } from 'sparqlee';
@@ -14,7 +14,7 @@ const BF = new BindingsFactory();
  * link should be follow or not
  */
 export class FilterNode {
-  public test(node: INode, context: IActionContext): boolean {
+  public test(node: ITreeNode, context: IActionContext): boolean {
     if (!node.relation) {
       return false;
     }
@@ -31,7 +31,7 @@ export class FilterNode {
     return true;
   }
 
-  public async run(node: INode, context: IActionContext): Promise<Map<string, boolean>> {
+  public async run(node: ITreeNode, context: IActionContext): Promise<Map<string, boolean>> {
     const filterMap: Map<string, boolean> = new Map();
 
     if (!this.test(node, context)) {
@@ -50,7 +50,7 @@ export class FilterNode {
       return new Map();
     }
     // Capture the relation from the input
-    const relations: IRelation[] = node.relation!;
+    const relations: ITreeRelation[] = node.relation!;
 
     for (const relation of relations) {
       if (typeof relation.path === 'undefined' || typeof relation.value === 'undefined') {

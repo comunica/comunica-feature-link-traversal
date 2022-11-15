@@ -1,4 +1,4 @@
-import type { IRelation, IRelationDescription } from '@comunica/types-link-traversal';
+import type { ITreeRelation, ITreeRelationDescription } from '@comunica/types-link-traversal';
 import { RelationOperator, TreeNodes } from '@comunica/types-link-traversal';
 import type * as RDF from 'rdf-js';
 
@@ -10,10 +10,10 @@ import type * as RDF from 'rdf-js';
  * to create a IRelation object
  */
 export function collectRelation(
-  relationDescription: IRelationDescription,
+  relationDescription: ITreeRelationDescription,
   nodeLinks: string,
-): IRelation {
-  const relation: IRelation = { node: nodeLinks };
+): ITreeRelation {
+  const relation: ITreeRelation = { node: nodeLinks };
   if (relationDescription?.operator) {
     relation['@type'] = {
       value: <string> relationDescription.operator[0],
@@ -46,7 +46,7 @@ export function collectRelation(
 }
 
 export function buildRelations(
-  relationDescriptions: Map<string, IRelationDescription>,
+  relationDescriptions: Map<string, ITreeRelationDescription>,
   quad: RDF.Quad,
 ): void {
   if (quad.predicate.value === TreeNodes.RDFTypeNode) {
@@ -93,14 +93,15 @@ export function addRelationDescription({
   operator,
   remainingItems,
 }: {
-  relationDescriptions: Map<string, IRelationDescription>;
+  relationDescriptions: Map<string, ITreeRelationDescription>;
   quad: RDF.Quad;
   value?: string;
   subject?: string;
   operator?: RelationOperator;
   remainingItems?: number;
 }): void {
-  const newDescription: IRelationDescription = typeof relationDescriptions?.get(quad.subject.value) !== 'undefined' ?
+  const newDescription: ITreeRelationDescription =
+  typeof relationDescriptions?.get(quad.subject.value) !== 'undefined' ?
     relationDescriptions.get(quad.subject.value)! :
     {};
   /* eslint-disable prefer-rest-params */
