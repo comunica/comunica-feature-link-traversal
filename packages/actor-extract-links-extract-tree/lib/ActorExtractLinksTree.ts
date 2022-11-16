@@ -85,11 +85,13 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
    * A helper function to find all the relations of a TREE document and the possible next nodes to visit.
    * The next nodes are not guaranteed to have as subject the URL of the current page,
    * so filtering is necessary afterward.
-   * @param quad the current quad.
-   * @param url url of the page
-   * @param pageRelationNodes the url of the relation node of the page that have as subject the URL of the page
-   * @param nodeLinks the url of the next potential page that has to be visited,
+   * @param {RDF.Quad} quad - the current quad.
+   * @param {string} url - url of the page
+   * @param {Set<string>} pageRelationNodes - the url of the relation node of the page that have as subject the URL of the page
+   * @param {[string, string][]} - nodeLinks the url of the next potential page that has to be visited,
    *  regardless if the implicit subject is the node of the page
+   * @param {Map<string, ITreeRelationDescription>} relationDescriptions - a map where the key is the id of the blank node
+   * associated with the description of a relation
    */
   private getTreeQuadsRawRelations(
     quad: RDF.Quad,
