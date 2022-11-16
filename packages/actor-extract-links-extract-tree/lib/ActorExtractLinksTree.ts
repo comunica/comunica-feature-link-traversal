@@ -46,21 +46,22 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
 
       // Resolve to discovered links
       metadata.on('end', async() => {
-        // Validate if the node forward have the current node as implicit subject
-        for (const [ nodeValue, link ] of nodeLinks) {
-          if (pageRelationNodes.has(nodeValue)) {
-            const relationDescription = relationDescriptions.get(nodeValue);
-            if (typeof relationDescription !== 'undefined') {
-              relations.push(collectRelation(relationDescription, link));
-            } else {
-              relations.push(collectRelation({}, link));
-            }
+        // Validate if the potential relation node are linked with the current page
+        // and add the relation description if it is connected
+        for (const [ blankNodeId, link ] of nodeLinks) {
+          // Check if the blank node id is the object of a relation of the current page
+          if (pageRelationNodes.has(blankNodeId)) {
+            const relationDescription = relationDescriptions.get(blankNodeId);
+            // Add the relation to the relation array
+            relations.push(collectRelation(relationDescription || {}, link));
           }
         }
 
+        // Create a ITreeNode object
         const node: ITreeNode = { relation: relations, subject: currentNodeUrl };
         let acceptedRelation = relations;
 
+        // Filter the relation based on the query
         const filters = await this.applyFilter(node, action.context);
         acceptedRelation = this.handleFilter(filters, acceptedRelation);
         resolve({ links: acceptedRelation.map(el => ({ url: el.node })) });
