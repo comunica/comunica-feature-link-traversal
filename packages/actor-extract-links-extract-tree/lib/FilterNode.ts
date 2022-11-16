@@ -163,6 +163,11 @@ export class FilterNode {
     return binding;
   }
 
+  /**
+ * Find the bgp of the original query of the user
+ * @param {Algebra.Operation} query - the original query
+ * @returns { RDF.Quad[]} the bgp of the query
+ */
   private static findBgp(query: Algebra.Operation): RDF.Quad[] {
     let currentNode: any = query;
     let bgp: RDF.Quad[] = [];
