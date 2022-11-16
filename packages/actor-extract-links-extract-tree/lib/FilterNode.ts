@@ -8,10 +8,10 @@ import { AsyncEvaluator } from 'sparqlee';
 
 const BF = new BindingsFactory();
 /**
- * A comunica Link traversal optimizer that filter link of document
- * following the [TREE specification](https://treecg.github.io/specification/).
- * The actor apply the filter of a query into the TREE relation to determine if a
- * link should be follow or not
+ * A class to apply [SPAQL filters](https://www.w3.org/TR/sparql11-query/#evaluation)
+ * to the [TREE specification](https://treecg.github.io/specification/).
+ * It use [sparqlee](https://github.com/comunica/sparqlee) to evaluate the filter where
+ * the binding are remplace by the [value of TREE relation](https://treecg.github.io/specification/#traversing)
  */
 export class FilterNode {
   public test(node: ITreeNode, context: IActionContext): boolean {
@@ -49,24 +49,29 @@ export class FilterNode {
     if (queryBody.length === 0) {
       return new Map();
     }
-    // Capture the relation from the input
+    // Capture the relation from the function argument
     const relations: ITreeRelation[] = node.relation!;
 
     for (const relation of relations) {
+      // Accept the relation if the relation does't specify a condition
       if (typeof relation.path === 'undefined' || typeof relation.value === 'undefined') {
         filterMap.set(relation.node, true);
         continue;
       }
       // Find the quad from the bgp that are related to the TREE relation
-      const relevantQuads = FilterNode.findRelavantQuad(queryBody, relation.path.value);
+      const relevantQuads = FilterNode.findRelevantQuad(queryBody, relation.path.value);
+
+      // Accept the relation if no quad are linked with the relation
       if (relevantQuads.length === 0) {
         filterMap.set(relation.node, true);
         continue;
       }
 
-      // Create the binding in relation to the relevant quad
+      // Create the binding from the relevant quad in association with the TREE relation
       const bindings = FilterNode.createBinding(relevantQuads, relation.value.quad);
-      const filterExpression: Algebra.Operation = FilterNode.deleteUnrelevantFilter(filterOperation, bindings);
+      const filterExpression: Algebra.Operation = FilterNode.generateTreeRelationFilter(filterOperation, bindings);
+
+      // Accept the relation if no filter are associated with the relation
       if (filterExpression.args.length === 0) {
         filterMap.set(relation.node, true);
         continue;
@@ -80,13 +85,13 @@ export class FilterNode {
   }
 
   /**
-   *
-   * @param queryBody
-   * @param path
-   * @returns RDF.Quad[]
-   * find the quad that has as predicate a the TREE:path of a relation
+   * Find the quad that match the predicate defined by the TREE:path from a TREE relation.
+   *  The subject can be anyting.
+   * @param {RDF.Quad[]} queryBody - the body of the query
+   * @param {string} path - TREE path
+   * @returns {RDF.Quad[]} the quad that contain the TREE path as predicate and a variable as object
    */
-  private static findRelavantQuad(queryBody: RDF.Quad[], path: string): RDF.Quad[] {
+  private static findRelevantQuad(queryBody: RDF.Quad[], path: string): RDF.Quad[] {
     const resp: RDF.Quad[] = [];
     for (const quad of queryBody) {
       if (quad.predicate.value === path && quad.object.termType === 'Variable') {
@@ -97,33 +102,41 @@ export class FilterNode {
   }
 
   /**
-   * @param filterExpression
-   * @param binding
-   * @returns Algebra.Expression
-   * delete the filters that are not related to TREE relation
+   * Delete the filters that are not related to the TREE relation
+   * @param {Algebra.Expression} filterExpression - the expression of the filter taken from the original query
+   * @param {Bindings} binding - binding that the resulting filter should contain
+   * @returns {Algebra.Expression} the resulting filter expression contain only filter related to the TREE relation
    */
-  private static deleteUnrelevantFilter(filterExpression: Algebra.Expression, binding: Bindings): Algebra.Expression {
+  private static generateTreeRelationFilter(filterExpression: Algebra.Expression,
+    binding: Bindings): Algebra.Expression {
+    // Generate an empty filter algebra
     let newFilterExpression: Algebra.Expression = {
       expressionType: Algebra.expressionTypes.OPERATOR,
       operator: filterExpression.operator,
       type: Algebra.types.EXPRESSION,
       args: [],
     };
-
+    // Check if there is one filter or multiple
     if ('operator' in filterExpression.args[0]) {
+      // Add the argument into the empty the new filter
       newFilterExpression.args = (<Algebra.Expression[]>filterExpression.args).filter(expression => {
         for (const arg of expression.args) {
           if ('term' in arg && arg.term.termType === 'Variable') {
+            // Check if the argument of the filter is present into the binding
             return binding.has(arg.term.value);
           }
         }
         return false;
       });
+
+      // If the filter has now a size of 1 change the form to respect the algebra specification
       if (newFilterExpression.args.length === 1) {
         newFilterExpression = newFilterExpression.args[0];
       }
     } else {
+      // Add the argument into the empty the new filter
       for (const arg of (<Algebra.Expression[]>filterExpression.args)) {
+        // Check if the argument of the filter is present into the binding
         if ('term' in arg && arg.term.termType === 'Variable' && !binding.has(arg.term.value)) {
           newFilterExpression.args = [];
           break;
@@ -135,17 +148,17 @@ export class FilterNode {
   }
 
   /**
-   *
-   * @param relevantQuad
-   * @param relationValue
-   * @returns Bindings
-   * create the binding from quad related to the TREE:path
+   * Create the binding from quad related to the TREE:path that will be used with sparqlee
+   * for filtering of relation
+   * @param {RDF.Quad[]} relevantQuad - the quads related to the TREE relation
+   * @param {RDF.Quad} relationValue - the quad related to the TREE path
+   * @returns {Bindings} the resulting binding
    */
   private static createBinding(relevantQuad: RDF.Quad[], relationValue: RDF.Quad): Bindings {
     let binding: Bindings = BF.bindings();
     for (const quad of relevantQuad) {
       const object = quad.object.value;
-      binding = binding.set(object, <RDF.Literal>relationValue.object);
+      binding = binding.set(object, relationValue.object);
     }
     return binding;
   }
@@ -179,6 +192,11 @@ export class FilterNode {
     return bgp;
   }
 
+  /**
+   * Format the section of the algebra graph contain a part of the bgp into an array of quad
+   * @param {any} joins - the join operation containing a part of the bgp
+   * @returns {RDF.Quad[]} the bgp in the form of an array of quad
+   */
   private static formatBgp(joins: any): RDF.Quad[] {
     const bgp = [];
     if (joins.length === 0) {
@@ -192,6 +210,12 @@ export class FilterNode {
     return bgp;
   }
 
+  /**
+   * Append the bgp of the query
+   * @param {RDF.Quad[]} bgp - the whole bgp
+   * @param {RDF.Quad[]} currentBgp - the bgp collected in the current node
+   * @returns {RDF.Quad[]} the bgp updated
+   */
   private static appendBgp(bgp: RDF.Quad[], currentBgp: RDF.Quad[]): RDF.Quad[] {
     if (Array.isArray(currentBgp)) {
       bgp = bgp.concat(currentBgp);
@@ -199,10 +223,16 @@ export class FilterNode {
     return bgp;
   }
 
-  private static doesNodeExist(query: Algebra.Operation, node: string): boolean {
+  /**
+   * Check if a specific node type exist inside the query
+   * @param {Algebra.Operation} query - the original query
+   * @param {string} nodeType - the tyoe of node requested
+   * @returns {boolean}
+   */
+  private static doesNodeExist(query: Algebra.Operation, nodeType: string): boolean {
     let currentNode = query;
     do {
-      if (currentNode.type === node) {
+      if (currentNode.type === nodeType) {
         return true;
       }
       /* istanbul ignore next */
