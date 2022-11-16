@@ -151,28 +151,50 @@ export class FilterNode {
   }
 
   private static findBgp(query: Algebra.Operation): RDF.Quad[] {
-    let currentNode = query.input;
+    let currentNode: any = query;
+    let bgp: RDF.Quad[] = [];
     do {
       if (currentNode.type === Algebra.types.JOIN) {
-        return this.formatBgp(currentNode.input);
+        const currentBgp = this.formatBgp(currentNode.input);
+        bgp = this.appendBgp(bgp, currentBgp);
+      } else if (currentNode.type === Algebra.types.CONSTRUCT &&
+        'template' in currentNode) {
+        // When it's a contruct query the where state
+        const currentBgp = this.formatBgp(currentNode.template);
+        bgp = this.appendBgp(bgp, currentBgp);
       }
+
       if ('input' in currentNode) {
         currentNode = currentNode.input;
       }
+
+      if (Array.isArray(currentNode)) {
+        for (const node of currentNode) {
+          if ('input' in node) {
+            currentNode = node.input;
+          }
+        }
+      }
     } while ('input' in currentNode);
-    return [];
+    return bgp;
   }
 
   private static formatBgp(joins: any): RDF.Quad[] {
-    const bgp: RDF.Quad[] = [];
+    const bgp = [];
     if (joins.length === 0) {
       return [];
     }
-    if (!('input' in joins[0])) {
-      return joins;
-    }
     for (const join of joins) {
-      bgp.push(join.input[0]);
+      if (!('input' in join)) {
+        bgp.push(join);
+      }
+    }
+    return bgp;
+  }
+
+  private static appendBgp(bgp: RDF.Quad[], currentBgp: RDF.Quad[]): RDF.Quad[] {
+    if (Array.isArray(currentBgp)) {
+      bgp = bgp.concat(currentBgp);
     }
     return bgp;
   }
