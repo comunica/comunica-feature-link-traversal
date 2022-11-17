@@ -183,11 +183,12 @@ export class FilterNode {
       if ('input' in currentNode) {
         currentNode = currentNode.input;
       }
-
+      // If the node is an array
       if (Array.isArray(currentNode)) {
         for (const node of currentNode) {
           if ('input' in node) {
             currentNode = node.input;
+            break;
           }
         }
       }
