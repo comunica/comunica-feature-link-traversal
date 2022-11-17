@@ -240,11 +240,9 @@ export class FilterNode {
       if (currentNode.type === nodeType) {
         return true;
       }
-      /* istanbul ignore next */
       if ('input' in currentNode) {
         currentNode = currentNode.input;
       }
-      /* istanbul ignore next */
     } while ('input' in currentNode);
     return false;
   }
