@@ -1,9 +1,10 @@
-import { KeysRdfResolveQuadPattern } from '@comunica/context-entries';
+import { KeysRdfResolveQuadPattern, KeysInitQuery } from '@comunica/context-entries';
 import { ActionContext, Bus } from '@comunica/core';
-import type { IRelation } from '@comunica/types-link-traversal';
+import type { ITreeRelation } from '@comunica/types-link-traversal';
 import { RelationOperator } from '@comunica/types-link-traversal';
 import { DataFactory } from 'rdf-data-factory';
 import type * as RDF from 'rdf-js';
+import { Algebra } from 'sparqlalgebrajs';
 import { ActorExtractLinksTree } from '../lib/ActorExtractLinksTree';
 
 const stream = require('streamify-array');
@@ -263,7 +264,7 @@ describe('ActorExtractLinksExtractLinksTree', () => {
           DF.namedNode('ex:gx')),
       ]);
       const action = { url: treeUrl, metadata: input, requestTime: 0, context };
-      const relations: IRelation[] = [
+      const relations: ITreeRelation[] = [
         {
           node: prunedUrl,
           remainingItems: {
@@ -303,6 +304,279 @@ describe('ActorExtractLinksExtractLinksTree', () => {
       jest.spyOn(actorWithCustomFilter, 'applyFilter').mockReturnValue(filterOutput);
       const result = await actorWithCustomFilter.run(action);
       expect(result).toEqual({ links: [{ url: expectedUrl }]});
+    });
+
+    it('should return the links of a TREE with one relation when using the real FilterNode class', async() => {
+      const expectedUrl = 'http://foo.com';
+      const input = stream([
+        DF.quad(DF.namedNode(treeUrl), DF.namedNode('ex:p'), DF.namedNode('ex:o'), DF.namedNode('ex:gx')),
+        DF.quad(DF.namedNode(treeUrl),
+          DF.namedNode('https://w3id.org/tree#foo'),
+          DF.literal(expectedUrl),
+          DF.namedNode('ex:gx')),
+        DF.quad(DF.namedNode(treeUrl),
+          DF.namedNode('https://w3id.org/tree#foo'),
+          DF.literal(expectedUrl),
+          DF.namedNode('ex:gx')),
+        DF.quad(DF.namedNode(treeUrl),
+          DF.namedNode('https://w3id.org/tree#relation'),
+          DF.blankNode('_:_g1'),
+          DF.namedNode('ex:gx')),
+        DF.quad(DF.blankNode('_:_g1'),
+          DF.namedNode('https://w3id.org/tree#node'),
+          DF.literal(expectedUrl),
+          DF.namedNode('ex:gx')),
+      ]);
+
+      const bgp = <RDF.Quad[]>[
+        DF.quad(DF.namedNode('ex:foo'), DF.namedNode('ex:path'), DF.variable('o')),
+        DF.quad(DF.namedNode('ex:foo'), DF.namedNode('ex:p'), DF.namedNode('ex:o')),
+        DF.quad(DF.namedNode('ex:bar'), DF.namedNode('ex:p2'), DF.namedNode('ex:o2')),
+        DF.quad(DF.namedNode('ex:too'), DF.namedNode('ex:p3'), DF.namedNode('ex:o3')),
+      ];
+      const filterExpression = {
+        expressionType: Algebra.expressionTypes.OPERATOR,
+        operator: '=',
+        type: Algebra.types.EXPRESSION,
+        args: [
+          {
+            expressionType: Algebra.expressionTypes.TERM,
+            type: Algebra.types.EXPRESSION,
+            term: {
+              termType: 'Variable',
+              value: 'o',
+            },
+          },
+          {
+            expressionType: Algebra.expressionTypes.TERM,
+            type: Algebra.types.EXPRESSION,
+            term: {
+              termType: 'Literal',
+              langugage: '',
+              value: '5',
+              datatype: {
+                termType: 'namedNode',
+                value: 'http://www.w3.org/2001/XMLSchema#integer',
+              },
+            },
+          },
+        ],
+      };
+
+      const query = {
+        type: Algebra.types.PROJECT,
+        input: {
+          type: Algebra.types.FILTER,
+          expression: filterExpression,
+          input: {
+            input: {
+              type: Algebra.types.JOIN,
+              input: bgp,
+            },
+          },
+        },
+      };
+      const contextWithQuery = new ActionContext({
+        [KeysRdfResolveQuadPattern.source.name]: treeUrl,
+        [KeysInitQuery.query.name]: query,
+      });
+
+      const actorWithFilterNodeClass = new ActorExtractLinksTree(
+        { name: 'actor', bus },
+      );
+      const action = { url: treeUrl, metadata: input, requestTime: 0, context: contextWithQuery };
+      const result = await actorWithFilterNodeClass.run(action);
+
+      expect(result).toEqual({ links: [{ url: expectedUrl }]});
+    });
+
+    it('should return the links of a TREE with one with a path relation when using the real FilterNode class',
+      async() => {
+        const expectedUrl = 'http://foo.com';
+        const input = stream([
+          DF.quad(DF.namedNode(treeUrl), DF.namedNode('ex:p'), DF.namedNode('ex:o'), DF.namedNode('ex:gx')),
+          DF.quad(DF.namedNode(treeUrl),
+            DF.namedNode('https://w3id.org/tree#foo'),
+            DF.literal(expectedUrl),
+            DF.namedNode('ex:gx')),
+          DF.quad(DF.namedNode(treeUrl),
+            DF.namedNode('https://w3id.org/tree#foo'),
+            DF.literal(expectedUrl),
+            DF.namedNode('ex:gx')),
+          DF.quad(DF.namedNode(treeUrl),
+            DF.namedNode('https://w3id.org/tree#relation'),
+            DF.blankNode('_:_g1'),
+            DF.namedNode('ex:gx')),
+
+          DF.quad(DF.blankNode('_:_g1'),
+            DF.namedNode('https://w3id.org/tree#node'),
+            DF.literal(expectedUrl),
+            DF.namedNode('ex:gx')),
+          DF.quad(DF.blankNode('_:_g1'),
+            DF.namedNode('https://w3id.org/tree#path'),
+            DF.literal('ex:path'),
+            DF.namedNode('ex:gx')),
+          DF.quad(DF.blankNode('_:_g1'),
+            DF.namedNode('https://w3id.org/tree#value'),
+            DF.literal('5', DF.namedNode('http://www.w3.org/2001/XMLSchema#integer')),
+            DF.namedNode('ex:gx')),
+
+        ]);
+
+        const bgp = <RDF.Quad[]>[
+          DF.quad(DF.namedNode('ex:foo'), DF.namedNode('ex:path'), DF.variable('o')),
+          DF.quad(DF.namedNode('ex:foo'), DF.namedNode('ex:p'), DF.namedNode('ex:o')),
+          DF.quad(DF.namedNode('ex:bar'), DF.namedNode('ex:p2'), DF.namedNode('ex:o2')),
+          DF.quad(DF.namedNode('ex:too'), DF.namedNode('ex:p3'), DF.namedNode('ex:o3')),
+        ];
+        const filterExpression = {
+          expressionType: Algebra.expressionTypes.OPERATOR,
+          operator: '=',
+          type: Algebra.types.EXPRESSION,
+          args: [
+            {
+              expressionType: Algebra.expressionTypes.TERM,
+              type: Algebra.types.EXPRESSION,
+              term: {
+                termType: 'Variable',
+                value: 'o',
+              },
+            },
+            {
+              expressionType: Algebra.expressionTypes.TERM,
+              type: Algebra.types.EXPRESSION,
+              term: {
+                termType: 'Literal',
+                langugage: '',
+                value: '5',
+                datatype: {
+                  termType: 'namedNode',
+                  value: 'http://www.w3.org/2001/XMLSchema#integer',
+                },
+              },
+            },
+          ],
+        };
+
+        const query = {
+          type: Algebra.types.PROJECT,
+          input: {
+            type: Algebra.types.FILTER,
+            expression: filterExpression,
+            input: {
+              input: {
+                type: Algebra.types.JOIN,
+                input: bgp,
+              },
+            },
+          },
+        };
+        const contextWithQuery = new ActionContext({
+          [KeysRdfResolveQuadPattern.source.name]: treeUrl,
+          [KeysInitQuery.query.name]: query,
+        });
+
+        const actorWithFilterNodeClass = new ActorExtractLinksTree(
+          { name: 'actor', bus },
+        );
+        const action = { url: treeUrl, metadata: input, requestTime: 0, context: contextWithQuery };
+        const result = await actorWithFilterNodeClass.run(action);
+
+        expect(result).toEqual({ links: [{ url: expectedUrl }]});
+      });
+
+    it('should return no link when it does\'t respect the filter using the real FilterNode class', async() => {
+      const expectedUrl = 'http://foo.com';
+      const input = stream([
+        DF.quad(DF.namedNode(treeUrl), DF.namedNode('ex:p'), DF.namedNode('ex:o'), DF.namedNode('ex:gx')),
+        DF.quad(DF.namedNode(treeUrl),
+          DF.namedNode('https://w3id.org/tree#foo'),
+          DF.literal(expectedUrl),
+          DF.namedNode('ex:gx')),
+        DF.quad(DF.namedNode(treeUrl),
+          DF.namedNode('https://w3id.org/tree#foo'),
+          DF.literal(expectedUrl),
+          DF.namedNode('ex:gx')),
+        DF.quad(DF.namedNode(treeUrl),
+          DF.namedNode('https://w3id.org/tree#relation'),
+          DF.blankNode('_:_g1'),
+          DF.namedNode('ex:gx')),
+
+        DF.quad(DF.blankNode('_:_g1'),
+          DF.namedNode('https://w3id.org/tree#node'),
+          DF.literal(expectedUrl),
+          DF.namedNode('ex:gx')),
+        DF.quad(DF.blankNode('_:_g1'),
+          DF.namedNode('https://w3id.org/tree#path'),
+          DF.literal('ex:path'),
+          DF.namedNode('ex:gx')),
+        DF.quad(DF.blankNode('_:_g1'),
+          DF.namedNode('https://w3id.org/tree#value'),
+          DF.literal('500', DF.namedNode('http://www.w3.org/2001/XMLSchema#integer')),
+          DF.namedNode('ex:gx')),
+
+      ]);
+
+      const bgp = <RDF.Quad[]>[
+        DF.quad(DF.namedNode('ex:foo'), DF.namedNode('ex:path'), DF.variable('o')),
+        DF.quad(DF.namedNode('ex:foo'), DF.namedNode('ex:p'), DF.namedNode('ex:o')),
+        DF.quad(DF.namedNode('ex:bar'), DF.namedNode('ex:p2'), DF.namedNode('ex:o2')),
+        DF.quad(DF.namedNode('ex:too'), DF.namedNode('ex:p3'), DF.namedNode('ex:o3')),
+      ];
+      const filterExpression = {
+        expressionType: Algebra.expressionTypes.OPERATOR,
+        operator: '=',
+        type: Algebra.types.EXPRESSION,
+        args: [
+          {
+            expressionType: Algebra.expressionTypes.TERM,
+            type: Algebra.types.EXPRESSION,
+            term: {
+              termType: 'Variable',
+              value: 'o',
+            },
+          },
+          {
+            expressionType: Algebra.expressionTypes.TERM,
+            type: Algebra.types.EXPRESSION,
+            term: {
+              termType: 'Literal',
+              langugage: '',
+              value: '5',
+              datatype: {
+                termType: 'namedNode',
+                value: 'http://www.w3.org/2001/XMLSchema#integer',
+              },
+            },
+          },
+        ],
+      };
+
+      const query = {
+        type: Algebra.types.PROJECT,
+        input: {
+          type: Algebra.types.FILTER,
+          expression: filterExpression,
+          input: {
+            input: {
+              type: Algebra.types.JOIN,
+              input: bgp,
+            },
+          },
+        },
+      };
+      const contextWithQuery = new ActionContext({
+        [KeysRdfResolveQuadPattern.source.name]: treeUrl,
+        [KeysInitQuery.query.name]: query,
+      });
+
+      const actorWithFilterNodeClass = new ActorExtractLinksTree(
+        { name: 'actor', bus },
+      );
+      const action = { url: treeUrl, metadata: input, requestTime: 0, context: contextWithQuery };
+      const result = await actorWithFilterNodeClass.run(action);
+
+      expect(result).toEqual({ links: []});
     });
   });
 

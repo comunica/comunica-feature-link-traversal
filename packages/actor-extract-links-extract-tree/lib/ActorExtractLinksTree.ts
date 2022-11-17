@@ -69,11 +69,9 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
     });
   }
 
-  /* istanbul ignore next */
   public async applyFilter(node: ITreeNode, context: IActionContext): Promise<Map<string, boolean>> {
     return await new FilterNode().run(node, context);
   }
-  /* istanbul ignore next */
 
   private handleFilter(filters: Map<string, boolean>, acceptedRelation: ITreeRelation[]): ITreeRelation[] {
     return filters.size > 0 ?
