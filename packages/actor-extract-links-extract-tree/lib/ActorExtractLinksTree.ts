@@ -69,10 +69,20 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
     });
   }
 
+  /**
+   * @param {ITreeNode} node - TREE metadata
+   * @param {IActionContext} context - context of the action; containing the query
+   * @returns {Promise<Map<string, boolean>>} a map containing the filter
+   */
   public async applyFilter(node: ITreeNode, context: IActionContext): Promise<Map<string, boolean>> {
     return await new FilterNode().run(node, context);
   }
 
+  /**
+   * @param { Map<string, boolean>} filters
+   * @param {ITreeRelation[]} acceptedRelation - the current accepted relation
+   * @returns {ITreeRelation[]} the relation when the nodes has been filtered
+   */
   private handleFilter(filters: Map<string, boolean>, acceptedRelation: ITreeRelation[]): ITreeRelation[] {
     return filters.size > 0 ?
       acceptedRelation.filter(relation => filters?.get(relation.node)) :
