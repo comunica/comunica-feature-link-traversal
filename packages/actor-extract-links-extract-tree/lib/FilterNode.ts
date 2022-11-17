@@ -3,10 +3,12 @@ import { KeysInitQuery } from '@comunica/context-entries';
 import type { Bindings, IActionContext } from '@comunica/types';
 import type { ITreeRelation, ITreeNode } from '@comunica/types-link-traversal';
 import type * as RDF from 'rdf-js';
-import { Algebra } from 'sparqlalgebrajs';
+import { Algebra, Factory as AlgebraFactory } from 'sparqlalgebrajs';
 import { AsyncEvaluator } from 'sparqlee';
 
+const AF = new AlgebraFactory();
 const BF = new BindingsFactory();
+
 /**
  * A class to apply [SPAQL filters](https://www.w3.org/TR/sparql11-query/#evaluation)
  * to the [TREE specification](https://treecg.github.io/specification/).
@@ -110,12 +112,8 @@ export class FilterNode {
   private static generateTreeRelationFilter(filterExpression: Algebra.Expression,
     binding: Bindings): Algebra.Expression {
     // Generate an empty filter algebra
-    let newFilterExpression: Algebra.Expression = {
-      expressionType: Algebra.expressionTypes.OPERATOR,
-      operator: filterExpression.operator,
-      type: Algebra.types.EXPRESSION,
-      args: [],
-    };
+    let newFilterExpression: Algebra.Expression = AF.createOperatorExpression(filterExpression.operator, []);
+
     // Check if there is one filter or multiple
     if ('operator' in filterExpression.args[0]) {
       // Add the argument into the empty the new filter
