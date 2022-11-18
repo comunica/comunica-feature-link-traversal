@@ -26,7 +26,7 @@ export class FilterNode {
     }
 
     const query: Algebra.Operation = context.get(KeysInitQuery.query)!;
-    if (!FilterNode.doesNodeExist(query, Algebra.types.FILTER)) {
+    if (!FilterNode.findNode(query, Algebra.types.FILTER)) {
       return false;
     }
 
@@ -43,7 +43,7 @@ export class FilterNode {
     // Extract the filter expression
     const filterOperation: Algebra.Expression = (() => {
       const query: Algebra.Operation = context.get(KeysInitQuery.query)!;
-      return query.input.expression;
+      return FilterNode.findNode(query, Algebra.types.FILTER).expression;
     })();
 
     // Extract the bgp of the query
@@ -228,21 +228,22 @@ export class FilterNode {
   }
 
   /**
-   * Check if a specific node type exist inside the query
+   * Find the first node of type `nodeType`, if it doesn't exist
+   * it return undefined
    * @param {Algebra.Operation} query - the original query
    * @param {string} nodeType - the tyoe of node requested
-   * @returns {boolean}
+   * @returns {any}
    */
-  private static doesNodeExist(query: Algebra.Operation, nodeType: string): boolean {
+  private static findNode(query: Algebra.Operation, nodeType: string): any {
     let currentNode = query;
     do {
       if (currentNode.type === nodeType) {
-        return true;
+        return currentNode;
       }
       if ('input' in currentNode) {
         currentNode = currentNode.input;
       }
     } while ('input' in currentNode);
-    return false;
+    return undefined;
   }
 }
