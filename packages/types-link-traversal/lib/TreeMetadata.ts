@@ -5,7 +5,7 @@
 
 import type * as RDF from 'rdf-js';
 
-// Reference
+// The type of the relationship.
 // https://treecg.github.io/specification/#vocabulary
 export enum RelationOperator {
   //  All elements in the related node have this prefix
@@ -30,6 +30,9 @@ export enum RelationOperator {
   // reference http://lin-ear-th-inking.blogspot.com/2007/06/subtleties-of-ogc-covers-spatial.html
   GeospatiallyContainsRelation = 'https://w3id.org/tree#GeospatiallyContainsRelation',
 }
+export const RelationOperatorReversed: Record<string, keyof RelationOperator> = Object.fromEntries(Object
+  .entries(RelationOperator)
+  .map(([ key, value ]) => [ value, key ]));
 
 // Reference
 // https://treecg.github.io/specification/#classes
@@ -51,40 +54,63 @@ export enum TreeNodes {
   RemainingItems = 'https://w3id.org/tree#remainingItems'
 }
 
+/**
+ * A TREE HTTP document with relationships.
+ */
 export interface ITreeNode {
-  // Relation of the node
+  /**
+   * Page URL that identifies this node.
+   */
+  identifier: string;
+  /**
+   * All available relationships in the node.
+   */
   relation?: ITreeRelation[];
-  // Name/URL of the node
-  subject: string;
 }
 
+/**
+ * Represents a relationship between the members across two nodes.
+ */
 export interface ITreeRelation {
-  // The relation operator type describe by the enum RelationOperator
-  '@type'?: {
-    value: string;
-    quad: RDF.Quad;
+  /**
+   * The type of relationship.
+   */
+  type?: {
+    value: RelationOperator;
+    quad: RDF.Quad; // TODO: can this be removed?
   };
-  // Refer to the TreeNodes of the similar name
+  /**
+   * How many members can be reached when following this relation.
+   */
   remainingItems?: {
     value: number;
-    quad: RDF.Quad;
+    quad: RDF.Quad; // TODO: can this be removed?
   };
-  // Refer to the TreeNodes of the similar name
+  /**
+   * A property path, as defined by SHACL, that indicates what resource the tree:value affects.
+   */
   path?: {
     value: string;
-    quad: RDF.Quad;
+    quad: RDF.Quad; // TODO: can this be removed?
   };
-  // Refer to the TreeNodes of the similar name
+  /**
+   * The contextual value of this node.
+   */
   value?: {
     value: any;
-    quad: RDF.Quad;
+    quad: RDF.Quad; // TODO: can this be removed? And replaced by RDF.Term
   };
-  // The URL to be derefenced when this relation cannot be pruned.
+  /**
+   * Link to the TREE node document for this relationship.
+   * This can be dereferenced.
+   */
   node: string ;
 }
 
-// An helper to build the relation from a stream
-export interface ITreeRelationDescription {
+/**
+ * A temporary helper object to build the relation while reading from a stream.
+ */
+export interface ITreeRelationRaw {
   // Id of the blank node of the relation
   subject?: [string, RDF.Quad];
   // Refer to the TreeNodes of the similar name

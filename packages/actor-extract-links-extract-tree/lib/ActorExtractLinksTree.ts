@@ -6,11 +6,12 @@ import { ActorExtractLinks } from '@comunica/bus-extract-links';
 
 import type { IActorTest } from '@comunica/core';
 import type { IActionContext } from '@comunica/types';
-import type { ITreeRelationDescription, ITreeRelation, ITreeNode } from '@comunica/types-link-traversal';
+import type { ITreeRelationRaw, ITreeRelation, ITreeNode } from '@comunica/types-link-traversal';
 import { TreeNodes } from '@comunica/types-link-traversal';
 import type * as RDF from 'rdf-js';
+import { termToString } from 'rdf-string';
 import { FilterNode } from './FilterNode';
-import { buildRelations, collectRelation } from './treeMetadataExtraction';
+import { buildRelations, materializeTreeRelation } from './treeMetadataExtraction';
 
 /**
  * A comunica Extract Links Tree Extract Links Actor.
@@ -27,38 +28,43 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
   public async run(action: IActionExtractLinks): Promise<IActorExtractLinksOutput> {
     return new Promise((resolve, reject) => {
       const metadata = action.metadata;
-      const currentNodeUrl = action.url;
-      const pageRelationNodes: Set<string> = new Set();
-      const relationDescriptions: Map<string, ITreeRelationDescription> = new Map();
+      const currentPageUrl = action.url;
+      // Identifiers of the relationships defined by the TREE document, represented as stringified RDF terms.
+      const relationIdentifiers: Set<string> = new Set();
+      // Maps relationship identifiers to their description.
+      // At this point, there's no guarantee yet that these relationships are linked to the current TREE document.
+      const relationDescriptions: Map<string, ITreeRelationRaw> = new Map();
       const relations: ITreeRelation[] = [];
+      // An array of pairs of relationship identifiers and next page link to another TREE document,
+      // represented as stringified RDF terms.
       const nodeLinks: [string, string][] = [];
 
       // Forward errors
       metadata.on('error', reject);
 
-      // Invoke callback on each metadata quad
+      // Collect information about relationships spread over quads, so that we can accumulate them afterwards.
       metadata.on('data', (quad: RDF.Quad) =>
-        this.getTreeQuadsRawRelations(quad,
-          currentNodeUrl,
-          pageRelationNodes,
+        this.interpretQuad(quad,
+          currentPageUrl,
+          relationIdentifiers,
           nodeLinks,
           relationDescriptions));
 
-      // Resolve to discovered links
+      // Accumulate collected relationship information.
       metadata.on('end', async() => {
         // Validate if the potential relation node are linked with the current page
-        // and add the relation description if it is connected
-        for (const [ blankNodeId, link ] of nodeLinks) {
-          // Check if the blank node id is the object of a relation of the current page
-          if (pageRelationNodes.has(blankNodeId)) {
-            const relationDescription = relationDescriptions.get(blankNodeId);
+        // and add the relation description if it is connected.
+        for (const [ identifier, link ] of nodeLinks) {
+          // Check if the identifier is the object of a relation of the current page
+          if (relationIdentifiers.has(identifier)) {
+            const relationDescription = relationDescriptions.get(identifier);
             // Add the relation to the relation array
-            relations.push(collectRelation(relationDescription || {}, link));
+            relations.push(materializeTreeRelation(relationDescription || {}, link));
           }
         }
 
         // Create a ITreeNode object
-        const node: ITreeNode = { relation: relations, subject: currentNodeUrl };
+        const node: ITreeNode = { relation: relations, identifier: currentPageUrl };
         let acceptedRelation = relations;
 
         // Filter the relation based on the query
@@ -93,28 +99,27 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
    * A helper function to find all the relations of a TREE document and the possible next nodes to visit.
    * The next nodes are not guaranteed to have as subject the URL of the current page,
    * so filtering is necessary afterward.
-   * @param {RDF.Quad} quad - the current quad.
-   * @param {string} url - url of the page
-   * @param {Set<string>} pageRelationNodes - the url of the relation node of the page
-   * that have as subject the URL of the page
-   * @param {[string, string][]} - nodeLinks the url of the next potential page that has to be visited,
-   *  regardless if the implicit subject is the node of the page
-   * @param {Map<string, ITreeRelationDescription>} relationDescriptions - a map where the key is the
-   * id of the blank node associated with the description of a relation
+   * @param {RDF.Quad} quad - The current quad.
+   * @param {string} currentPageUrl - The url of the page.
+   * @param {Set<string>} relationIdentifiers - Identifiers of the relationships defined by the TREE document,
+   *                                            represented as stringified RDF terms.
+   * @param {[string, string][]} nodeLinks - An array of pairs of relationship identifiers and next page link to another
+   *                                         TREE document, represented as stringified RDF terms.
+   * @param {Map<string, ITreeRelationRaw>} relationDescriptions - Maps relationship identifiers to their description.
    */
-  private getTreeQuadsRawRelations(
+  private interpretQuad(
     quad: RDF.Quad,
-    url: string,
-    pageRelationNodes: Set<string>,
+    currentPageUrl: string,
+    relationIdentifiers: Set<string>,
     nodeLinks: [string, string][],
-    relationDescriptions: Map<string, ITreeRelationDescription>,
+    relationDescriptions: Map<string, ITreeRelationRaw>,
   ): void {
     // If it's a relation of the current node
-    if (quad.subject.value === url && quad.predicate.value === TreeNodes.Relation) {
-      pageRelationNodes.add(quad.object.value);
+    if (quad.subject.value === currentPageUrl && quad.predicate.value === TreeNodes.Relation) {
+      relationIdentifiers.add(termToString(quad.object));
       // If it's a node forward
     } else if (quad.predicate.value === TreeNodes.Node) {
-      nodeLinks.push([ quad.subject.value, quad.object.value ]);
+      nodeLinks.push([ termToString(quad.subject), termToString(quad.object) ]);
     }
     buildRelations(relationDescriptions, quad);
   }

@@ -1,56 +1,57 @@
-import type { ITreeRelation, ITreeRelationDescription } from '@comunica/types-link-traversal';
-import { RelationOperator, TreeNodes } from '@comunica/types-link-traversal';
+import type { ITreeRelation, ITreeRelationRaw } from '@comunica/types-link-traversal';
+import { RelationOperator, RelationOperatorReversed, TreeNodes } from '@comunica/types-link-traversal';
 import type * as RDF from 'rdf-js';
 
 /**
- * @param relationDescription
- * @param nodeLinks
- * @returns IRelation
- * collect the relevant values and quad capture from a IRelationDescription object
- * to create a IRelation object
+ * Materialize a raw tree relation using the captured values.
+ * @param relationRaw Raw representation of a tree relation.
+ * @param nextLink Link to the next page.
+ * @returns ITreeRelation
  */
-export function collectRelation(
-  relationDescription: ITreeRelationDescription,
-  nodeLinks: string,
+export function materializeTreeRelation(
+  relationRaw: ITreeRelationRaw,
+  nextLink: string,
 ): ITreeRelation {
-  const relation: ITreeRelation = { node: nodeLinks };
-  if (relationDescription?.operator) {
-    relation['@type'] = {
-      value: <string> relationDescription.operator[0],
-      quad: relationDescription.operator[1],
+  const relation: ITreeRelation = { node: nextLink };
+  if (relationRaw?.operator) {
+    relation.type = {
+      value: relationRaw.operator[0],
+      quad: relationRaw.operator[1],
     };
   }
 
-  if (relationDescription?.remainingItems) {
+  if (relationRaw?.remainingItems) {
     relation.remainingItems = {
-      value: relationDescription.remainingItems[0],
-      quad: relationDescription.remainingItems[1],
+      value: relationRaw.remainingItems[0],
+      quad: relationRaw.remainingItems[1],
     };
   }
 
-  if (relationDescription?.subject) {
+  if (relationRaw?.subject) {
     relation.path = {
-      value: relationDescription.subject[0],
-      quad: relationDescription.subject[1],
+      value: relationRaw.subject[0],
+      quad: relationRaw.subject[1],
     };
   }
 
-  if (relationDescription?.value) {
+  if (relationRaw?.value) {
     relation.value = {
-      value: relationDescription.value[0],
-      quad: relationDescription.value[1],
+      value: relationRaw.value[0],
+      quad: relationRaw.value[1],
     };
   }
 
   return relation;
 }
 
+// TODO: add doc
 export function buildRelations(
-  relationDescriptions: Map<string, ITreeRelationDescription>,
+  relationDescriptions: Map<string, ITreeRelationRaw>, // TODO: remove this param, and return ITreeRelationRaw | undefined instead.
   quad: RDF.Quad,
 ): void {
   if (quad.predicate.value === TreeNodes.RDFTypeNode) {
     // Set the operator of the relation
+    //const operator = RelationOperatorReversed[quad.object.value]; // TODO: make sure this happens in constant time
     const enumIndexOperator = (<string[]> Object.values(RelationOperator)).indexOf(quad.object.value);
     const operator: RelationOperator | undefined =
         enumIndexOperator === -1 ? undefined : Object.values(RelationOperator)[enumIndexOperator];
@@ -76,7 +77,8 @@ export function buildRelations(
   }
 }
 /**
- * @param relationDescriptions: Map<string, IRelationDescription>
+ * TODO: update docs
+ * @param rawRelations: Map<string, IRelationDescription>
  * @param quad: RDF.Quad
  * @param value?: string
  * @param subject?: string
@@ -86,32 +88,29 @@ export function buildRelations(
  * a IRelationDescription map
  */
 export function addRelationDescription({
-  relationDescriptions,
+  rawRelations,
   quad,
   value,
   subject,
   operator,
   remainingItems,
 }: {
-  relationDescriptions: Map<string, ITreeRelationDescription>;
+  rawRelations: Map<string, ITreeRelationRaw>;
   quad: RDF.Quad;
   value?: string;
   subject?: string;
   operator?: RelationOperator;
   remainingItems?: number;
 }): void {
-  const newDescription: ITreeRelationDescription =
-  typeof relationDescriptions?.get(quad.subject.value) !== 'undefined' ?
-    relationDescriptions.get(quad.subject.value)! :
-    {};
+  const rawRelation: ITreeRelationRaw = rawRelations?.get(quad.subject.value) || {};
   /* eslint-disable prefer-rest-params */
-  const objectArgument = arguments[0];
+  const objectArgument = arguments[0]; // TODO: make explicit
   for (const [ arg, val ] of Object.entries(objectArgument)) {
     if (val && arg !== 'relationDescriptions' && arg !== 'quad') {
-      newDescription[<keyof typeof newDescription>arg] = [ val, quad ];
+      rawRelation[<keyof typeof rawRelation>arg] = [ val, quad ];
       break;
     }
   }
   /* eslint-enable prefer-rest-params */
-  relationDescriptions.set(quad.subject.value, newDescription);
+  rawRelations.set(quad.subject.value, rawRelation);
 }
