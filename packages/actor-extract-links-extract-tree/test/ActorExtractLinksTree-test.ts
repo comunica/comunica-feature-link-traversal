@@ -267,26 +267,11 @@ describe('ActorExtractLinksExtractLinksTree', () => {
       const relations: ITreeRelation[] = [
         {
           node: prunedUrl,
-          remainingItems: {
-            value: 66,
-            quad: <RDF.Quad> DF.quad(DF.blankNode('_:_g1'),
-              DF.namedNode('https://w3id.org/tree#remainingItems'),
-              DF.literal('66'),
-              DF.namedNode('ex:gx')),
-          },
-          '@type': {
-            value: RelationOperator.GreaterThanRelation,
-            quad: <RDF.Quad> DF.quad(DF.blankNode('_:_g1'),
-              DF.namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
-              DF.namedNode('https://w3id.org/tree#GreaterThanRelation'),
-              DF.namedNode('ex:gx')),
-          },
+          remainingItems: 66,
+          type: RelationOperator.GreaterThanRelation,
           value: {
             value: '66',
-            quad: <RDF.Quad> DF.quad(DF.blankNode('_:_g1'),
-              DF.namedNode('https://w3id.org/tree#value'),
-              DF.literal('66'),
-              DF.namedNode('ex:gx')),
+            term: DF.literal('66'),
           },
         },
         {

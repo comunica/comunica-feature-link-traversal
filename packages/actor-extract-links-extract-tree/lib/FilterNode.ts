@@ -61,7 +61,7 @@ export class FilterNode {
         continue;
       }
       // Find the quad from the bgp that are related to the TREE relation
-      const relevantQuads = FilterNode.findRelevantQuad(queryBody, relation.path.value);
+      const relevantQuads = FilterNode.findRelevantQuad(queryBody, relation.path);
 
       // Accept the relation if no quad are linked with the relation
       if (relevantQuads.length === 0) {
@@ -70,7 +70,7 @@ export class FilterNode {
       }
 
       // Create the binding from the relevant quad in association with the TREE relation
-      const bindings = FilterNode.createBinding(relevantQuads, relation.value.quad);
+      const bindings = FilterNode.createBinding(relevantQuads, relation.value.term);
       const filterExpression: Algebra.Operation = FilterNode.generateTreeRelationFilter(filterOperation, bindings);
 
       // Accept the relation if no filter are associated with the relation
@@ -152,11 +152,10 @@ export class FilterNode {
    * @param {RDF.Quad} relationValue - the quad related to the TREE path
    * @returns {Bindings} the resulting binding
    */
-  private static createBinding(relevantQuad: RDF.Quad[], relationValue: RDF.Quad): Bindings {
+  private static createBinding(relevantQuad: RDF.Quad[], relationValue: RDF.Term): Bindings {
     let binding: Bindings = BF.bindings();
     for (const quad of relevantQuad) {
-      const object = quad.object.value;
-      binding = binding.set(object, relationValue.object);
+      binding = binding.set(quad.object.value, relationValue);
     }
     return binding;
   }

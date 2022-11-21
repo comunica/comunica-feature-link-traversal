@@ -22,7 +22,7 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
           [KeysInitQuery.query.name]: { type: Algebra.types.FILTER },
         });
         const node: ITreeNode = {
-          subject: treeSubject,
+          identifier: treeSubject,
           relation: [
             {
               node: 'http://bar.com',
@@ -39,7 +39,7 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
           [KeysInitQuery.query.name]: { type: Algebra.types.FILTER },
         });
         const node: ITreeNode = {
-          subject: treeSubject,
+          identifier: treeSubject,
         };
 
         const response = filterNode.test(node, context);
@@ -51,7 +51,7 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
           [KeysInitQuery.query.name]: { type: Algebra.types.FILTER },
         });
         const node: ITreeNode = {
-          subject: treeSubject,
+          identifier: treeSubject,
           relation: [],
         };
         const response = filterNode.test(node, context);
@@ -63,7 +63,7 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
           [KeysInitQuery.query.name]: { type: Algebra.types.ASK },
         });
         const node: ITreeNode = {
-          subject: treeSubject,
+          identifier: treeSubject,
           relation: [
             {
               node: 'http://bar.com',
@@ -84,19 +84,14 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
         const treeSubject = 'tree';
 
         const node: ITreeNode = {
-          subject: treeSubject,
+          identifier: treeSubject,
           relation: [
             {
               node: 'http://bar.com',
-              path: {
-                value: 'ex:path',
-                quad: aQuad,
-              },
+              path: 'ex:path',
               value: {
                 value: '5',
-                quad: <RDF.Quad>DF.quad(DF.namedNode('ex:s'),
-                  DF.namedNode('ex:p'),
-                  DF.literal('5', DF.namedNode('http://www.w3.org/2001/XMLSchema#integer'))),
+                term: DF.literal('5', DF.namedNode('http://www.w3.org/2001/XMLSchema#integer')),
               },
             },
           ],
@@ -166,19 +161,14 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
         const treeSubject = 'tree';
 
         const node: ITreeNode = {
-          subject: treeSubject,
+          identifier: treeSubject,
           relation: [
             {
               node: 'http://bar.com',
-              path: {
-                value: 'ex:path',
-                quad: aQuad,
-              },
+              path: 'ex:path',
               value: {
                 value: '5',
-                quad: <RDF.Quad>DF.quad(DF.namedNode('ex:s'),
-                  DF.namedNode('ex:p'),
-                  DF.literal('5', DF.namedNode('http://www.w3.org/2001/XMLSchema#integer'))),
+                term: DF.literal('5', DF.namedNode('http://www.w3.org/2001/XMLSchema#integer')),
               },
             },
           ],
@@ -242,19 +232,14 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
         const treeSubject = 'tree';
 
         const node: ITreeNode = {
-          subject: treeSubject,
+          identifier: treeSubject,
           relation: [
             {
               node: 'http://bar.com',
-              path: {
-                value: 'ex:path',
-                quad: aQuad,
-              },
+              path: 'ex:path',
               value: {
                 value: '5',
-                quad: <RDF.Quad>DF.quad(DF.namedNode('ex:s'),
-                  DF.namedNode('ex:p'),
-                  DF.literal('5', DF.namedNode('http://www.w3.org/2001/XMLSchema#integer'))),
+                term: DF.literal('5', DF.namedNode('http://www.w3.org/2001/XMLSchema#integer')),
               },
             },
           ],
@@ -362,7 +347,7 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
         const context = new ActionContext({
           [KeysInitQuery.query.name]: query,
         });
-        const node: ITreeNode = { subject: 'foo' };
+        const node: ITreeNode = { identifier: 'foo' };
         const result = await filterNode.run(node, context);
 
         expect(result).toStrictEqual(
@@ -375,19 +360,14 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
           const treeSubject = 'tree';
 
           const node: ITreeNode = {
-            subject: treeSubject,
+            identifier: treeSubject,
             relation: [
               {
                 node: 'http://bar.com',
-                path: {
-                  value: 'ex:path',
-                  quad: aQuad,
-                },
+                path: 'ex:path',
                 value: {
                   value: '5',
-                  quad: <RDF.Quad>DF.quad(DF.namedNode('ex:s'),
-                    DF.namedNode('ex:p'),
-                    DF.literal('5', DF.namedNode('http://www.w3.org/2001/XMLSchema#integer'))),
+                  term: DF.literal('5', DF.namedNode('http://www.w3.org/2001/XMLSchema#integer')),
                 },
               },
             ],
@@ -488,19 +468,14 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
           const treeSubject = 'tree';
 
           const node: ITreeNode = {
-            subject: treeSubject,
+            identifier: treeSubject,
             relation: [
               {
                 node: 'http://bar.com',
-                path: {
-                  value: 'ex:path',
-                  quad: aQuad,
-                },
+                path: 'ex:path',
                 value: {
                   value: '5',
-                  quad: <RDF.Quad>DF.quad(DF.namedNode('ex:s'),
-                    DF.namedNode('ex:p'),
-                    DF.literal('5', DF.namedNode('http://www.w3.org/2001/XMLSchema#integer'))),
+                  term: DF.literal('5', DF.namedNode('http://www.w3.org/2001/XMLSchema#integer')),
                 },
               },
 
@@ -568,19 +543,14 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
         const treeSubject = 'tree';
 
         const node: ITreeNode = {
-          subject: treeSubject,
+          identifier: treeSubject,
           relation: [
             {
               node: 'http://bar.com',
-              path: {
-                value: 'ex:path',
-                quad: aQuad,
-              },
+              path: 'ex:path',
               value: {
                 value: '5',
-                quad: <RDF.Quad>DF.quad(DF.namedNode('ex:s'),
-                  DF.namedNode('ex:p'),
-                  DF.literal('5', DF.namedNode('http://www.w3.org/2001/XMLSchema#integer'))),
+                term: DF.literal('5', DF.namedNode('http://www.w3.org/2001/XMLSchema#integer')),
               },
             },
           ],
@@ -644,19 +614,14 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
         const treeSubject = 'tree';
 
         const node: ITreeNode = {
-          subject: treeSubject,
+          identifier: treeSubject,
           relation: [
             {
               node: 'http://bar.com',
-              path: {
-                value: 'ex:path',
-                quad: aQuad,
-              },
+              path: 'ex:path',
               value: {
                 value: '5',
-                quad: <RDF.Quad>DF.quad(DF.namedNode('ex:s'),
-                  DF.namedNode('ex:p'),
-                  DF.literal('5', DF.namedNode('http://www.w3.org/2001/XMLSchema#integer'))),
+                term: DF.literal('5', DF.namedNode('http://www.w3.org/2001/XMLSchema#integer')),
               },
             },
           ],
@@ -753,19 +718,14 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
         const treeSubject = 'tree';
 
         const node: ITreeNode = {
-          subject: treeSubject,
+          identifier: treeSubject,
           relation: [
             {
               node: 'http://bar.com',
-              path: {
-                value: 'ex:path',
-                quad: aQuad,
-              },
+              path: 'ex:path',
               value: {
                 value: '5',
-                quad: <RDF.Quad>DF.quad(DF.namedNode('ex:s'),
-                  DF.namedNode('ex:p'),
-                  DF.literal('5', DF.namedNode('http://www.w3.org/2001/XMLSchema#integer'))),
+                term: DF.literal('5', DF.namedNode('http://www.w3.org/2001/XMLSchema#integer')),
               },
             },
           ],
@@ -872,19 +832,14 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
         const treeSubject = 'tree';
 
         const node: ITreeNode = {
-          subject: treeSubject,
+          identifier: treeSubject,
           relation: [
             {
               node: 'http://bar.com',
-              path: {
-                value: 'ex:path',
-                quad: aQuad,
-              },
+              path: 'ex:path',
               value: {
                 value: '5',
-                quad: <RDF.Quad>DF.quad(DF.namedNode('ex:s'),
-                  DF.namedNode('ex:p'),
-                  DF.literal('5', DF.namedNode('http://www.w3.org/2001/XMLSchema#integer'))),
+                term: DF.literal('5', DF.namedNode('http://www.w3.org/2001/XMLSchema#integer')),
               },
             },
           ],
@@ -946,19 +901,14 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
         const treeSubject = 'tree';
 
         const node: ITreeNode = {
-          subject: treeSubject,
+          identifier: treeSubject,
           relation: [
             {
               node: 'http://bar.com',
-              path: {
-                value: 'ex:path',
-                quad: aQuad,
-              },
+              path: 'ex:path',
               value: {
                 value: '5',
-                quad: <RDF.Quad>DF.quad(DF.namedNode('ex:s'),
-                  DF.namedNode('ex:p'),
-                  DF.literal('5', DF.namedNode('http://www.w3.org/2001/XMLSchema#integer'))),
+                term: DF.literal('5', DF.namedNode('http://www.w3.org/2001/XMLSchema#integer')),
               },
             },
           ],
@@ -1014,19 +964,14 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
         const treeSubject = 'tree';
 
         const node: ITreeNode = {
-          subject: treeSubject,
+          identifier: treeSubject,
           relation: [
             {
               node: 'http://bar.com',
-              path: {
-                value: 'ex:path',
-                quad: aQuad,
-              },
+              path: 'ex:path',
               value: {
                 value: '5',
-                quad: <RDF.Quad>DF.quad(DF.namedNode('ex:s'),
-                  DF.namedNode('ex:p'),
-                  DF.literal('5', DF.namedNode('http://www.w3.org/2001/XMLSchema#integer'))),
+                term: DF.literal('5', DF.namedNode('http://www.w3.org/2001/XMLSchema#integer')),
               },
             },
           ],
@@ -1097,19 +1042,14 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
         const treeSubject = 'tree';
 
         const node: ITreeNode = {
-          subject: treeSubject,
+          identifier: treeSubject,
           relation: [
             {
               node: 'http://bar.com',
-              path: {
-                value: 'ex:path',
-                quad: aQuad,
-              },
+              path: 'ex:path',
               value: {
                 value: '5',
-                quad: <RDF.Quad>DF.quad(DF.namedNode('ex:s'),
-                  DF.namedNode('ex:p'),
-                  DF.literal('5', DF.namedNode('http://www.w3.org/2001/XMLSchema#integer'))),
+                term: DF.literal('5', DF.namedNode('http://www.w3.org/2001/XMLSchema#integer')),
               },
             },
           ],
@@ -1132,7 +1072,7 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
                         {
                           termType: 'Quad',
                           value: '',
-                          subject: {
+                          identifier: {
                             termType: 'Variable',
                             value: 's',
                           },
@@ -1169,7 +1109,7 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
                 {
                   termType: 'Quad',
                   value: '',
-                  subject: {
+                  identifier: {
                     termType: 'Variable',
                     value: 's',
                   },

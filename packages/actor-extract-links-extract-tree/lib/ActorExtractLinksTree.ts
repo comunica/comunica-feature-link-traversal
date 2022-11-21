@@ -11,7 +11,7 @@ import { TreeNodes } from '@comunica/types-link-traversal';
 import type * as RDF from 'rdf-js';
 import { termToString } from 'rdf-string';
 import { FilterNode } from './FilterNode';
-import { buildRelations, materializeTreeRelation } from './treeMetadataExtraction';
+import { buildRelations, materializeTreeRelation, addRelationDescription } from './treeMetadataExtraction';
 
 /**
  * A comunica Extract Links Tree Extract Links Actor.
@@ -119,8 +119,12 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
       relationIdentifiers.add(termToString(quad.object));
       // If it's a node forward
     } else if (quad.predicate.value === TreeNodes.Node) {
-      nodeLinks.push([ termToString(quad.subject), termToString(quad.object) ]);
+      nodeLinks.push([ termToString(quad.subject), quad.object.value ]);
     }
-    buildRelations(relationDescriptions, quad);
+    const descriptionElement = buildRelations(quad);
+    if (descriptionElement) {
+      const [ value, key ] = descriptionElement;
+      addRelationDescription(relationDescriptions, quad, value, key);
+    }
   }
 }

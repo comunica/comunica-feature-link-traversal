@@ -30,9 +30,12 @@ export enum RelationOperator {
   // reference http://lin-ear-th-inking.blogspot.com/2007/06/subtleties-of-ogc-covers-spatial.html
   GeospatiallyContainsRelation = 'https://w3id.org/tree#GeospatiallyContainsRelation',
 }
-export const RelationOperatorReversed: Record<string, keyof RelationOperator> = Object.fromEntries(Object
-  .entries(RelationOperator)
-  .map(([ key, value ]) => [ value, key ]));
+
+export const RelationOperatorReversed: Map<string, RelationOperator> =
+new Map(Object.values(RelationOperator).map(value => {
+  const enumIndex = Object.values(RelationOperator).indexOf(value);
+  return [ Object.values(RelationOperator)[enumIndex], value ];
+}));
 
 // Reference
 // https://treecg.github.io/specification/#classes
@@ -75,30 +78,21 @@ export interface ITreeRelation {
   /**
    * The type of relationship.
    */
-  type?: {
-    value: RelationOperator;
-    quad: RDF.Quad; // TODO: can this be removed?
-  };
+  type?: RelationOperator;
   /**
    * How many members can be reached when following this relation.
    */
-  remainingItems?: {
-    value: number;
-    quad: RDF.Quad; // TODO: can this be removed?
-  };
+  remainingItems?: number;
   /**
    * A property path, as defined by SHACL, that indicates what resource the tree:value affects.
    */
-  path?: {
-    value: string;
-    quad: RDF.Quad; // TODO: can this be removed?
-  };
+  path?: string;
   /**
    * The contextual value of this node.
    */
   value?: {
-    value: any;
-    quad: RDF.Quad; // TODO: can this be removed? And replaced by RDF.Term
+    value: string;
+    term: RDF.Term;
   };
   /**
    * Link to the TREE node document for this relationship.
