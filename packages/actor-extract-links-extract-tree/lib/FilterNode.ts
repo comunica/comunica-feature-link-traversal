@@ -111,7 +111,7 @@ export class FilterNode {
    */
   private static generateTreeRelationFilter(filterExpression: Algebra.Expression,
     binding: Bindings): Algebra.Expression {
-    // Generate an empty filter algebra
+    // Generate an empty filter algebra.
     let newFilterExpression: Algebra.Expression = AF.createOperatorExpression(filterExpression.operator, []);
 
     // Check if there is one filter or multiple.
