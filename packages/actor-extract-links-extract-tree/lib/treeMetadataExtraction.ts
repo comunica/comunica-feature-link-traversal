@@ -1,6 +1,7 @@
 import type { ITreeRelation, ITreeRelationRaw, RelationOperator } from '@comunica/types-link-traversal';
 import { TreeNodes, RelationOperatorReversed } from '@comunica/types-link-traversal';
 import type * as RDF from 'rdf-js';
+import { termToString } from 'rdf-string';
 
 /**
  * Materialize a raw tree relation using the captured values.
@@ -28,19 +29,23 @@ export function materializeTreeRelation(
   if (relationRaw?.value) {
     relation.value = {
       value: relationRaw.value[0],
-      term: relationRaw.value[1],
+      term: relationRaw.value[1].object,
     };
   }
 
   return relation;
 }
 
-// TODO: add doc
-export function buildRelations(
+/**
+ * From a quad stream return a relation element if it exist
+ * @param {RDF.Quad} quad - Current quad of the stream.
+ * @returns {[RelationOperator | number | string, keyof ITreeRelationRaw] | undefined} The relation element
+ * and the key associated with it.
+ */
+export function buildRelationElement(
   quad: RDF.Quad,
 ): [RelationOperator | number | string, keyof ITreeRelationRaw] | undefined {
   if (quad.predicate.value === TreeNodes.RDFTypeNode) {
-    console.log(RelationOperatorReversed);
     // Set the operator of the relation
     const operator: RelationOperator | undefined = RelationOperatorReversed.get(quad.object.value);
     if (typeof operator !== 'undefined') {
@@ -73,9 +78,9 @@ export function addRelationDescription(
   value: RelationOperator | number | string,
   key: keyof ITreeRelationRaw,
 ): void {
-  const rawRelation: ITreeRelationRaw = relationDescriptions?.get(quad.subject.value) || {};
+  const rawRelation: ITreeRelationRaw = relationDescriptions?.get(termToString(quad.subject)) || {};
   rawRelation[key] = [ value, quad ];
 
-  relationDescriptions.set(quad.subject.value, rawRelation);
+  relationDescriptions.set(termToString(quad.subject), rawRelation);
 }
 
