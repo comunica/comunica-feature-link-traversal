@@ -32,7 +32,7 @@ export enum RelationOperator {
   /**
    * Similar to GreaterThanRelation.
    */
-  LessThanRelation = 'https://w3id.org/tree#LessThanRelation', 
+  LessThanRelation = 'https://w3id.org/tree#LessThanRelation',
   /**
    * Similar to GreaterThanRelation.
    */
