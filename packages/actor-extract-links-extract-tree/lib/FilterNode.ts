@@ -2,13 +2,13 @@ import { BindingsFactory } from '@comunica/bindings-factory';
 import { KeysInitQuery } from '@comunica/context-entries';
 import type { Bindings, IActionContext } from '@comunica/types';
 import type { ITreeRelation, ITreeNode } from '@comunica/types-link-traversal';
-import { RelationOperator } from '@comunica/types-link-traversal';
 import type * as RDF from 'rdf-js';
 import { Algebra, Factory as AlgebraFactory } from 'sparqlalgebrajs';
 import { AsyncEvaluator } from 'sparqlee';
 
 const AF = new AlgebraFactory();
 const BF = new BindingsFactory();
+const Utf8Encode = new TextEncoder();
 
 /**
  * A class to apply [SPAQL filters](https://www.w3.org/TR/sparql11-query/#evaluation)
@@ -161,60 +161,6 @@ export class FilterNode {
     return binding;
   }
 
-  public static adjusteBindingWithTreeRelationType(originalBinding: Bindings,
-     filterExpression: Algebra.Operation): Bindings {
-    let respBinding = originalBinding;
-
-    // Check if there is one filter or multiple.
-    if (filterExpression.args[0]?.operator) {
-      // For each filter expression check if there is an equal expression.
-      (<Algebra.Expression[]>filterExpression.args).forEach(expression => {
-        if (expression.operator === '=') {
-          let variable: string | undefined;
-          let value: RDF.Term | undefined;
-          // Find the filter variable and the filter value.
-          for (const arg of expression.args) {
-            if ('term' in arg && arg.term.termType === 'Variable') {
-              variable = arg.term.value;
-            } else if ('term' in arg && arg.term.termType === 'Literal') {
-              value = arg.term;
-            }
-          }
-          // If there is a variable and value in the filter expression analyse
-          // modify the binding if necessary.
-          if (variable && value) {
-            respBinding = respBinding.set(variable, value);
-          }
-        }
-      });
-    } else {
-      let variable: string | undefined;
-      let value: RDF.Term | undefined;
-
-      for (const arg of (<Algebra.Expression[]>filterExpression.args)) {
-        if ('term' in arg && arg.term.termType === 'Variable') {
-          variable = arg.term.value;
-        } else if ('term' in arg && arg.term.termType === 'Literal') {
-          value = arg.term;
-        }
-      }
-      if (variable && value) {
-        respBinding = respBinding.set(variable, value);
-      }
-    }
-    return respBinding;
-  }
-
-  private static evaluateRelationType(relation: ITreeRelation, filterValue: RDF.Term, filterVariable: string):void {
-    switch (relation.type) {
-      case RelationOperator.GreaterThanRelation: {
-        break;
-      }
-      default:
-        break;
-    }
-  }
-
   /**
  * Find the bgp of the original query of the user.
  * @param {Algebra.Operation} query - the original query
@@ -302,25 +248,3 @@ export class FilterNode {
   }
 }
 
-enum SparqlOperandDataTypes{
-  Integer = 'http://www.w3.org/2001/XMLSchema#integer',
-  Decimal = 'http://www.w3.org/2001/XMLSchema#decimal',
-  Float = 'http://www.w3.org/2001/XMLSchema#float',
-  Double = 'http://www.w3.org/2001/XMLSchema#double',
-  String = 'http://www.w3.org/2001/XMLSchema#string',
-  Boolean = 'http://www.w3.org/2001/XMLSchema#boolean',
-  DateTime = 'http://www.w3.org/2001/XMLSchema#dateTime',
-
-  NonPositiveInteger = 'http://www.w3.org/2001/XMLSchema#nonPositiveInteger',
-  NegativeInteger = 'http://www.w3.org/2001/XMLSchema#negativeInteger',
-  Long = 'http://www.w3.org/2001/XMLSchema#long',
-  Int = 'http://www.w3.org/2001/XMLSchema#int',
-  Short = 'http://www.w3.org/2001/XMLSchema#short',
-  Byte = 'http://www.w3.org/2001/XMLSchema#byte',
-  NonNegativeInteger = 'http://www.w3.org/2001/XMLSchema#nonNegativeInteger',
-  UnsignedLong = 'http://www.w3.org/2001/XMLSchema#nunsignedLong',
-  UnsignedInt = 'http://www.w3.org/2001/XMLSchema#unsignedInt',
-  UnsignedShort = 'http://www.w3.org/2001/XMLSchema#unsignedShort',
-  UnsignedByte = 'http://www.w3.org/2001/XMLSchema#unsignedByte',
-  PositiveInteger = 'http://www.w3.org/2001/XMLSchema#positiveInteger'
-}

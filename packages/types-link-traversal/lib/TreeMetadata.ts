@@ -52,10 +52,7 @@ export enum RelationOperator {
  * A map to access the value of the enum RelationOperator by it's value in O(1).
  */
 export const RelationOperatorReversed: Map<string, RelationOperator> =
-new Map(Object.values(RelationOperator).map(value => {
-  const enumIndex = Object.values(RelationOperator).indexOf(value);
-  return [ Object.values(RelationOperator)[enumIndex], value ];
-}));
+new Map(Object.values(RelationOperator).map(value => [ value, value ]));
 
 /**
  * Reference
