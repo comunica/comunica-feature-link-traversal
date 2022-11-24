@@ -35,6 +35,8 @@
     "ccqs:config/rdf-join-selectivity/mediators.json",
     "ccqs:config/rdf-metadata/actors.json",
     "ccqs:config/rdf-metadata/mediators.json",
+    "ccqs:config/rdf-metadata-accumulate/actors.json",
+    "ccqs:config/rdf-metadata-accumulate/mediators.json",
     "ccqs:config/rdf-metadata-extract/actors.json",
     "ccqs:config/rdf-metadata-extract/mediators.json",
     "ccqslt:config/rdf-metadata-extract/actors/traverse.json",

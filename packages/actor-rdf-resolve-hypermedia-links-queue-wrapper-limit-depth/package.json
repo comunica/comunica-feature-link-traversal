@@ -32,8 +32,8 @@
     "lib/**/*.js.map"
   ],
   "dependencies": {
-    "@comunica/core": "^2.0.1",
-    "@comunica/bus-rdf-resolve-hypermedia-links-queue": "^2.0.1"
+    "@comunica/core": "2.5.1-alpha.34.0",
+    "@comunica/bus-rdf-resolve-hypermedia-links-queue": "2.5.1-alpha.34.0"
   },
   "scripts": {
     "build": "npm run build:ts && npm run build:components",
