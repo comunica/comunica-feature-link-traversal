@@ -28,11 +28,12 @@
   "files": [
     "components",
     "lib/**/*.d.ts",
-    "lib/**/*.js"
+    "lib/**/*.js",
+    "lib/**/*.js.map"
   ],
   "dependencies": {
     "@comunica/bus-rdf-resolve-hypermedia-links": "^2.0.1",
-    "@comunica/context-entries": "2.4.0",
+    "@comunica/context-entries": "2.5.1",
     "@comunica/context-entries-link-traversal": "^0.0.1",
     "@comunica/core": "^2.0.1"
   },

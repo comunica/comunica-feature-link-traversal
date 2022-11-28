@@ -11,12 +11,12 @@
     "@babel/preset-env": "^7.16.4",
     "rdf-data-factory": "^1.1.0",
     "@types/jest": "^29.0.0",
-    "@types/node": "^16.0.0",
+    "@types/node": "^18.0.0",
     "@typescript-eslint/eslint-plugin": "^5.5.0",
     "@typescript-eslint/parser": "^5.5.0",
     "arrayify-stream": "^2.0.0",
     "asynciterator": "^3.0.3",
-    "babel-loader": "^8.2.3",
+    "babel-loader": "^9.0.0",
     "componentsjs-generator": "^3.0.1",
     "eslint": "^8.3.0",
     "eslint-config-es": "4.1.0",
@@ -50,7 +50,7 @@
     "@strictsoftware/typedoc-plugin-monorepo": "^0.4.2",
     "typescript": "^4.5.2",
     "webpack": "^5.64.4",
-    "webpack-cli": "^4.9.1"
+    "webpack-cli": "^5.0.0"
   },
   "pre-commit": [
     "build",
@@ -81,8 +81,8 @@
   },
   "resolutions": {
     "@types/yargs": "17.0.13",
-    "@types/node": "18.0.0",
-    "@comunica/actor-rdf-resolve-quad-pattern-federated": "2.4.0",
-    "@comunica/actor-rdf-join-inner-multi-bind": "2.4.0"
+    "@types/node": "^18.0.0",
+    "@comunica/actor-rdf-resolve-quad-pattern-federated": "2.5.1",
+    "@comunica/actor-rdf-join-inner-multi-bind": "2.5.1"
   }
 }
