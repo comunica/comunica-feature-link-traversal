@@ -6,6 +6,7 @@ import type * as RDF from 'rdf-js';
 import { Algebra, Factory as AlgebraFactory } from 'sparqlalgebrajs';
 import { AsyncEvaluator } from 'sparqlee';
 
+
 const AF = new AlgebraFactory();
 const BF = new BindingsFactory();
 const Utf8Encode = new TextEncoder();
