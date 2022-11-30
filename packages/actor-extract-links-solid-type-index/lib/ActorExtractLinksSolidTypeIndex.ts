@@ -1,5 +1,5 @@
-import { ActorInitQueryBase } from '@comunica/actor-init-query';
 import { QueryEngineBase } from '@comunica/actor-init-query';
+import type { ActorInitQueryBase } from '@comunica/actor-init-query';
 import type { MediatorDereferenceRdf } from '@comunica/bus-dereference-rdf';
 import type { IActionExtractLinks, IActorExtractLinksOutput } from '@comunica/bus-extract-links';
 import { ActorExtractLinks } from '@comunica/bus-extract-links';
@@ -158,23 +158,25 @@ export class ActorExtractLinksSolidTypeIndex extends ActorExtractLinks {
     // Collect all subjects, and all subjects in the original query that refer to a specific type.
     const allSubjects: Set<string> = new Set();
     const typeSubjects: Record<string, RDF.Term[]> = {};
-    var queryEngineLocal = this.queryEngine;
+    const predicateSubjectRecord: Record<string, RDF.Term> = {};
+    const queryEngineLocal = this.queryEngine;
 
-    //Fetch the rdf type from the vocabulary if the type is not already present.
-    async function getRDFTypeFromPredicates(predicateValue:string):Promise<string>{
-        const bindings=await queryEngineLocal.queryBindings(`
+    // Fetch the rdf type from the vocabulary if the type is not already present.
+    async function getRDFTypeFromPredicates(predicateValue: string): Promise<string> {
+      const bindings = await queryEngineLocal.queryBindings(`
           PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
           SELECT ?class WHERE {
             ?s rdfs:domain ?class.
           }`, {
-          sources: [`${predicateValue}`]       
-         })
-          const bindingsArray = await bindings.toArray();
-          return bindingsArray[0].get('class')?.value || '';
-      }
+        sources: [ `${predicateValue}` ],
+      });
+      const bindingsArray = await bindings.toArray();
+
+      return bindingsArray[0]?.get('class')?.value || '';
+    }
 
     // Helper function for walking through query
-    async function handleQueryTriple(subject: RDF.Term, predicate: RDF.Term, object: RDF.Term): Promise<void> {
+    function handleQueryTriple(subject: RDF.Term, predicate: RDF.Term, object: RDF.Term): void {
       allSubjects.add(termToString(subject));
 
       if (predicate.value === ActorExtractLinksSolidTypeIndex.RDF_TYPE && object.termType === 'NamedNode') {
@@ -184,42 +186,32 @@ export class ActorExtractLinksSolidTypeIndex extends ActorExtractLinks {
         }
         typeSubjects[type].push(subject);
       }
+    }
 
-      if(Object.keys(typeSubjects).length){ 
-      Object.entries(typeSubjects).forEach(async ([key, ObjValue]) => {
-        if(!ObjValue.includes(subject)){
-          const typeName =await getRDFTypeFromPredicates(predicate.value);
-          if (!typeSubjects[typeName]) {
-            typeSubjects[typeName] = [];
-          }
-          typeSubjects[typeName].push(subject);
-        }  
-      });
+    // Aggregates all the predicates from the query.
+    function fetchPredicatesFromQuery(subject: RDF.Term, predicate: RDF.Term): Record<string, RDF.Term> {
+      predicateSubjectRecord[predicate.value] = subject;
+      return predicateSubjectRecord;
     }
-    else{
-    const typeName =await getRDFTypeFromPredicates(predicate.value);
-    if (!typeSubjects[typeName]) {
-      typeSubjects[typeName] = [];
-    }
-    typeSubjects[typeName].push(subject);
-   }  
-}
 
     // Visit nodes in query to determine subjects
     AlgebraUtil.recurseOperation(query, {
       pattern(queryPattern) {
         handleQueryTriple(queryPattern.subject, queryPattern.predicate, queryPattern.object);
+        fetchPredicatesFromQuery(queryPattern.subject, queryPattern.predicate);
         return false;
       },
       path(path: Algebra.Path) {
         AlgebraUtil.recurseOperation(path, {
           link(link: Algebra.Link) {
             handleQueryTriple(path.subject, link.iri, path.object);
+            fetchPredicatesFromQuery(path.subject, link.iri);
             return false;
           },
           nps(nps: Algebra.Nps) {
             for (const iri of nps.iris) {
               handleQueryTriple(path.subject, iri, path.object);
+              fetchPredicatesFromQuery(path.subject, iri);
             }
             return false;
           },
@@ -227,6 +219,33 @@ export class ActorExtractLinksSolidTypeIndex extends ActorExtractLinks {
         return false;
       },
     });
+    // To fetch the domain of the predicate.
+    async function linkPredicateDomain(): Promise<void> {
+      for (const [ key, value ] of Object.entries(predicateSubjectRecord)) {
+        if (Object.keys(typeSubjects).length > 0) {
+          Object.entries(typeSubjects).forEach(async([ keyParam, ObjValue ]) => {
+            if (!ObjValue.includes(value)) {
+              const typeName = await getRDFTypeFromPredicates(key);
+              if (!typeSubjects[typeName]) {
+                typeSubjects[typeName] = [];
+              }
+              if (typeName) {
+                typeSubjects[typeName].push(value);
+              }
+            }
+          });
+        } else {
+          const typeName = await getRDFTypeFromPredicates(key);
+          if (!typeSubjects[typeName]) {
+            typeSubjects[typeName] = [];
+          }
+          if (typeName) {
+            typeSubjects[typeName].push(value);
+          }
+        }
+      }
+    }
+    await linkPredicateDomain();
 
     // Check if the current pattern has any of the allowed subjects,
     // and consider the type index entry's links in that case.
