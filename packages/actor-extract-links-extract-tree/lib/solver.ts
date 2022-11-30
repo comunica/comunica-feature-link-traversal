@@ -2,17 +2,30 @@ import { RelationOperator } from '@comunica/types-link-traversal';
 import type { ITreeRelation } from '@comunica/types-link-traversal';
 import type * as RDF from 'rdf-js';
 import { Algebra } from 'sparqlalgebrajs';
-import { SparqlOperandDataTypes, LogicOperator, SolverExpression, LinkOperator, Variable } from './SolverType'; 
+import {
+  SparqlOperandDataTypes, SolverEquationSystem,
+  LogicOperatorReversed, LogicOperator, SolverExpression,
+  LinkOperator, Variable, SolverEquation,
+  SolutionRange, SolutionDomain
+} from './SolverType';
 
-
-
-
-
-export function solveRelationWithFilter({relation, filterExpression}:{
-  relation:ITreeRelation,
+export function solveRelationWithFilter({ relation, filterExpression, variable }: {
+  relation: ITreeRelation,
   filterExpression: Algebra.Expression,
-  variables: Set<Variable>
-}):boolean {
+  variable: Variable
+}): boolean {
+  const relationsolverExpressions = convertTreeRelationToSolverExpression(relation, variable);
+  // the relation doesn't have a value or a type, so we accept it
+  if (typeof relationsolverExpressions === 'undefined'){
+    return true;
+  }
+  const filtersolverExpressions = convertFilterExpressionToSolverExpression(filterExpression, [], []);
+  // the type are not compatible no evaluation is possible SPARQLEE will later return an error
+  if (!areTypeCompatible(filtersolverExpressions.concat(relationsolverExpressions))) {
+    return false;
+  }
+  const filterEquationSystem = createEquationSystem(filtersolverExpressions);
+
   return true
 }
 
@@ -32,6 +45,7 @@ function convertTreeRelationToSolverExpression(expression: ITreeRelation, variab
       rawValue: expression.value.value,
       valueType,
       valueAsNumber: valueNumber,
+      chainOperator: [],
 
       operator: expression.type,
     };
@@ -39,7 +53,7 @@ function convertTreeRelationToSolverExpression(expression: ITreeRelation, variab
 }
 
 
-function resolveAFilterTerm(expression: Algebra.Expression, operator: RelationOperator, linksOperator: string[]): SolverExpression | undefined {
+function resolveAFilterTerm(expression: Algebra.Expression, operator: RelationOperator, linksOperator: LinkOperator[]): SolverExpression | undefined {
   let variable: string | undefined;
   let rawValue: string | undefined;
   let valueType: SparqlOperandDataTypes | undefined;
@@ -69,84 +83,82 @@ function resolveAFilterTerm(expression: Algebra.Expression, operator: RelationOp
   return undefined
 }
 
-export function convertFilterExpressionToSolverExpression(expression: Algebra.Expression, filterExpressionList: SolverExpression[], linksOperator:string[]): SolverExpression[] {
-  if (expression.args.length === 2 &&
+export function convertFilterExpressionToSolverExpression(expression: Algebra.Expression, filterExpressionList: SolverExpression[], linksOperator: LinkOperator[]): SolverExpression[] {
+
+  if (
     expression.args[0].expressionType === Algebra.expressionTypes.TERM
   ) {
     const rawOperator = expression.operator;
     const operator = filterOperatorToRelationOperator(rawOperator)
     if (typeof operator !== 'undefined') {
       const solverExpression = resolveAFilterTerm(expression, operator, new Array(...linksOperator));
-      if(typeof solverExpression !== 'undefined') {
+      if (typeof solverExpression !== 'undefined') {
         filterExpressionList.push(solverExpression);
         return filterExpressionList;
       }
     }
   } else {
-    linksOperator.push(expression.operator);
-    for (const arg of expression.args) {
-      convertFilterExpressionToSolverExpression(arg, filterExpressionList, linksOperator);
+    const logicOperator = LogicOperatorReversed.get(expression.operator);
+    if (typeof logicOperator !== 'undefined') {
+      const operator = new LinkOperator(logicOperator);
+      linksOperator.push(operator);
+      for (const arg of expression.args) {
+        convertFilterExpressionToSolverExpression(arg, filterExpressionList, linksOperator);
+      }
     }
-  }
 
+  }
   return filterExpressionList;
 }
 
-function areTypeCompatible(relation: ITreeRelation, filterValue: RDF.Term): boolean {
-  const filterValueType = SparqlOperandDataTypesReversed.get((<RDF.Literal>filterValue).datatype.value);
-  const relationValueType = SparqlOperandDataTypesReversed.get((<RDF.Literal>relation.value?.term).datatype.value);
-  // Unvalid type we will let sparqlee handle the error.
-  if (!filterValueType || !relationValueType) {
-    return false;
+export function createEquationSystem(expressions: SolverExpression[]): SolverEquationSystem {
+  const system: SolverEquationSystem = new Map();
+  for (const expression of expressions) {
+    const lastOperator = expression.chainOperator.slice(-1).toString();
+
+    const systemElement = system.get(lastOperator);
+    const solutionRange = getPossibleRangeOfExpression(expression.valueAsNumber, expression.operator);
+
+    if (typeof solutionRange !== 'undefined') {
+      const equation: SolverEquation = {
+        chainOperator: expression.chainOperator,
+        solutionDomain: new SolutionDomain(solutionRange)
+      };
+
+      if (typeof systemElement !== 'undefined') {
+        systemElement.push(equation);
+      } else if (typeof solutionRange !== 'undefined') {
+        system.set(lastOperator, [equation]);
+      }
+    }
   }
-  // The type doesn't match we let sparqlee handle the error
-  if (filterValueType !== relationValueType &&
-    !(isSparqlOperandNumberType(filterValueType) && isSparqlOperandNumberType(relationValueType))) {
-    return false;
+  return system;
+}
+
+function areTypeCompatible(expressions: SolverExpression[]): boolean {
+  const firstType = expressions[0].valueType;
+  for (const expression of expressions) {
+    if (expression.valueType !== firstType ||
+      !(isSparqlOperandNumberType(firstType) &&
+        isSparqlOperandNumberType(expression.valueType))) {
+      return false
+    }
   }
-  return true;
+  return true
 }
 
-function convertValueToNumber() {
-
-}
-
-function evaluateRange() {
-
-}
-
-function checkIfRangeOverlap() {
-
-}
-
-function evaluateRelationType(relation: ITreeRelation, filterValue: RDF.Term, filterVariable: string): void {
-  const filterValueType = SparqlOperandDataTypesReversed.get((<RDF.Literal>filterValue).datatype.value);
-  const relationValueType = SparqlOperandDataTypesReversed.get((<RDF.Literal>relation.value?.term).datatype.value);
-  // Unvalid type we will let sparqlee handle the error.
-  if (!filterValueType || !relationValueType) {
-    return;
-  }
-  // The type doesn't match we let sparqlee handle the error
-  if (filterValueType !== relationValueType &&
-    !(isSparqlOperandNumberType(filterValueType) && isSparqlOperandNumberType(relationValueType))) {
-    return;
-  }
-
-  const filterValueAsNumber = castSparqlRdfTermIntoJs(filterValue.value, filterValueType);
-}
-
-function getPossibleRangeOfExpression(value: number, operator: RelationOperator): [number, number] | undefined {
+function getPossibleRangeOfExpression(value: number, operator: RelationOperator): SolutionRange | undefined {
   switch (operator) {
     case RelationOperator.GreaterThanRelation:
-      return [value + Number.EPSILON, Number.POSITIVE_INFINITY];
+      return new SolutionRange([value + Number.EPSILON, Number.POSITIVE_INFINITY]);
     case RelationOperator.GreaterThanOrEqualToRelation:
-      return [value, Number.POSITIVE_INFINITY];
+      return new SolutionRange([value, Number.POSITIVE_INFINITY]);
     case RelationOperator.EqualThanRelation:
-      return [value, value];
+      return new SolutionRange([value, value]);
     case RelationOperator.LessThanRelation:
-      return [Number.NEGATIVE_INFINITY, value - Number.EPSILON];
+      return new SolutionRange([Number.NEGATIVE_INFINITY, value - Number.EPSILON]);
     case RelationOperator.LessThanOrEqualToRelation:
-      return [Number.NEGATIVE_INFINITY, value];
+      return new SolutionRange([Number.NEGATIVE_INFINITY, value]);
     default:
       break;
   }

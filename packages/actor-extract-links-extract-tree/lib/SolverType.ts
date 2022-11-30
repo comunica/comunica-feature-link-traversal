@@ -1,4 +1,5 @@
 import { RelationOperator } from '@comunica/types-link-traversal';
+import { type } from 'os';
 /**
  * Valid SPARQL data type for operation.
  */
@@ -31,17 +32,33 @@ export enum LogicOperator {
     Not = '!',
 };
 
-export interface LinkOperator {
-    operator: LogicOperator,
-    id: number,
+export const LogicOperatorReversed: Map<string, LogicOperator> =
+    new Map(Object.values(LogicOperator).map(value => [value, value]));
+
+export class LinkOperator {
+    private readonly operator: LogicOperator;
+    private readonly id: number;
+    private static count: number = 0;
+
+    constructor(operator: LogicOperator) {
+        this.operator = operator;
+        this.id = LinkOperator.count;
+        LinkOperator.count++;
+    }
+
+    public toString(): string {
+        return `${this.operator}-${this.id}`
+    }
 }
 
 export interface SolverEquation {
     chainOperator: LinkOperator[];
-    expression: SolverExpression;
-    solutionDomain?: SolutionDomain;
+    solutionDomain: SolutionDomain;
 }
 
+export type SolverEquationSystem = Map<LastLogicalOperator, SolverEquation[]>;
+
+export type LastLogicalOperator = string;
 export type Variable = string;
 
 export interface SolverExpression {
@@ -52,18 +69,16 @@ export interface SolverExpression {
     valueAsNumber: number;
 
     operator: RelationOperator;
-    chainOperator?: string[];
-
-    expressionRange?: SolutionRange;
+    chainOperator: LinkOperator[];
 };
 
 export class SolutionRange {
     public readonly upper: number;
     public readonly lower: number;
 
-    constructor(upper: number, lower: number) {
-        this.upper = upper;
-        this.lower = lower;
+    constructor(range: [number, number]) {
+        this.upper = range[0];
+        this.lower = range[1];
     }
 
     public isOverlaping(otherRange: SolutionRange): boolean {
@@ -80,23 +95,26 @@ export class SolutionRange {
         if (this.isOverlaping(otherRange)) {
             const lowest = this.lower < otherRange.lower ? this.lower : otherRange.lower;
             const uppest = this.upper > otherRange.upper ? this.upper : otherRange.upper;
-            return new SolutionRange(uppest, lowest);
+            return new SolutionRange([uppest, lowest]);
         }
         return undefined;
     }
 
     public clone(): SolutionRange {
-        return new SolutionRange(this.upper, this.lower);
+        return new SolutionRange([this.upper, this.lower]);
     }
 }
 
 
 export class SolutionDomain {
     private canBeSatisfy: boolean = true;
-    private domain: SolutionRange[] = [];
+    private domain: SolutionRange[];
     private excludedDomain: SolutionRange[] = [];
-    constructor() {
+
+    constructor(initialDomain: SolutionRange) {
+        this.domain = [initialDomain];
     }
+
 
     public add(range: SolutionRange): boolean {
         for (const excluded of this.excludedDomain) {
