@@ -7,7 +7,7 @@ import type { ILink } from '@comunica/bus-rdf-resolve-hypermedia-links';
 import { KeysInitQuery, KeysQueryOperation } from '@comunica/context-entries';
 import { KeysRdfResolveHypermediaLinks } from '@comunica/context-entries-link-traversal';
 import type { IActorArgs, IActorTest } from '@comunica/core';
-import type { IActionContext } from '@comunica/types';
+import type { IActionContext, IDataSource } from '@comunica/types';
 import type * as RDF from '@rdfjs/types';
 import { storeStream } from 'rdf-store-stream';
 import { termToString } from 'rdf-string';
@@ -43,7 +43,6 @@ export class ActorExtractLinksSolidTypeIndex extends ActorExtractLinks {
   public async run(action: IActionExtractLinks): Promise<IActorExtractLinksOutput> {
     // Determine links to type indexes
     const typeIndexes = await this.extractTypeIndexLinks(action.metadata);
-
     // Dereference all type indexes, and collect them in one record
     const typeLinks = (await Promise.all(typeIndexes
       .map(typeIndex => this.dereferenceTypeIndex(typeIndex, action.context))))
@@ -118,7 +117,6 @@ export class ActorExtractLinksSolidTypeIndex extends ActorExtractLinks {
     // Parse the type index document
     const response = await this.mediatorDereferenceRdf.mediate({ url: typeIndex, context });
     const store = await storeStream(response.data);
-
     // Query the document to extract all type registrations
     const bindingsArray = await (await this.queryEngine
       .queryBindings(`
@@ -131,7 +129,6 @@ export class ActorExtractLinksSolidTypeIndex extends ActorExtractLinks {
         sources: [ store ],
         [KeysRdfResolveHypermediaLinks.traverse.name]: false,
       })).toArray();
-
     // Collect links per type
     const typeLinks: Record<string, ILink[]> = {};
     for (const bindings of bindingsArray) {
@@ -159,20 +156,32 @@ export class ActorExtractLinksSolidTypeIndex extends ActorExtractLinks {
     const allSubjects: Set<string> = new Set();
     const typeSubjects: Record<string, RDF.Term[]> = {};
     const predicateSubjectRecord: Record<string, RDF.Term> = {};
+    const predicateSubjectKey: string[] = [];
     const queryEngineLocal = this.queryEngine;
+    const vocabSource: IDataSource[] = [];
 
     // Fetch the rdf type from the vocabulary if the type is not already present.
-    async function getRDFTypeFromPredicates(predicateValue: string): Promise<string> {
+    async function getRDFTypeFromPredicates(predicateValue: string[]): Promise<Record<string, string>> {
+      if (!predicateValue.slice(1).toString().split(',')[0]) {
+        vocabSource.push();
+      } else {
+        vocabSource.push(...predicateValue.slice(1).toString().split(','));
+      }
       const bindings = await queryEngineLocal.queryBindings(`
           PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-          SELECT ?class WHERE {
-            ?s rdfs:domain ?class.
+          SELECT ?domain WHERE {
+            ?s rdfs:domain ?domain.
           }`, {
-        sources: [ `${predicateValue}` ],
+        sources: [ predicateValue[0], ...vocabSource ],
+        [KeysRdfResolveHypermediaLinks.traverse.name]: false,
       });
-      const bindingsArray = await bindings.toArray();
 
-      return bindingsArray[0]?.get('class')?.value || '';
+      const bindingsArray = await bindings.toArray();
+      const predicateTypeLinks: Record<string, string> = {};
+      for (const pred of predicateValue) {
+        predicateTypeLinks[pred] = bindingsArray[predicateValue.indexOf(pred)]?.get('domain')?.value || '';
+      }
+      return predicateTypeLinks;
     }
 
     // Helper function for walking through query
@@ -219,27 +228,38 @@ export class ActorExtractLinksSolidTypeIndex extends ActorExtractLinks {
         return false;
       },
     });
+
     // To fetch the domain of the predicate.
     async function linkPredicateDomain(): Promise<void> {
+      // Fetch and keep the domains of all the predicates in a dict.
+      for (const key in predicateSubjectRecord) {
+        if (key !== ActorExtractLinksSolidTypeIndex.RDF_TYPE) {
+          predicateSubjectKey.push(key);
+        }
+      }
+
+      const domain = await getRDFTypeFromPredicates(predicateSubjectKey);
+
       for (const [ key, value ] of Object.entries(predicateSubjectRecord)) {
+        // If multiple subjects have the same predicate domain.
         if (Object.keys(typeSubjects).length > 0) {
-          Object.entries(typeSubjects).forEach(async([ keyParam, ObjValue ]) => {
+          for (const [ keyParam, ObjValue ] of Object.entries(typeSubjects)) {
             if (!ObjValue.includes(value)) {
-              const typeName = await getRDFTypeFromPredicates(key);
-              if (!typeSubjects[typeName]) {
-                typeSubjects[typeName] = [];
-              }
+              const typeName = domain[key];
               if (typeName) {
+                if (!typeSubjects[typeName]) {
+                  typeSubjects[typeName] = [];
+                }
                 typeSubjects[typeName].push(value);
               }
             }
-          });
-        } else {
-          const typeName = await getRDFTypeFromPredicates(key);
-          if (!typeSubjects[typeName]) {
-            typeSubjects[typeName] = [];
           }
+        } else {
+          const typeName = domain[key];
           if (typeName) {
+            if (!typeSubjects[typeName]) {
+              typeSubjects[typeName] = [];
+            }
             typeSubjects[typeName].push(value);
           }
         }
@@ -250,9 +270,11 @@ export class ActorExtractLinksSolidTypeIndex extends ActorExtractLinks {
     // Check if the current pattern has any of the allowed subjects,
     // and consider the type index entry's links in that case.
     const links: ILink[] = [];
+    const allTypeMappedSubjects: RDF.Term[] = Object.values(typeSubjects).flat();
+
     for (const [ type, subjects ] of Object.entries(typeSubjects)) {
       const currentLinks = typeLinks[type];
-      if (currentLinks && subjects.some(subject => subject.equals(pattern.subject))) {
+      if (currentLinks && allTypeMappedSubjects.some(subject => subject.equals(pattern.subject))) {
         links.push(...currentLinks);
       }
 
@@ -267,7 +289,6 @@ export class ActorExtractLinksSolidTypeIndex extends ActorExtractLinks {
     if (allSubjects.size > 0) {
       return Object.values(typeLinks).flat();
     }
-
     return links;
   }
 }
