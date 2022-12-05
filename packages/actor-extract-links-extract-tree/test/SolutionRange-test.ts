@@ -1,0 +1,233 @@
+import { SolutionRange } from '../lib/SolverType';
+
+describe('SolutionRange', ()=>{
+    describe('constructor', ()=>{
+        it('should have the right parameters when building', ()=>{
+            const aRange: [number, number] = [0,1];
+            const solutionRange = new SolutionRange(aRange);
+
+            expect(solutionRange.lower).toBe(aRange[0])
+            expect(solutionRange.upper).toBe(aRange[1])
+
+        });
+
+        it('should not throw an error when the domain is unitary', ()=>{
+            const aRange: [number, number] = [0,0];
+            const solutionRange = new SolutionRange(aRange);
+
+            expect(solutionRange.lower).toBe(aRange[0])
+            expect(solutionRange.upper).toBe(aRange[1])
+
+        });
+
+        it('should have throw an error when the first element of the range is greater than the second', ()=>{
+            const aRange: [number, number] = [1,0];
+            expect(()=>{new SolutionRange(aRange)}).toThrow(RangeError);
+        });
+    });
+
+    describe('isOverlaping', ()=>{
+        it('should return true when the solution range have the same range', ()=>{
+            const aRange: [number, number] = [0,100];
+            const aSolutionRange = new SolutionRange(aRange);
+
+            const aSecondRange: [number, number] = [0,100];
+            const aSecondSolutionRange = new SolutionRange(aSecondRange);
+
+            expect(aSolutionRange.isOverlapping(aSecondSolutionRange)).toBe(true);
+        });
+
+        it('should return true when the other range start before the subject range and end inside the subject range', ()=>{
+            const aRange: [number, number] = [0,100];
+            const aSolutionRange = new SolutionRange(aRange);
+
+            const aSecondRange: [number, number] = [-1,99];
+            const aSecondSolutionRange = new SolutionRange(aSecondRange);
+
+            expect(aSolutionRange.isOverlapping(aSecondSolutionRange)).toBe(true);
+        });
+
+        it('should return true when the other range start before the subject range and end after the subject range', ()=>{
+            const aRange: [number, number] = [0,100];
+            const aSolutionRange = new SolutionRange(aRange);
+
+            const aSecondRange: [number, number] = [-1,101];
+            const aSecondSolutionRange = new SolutionRange(aSecondRange);
+
+            expect(aSolutionRange.isOverlapping(aSecondSolutionRange)).toBe(true);
+        });
+
+        it('should return true when the other range start at the subject range and end after the range', ()=>{
+            const aRange: [number, number] = [0,100];
+            const aSolutionRange = new SolutionRange(aRange);
+
+            const aSecondRange: [number, number] = [0,101];
+            const aSecondSolutionRange = new SolutionRange(aSecondRange);
+
+            expect(aSolutionRange.isOverlapping(aSecondSolutionRange)).toBe(true);
+        });
+
+        it('should return true when the other range start inside the current range and end inside the current range', ()=>{
+            const aRange: [number, number] = [0,100];
+            const aSolutionRange = new SolutionRange(aRange);
+
+            const aSecondRange: [number, number] = [1,50];
+            const aSecondSolutionRange = new SolutionRange(aSecondRange);
+
+            expect(aSolutionRange.isOverlapping(aSecondSolutionRange)).toBe(true);
+        });
+
+        it('should return true when the other range start at the end of the subject range', ()=>{
+            const aRange: [number, number] = [0,100];
+            const aSolutionRange = new SolutionRange(aRange);
+
+            const aSecondRange: [number, number] = [100,500];
+            const aSecondSolutionRange = new SolutionRange(aSecondRange);
+
+            expect(aSolutionRange.isOverlapping(aSecondSolutionRange)).toBe(true);
+        });
+
+        it('should return false when the other range is located before the subject range', ()=>{
+            const aRange: [number, number] = [0,100];
+            const aSolutionRange = new SolutionRange(aRange);
+
+            const aSecondRange: [number, number] = [-50, -20];
+            const aSecondSolutionRange = new SolutionRange(aSecondRange);
+
+            expect(aSolutionRange.isOverlapping(aSecondSolutionRange)).toBe(false);
+        });
+
+        it('should return false when the other range is located after the subject range', ()=>{
+            const aRange: [number, number] = [0,100];
+            const aSolutionRange = new SolutionRange(aRange);
+
+            const aSecondRange: [number, number] = [101, 200];
+            const aSecondSolutionRange = new SolutionRange(aSecondRange);
+
+            expect(aSolutionRange.isOverlapping(aSecondSolutionRange)).toBe(false);
+        });
+    });
+    describe('isInside', ()=>{
+        it('should return true when the other range is inside the subject range', ()=>{
+            const aRange: [number, number] = [0,100];
+            const aSolutionRange = new SolutionRange(aRange);
+
+            const aSecondRange: [number, number] = [1,50];
+            const aSecondSolutionRange = new SolutionRange(aSecondRange);
+
+            expect(aSolutionRange.isInside(aSecondSolutionRange)).toBe(true);
+        });
+
+        it('should return false when the other range is not inside the subject range', ()=>{
+            const aRange: [number, number] = [0,100];
+            const aSolutionRange = new SolutionRange(aRange);
+
+            const aSecondRange: [number, number] = [-1,50];
+            const aSecondSolutionRange = new SolutionRange(aSecondRange);
+
+            expect(aSolutionRange.isInside(aSecondSolutionRange)).toBe(false);
+        });
+    });
+
+    describe('fuseRange', ()=>{
+        it('given an non overlapping range return both range should return the correct range', ()=>{
+            const aRange: [number, number] = [0,100];
+            const aSolutionRange = new SolutionRange(aRange);
+
+            const aSecondRange: [number, number] = [101, 200];
+            const aSecondSolutionRange = new SolutionRange(aSecondRange);
+
+            const resp = SolutionRange.fuseRange(aSolutionRange, aSecondSolutionRange);
+
+            expect(resp.length).toBe(2);
+            expect(resp[0]).toStrictEqual(aSolutionRange);
+            expect(resp[1]).toStrictEqual(aSecondSolutionRange);
+        });
+
+        it('given an overlapping range where the solution range have the same range should return the correct range', ()=>{
+            const aRange: [number, number] = [0,100];
+            const aSolutionRange = new SolutionRange(aRange);
+
+            const aSecondRange: [number, number] = [0,100];
+            const aSecondSolutionRange = new SolutionRange(aSecondRange);
+
+            const resp = SolutionRange.fuseRange(aSolutionRange, aSecondSolutionRange);
+
+            expect(resp.length).toBe(1);
+            expect(resp[0]).toStrictEqual(aSolutionRange);
+            expect(resp[0]).toStrictEqual(aSecondSolutionRange);
+        });
+
+        it('given an overlapping range where the other range start before the subject range and end inside the subject range should return the correct range', ()=>{
+            const aRange: [number, number] = [0,100];
+            const aSolutionRange = new SolutionRange(aRange);
+
+            const aSecondRange: [number, number] = [-1,99];
+            const aSecondSolutionRange = new SolutionRange(aSecondRange);
+
+            const resp = SolutionRange.fuseRange(aSolutionRange, aSecondSolutionRange);
+
+            const expectedRange = new SolutionRange([-1, 100]);
+            expect(resp.length).toBe(1);
+            expect(resp[0]).toStrictEqual(expectedRange);
+        });
+
+        it('given an overlapping range where the other range start before the subject range and end after the subject range should return the correct range', ()=>{
+            const aRange: [number, number] = [0,100];
+            const aSolutionRange = new SolutionRange(aRange);
+
+            const aSecondRange: [number, number] = [-1,101];
+            const aSecondSolutionRange = new SolutionRange(aSecondRange);
+
+            const resp = SolutionRange.fuseRange(aSolutionRange, aSecondSolutionRange);
+
+            const expectedRange = new SolutionRange([-1, 101]);
+            expect(resp.length).toBe(1);
+            expect(resp[0]).toStrictEqual(expectedRange);
+        });
+
+        it('given an overlapping range where the other range start at the subject range and end after the range should return the correct range', ()=>{
+            const aRange: [number, number] = [0,100];
+            const aSolutionRange = new SolutionRange(aRange);
+
+            const aSecondRange: [number, number] = [0,101];
+            const aSecondSolutionRange = new SolutionRange(aSecondRange);
+
+            const resp = SolutionRange.fuseRange(aSolutionRange, aSecondSolutionRange);
+
+            const expectedRange = new SolutionRange([0, 101]);
+            expect(resp.length).toBe(1);
+            expect(resp[0]).toStrictEqual(expectedRange);
+        });
+
+        it('given an overlapping range where the other range start inside the current range and end inside the current range should return the correct range', ()=>{
+            const aRange: [number, number] = [0,100];
+            const aSolutionRange = new SolutionRange(aRange);
+
+            const aSecondRange: [number, number] = [1,50];
+            const aSecondSolutionRange = new SolutionRange(aSecondRange);
+
+            const resp = SolutionRange.fuseRange(aSolutionRange, aSecondSolutionRange);
+
+            const expectedRange = new SolutionRange([0, 100]);
+            expect(resp.length).toBe(1);
+            expect(resp[0]).toStrictEqual(expectedRange);
+        });
+
+        it('given an overlapping range where the other range start at the end of the subject range should return the correct range', ()=>{
+            const aRange: [number, number] = [0,100];
+            const aSolutionRange = new SolutionRange(aRange);
+
+            const aSecondRange: [number, number] = [100,500];
+            const aSecondSolutionRange = new SolutionRange(aSecondRange);
+
+            const resp = SolutionRange.fuseRange(aSolutionRange, aSecondSolutionRange);
+
+            const expectedRange = new SolutionRange([0, 500]);
+            expect(resp.length).toBe(1);
+            expect(resp[0]).toStrictEqual(expectedRange);
+        });
+
+
+    });
+});

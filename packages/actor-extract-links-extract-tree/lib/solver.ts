@@ -122,7 +122,7 @@ export function createEquationSystem(expressions: SolverExpression[]): SolverEqu
     if (typeof solutionRange !== 'undefined') {
       const equation: SolverEquation = {
         chainOperator: expression.chainOperator,
-        solutionDomain: new SolutionDomain(solutionRange)
+        solutionDomain: solutionRange
       };
 
       if (typeof systemElement !== 'undefined') {

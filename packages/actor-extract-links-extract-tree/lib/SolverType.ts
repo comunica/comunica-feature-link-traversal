@@ -53,7 +53,7 @@ export class LinkOperator {
 
 export interface SolverEquation {
     chainOperator: LinkOperator[];
-    solutionDomain: SolutionDomain;
+    solutionDomain: SolutionRange;
 }
 
 export type SolverEquationSystem = Map<LastLogicalOperator, SolverEquation[]>;
@@ -77,70 +77,105 @@ export class SolutionRange {
     public readonly lower: number;
 
     constructor(range: [number, number]) {
-        this.upper = range[0];
-        this.lower = range[1];
+        if (range[0] > range[1]) {
+            throw new RangeError('the first element of the range should lower or equal to the second');
+        }
+        this.upper = range[1];
+        this.lower = range[0];
     }
 
-    public isOverlaping(otherRange: SolutionRange): boolean {
+    public isOverlapping(otherRange: SolutionRange): boolean {
         if (this.upper === otherRange.upper && this.lower === otherRange.lower) {
             return true;
         } else if (this.upper >= otherRange.lower && this.upper <= otherRange.upper) {
             return true;
         } else if (this.lower >= otherRange.lower && this.lower <= otherRange.upper) {
             return true;
+        } else if (otherRange.lower >= this.lower && otherRange.upper <= this.upper) {
+            return true;
         }
         return false;
     }
-    public fuseRangeIfOverlap(otherRange: SolutionRange): SolutionRange | undefined {
-        if (this.isOverlaping(otherRange)) {
-            const lowest = this.lower < otherRange.lower ? this.lower : otherRange.lower;
-            const uppest = this.upper > otherRange.upper ? this.upper : otherRange.upper;
-            return new SolutionRange([uppest, lowest]);
-        }
-        return undefined;
+
+    public isInside(otherRange: SolutionRange): boolean {
+        return otherRange.lower >= this.lower && otherRange.upper <= this.upper;
     }
 
-    public clone(): SolutionRange {
-        return new SolutionRange([this.upper, this.lower]);
+    public static fuseRange(subjectRange: SolutionRange, otherRange: SolutionRange): SolutionRange[] {
+        if (subjectRange.isOverlapping(otherRange)) {
+            const lowest = subjectRange.lower < otherRange.lower ? subjectRange.lower : otherRange.lower;
+            const uppest = subjectRange.upper > otherRange.upper ? subjectRange.upper : otherRange.upper;
+            return [new SolutionRange([lowest, uppest])];
+        }
+        return [subjectRange, otherRange];
     }
 }
 
 
 export class SolutionDomain {
-    private canBeSatisfy: boolean = true;
-    private domain: SolutionRange[];
+    private domain: SolutionRange[] = [];
     private excludedDomain: SolutionRange[] = [];
 
-    constructor(initialDomain: SolutionRange) {
-        this.domain = [initialDomain];
+    constructor() {
+    }
+
+    public get_domain(): SolutionRange[]{
+        return new Array(...this.domain);
+    }
+
+    public get_excluded_domain(): SolutionRange[]{
+        return new Array(...this.excludedDomain);
+    }
+
+    public static newWithInitialValue(initialRange: SolutionRange): SolutionDomain {
+        const newSolutionDomain = new SolutionDomain();
+        newSolutionDomain.domain = [initialRange];
+        return newSolutionDomain
+    }
+
+    public clone(): SolutionDomain {
+        const newSolutionDomain = new SolutionDomain();
+        newSolutionDomain.domain = this.domain;
+        newSolutionDomain.excludedDomain = this.excludedDomain;
+        return newSolutionDomain;
     }
 
 
-    public add(range: SolutionRange): boolean {
-        for (const excluded of this.excludedDomain) {
-            if (excluded.isOverlaping(range)) {
-                this.canBeSatisfy = false;
-                return this.canBeSatisfy
+    public add(range: SolutionRange, operator: LogicOperator): SolutionDomain {
+        // we check if the new range is inside an excluded solution
+        if (operator !== LogicOperator.Not) {
+            for (const excluded of this.excludedDomain) {
+                if (excluded.isInside(range)) {
+                    return this.clone();
+                }
             }
         }
+        return this.clone();
+    }
 
-        let currentRange = range.clone();
-        let fusedIndex: number[] = [];
-
-        this.domain.map((el, idx) => {
-            const fusedRange = el.fuseRangeIfOverlap(currentRange);
-            if (typeof fusedRange !== 'undefined') {
-                fusedIndex.push(idx);
-                currentRange = fusedRange;
-                return fusedRange;
+    public addWithOrOperator(range: SolutionRange): SolutionDomain {
+        const newDomain = this.clone();
+        let currentRange = range;
+        newDomain.domain = newDomain.domain.filter((el) => {
+            const resp = SolutionRange.fuseRange(el, currentRange);
+            if (resp.length === 1) {
+                currentRange = resp[0];
+                return false;
             }
-            return el
+            return true;
         });
-
-        for (let i = 0; i < fusedIndex.length - 1; i++) {
-            this.domain.splice(fusedIndex[i]);
-        }
-        return this.canBeSatisfy;
+        newDomain.domain.push(currentRange);
+        newDomain.domain.sort(sortDomainRangeByLowerBound);
+        return newDomain
     }
+}
+
+function sortDomainRangeByLowerBound(firstRange: SolutionRange, secondRange: SolutionRange): number {
+    if (firstRange.lower < secondRange.lower) {
+        return -1
+    } else if (firstRange.lower > secondRange.lower) {
+        return 1
+    }
+    return 0
 }
 
