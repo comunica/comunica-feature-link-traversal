@@ -110,19 +110,19 @@ export class SolutionRange {
         return [subjectRange, otherRange];
     }
 
-    public inverse(): SolutionRange[]{
-        if( this.lower === Number.NEGATIVE_INFINITY && this.upper === Number.POSITIVE_INFINITY){
+    public inverse(): SolutionRange[] {
+        if (this.lower === Number.NEGATIVE_INFINITY && this.upper === Number.POSITIVE_INFINITY) {
             return [];
-        } else if( this.lower === this.upper) {
+        } else if (this.lower === this.upper) {
             return [];
-        } else if( this.lower === Number.NEGATIVE_INFINITY){
-            return [new SolutionRange([this.upper+ Number.EPSILON, Number.POSITIVE_INFINITY])]
-        }else if( this.upper === Number.POSITIVE_INFINITY){
+        } else if (this.lower === Number.NEGATIVE_INFINITY) {
+            return [new SolutionRange([this.upper + Number.EPSILON, Number.POSITIVE_INFINITY])]
+        } else if (this.upper === Number.POSITIVE_INFINITY) {
             return [new SolutionRange([Number.NEGATIVE_INFINITY, this.lower - Number.EPSILON])];
         }
         return [
             new SolutionRange([Number.NEGATIVE_INFINITY, this.lower - Number.EPSILON]),
-            new SolutionRange([this.upper, Number.POSITIVE_INFINITY]),
+            new SolutionRange([this.upper + Number.EPSILON, Number.POSITIVE_INFINITY]),
         ];
     }
 }
@@ -134,7 +134,7 @@ export class SolutionDomain {
     constructor() {
     }
 
-    public get_domain(): SolutionRange[]{
+    public get_domain(): SolutionRange[] {
         return new Array(...this.domain);
     }
 
@@ -152,7 +152,7 @@ export class SolutionDomain {
 
 
     public add(range: SolutionRange, operator: LogicOperator): SolutionDomain {
-        
+
         return this.clone();
     }
 
@@ -172,9 +172,13 @@ export class SolutionDomain {
         return newDomain;
     }
 
-    public notOperation(): SolutionDomain{
-        const newDomain = this.clone();
-
+    public notOperation(): SolutionDomain {
+        let newDomain = new SolutionDomain();
+        for (const domainElement of this.domain) {
+            domainElement.inverse().forEach((el) => {
+                newDomain = newDomain.addWithOrOperator(el);
+            })
+        }
         return newDomain
     }
 

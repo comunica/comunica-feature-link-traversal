@@ -99,4 +99,42 @@ describe('SolutionDomain', ()=>{
             expect(newDomain.get_domain()).toStrictEqual(expectedResultingDomainRange);
         });
     });
+
+    describe('notOperation', ()=>{
+        it('given a domain with one range should return the inverse of the domain',()=>{
+            const solutionRange = new SolutionRange([0,1]);
+            const solutionDomain = SolutionDomain.newWithInitialValue(solutionRange);
+
+            const expectedDomain = [
+                new SolutionRange([Number.NEGATIVE_INFINITY,0-Number.EPSILON]),
+                new SolutionRange([1+Number.EPSILON,Number.POSITIVE_INFINITY])
+            ];
+            const newDomain = solutionDomain.notOperation();
+
+            expect(newDomain.get_domain().length).toBe(2);
+            expect(newDomain.get_domain()).toStrictEqual(expectedDomain);
+        });
+
+        it('given a domain with multiple range should return the inverted domain',()=>{
+           let domain = new SolutionDomain();
+            const ranges = [
+            new SolutionRange([0,1]),
+            new SolutionRange([2,2]),
+            new SolutionRange([44,55]),
+           ];
+           const expectedDomain = [
+            new SolutionRange([Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY]),
+           ];
+
+           for(const r of ranges) {
+            domain = domain.addWithOrOperator(r);
+           }
+           domain = domain.notOperation();
+
+           expect(domain.get_domain()).toStrictEqual(expectedDomain);
+
+        });
+
+        
+    });
 });
