@@ -6,7 +6,6 @@ describe('SolutionDomain', ()=>{
             const solutionDomain = new SolutionDomain();
 
             expect(solutionDomain.get_domain().length).toBe(0);
-            expect(solutionDomain.get_excluded_domain().length).toBe(0);
         });
     });
 
@@ -17,7 +16,6 @@ describe('SolutionDomain', ()=>{
 
             expect(solutionDomain.get_domain().length).toBe(1);
             expect(solutionDomain.get_domain()[0]).toStrictEqual(solutionRange);
-            expect(solutionDomain.get_excluded_domain().length).toBe(0);
         });
     });
 

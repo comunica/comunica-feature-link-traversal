@@ -109,22 +109,33 @@ export class SolutionRange {
         }
         return [subjectRange, otherRange];
     }
+
+    public inverse(): SolutionRange[]{
+        if( this.lower === Number.NEGATIVE_INFINITY && this.upper === Number.POSITIVE_INFINITY){
+            return [];
+        } else if( this.lower === this.upper) {
+            return [];
+        } else if( this.lower === Number.NEGATIVE_INFINITY){
+            return [new SolutionRange([this.upper+ Number.EPSILON, Number.POSITIVE_INFINITY])]
+        }else if( this.upper === Number.POSITIVE_INFINITY){
+            return [new SolutionRange([Number.NEGATIVE_INFINITY, this.lower - Number.EPSILON])];
+        }
+        return [
+            new SolutionRange([Number.NEGATIVE_INFINITY, this.lower - Number.EPSILON]),
+            new SolutionRange([this.upper, Number.POSITIVE_INFINITY]),
+        ];
+    }
 }
 
 
 export class SolutionDomain {
     private domain: SolutionRange[] = [];
-    private excludedDomain: SolutionRange[] = [];
 
     constructor() {
     }
 
     public get_domain(): SolutionRange[]{
         return new Array(...this.domain);
-    }
-
-    public get_excluded_domain(): SolutionRange[]{
-        return new Array(...this.excludedDomain);
     }
 
     public static newWithInitialValue(initialRange: SolutionRange): SolutionDomain {
@@ -136,20 +147,12 @@ export class SolutionDomain {
     public clone(): SolutionDomain {
         const newSolutionDomain = new SolutionDomain();
         newSolutionDomain.domain = this.domain;
-        newSolutionDomain.excludedDomain = this.excludedDomain;
         return newSolutionDomain;
     }
 
 
     public add(range: SolutionRange, operator: LogicOperator): SolutionDomain {
-        // we check if the new range is inside an excluded solution
-        if (operator !== LogicOperator.Not) {
-            for (const excluded of this.excludedDomain) {
-                if (excluded.isInside(range)) {
-                    return this.clone();
-                }
-            }
-        }
+        
         return this.clone();
     }
 
@@ -166,16 +169,23 @@ export class SolutionDomain {
         });
         newDomain.domain.push(currentRange);
         newDomain.domain.sort(sortDomainRangeByLowerBound);
+        return newDomain;
+    }
+
+    public notOperation(): SolutionDomain{
+        const newDomain = this.clone();
+
         return newDomain
     }
+
 }
 
 function sortDomainRangeByLowerBound(firstRange: SolutionRange, secondRange: SolutionRange): number {
     if (firstRange.lower < secondRange.lower) {
-        return -1
+        return -1;
     } else if (firstRange.lower > secondRange.lower) {
-        return 1
+        return 1;
     }
-    return 0
+    return 0;
 }
 

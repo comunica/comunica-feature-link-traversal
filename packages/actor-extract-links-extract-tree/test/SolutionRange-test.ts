@@ -227,7 +227,70 @@ describe('SolutionRange', ()=>{
             expect(resp.length).toBe(1);
             expect(resp[0]).toStrictEqual(expectedRange);
         });
+    });
 
+    describe('inverse', ()=>{
+        it('given an real solution range it should return no range', ()=>{
+            const aSolutionRange = new SolutionRange([
+                Number.NEGATIVE_INFINITY,
+                Number.POSITIVE_INFINITY
+            ]);
 
+            expect(aSolutionRange.inverse().length).toBe(0);
+        });
+
+        it('given an unique solution should return no range', ()=>{
+            const aSolutionRange = new SolutionRange([
+                1,
+                1
+            ]);
+            
+            expect(aSolutionRange.inverse().length).toBe(0);
+        });
+
+        it('given a range with an infinite upper bound should return a new range', ()=>{
+            const aSolutionRange = new SolutionRange([
+                21,
+                Number.POSITIVE_INFINITY
+            ]);
+
+            const expectedRange = new SolutionRange([Number.NEGATIVE_INFINITY, 21- Number.EPSILON]);
+
+            const resp = aSolutionRange.inverse();
+
+            expect(resp.length).toBe(1);
+            expect(resp[0]).toStrictEqual(expectedRange);
+        });
+
+        it('given a range with an infinite lower bound should return a new range',()=>{
+            const aSolutionRange = new SolutionRange([
+                Number.NEGATIVE_INFINITY,
+                -21
+            ]);
+
+            const expectedRange = new SolutionRange([-21 + Number.EPSILON, Number.POSITIVE_INFINITY]);
+
+            const resp = aSolutionRange.inverse();
+
+            expect(resp.length).toBe(1);
+            expect(resp[0]).toStrictEqual(expectedRange);
+        });
+
+        it('given a range that is not unitary and doesn\t have infinite bound should return 2 ranges',()=>{
+            const aSolutionRange = new SolutionRange([
+                -33,
+                21
+            ]);
+
+            const expectedRange = [
+                new SolutionRange([Number.NEGATIVE_INFINITY, -33 - Number.EPSILON]),
+                new SolutionRange([21+ Number.EPSILON, Number.POSITIVE_INFINITY]),
+            ];
+
+            const resp = aSolutionRange.inverse();
+
+            expect(resp.length).toBe(2);
+            expect(resp).toStrictEqual(expectedRange);
+        });
     });
 });
