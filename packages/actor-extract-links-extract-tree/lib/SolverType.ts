@@ -26,6 +26,12 @@ export enum SparqlOperandDataTypes {
     PositiveInteger = 'http://www.w3.org/2001/XMLSchema#positiveInteger'
 }
 
+/**
+   * A map to access the value of the enum SparqlOperandDataTypesReversed by it's value in O(1).
+   */
+ export const SparqlOperandDataTypesReversed: Map<string, SparqlOperandDataTypes> =
+ new Map(Object.values(SparqlOperandDataTypes).map(value => [value, value]));
+
 export enum LogicOperator {
     And = '&&',
     Or = '||',

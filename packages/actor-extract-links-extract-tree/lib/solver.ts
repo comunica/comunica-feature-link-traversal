@@ -7,7 +7,7 @@ import { SolutionRange } from './SolutionRange';
 import {
   SparqlOperandDataTypes, SolverEquationSystem,
   LogicOperatorReversed, LogicOperator, SolverExpression,
-  LinkOperator, Variable, SolverEquation,
+  LinkOperator, Variable, SolverEquation, SparqlOperandDataTypesReversed
 } from './SolverType';
 
 export function solveRelationWithFilter({ relation, filterExpression, variable }: {
@@ -52,7 +52,6 @@ function convertTreeRelationToSolverExpression(expression: ITreeRelation, variab
     };
   }
 }
-
 
 function resolveAFilterTerm(expression: Algebra.Expression, operator: RelationOperator, linksOperator: LinkOperator[]): SolverExpression | undefined {
   let variable: string | undefined;
@@ -195,12 +194,6 @@ function isSparqlOperandNumberType(rdfTermType: SparqlOperandDataTypes): boolean
     rdfTermType === SparqlOperandDataTypes.UnsignedShort ||
     rdfTermType === SparqlOperandDataTypes.PositiveInteger;
 }
-
-/**
-   * A map to access the value of the enum SparqlOperandDataTypesReversed by it's value in O(1).
-   */
-const SparqlOperandDataTypesReversed: Map<string, SparqlOperandDataTypes> =
-  new Map(Object.values(SparqlOperandDataTypes).map(value => [value, value]));
 
 function filterOperatorToRelationOperator(filterOperator: string): RelationOperator | undefined {
   switch (filterOperator) {

@@ -6,8 +6,8 @@ export class SolutionRange {
         if (range[0] > range[1]) {
             throw new RangeError('the first element of the range should lower or equal to the second');
         }
-        this.upper = range[1];
         this.lower = range[0];
+        this.upper = range[1];
     }
 
     public isOverlapping(otherRange: SolutionRange): boolean {
@@ -50,5 +50,15 @@ export class SolutionRange {
             new SolutionRange([Number.NEGATIVE_INFINITY, this.lower - Number.EPSILON]),
             new SolutionRange([this.upper + Number.EPSILON, Number.POSITIVE_INFINITY]),
         ];
+    }
+
+    public getIntersection(otherRange: SolutionRange): SolutionRange | undefined {
+        if (!this.isOverlapping(otherRange)) {
+            return undefined;
+        }
+        const lower = this.lower > otherRange.lower ? this.lower : otherRange.lower;
+        const upper = this.upper < otherRange.upper ? this.upper : otherRange.upper;
+
+        return new SolutionRange([lower, upper]);
     }
 }

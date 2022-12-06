@@ -293,4 +293,29 @@ describe('SolutionRange', ()=>{
             expect(resp).toStrictEqual(expectedRange);
         });
     });
+
+    describe('getIntersection', ()=>{
+        it('given two range that doesn\'t overlap should return no intersection', ()=>{
+            const aSolutionRange = new SolutionRange([0, 20]);
+            const aSecondSolutionRange = new SolutionRange([30, 40]);
+
+            expect(aSolutionRange.getIntersection(aSecondSolutionRange)).toBeUndefined();
+        });
+
+        it('given two range when one is inside the other should return the range at the inside', ()=>{
+            const aSolutionRange = new SolutionRange([0, 20]);
+            const aSecondSolutionRange = new SolutionRange([5, 10]);
+
+            expect(aSolutionRange.getIntersection(aSecondSolutionRange)).toStrictEqual(aSecondSolutionRange);
+        });
+
+        it('given two range when they overlap should return the intersection', ()=>{
+            const aSolutionRange = new SolutionRange([0, 20]);
+            const aSecondSolutionRange = new SolutionRange([5, 80]);
+
+            const expectedIntersection = new SolutionRange([5, 20]);
+
+            expect(aSolutionRange.getIntersection(aSecondSolutionRange)).toStrictEqual(expectedIntersection);
+        });
+    });
 });
