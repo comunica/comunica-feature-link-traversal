@@ -4,17 +4,19 @@ import type * as RDF from 'rdf-js';
 import { Algebra } from 'sparqlalgebrajs';
 import { SolutionDomain } from './SolutionDomain';
 import { SolutionRange } from './SolutionRange';
+import { LinkOperator } from './LinkOperator';
 import {
   SparqlOperandDataTypes, SolverEquationSystem,
   LogicOperatorReversed, LogicOperator, SolverExpression,
-  LinkOperator, Variable, SolverEquation, SparqlOperandDataTypesReversed
-} from './SolverType';
+   Variable, SolverEquation, SparqlOperandDataTypesReversed
+} from './solverInterfaces';
 
 export function solveRelationWithFilter({ relation, filterExpression, variable }: {
   relation: ITreeRelation,
   filterExpression: Algebra.Expression,
   variable: Variable
 }): boolean {
+  LinkOperator.resetIdCount();
   const relationsolverExpressions = convertTreeRelationToSolverExpression(relation, variable);
   // the relation doesn't have a value or a type, so we accept it
   if (typeof relationsolverExpressions === 'undefined'){

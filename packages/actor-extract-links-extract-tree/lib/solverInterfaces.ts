@@ -1,5 +1,6 @@
 import { RelationOperator } from '@comunica/types-link-traversal';
 import { SolutionRange } from './SolutionRange';
+import { LinkOperator } from './LinkOperator';
 /**
  * Valid SPARQL data type for operation.
  */
@@ -40,22 +41,7 @@ export enum LogicOperator {
 
 export const LogicOperatorReversed: Map<string, LogicOperator> =
     new Map(Object.values(LogicOperator).map(value => [value, value]));
-
-export class LinkOperator {
-    private readonly operator: LogicOperator;
-    private readonly id: number;
-    private static count: number = 0;
-
-    constructor(operator: LogicOperator) {
-        this.operator = operator;
-        this.id = LinkOperator.count;
-        LinkOperator.count++;
-    }
-
-    public toString(): string {
-        return `${this.operator}-${this.id}`
-    }
-}
+    
 
 export interface SolverEquation {
     chainOperator: LinkOperator[];
