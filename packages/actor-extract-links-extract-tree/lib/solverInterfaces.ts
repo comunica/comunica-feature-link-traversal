@@ -48,7 +48,7 @@ export interface SolverEquation {
     solutionDomain: SolutionRange;
 }
 
-export type SolverEquationSystem = Map<LastLogicalOperator, SolverEquation[]>;
+export type SolverEquationSystem = Map<LastLogicalOperator, [SolverEquation, SolverEquation]| SolverEquation>;
 
 export type LastLogicalOperator = string;
 export type Variable = string;

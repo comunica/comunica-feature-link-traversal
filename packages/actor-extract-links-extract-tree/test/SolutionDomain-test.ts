@@ -259,9 +259,5 @@ describe('SolutionDomain', () => {
             aDomain.add({operator:LogicOperator.Not})
             expect(spyAddWithOrOperator).toBeCalledTimes(1);
         });
-
-        it('should throw an error when adding range with a "NOT" operator and a new range', () => {
-            expect(()=>{aDomain.add({range:aRange, operator:LogicOperator.Not})}).toThrow();
-        });
     });
 });

@@ -41,9 +41,6 @@ export class SolutionDomain {
             }
 
             case LogicOperator.Not: {
-                if (range) {
-                    throw ReferenceError('range should not be defined with "NOT" operator')
-                }
                 return this.notOperation();
             }
         }

@@ -10,6 +10,7 @@ import {
   LogicOperatorReversed, LogicOperator, SolverExpression,
    Variable, SolverEquation, SparqlOperandDataTypesReversed
 } from './solverInterfaces';
+import { LastLogicalOperator } from './SolverType';
 
 export function solveRelationWithFilter({ relation, filterExpression, variable }: {
   relation: ITreeRelation,
@@ -24,7 +25,7 @@ export function solveRelationWithFilter({ relation, filterExpression, variable }
   }
   const filtersolverExpressions = convertFilterExpressionToSolverExpression(filterExpression, [], []);
   // the type are not compatible no evaluation is possible SPARQLEE will later return an error
-  if (!areTypeCompatible(filtersolverExpressions.concat(relationsolverExpressions))) {
+  if (!areTypesCompatible(filtersolverExpressions.concat(relationsolverExpressions))) {
     return false;
   }
   const filterEquationSystem = createEquationSystem(filtersolverExpressions);
@@ -38,7 +39,7 @@ function convertTreeRelationToSolverExpression(expression: ITreeRelation, variab
     if (!valueType) {
       return undefined;
     }
-    const valueNumber = castSparqlRdfTermIntoJs(expression.value.value, valueType);
+    const valueNumber = castSparqlRdfTermIntoNumber(expression.value.value, valueType);
     if (!valueNumber) {
       return undefined;
     }
@@ -68,7 +69,7 @@ function resolveAFilterTerm(expression: Algebra.Expression, operator: RelationOp
       rawValue = arg.term.value;
       valueType = SparqlOperandDataTypesReversed.get(arg.term.datatype.value);
       if (valueType) {
-        valueAsNumber = castSparqlRdfTermIntoJs(rawValue!, valueType);
+        valueAsNumber = castSparqlRdfTermIntoNumber(rawValue!, valueType);
       }
     }
   }
@@ -113,13 +114,16 @@ export function convertFilterExpressionToSolverExpression(expression: Algebra.Ex
   return filterExpressionList;
 }
 
-export function createEquationSystem(expressions: SolverExpression[]): SolverEquationSystem {
+export function createEquationSystem(expressions: SolverExpression[]): [SolverEquationSystem, LastLogicalOperator, SolverEquation[]] {
   const system: SolverEquationSystem = new Map();
+  let firstEquationToEvaluate:[string, SolverEquation[]]| undefined = undefined;
+
+
   for (const expression of expressions) {
     const lastOperator = expression.chainOperator.slice(-1).toString();
 
     const systemElement = system.get(lastOperator);
-    const solutionRange = getPossibleRangeOfExpression(expression.valueAsNumber, expression.operator);
+    const solutionRange = getSolutionRange(expression.valueAsNumber, expression.operator);
 
     if (typeof solutionRange !== 'undefined') {
       const equation: SolverEquation = {
@@ -127,17 +131,55 @@ export function createEquationSystem(expressions: SolverExpression[]): SolverEqu
         solutionDomain: solutionRange
       };
 
-      if (typeof systemElement !== 'undefined') {
+      if (Array.isArray(systemElement) ) {
         systemElement.push(equation);
+        if(firstEquationToEvaluate){
+          throw Error('there should not be multiple first equation to resolve');
+        }
+        firstEquationToEvaluate = [lastOperator, systemElement];
       } else if (typeof solutionRange !== 'undefined') {
-        system.set(lastOperator, [equation]);
+        system.set(lastOperator, equation);
       }
     }
   }
-  return system;
+  if(typeof firstEquationToEvaluate === 'undefined'){
+    throw Error('there should be one possible equation to resolve');
+  }
+  return [system, firstEquationToEvaluate[0], firstEquationToEvaluate[1]];
 }
 
-function areTypeCompatible(expressions: SolverExpression[]): boolean {
+export function resolveSolutionDomain(equationSystem:SolverEquationSystem, firstEquation: [LastLogicalOperator, [SolverEquation, SolverEquation]]): SolutionDomain{
+  const localEquationSystem  = new Map(equationSystem);
+  const currentEquations: [SolverEquation, SolverEquation] = firstEquation[1];
+  const chainOperator = currentEquations[0].chainOperator;
+  if(chainOperator.length===0){
+    throw Error('there should be at least one operator in the first equation');
+  }
+  const operator: LogicOperator = <LogicOperator>currentEquations[0].chainOperator.pop()?.operator;
+
+  let indexEquation = firstEquation[0];
+  
+  let domain = SolutionDomain.newWithInitialValue(currentEquations[0].solutionDomain);
+  domain = domain.add({range:currentEquations[1].solutionDomain, operator:operator});
+
+  indexEquation = currentEquations[0].chainOperator.pop()?.toString();
+
+  localEquationSystem.delete(indexEquation);
+  while(localEquationSystem.size !==0){
+    const nextEquation = localEquationSystem.get(indexEquation);
+    if(typeof nextEquation === 'undefined'){
+      throw Error('operation does\'t exist in the system of equation');
+    }else if(Array.isArray(nextEquation)){
+      throw Error('there should be one equation in the rest of the equation system');
+    }
+    const operator = nextEquation.chainOperator.slice(-1)[0].operator;
+    domain = domain.add({range:nextEquation.solutionDomain, operator});
+  }
+
+  return domain;
+}
+
+function areTypesCompatible(expressions: SolverExpression[]): boolean {
   const firstType = expressions[0].valueType;
   for (const expression of expressions) {
     if (expression.valueType !== firstType ||
@@ -149,7 +191,7 @@ function areTypeCompatible(expressions: SolverExpression[]): boolean {
   return true
 }
 
-function getPossibleRangeOfExpression(value: number, operator: RelationOperator): SolutionRange | undefined {
+function getSolutionRange(value: number, operator: RelationOperator): SolutionRange | undefined {
   switch (operator) {
     case RelationOperator.GreaterThanRelation:
       return new SolutionRange([value + Number.EPSILON, Number.POSITIVE_INFINITY]);
@@ -166,7 +208,7 @@ function getPossibleRangeOfExpression(value: number, operator: RelationOperator)
   }
 }
 
-function castSparqlRdfTermIntoJs(rdfTermValue: string, rdfTermType: SparqlOperandDataTypes): number | undefined {
+function castSparqlRdfTermIntoNumber(rdfTermValue: string, rdfTermType: SparqlOperandDataTypes): number | undefined {
   let jsValue: number | undefined;
   if (
     isSparqlOperandNumberType(rdfTermType)
@@ -213,5 +255,3 @@ function filterOperatorToRelationOperator(filterOperator: string): RelationOpera
       return undefined;
   }
 }
-
-

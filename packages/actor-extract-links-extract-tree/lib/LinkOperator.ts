@@ -1,7 +1,7 @@
 import { LogicOperator } from './solverInterfaces';
 
 export class LinkOperator {
-    private readonly operator: LogicOperator;
+    public readonly operator: LogicOperator;
     public readonly id: number;
     private static count: number = 0;
 
