@@ -1,4 +1,4 @@
-import { SolutionRange } from '../lib/SolverType';
+import {SolutionRange} from '../lib//SolutionRange';
 
 describe('SolutionRange', ()=>{
     describe('constructor', ()=>{

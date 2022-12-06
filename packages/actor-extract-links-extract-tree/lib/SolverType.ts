@@ -1,5 +1,5 @@
 import { RelationOperator } from '@comunica/types-link-traversal';
-import { type } from 'os';
+import { SolutionRange } from './SolutionRange';
 /**
  * Valid SPARQL data type for operation.
  */
@@ -72,124 +72,7 @@ export interface SolverExpression {
     chainOperator: LinkOperator[];
 };
 
-export class SolutionRange {
-    public readonly upper: number;
-    public readonly lower: number;
-
-    constructor(range: [number, number]) {
-        if (range[0] > range[1]) {
-            throw new RangeError('the first element of the range should lower or equal to the second');
-        }
-        this.upper = range[1];
-        this.lower = range[0];
-    }
-
-    public isOverlapping(otherRange: SolutionRange): boolean {
-        if (this.upper === otherRange.upper && this.lower === otherRange.lower) {
-            return true;
-        } else if (this.upper >= otherRange.lower && this.upper <= otherRange.upper) {
-            return true;
-        } else if (this.lower >= otherRange.lower && this.lower <= otherRange.upper) {
-            return true;
-        } else if (otherRange.lower >= this.lower && otherRange.upper <= this.upper) {
-            return true;
-        }
-        return false;
-    }
-
-    public isInside(otherRange: SolutionRange): boolean {
-        return otherRange.lower >= this.lower && otherRange.upper <= this.upper;
-    }
-
-    public static fuseRange(subjectRange: SolutionRange, otherRange: SolutionRange): SolutionRange[] {
-        if (subjectRange.isOverlapping(otherRange)) {
-            const lowest = subjectRange.lower < otherRange.lower ? subjectRange.lower : otherRange.lower;
-            const uppest = subjectRange.upper > otherRange.upper ? subjectRange.upper : otherRange.upper;
-            return [new SolutionRange([lowest, uppest])];
-        }
-        return [subjectRange, otherRange];
-    }
-
-    public inverse(): SolutionRange[] {
-        if (this.lower === Number.NEGATIVE_INFINITY && this.upper === Number.POSITIVE_INFINITY) {
-            return [];
-        } else if (this.lower === this.upper) {
-            return [];
-        } else if (this.lower === Number.NEGATIVE_INFINITY) {
-            return [new SolutionRange([this.upper + Number.EPSILON, Number.POSITIVE_INFINITY])]
-        } else if (this.upper === Number.POSITIVE_INFINITY) {
-            return [new SolutionRange([Number.NEGATIVE_INFINITY, this.lower - Number.EPSILON])];
-        }
-        return [
-            new SolutionRange([Number.NEGATIVE_INFINITY, this.lower - Number.EPSILON]),
-            new SolutionRange([this.upper + Number.EPSILON, Number.POSITIVE_INFINITY]),
-        ];
-    }
-}
 
 
-export class SolutionDomain {
-    private domain: SolutionRange[] = [];
 
-    constructor() {
-    }
-
-    public get_domain(): SolutionRange[] {
-        return new Array(...this.domain);
-    }
-
-    public static newWithInitialValue(initialRange: SolutionRange): SolutionDomain {
-        const newSolutionDomain = new SolutionDomain();
-        newSolutionDomain.domain = [initialRange];
-        return newSolutionDomain
-    }
-
-    public clone(): SolutionDomain {
-        const newSolutionDomain = new SolutionDomain();
-        newSolutionDomain.domain = this.domain;
-        return newSolutionDomain;
-    }
-
-
-    public add(range: SolutionRange, operator: LogicOperator): SolutionDomain {
-
-        return this.clone();
-    }
-
-    public addWithOrOperator(range: SolutionRange): SolutionDomain {
-        const newDomain = this.clone();
-        let currentRange = range;
-        newDomain.domain = newDomain.domain.filter((el) => {
-            const resp = SolutionRange.fuseRange(el, currentRange);
-            if (resp.length === 1) {
-                currentRange = resp[0];
-                return false;
-            }
-            return true;
-        });
-        newDomain.domain.push(currentRange);
-        newDomain.domain.sort(sortDomainRangeByLowerBound);
-        return newDomain;
-    }
-
-    public notOperation(): SolutionDomain {
-        let newDomain = new SolutionDomain();
-        for (const domainElement of this.domain) {
-            domainElement.inverse().forEach((el) => {
-                newDomain = newDomain.addWithOrOperator(el);
-            })
-        }
-        return newDomain
-    }
-
-}
-
-function sortDomainRangeByLowerBound(firstRange: SolutionRange, secondRange: SolutionRange): number {
-    if (firstRange.lower < secondRange.lower) {
-        return -1;
-    } else if (firstRange.lower > secondRange.lower) {
-        return 1;
-    }
-    return 0;
-}
 

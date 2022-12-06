@@ -2,11 +2,12 @@ import { RelationOperator } from '@comunica/types-link-traversal';
 import type { ITreeRelation } from '@comunica/types-link-traversal';
 import type * as RDF from 'rdf-js';
 import { Algebra } from 'sparqlalgebrajs';
+import { SolutionDomain } from './SolutionDomain';
+import { SolutionRange } from './SolutionRange';
 import {
   SparqlOperandDataTypes, SolverEquationSystem,
   LogicOperatorReversed, LogicOperator, SolverExpression,
   LinkOperator, Variable, SolverEquation,
-  SolutionRange, SolutionDomain
 } from './SolverType';
 
 export function solveRelationWithFilter({ relation, filterExpression, variable }: {
