@@ -33,28 +33,7 @@ export function solveRelationWithFilter({ relation, filterExpression, variable }
   return true
 }
 
-function convertTreeRelationToSolverExpression(expression: ITreeRelation, variable: string): SolverExpression | undefined {
-  if (expression.value && expression.type) {
-    const valueType = SparqlOperandDataTypesReversed.get((<RDF.Literal>expression.value.term).datatype.value);
-    if (!valueType) {
-      return undefined;
-    }
-    const valueNumber = castSparqlRdfTermIntoNumber(expression.value.value, valueType);
-    if (!valueNumber) {
-      return undefined;
-    }
 
-    return {
-      variable,
-      rawValue: expression.value.value,
-      valueType,
-      valueAsNumber: valueNumber,
-      chainOperator: [],
-
-      operator: expression.type,
-    };
-  }
-}
 
 function resolveAFilterTerm(expression: Algebra.Expression, operator: RelationOperator, linksOperator: LinkOperator[]): SolverExpression | undefined {
   let variable: string | undefined;
@@ -193,19 +172,45 @@ function resolveEquation(equation: SolverEquation, domain: SolutionDomain): [Sol
   return [localDomain, currentLastOperator.toString()]
 }
 
-function areTypesCompatible(expressions: SolverExpression[]): boolean {
+export function convertTreeRelationToSolverExpression(expression: ITreeRelation, variable: string): SolverExpression | undefined {
+  if (expression.value && expression.type) {
+    const valueType = SparqlOperandDataTypesReversed.get((<RDF.Literal>expression.value.term).datatype.value);
+    if (!valueType) {
+      return undefined;
+    }
+    const valueNumber = castSparqlRdfTermIntoNumber(expression.value.value, valueType);
+    if (!valueNumber) {
+      return undefined;
+    }
+
+    return {
+      variable,
+      rawValue: expression.value.value,
+      valueType,
+      valueAsNumber: valueNumber,
+      chainOperator: [],
+
+      operator: expression.type,
+    };
+  }
+}
+
+export function areTypesCompatible(expressions: SolverExpression[]): boolean {
   const firstType = expressions[0].valueType;
   for (const expression of expressions) {
-    if (expression.valueType !== firstType ||
-      !(isSparqlOperandNumberType(firstType) &&
-        isSparqlOperandNumberType(expression.valueType))) {
+
+    const areIdentical = expression.valueType === firstType;
+    const areNumbers = isSparqlOperandNumberType(firstType) &&
+      isSparqlOperandNumberType(expression.valueType);
+
+    if (!(areIdentical || areNumbers)) {
       return false
     }
   }
   return true
 }
 
-function getSolutionRange(value: number, operator: RelationOperator): SolutionRange | undefined {
+export function getSolutionRange(value: number, operator: RelationOperator): SolutionRange | undefined {
   switch (operator) {
     case RelationOperator.GreaterThanRelation:
       return new SolutionRange([value + Number.EPSILON, Number.POSITIVE_INFINITY]);
@@ -222,22 +227,24 @@ function getSolutionRange(value: number, operator: RelationOperator): SolutionRa
   }
 }
 
-function castSparqlRdfTermIntoNumber(rdfTermValue: string, rdfTermType: SparqlOperandDataTypes): number | undefined {
-  let jsValue: number | undefined;
+export function castSparqlRdfTermIntoNumber(rdfTermValue: string, rdfTermType: SparqlOperandDataTypes): number | undefined {
   if (
-    isSparqlOperandNumberType(rdfTermType)
-  ) {
-    jsValue = Number.parseInt(rdfTermValue, 10);
-  } else if (
     rdfTermType === SparqlOperandDataTypes.Decimal ||
     rdfTermType === SparqlOperandDataTypes.Float ||
     rdfTermType === SparqlOperandDataTypes.Double
   ) {
-    jsValue = Number.parseFloat(rdfTermValue);
+    const val = Number.parseFloat(rdfTermValue)
+    return Number.isNaN(val) ? undefined : val;
+  } else if (
+    isSparqlOperandNumberType(rdfTermType) && !rdfTermValue.includes('.')
+  ) {
+    const val = Number.parseInt(rdfTermValue, 10)
+    return Number.isNaN(val) ? undefined : val;
   } else if (rdfTermType === SparqlOperandDataTypes.DateTime) {
-    jsValue = new Date(rdfTermValue).getTime();
+    const val = new Date(rdfTermValue).getTime()
+    return Number.isNaN(val) ? undefined : val;
   }
-  return jsValue;
+  return undefined;
 }
 
 export function isSparqlOperandNumberType(rdfTermType: SparqlOperandDataTypes): boolean {
@@ -250,7 +257,11 @@ export function isSparqlOperandNumberType(rdfTermType: SparqlOperandDataTypes): 
     rdfTermType === SparqlOperandDataTypes.UnsignedLong ||
     rdfTermType === SparqlOperandDataTypes.UnsignedInt ||
     rdfTermType === SparqlOperandDataTypes.UnsignedShort ||
-    rdfTermType === SparqlOperandDataTypes.PositiveInteger;
+    rdfTermType === SparqlOperandDataTypes.PositiveInteger ||
+    rdfTermType === SparqlOperandDataTypes.Float ||
+    rdfTermType === SparqlOperandDataTypes.Double ||
+    rdfTermType === SparqlOperandDataTypes.Decimal||
+    rdfTermType === SparqlOperandDataTypes.Int;
 }
 
 export function filterOperatorToRelationOperator(filterOperator: string): RelationOperator | undefined {
