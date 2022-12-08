@@ -8,7 +8,7 @@ import { LinkOperator } from './LinkOperator';
 import {
   SparqlOperandDataTypes, SolverEquationSystem,
   LogicOperatorReversed, LogicOperator, SolverExpression,
-   Variable, SolverEquation, SparqlOperandDataTypesReversed
+  Variable, SolverEquation, SparqlOperandDataTypesReversed
 } from './solverInterfaces';
 import { LastLogicalOperator } from './SolverType';
 
@@ -20,7 +20,7 @@ export function solveRelationWithFilter({ relation, filterExpression, variable }
   LinkOperator.resetIdCount();
   const relationsolverExpressions = convertTreeRelationToSolverExpression(relation, variable);
   // the relation doesn't have a value or a type, so we accept it
-  if (typeof relationsolverExpressions === 'undefined'){
+  if (typeof relationsolverExpressions === 'undefined') {
     return true;
   }
   const filtersolverExpressions = convertFilterExpressionToSolverExpression(filterExpression, [], []);
@@ -114,70 +114,85 @@ export function convertFilterExpressionToSolverExpression(expression: Algebra.Ex
   return filterExpressionList;
 }
 
-export function createEquationSystem(expressions: SolverExpression[]): [SolverEquationSystem, LastLogicalOperator, SolverEquation[]] {
+export function createEquationSystem(expressions: SolverExpression[]): [SolverEquationSystem, [SolverEquation, SolverEquation]] | undefined {
   const system: SolverEquationSystem = new Map();
-  let firstEquationToEvaluate:[string, SolverEquation[]]| undefined = undefined;
-
+  let firstEquationToEvaluate: [SolverEquation, SolverEquation] | undefined = undefined;
 
   for (const expression of expressions) {
     const lastOperator = expression.chainOperator.slice(-1).toString();
-
-    const systemElement = system.get(lastOperator);
     const solutionRange = getSolutionRange(expression.valueAsNumber, expression.operator);
-
-    if (typeof solutionRange !== 'undefined') {
-      const equation: SolverEquation = {
-        chainOperator: expression.chainOperator,
-        solutionDomain: solutionRange
-      };
-
-      if (Array.isArray(systemElement) ) {
-        systemElement.push(equation);
-        if(firstEquationToEvaluate){
-          throw Error('there should not be multiple first equation to resolve');
-        }
-        firstEquationToEvaluate = [lastOperator, systemElement];
-      } else if (typeof solutionRange !== 'undefined') {
-        system.set(lastOperator, equation);
-      }
+    if (!solutionRange) {
+      return undefined;
     }
+    const equation: SolverEquation = {
+      chainOperator: expression.chainOperator,
+      solutionDomain: solutionRange
+    };
+    const lastEquation = system.get(lastOperator);
+    if (lastEquation) {
+      if (firstEquationToEvaluate) {
+        return undefined;
+      }
+      firstEquationToEvaluate = [lastEquation, equation];
+      system.delete(lastOperator);
+    } else {
+      system.set(lastOperator, equation);
+    }
+
   }
-  if(typeof firstEquationToEvaluate === 'undefined'){
-    throw Error('there should be one possible equation to resolve');
+  if (!firstEquationToEvaluate) {
+    return undefined;
   }
-  return [system, firstEquationToEvaluate[0], firstEquationToEvaluate[1]];
+  return [system, firstEquationToEvaluate];
 }
 
-export function resolveSolutionDomain(equationSystem:SolverEquationSystem, firstEquation: [LastLogicalOperator, [SolverEquation, SolverEquation]]): SolutionDomain{
-  const localEquationSystem  = new Map(equationSystem);
-  const currentEquations: [SolverEquation, SolverEquation] = firstEquation[1];
-  const chainOperator = currentEquations[0].chainOperator;
-  if(chainOperator.length===0){
-    throw Error('there should be at least one operator in the first equation');
-  }
-  const operator: LogicOperator = <LogicOperator>currentEquations[0].chainOperator.pop()?.operator;
+export function resolveEquationSystem(equationSystem: SolverEquationSystem, firstEquation: [SolverEquation, SolverEquation]): SolutionDomain | undefined {
+  const localEquationSystem = new Map(equationSystem);
+  const localFistEquation = new Array(...firstEquation);
+  let domain: SolutionDomain = SolutionDomain.newWithInitialValue(localFistEquation[0].solutionDomain);
+  let idx: string = "";
+  let currentEquation: SolverEquation | undefined = localFistEquation[1];
 
-  let indexEquation = firstEquation[0];
-  
-  let domain = SolutionDomain.newWithInitialValue(currentEquations[0].solutionDomain);
-  domain = domain.add({range:currentEquations[1].solutionDomain, operator:operator});
-
-  indexEquation = currentEquations[0].chainOperator.pop()?.toString();
-
-  localEquationSystem.delete(indexEquation);
-  while(localEquationSystem.size !==0){
-    const nextEquation = localEquationSystem.get(indexEquation);
-    if(typeof nextEquation === 'undefined'){
-      throw Error('operation does\'t exist in the system of equation');
-    }else if(Array.isArray(nextEquation)){
-      throw Error('there should be one equation in the rest of the equation system');
+  do {
+    const resp = resolveEquation(currentEquation, domain);
+    if (!resp) {
+      return undefined;
     }
-    const operator = nextEquation.chainOperator.slice(-1)[0].operator;
-    domain = domain.add({range:nextEquation.solutionDomain, operator});
-  }
+    [domain, idx] = resp;
+
+    currentEquation = localEquationSystem.get(idx);
+
+  } while (currentEquation)
 
   return domain;
 }
+
+function resolveEquation(equation: SolverEquation, domain: SolutionDomain): [SolutionDomain, LastLogicalOperator] | undefined {
+  let localDomain = domain.clone();
+  let i = -1;
+  let currentLastOperator = equation.chainOperator.at(i);
+  if (!currentLastOperator) {
+    return undefined;
+  }
+  i--;
+  localDomain = localDomain.add({ range: equation.solutionDomain, operator: currentLastOperator?.operator });
+
+  currentLastOperator = equation.chainOperator.at(i);
+  if (!currentLastOperator) {
+    return [localDomain, ""];
+  }
+  while (currentLastOperator?.operator === LogicOperator.Not) {
+    localDomain = localDomain.add({ operator: currentLastOperator?.operator });
+    i--;
+    currentLastOperator = equation.chainOperator.at(i);
+    if (!currentLastOperator?.operator) {
+      return [localDomain, ""];
+    }
+  }
+
+  return [localDomain, currentLastOperator.toString()]
+}
+
 
 function areTypesCompatible(expressions: SolverExpression[]): boolean {
   const firstType = expressions[0].valueType;
