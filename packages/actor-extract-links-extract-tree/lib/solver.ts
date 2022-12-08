@@ -193,7 +193,6 @@ function resolveEquation(equation: SolverEquation, domain: SolutionDomain): [Sol
   return [localDomain, currentLastOperator.toString()]
 }
 
-
 function areTypesCompatible(expressions: SolverExpression[]): boolean {
   const firstType = expressions[0].valueType;
   for (const expression of expressions) {
@@ -241,7 +240,7 @@ function castSparqlRdfTermIntoNumber(rdfTermValue: string, rdfTermType: SparqlOp
   return jsValue;
 }
 
-function isSparqlOperandNumberType(rdfTermType: SparqlOperandDataTypes): boolean {
+export function isSparqlOperandNumberType(rdfTermType: SparqlOperandDataTypes): boolean {
   return rdfTermType === SparqlOperandDataTypes.Integer ||
     rdfTermType === SparqlOperandDataTypes.NonPositiveInteger ||
     rdfTermType === SparqlOperandDataTypes.NegativeInteger ||
@@ -254,7 +253,7 @@ function isSparqlOperandNumberType(rdfTermType: SparqlOperandDataTypes): boolean
     rdfTermType === SparqlOperandDataTypes.PositiveInteger;
 }
 
-function filterOperatorToRelationOperator(filterOperator: string): RelationOperator | undefined {
+export function filterOperatorToRelationOperator(filterOperator: string): RelationOperator | undefined {
   switch (filterOperator) {
     case '=':
       return RelationOperator.EqualThanRelation;
