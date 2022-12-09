@@ -1,6 +1,6 @@
 import { SolutionDomain } from '../lib/SolutionDomain';
 import { SolutionRange } from '../lib//SolutionRange';
-import { LogicOperator } from '../lib/SolverType';
+import { LogicOperator } from '../lib/solverInterfaces';
 
 describe('SolutionDomain', () => {
     describe('constructor', () => {

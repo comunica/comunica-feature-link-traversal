@@ -10,7 +10,7 @@ import {
   LogicOperatorReversed, LogicOperator, SolverExpression,
   Variable, SolverEquation, SparqlOperandDataTypesReversed
 } from './solverInterfaces';
-import { LastLogicalOperator } from './SolverType';
+import { LastLogicalOperator } from './solverInterfaces';
 
 export function solveRelationWithFilter({ relation, filterExpression, variable }: {
   relation: ITreeRelation,

@@ -1,5 +1,5 @@
 import { SolutionRange } from './SolutionRange';
-import { LogicOperator } from './SolverType';
+import { LogicOperator } from './solverInterfaces';
 
 
 export class SolutionDomain {
