@@ -33,9 +33,7 @@ export function solveRelationWithFilter({ relation, filterExpression, variable }
   return true
 }
 
-
-
-function resolveAFilterTerm(expression: Algebra.Expression, operator: RelationOperator, linksOperator: LinkOperator[]): SolverExpression | undefined {
+export function resolveAFilterTerm(expression: Algebra.Expression, operator: RelationOperator, linksOperator: LinkOperator[]): SolverExpression | undefined {
   let variable: string | undefined;
   let rawValue: string | undefined;
   let valueType: SparqlOperandDataTypes | undefined;
@@ -146,7 +144,7 @@ export function resolveEquationSystem(equationSystem: SolverEquationSystem, firs
   return domain;
 }
 
-function resolveEquation(equation: SolverEquation, domain: SolutionDomain): [SolutionDomain, LastLogicalOperator] | undefined {
+export function resolveEquation(equation: SolverEquation, domain: SolutionDomain): [SolutionDomain, LastLogicalOperator] | undefined {
   let localDomain = domain.clone();
   let i = -1;
   let currentLastOperator = equation.chainOperator.at(i);
