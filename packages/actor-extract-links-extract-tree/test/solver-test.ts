@@ -3,12 +3,16 @@ import {
     isSparqlOperandNumberType,
     castSparqlRdfTermIntoNumber,
     getSolutionRange,
-    areTypesCompatible
+    areTypesCompatible,
+    convertTreeRelationToSolverExpression
 } from '../lib/solver';
 import { SolutionRange } from '../lib/SolutionRange';
-import { RelationOperator } from '@comunica/types-link-traversal';
+import { ITreeRelation, RelationOperator } from '@comunica/types-link-traversal';
 import { SparqlOperandDataTypes, SolverExpression } from '../lib/solverInterfaces';
+import { DataFactory } from 'rdf-data-factory';
+import type * as RDF from 'rdf-js';
 
+const DF = new DataFactory<RDF.BaseQuad>();
 
 describe('solver function', () => {
     describe('filterOperatorToRelationOperator', () => {
@@ -158,12 +162,12 @@ describe('solver function', () => {
                 ]
             ];
 
-            for(const [operator, expectedRange] of testTable) {
+            for (const [operator, expectedRange] of testTable) {
                 expect(getSolutionRange(value, operator)).toStrictEqual(expectedRange);
             }
         });
 
-        it('should return undefined given an RelationOperator that is not boolean compatible', ()=>{
+        it('should return undefined given an RelationOperator that is not boolean compatible', () => {
             const value = -1;
             const operator = RelationOperator.PrefixRelation;
 
@@ -171,125 +175,125 @@ describe('solver function', () => {
         });
     });
 
-    describe('areTypesCompatible', ()=>{
-        it('given expression with identical value type should return true', ()=>{
-            const expressions:SolverExpression[] = [
+    describe('areTypesCompatible', () => {
+        it('given expression with identical value type should return true', () => {
+            const expressions: SolverExpression[] = [
                 {
-                    variable:"a",
-                    rawValue:"true",
-                    valueType:SparqlOperandDataTypes.Boolean,
-                    valueAsNumber:1,
-                    operator:RelationOperator.EqualThanRelation,
-                    chainOperator:[]
+                    variable: "a",
+                    rawValue: "true",
+                    valueType: SparqlOperandDataTypes.Boolean,
+                    valueAsNumber: 1,
+                    operator: RelationOperator.EqualThanRelation,
+                    chainOperator: []
                 },
                 {
-                    variable:"a",
-                    rawValue:"false",
-                    valueType:SparqlOperandDataTypes.Boolean,
-                    valueAsNumber:0,
-                    operator:RelationOperator.EqualThanRelation,
-                    chainOperator:[]
+                    variable: "a",
+                    rawValue: "false",
+                    valueType: SparqlOperandDataTypes.Boolean,
+                    valueAsNumber: 0,
+                    operator: RelationOperator.EqualThanRelation,
+                    chainOperator: []
                 },
                 {
-                    variable:"a",
-                    rawValue:"false",
-                    valueType:SparqlOperandDataTypes.Boolean,
-                    valueAsNumber:0,
-                    operator:RelationOperator.EqualThanRelation,
-                    chainOperator:[]
+                    variable: "a",
+                    rawValue: "false",
+                    valueType: SparqlOperandDataTypes.Boolean,
+                    valueAsNumber: 0,
+                    operator: RelationOperator.EqualThanRelation,
+                    chainOperator: []
                 }
             ];
 
             expect(areTypesCompatible(expressions)).toBe(true);
         });
 
-        it('should return true when all the types are numbers', ()=>{
-            const expressions:SolverExpression[] = [
+        it('should return true when all the types are numbers', () => {
+            const expressions: SolverExpression[] = [
                 {
-                    variable:"a",
-                    rawValue:"true",
-                    valueType:SparqlOperandDataTypes.Int,
-                    valueAsNumber:1,
-                    operator:RelationOperator.EqualThanRelation,
-                    chainOperator:[]
+                    variable: "a",
+                    rawValue: "true",
+                    valueType: SparqlOperandDataTypes.Int,
+                    valueAsNumber: 1,
+                    operator: RelationOperator.EqualThanRelation,
+                    chainOperator: []
                 },
                 {
-                    variable:"a",
-                    rawValue:"false",
-                    valueType:SparqlOperandDataTypes.NonNegativeInteger,
-                    valueAsNumber:0,
-                    operator:RelationOperator.EqualThanRelation,
-                    chainOperator:[]
+                    variable: "a",
+                    rawValue: "false",
+                    valueType: SparqlOperandDataTypes.NonNegativeInteger,
+                    valueAsNumber: 0,
+                    operator: RelationOperator.EqualThanRelation,
+                    chainOperator: []
                 },
                 {
-                    variable:"a",
-                    rawValue:"false",
-                    valueType:SparqlOperandDataTypes.Decimal,
-                    valueAsNumber:0,
-                    operator:RelationOperator.EqualThanRelation,
-                    chainOperator:[]
+                    variable: "a",
+                    rawValue: "false",
+                    valueType: SparqlOperandDataTypes.Decimal,
+                    valueAsNumber: 0,
+                    operator: RelationOperator.EqualThanRelation,
+                    chainOperator: []
                 }
             ];
 
             expect(areTypesCompatible(expressions)).toBe(true);
         });
 
-        it('should return false when one type is not identical', ()=>{
-            const expressions:SolverExpression[] = [
+        it('should return false when one type is not identical', () => {
+            const expressions: SolverExpression[] = [
                 {
-                    variable:"a",
-                    rawValue:"true",
-                    valueType:SparqlOperandDataTypes.Boolean,
-                    valueAsNumber:1,
-                    operator:RelationOperator.EqualThanRelation,
-                    chainOperator:[]
+                    variable: "a",
+                    rawValue: "true",
+                    valueType: SparqlOperandDataTypes.Boolean,
+                    valueAsNumber: 1,
+                    operator: RelationOperator.EqualThanRelation,
+                    chainOperator: []
                 },
                 {
-                    variable:"a",
-                    rawValue:"false",
-                    valueType:SparqlOperandDataTypes.Boolean,
-                    valueAsNumber:0,
-                    operator:RelationOperator.EqualThanRelation,
-                    chainOperator:[]
+                    variable: "a",
+                    rawValue: "false",
+                    valueType: SparqlOperandDataTypes.Boolean,
+                    valueAsNumber: 0,
+                    operator: RelationOperator.EqualThanRelation,
+                    chainOperator: []
                 },
                 {
-                    variable:"a",
-                    rawValue:"false",
-                    valueType:SparqlOperandDataTypes.Byte,
-                    valueAsNumber:0,
-                    operator:RelationOperator.EqualThanRelation,
-                    chainOperator:[]
+                    variable: "a",
+                    rawValue: "false",
+                    valueType: SparqlOperandDataTypes.Byte,
+                    valueAsNumber: 0,
+                    operator: RelationOperator.EqualThanRelation,
+                    chainOperator: []
                 }
             ];
 
             expect(areTypesCompatible(expressions)).toBe(false);
         });
 
-        it('should return false when one type is not identical and the other are number', ()=>{
-            const expressions:SolverExpression[] = [
+        it('should return false when one type is not identical and the other are number', () => {
+            const expressions: SolverExpression[] = [
                 {
-                    variable:"a",
-                    rawValue:"true",
-                    valueType:SparqlOperandDataTypes.UnsignedInt,
-                    valueAsNumber:1,
-                    operator:RelationOperator.EqualThanRelation,
-                    chainOperator:[]
+                    variable: "a",
+                    rawValue: "true",
+                    valueType: SparqlOperandDataTypes.UnsignedInt,
+                    valueAsNumber: 1,
+                    operator: RelationOperator.EqualThanRelation,
+                    chainOperator: []
                 },
                 {
-                    variable:"a",
-                    rawValue:"false",
-                    valueType:SparqlOperandDataTypes.Float,
-                    valueAsNumber:0,
-                    operator:RelationOperator.EqualThanRelation,
-                    chainOperator:[]
+                    variable: "a",
+                    rawValue: "false",
+                    valueType: SparqlOperandDataTypes.Float,
+                    valueAsNumber: 0,
+                    operator: RelationOperator.EqualThanRelation,
+                    chainOperator: []
                 },
                 {
-                    variable:"a",
-                    rawValue:"false",
-                    valueType:SparqlOperandDataTypes.Byte,
-                    valueAsNumber:0,
-                    operator:RelationOperator.EqualThanRelation,
-                    chainOperator:[]
+                    variable: "a",
+                    rawValue: "false",
+                    valueType: SparqlOperandDataTypes.Byte,
+                    valueAsNumber: 0,
+                    operator: RelationOperator.EqualThanRelation,
+                    chainOperator: []
                 }
             ];
 
@@ -297,5 +301,100 @@ describe('solver function', () => {
         });
     });
 
-    
+    describe('convertTreeRelationToSolverExpression', () => {
+        it('given a TREE relation with all the parameters should return a valid expression', () => {
+            const relation: ITreeRelation = {
+                type: RelationOperator.EqualThanRelation,
+                remainingItems: 10,
+                path: "ex:path",
+                value: {
+                    value: "5",
+                    term: DF.literal('5', DF.namedNode('http://www.w3.org/2001/XMLSchema#integer'))
+                },
+                node: "https://www.example.be"
+            };
+            const variable = "x";
+
+            const expectedExpression: SolverExpression = {
+                variable: variable,
+                rawValue: '5',
+                valueType: SparqlOperandDataTypes.Integer,
+                valueAsNumber: 5,
+                chainOperator: [],
+                operator: RelationOperator.EqualThanRelation
+            };
+
+            expect(convertTreeRelationToSolverExpression(relation, variable)).toStrictEqual(expectedExpression);
+        });
+
+        it('should return undefined given a relation witn a value term containing an unknowed value type', () => {
+            const relation: ITreeRelation = {
+                type: RelationOperator.EqualThanRelation,
+                remainingItems: 10,
+                path: "ex:path",
+                value: {
+                    value: "5",
+                    term: DF.literal('5', DF.namedNode('http://www.w3.org/2001/XMLSchema#foo'))
+                },
+                node: "https://www.example.be"
+            };
+            const variable = "x";
+
+            expect(convertTreeRelationToSolverExpression(relation, variable)).toBeUndefined();
+        });
+
+        it('should return undefined given a relation with a term containing an incompatible value in relation to its value type', () => {
+            const relation: ITreeRelation = {
+                type: RelationOperator.EqualThanRelation,
+                remainingItems: 10,
+                path: "ex:path",
+                value: {
+                    value: "a",
+                    term: DF.literal('a', DF.namedNode('http://www.w3.org/2001/XMLSchema#integer'))
+                },
+                node: "https://www.example.be"
+            };
+            const variable = "x";
+
+            expect(convertTreeRelationToSolverExpression(relation, variable)).toBeUndefined();
+        });
+
+        it('should return undefined given a relation without a value and a type', () => {
+            const relation: ITreeRelation = {
+                remainingItems: 10,
+                path: "ex:path",
+                node: "https://www.example.be"
+            };
+            const variable = "x";
+
+            expect(convertTreeRelationToSolverExpression(relation, variable)).toBeUndefined();
+        });
+
+        it('should return undefined given a relation without a value', () => {
+            const relation: ITreeRelation = {
+                type: RelationOperator.EqualThanRelation,
+                remainingItems: 10,
+                path: "ex:path",
+                node: "https://www.example.be"
+            };
+            const variable = "x";
+
+            expect(convertTreeRelationToSolverExpression(relation, variable)).toBeUndefined();
+        });
+
+        it('should return undefined given a relation without a type', () => {
+            const relation: ITreeRelation = {
+                remainingItems: 10,
+                path: "ex:path",
+                value: {
+                    value: "a",
+                    term: DF.literal('a', DF.namedNode('http://www.w3.org/2001/XMLSchema#integer'))
+                },
+                node: "https://www.example.be"
+            };
+            const variable = "x";
+
+            expect(convertTreeRelationToSolverExpression(relation, variable)).toBeUndefined();
+        });
+    });
 });
