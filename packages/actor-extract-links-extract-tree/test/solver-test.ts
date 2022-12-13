@@ -5,11 +5,12 @@ import {
     getSolutionRange,
     areTypesCompatible,
     convertTreeRelationToSolverExpression,
-    resolveEquation
+    resolveEquation,
+    createEquationSystem
 } from '../lib/solver';
 import { SolutionRange } from '../lib/SolutionRange';
-import { ITreeRelation, RelationOperator } from '@comunica/types-link-traversal';
-import { SparqlOperandDataTypes, SolverExpression, SolverEquation, LogicOperator } from '../lib/solverInterfaces';
+import { ITreeRelation, SparqlRelationOperator } from '@comunica/types-link-traversal';
+import { SparqlOperandDataTypes, SolverExpression, SolverEquation, LogicOperator, SolverEquationSystem } from '../lib/solverInterfaces';
 import { DataFactory } from 'rdf-data-factory';
 import type * as RDF from 'rdf-js';
 import { SolutionDomain } from '../lib/SolutionDomain';
@@ -20,12 +21,12 @@ const DF = new DataFactory<RDF.BaseQuad>();
 describe('solver function', () => {
     describe('filterOperatorToRelationOperator', () => {
         it('should return the RelationOperator given a string representation', () => {
-            const testTable: [string, RelationOperator][] = [
-                ['=', RelationOperator.EqualThanRelation],
-                ['<', RelationOperator.LessThanRelation],
-                ['<=', RelationOperator.LessThanOrEqualToRelation],
-                ['>', RelationOperator.GreaterThanRelation],
-                ['>=', RelationOperator.GreaterThanOrEqualToRelation]
+            const testTable: [string, SparqlRelationOperator][] = [
+                ['=', SparqlRelationOperator.EqualThanRelation],
+                ['<', SparqlRelationOperator.LessThanRelation],
+                ['<=', SparqlRelationOperator.LessThanOrEqualToRelation],
+                ['>', SparqlRelationOperator.GreaterThanRelation],
+                ['>=', SparqlRelationOperator.GreaterThanOrEqualToRelation]
             ];
 
             for (const [value, expectedAnswer] of testTable) {
@@ -142,25 +143,25 @@ describe('solver function', () => {
     describe('getSolutionRange', () => {
         it('given a boolean compatible RelationOperator and a value should return a valid SolutionRange', () => {
             const value = -1;
-            const testTable: [RelationOperator, SolutionRange][] = [
+            const testTable: [SparqlRelationOperator, SolutionRange][] = [
                 [
-                    RelationOperator.GreaterThanRelation,
+                    SparqlRelationOperator.GreaterThanRelation,
                     new SolutionRange([value + Number.EPSILON, Number.POSITIVE_INFINITY])
                 ],
                 [
-                    RelationOperator.GreaterThanOrEqualToRelation,
+                    SparqlRelationOperator.GreaterThanOrEqualToRelation,
                     new SolutionRange([value, Number.POSITIVE_INFINITY])
                 ],
                 [
-                    RelationOperator.EqualThanRelation,
+                    SparqlRelationOperator.EqualThanRelation,
                     new SolutionRange([value, value])
                 ],
                 [
-                    RelationOperator.LessThanRelation,
+                    SparqlRelationOperator.LessThanRelation,
                     new SolutionRange([Number.NEGATIVE_INFINITY, value - Number.EPSILON])
                 ],
                 [
-                    RelationOperator.LessThanOrEqualToRelation,
+                    SparqlRelationOperator.LessThanOrEqualToRelation,
                     new SolutionRange([Number.NEGATIVE_INFINITY, value])
                 ]
             ];
@@ -172,7 +173,7 @@ describe('solver function', () => {
 
         it('should return undefined given an RelationOperator that is not boolean compatible', () => {
             const value = -1;
-            const operator = RelationOperator.PrefixRelation;
+            const operator = SparqlRelationOperator.PrefixRelation;
 
             expect(getSolutionRange(value, operator)).toBeUndefined();
         });
@@ -186,7 +187,7 @@ describe('solver function', () => {
                     rawValue: "true",
                     valueType: SparqlOperandDataTypes.Boolean,
                     valueAsNumber: 1,
-                    operator: RelationOperator.EqualThanRelation,
+                    operator: SparqlRelationOperator.EqualThanRelation,
                     chainOperator: []
                 },
                 {
@@ -194,7 +195,7 @@ describe('solver function', () => {
                     rawValue: "false",
                     valueType: SparqlOperandDataTypes.Boolean,
                     valueAsNumber: 0,
-                    operator: RelationOperator.EqualThanRelation,
+                    operator: SparqlRelationOperator.EqualThanRelation,
                     chainOperator: []
                 },
                 {
@@ -202,7 +203,7 @@ describe('solver function', () => {
                     rawValue: "false",
                     valueType: SparqlOperandDataTypes.Boolean,
                     valueAsNumber: 0,
-                    operator: RelationOperator.EqualThanRelation,
+                    operator: SparqlRelationOperator.EqualThanRelation,
                     chainOperator: []
                 }
             ];
@@ -217,7 +218,7 @@ describe('solver function', () => {
                     rawValue: "true",
                     valueType: SparqlOperandDataTypes.Int,
                     valueAsNumber: 1,
-                    operator: RelationOperator.EqualThanRelation,
+                    operator: SparqlRelationOperator.EqualThanRelation,
                     chainOperator: []
                 },
                 {
@@ -225,7 +226,7 @@ describe('solver function', () => {
                     rawValue: "false",
                     valueType: SparqlOperandDataTypes.NonNegativeInteger,
                     valueAsNumber: 0,
-                    operator: RelationOperator.EqualThanRelation,
+                    operator: SparqlRelationOperator.EqualThanRelation,
                     chainOperator: []
                 },
                 {
@@ -233,7 +234,7 @@ describe('solver function', () => {
                     rawValue: "false",
                     valueType: SparqlOperandDataTypes.Decimal,
                     valueAsNumber: 0,
-                    operator: RelationOperator.EqualThanRelation,
+                    operator: SparqlRelationOperator.EqualThanRelation,
                     chainOperator: []
                 }
             ];
@@ -248,7 +249,7 @@ describe('solver function', () => {
                     rawValue: "true",
                     valueType: SparqlOperandDataTypes.Boolean,
                     valueAsNumber: 1,
-                    operator: RelationOperator.EqualThanRelation,
+                    operator: SparqlRelationOperator.EqualThanRelation,
                     chainOperator: []
                 },
                 {
@@ -256,7 +257,7 @@ describe('solver function', () => {
                     rawValue: "false",
                     valueType: SparqlOperandDataTypes.Boolean,
                     valueAsNumber: 0,
-                    operator: RelationOperator.EqualThanRelation,
+                    operator: SparqlRelationOperator.EqualThanRelation,
                     chainOperator: []
                 },
                 {
@@ -264,7 +265,7 @@ describe('solver function', () => {
                     rawValue: "false",
                     valueType: SparqlOperandDataTypes.Byte,
                     valueAsNumber: 0,
-                    operator: RelationOperator.EqualThanRelation,
+                    operator: SparqlRelationOperator.EqualThanRelation,
                     chainOperator: []
                 }
             ];
@@ -279,7 +280,7 @@ describe('solver function', () => {
                     rawValue: "true",
                     valueType: SparqlOperandDataTypes.UnsignedInt,
                     valueAsNumber: 1,
-                    operator: RelationOperator.EqualThanRelation,
+                    operator: SparqlRelationOperator.EqualThanRelation,
                     chainOperator: []
                 },
                 {
@@ -287,7 +288,7 @@ describe('solver function', () => {
                     rawValue: "false",
                     valueType: SparqlOperandDataTypes.Float,
                     valueAsNumber: 0,
-                    operator: RelationOperator.EqualThanRelation,
+                    operator: SparqlRelationOperator.EqualThanRelation,
                     chainOperator: []
                 },
                 {
@@ -295,7 +296,7 @@ describe('solver function', () => {
                     rawValue: "false",
                     valueType: SparqlOperandDataTypes.Byte,
                     valueAsNumber: 0,
-                    operator: RelationOperator.EqualThanRelation,
+                    operator: SparqlRelationOperator.EqualThanRelation,
                     chainOperator: []
                 }
             ];
@@ -307,7 +308,7 @@ describe('solver function', () => {
     describe('convertTreeRelationToSolverExpression', () => {
         it('given a TREE relation with all the parameters should return a valid expression', () => {
             const relation: ITreeRelation = {
-                type: RelationOperator.EqualThanRelation,
+                type: SparqlRelationOperator.EqualThanRelation,
                 remainingItems: 10,
                 path: "ex:path",
                 value: {
@@ -324,7 +325,7 @@ describe('solver function', () => {
                 valueType: SparqlOperandDataTypes.Integer,
                 valueAsNumber: 5,
                 chainOperator: [],
-                operator: RelationOperator.EqualThanRelation
+                operator: SparqlRelationOperator.EqualThanRelation
             };
 
             expect(convertTreeRelationToSolverExpression(relation, variable)).toStrictEqual(expectedExpression);
@@ -332,7 +333,7 @@ describe('solver function', () => {
 
         it('should return undefined given a relation witn a value term containing an unknowed value type', () => {
             const relation: ITreeRelation = {
-                type: RelationOperator.EqualThanRelation,
+                type: SparqlRelationOperator.EqualThanRelation,
                 remainingItems: 10,
                 path: "ex:path",
                 value: {
@@ -348,7 +349,7 @@ describe('solver function', () => {
 
         it('should return undefined given a relation with a term containing an incompatible value in relation to its value type', () => {
             const relation: ITreeRelation = {
-                type: RelationOperator.EqualThanRelation,
+                type: SparqlRelationOperator.EqualThanRelation,
                 remainingItems: 10,
                 path: "ex:path",
                 value: {
@@ -375,7 +376,7 @@ describe('solver function', () => {
 
         it('should return undefined given a relation without a value', () => {
             const relation: ITreeRelation = {
-                type: RelationOperator.EqualThanRelation,
+                type: SparqlRelationOperator.EqualThanRelation,
                 remainingItems: 10,
                 path: "ex:path",
                 node: "https://www.example.be"
@@ -537,6 +538,202 @@ describe('solver function', () => {
 
             expect(resolveEquation(equation, domain)).toBeUndefined();
 
+        });
+    });
+
+    describe('createEquationSystem', () => {
+        it('given multiple equations that are consistent with one and another should return a valid equation system and the first equation to resolve', () => {
+            const lastOperator = new LinkOperator(LogicOperator.And);
+            const firstOperator = new LinkOperator(LogicOperator.Or);
+            const secondOperator = new LinkOperator(LogicOperator.Or);
+            const thirdOperator = new LinkOperator(LogicOperator.Not);
+            const aVariable = 'x';
+            const aRawValue = '1';
+            const aValueType = SparqlOperandDataTypes.Int;
+            const avalueAsNumber = 1;
+            const anOperator = SparqlRelationOperator.EqualThanRelation;
+
+            const operationTemplate = (c: LinkOperator[]): SolverExpression => {
+                return {
+                    variable: aVariable,
+                    rawValue: aRawValue,
+                    valueType: aValueType,
+                    valueAsNumber: avalueAsNumber,
+                    operator: anOperator,
+                    chainOperator: c
+                }
+            };
+
+            const firstOperation = operationTemplate([firstOperator]);
+            const firstEquation: SolverEquation = { chainOperator: firstOperation.chainOperator, solutionDomain: new SolutionRange([1, 1]) };
+            const secondOperation = operationTemplate([firstOperator, secondOperator]);
+            const secondEquation: SolverEquation = { chainOperator: secondOperation.chainOperator, solutionDomain: new SolutionRange([1, 1]) };
+            const thirdOperation = operationTemplate([firstOperator, secondOperator, thirdOperator]);
+            const thirdEquation: SolverEquation = { chainOperator: thirdOperation.chainOperator, solutionDomain: new SolutionRange([1, 1]) };
+            const lastOperation1 = operationTemplate([firstOperator, secondOperator, thirdOperator, lastOperator]);
+            const expectedFirstEquation1: SolverEquation = { chainOperator: lastOperation1.chainOperator, solutionDomain: new SolutionRange([1, 1]) };
+            const lastOperation2 = operationTemplate([firstOperator, secondOperator, thirdOperator, lastOperator]);
+            const expectedFirstEquation2: SolverEquation = { chainOperator: lastOperation2.chainOperator, solutionDomain: new SolutionRange([1, 1]) };
+
+            const equations: SolverExpression[] = [
+                firstOperation,
+                secondOperation,
+                thirdOperation,
+                lastOperation1,
+                lastOperation2
+            ]
+            equations.sort(() => Math.random() - 0.5);
+
+            const expectedEquationSystem: SolverEquationSystem = new Map([
+                [firstOperator.toString(), firstEquation],
+                [secondOperator.toString(), secondEquation],
+                [thirdOperator.toString(), thirdEquation]
+            ]);
+
+            const resp = createEquationSystem(equations);
+            if (resp) {
+                const [respEquationSystem, [respFirstEquation1, respFirstEquation2]] = resp;
+                expect(respEquationSystem).toStrictEqual(expectedEquationSystem);
+                expect(respFirstEquation1).toStrictEqual(expectedFirstEquation1);
+                expect(respFirstEquation2).toStrictEqual(expectedFirstEquation2);
+            } else {
+                expect(resp).toBeDefined();
+            }
+
+        });
+
+        it('given multiples equations where it is not possible to get the solution range of an equation it should return undefined', () => {
+            const lastOperator = new LinkOperator(LogicOperator.And);
+            const firstOperator = new LinkOperator(LogicOperator.Or);
+            const secondOperator = new LinkOperator(LogicOperator.Or);
+            const thirdOperator = new LinkOperator(LogicOperator.Not);
+            const aVariable = 'x';
+            const aRawValue = '1';
+            const aValueType = SparqlOperandDataTypes.Int;
+            const avalueAsNumber = 1;
+            const anOperator = SparqlRelationOperator.EqualThanRelation;
+
+            const operationTemplate = (c: LinkOperator[]): SolverExpression => {
+                return {
+                    variable: aVariable,
+                    rawValue: aRawValue,
+                    valueType: aValueType,
+                    valueAsNumber: avalueAsNumber,
+                    operator: anOperator,
+                    chainOperator: c
+                }
+            };
+
+            const firstOperation = {
+                variable: aVariable,
+                rawValue: aRawValue,
+                valueType: aValueType,
+                valueAsNumber: avalueAsNumber,
+                operator: SparqlRelationOperator.GeospatiallyContainsRelation,
+                chainOperator: [firstOperator]
+            };
+            const secondOperation = operationTemplate([firstOperator, secondOperator]);
+            const thirdOperation = operationTemplate([firstOperator, secondOperator, thirdOperator]);
+            const lastOperation1 = operationTemplate([firstOperator, secondOperator, thirdOperator, lastOperator]);
+            const lastOperation2 = operationTemplate([firstOperator, secondOperator, thirdOperator, lastOperator]);
+
+            const equations: SolverExpression[] = [
+                firstOperation,
+                secondOperation,
+                thirdOperation,
+                lastOperation1,
+                lastOperation2
+            ];
+            equations.sort(() => Math.random() - 0.5);
+            
+            expect(createEquationSystem(equations)).toBeUndefined();
+        });
+
+        it('given multiples equations where there is multiple equation that could be the first equation to be resolved it should return undefined', () => {
+            const lastOperator = new LinkOperator(LogicOperator.And);
+            const firstOperator = new LinkOperator(LogicOperator.Or);
+            const secondOperator = new LinkOperator(LogicOperator.Or);
+            const thirdOperator = new LinkOperator(LogicOperator.Not);
+            const aVariable = 'x';
+            const aRawValue = '1';
+            const aValueType = SparqlOperandDataTypes.Int;
+            const avalueAsNumber = 1;
+            const anOperator = SparqlRelationOperator.EqualThanRelation;
+
+            const operationTemplate = (c: LinkOperator[]): SolverExpression => {
+                return {
+                    variable: aVariable,
+                    rawValue: aRawValue,
+                    valueType: aValueType,
+                    valueAsNumber: avalueAsNumber,
+                    operator: anOperator,
+                    chainOperator: c
+                }
+            };
+
+            const firstOperation = operationTemplate([firstOperator]);
+            const secondOperation = operationTemplate([firstOperator, secondOperator]);
+            const thirdOperation = operationTemplate([firstOperator, secondOperator, thirdOperator]);
+            const lastOperation1 = operationTemplate([firstOperator, secondOperator, thirdOperator, lastOperator]);
+            const lastOperation2 = operationTemplate([firstOperator, secondOperator, thirdOperator, lastOperator]);
+            const lastOperation3 = operationTemplate([firstOperator, secondOperator, thirdOperator, lastOperator]);
+
+            const equations: SolverExpression[] = [
+                firstOperation,
+                secondOperation,
+                thirdOperation,
+                lastOperation1,
+                lastOperation2,
+                lastOperation3
+            ];
+            equations.sort(() => Math.random() - 0.5);
+            
+            expect(createEquationSystem(equations)).toBeUndefined();
+        });
+
+        it('given multiples equations where there is no first equation to be resolved should return undefined', () => {
+            const lastOperator = new LinkOperator(LogicOperator.And);
+            const firstOperator = new LinkOperator(LogicOperator.Or);
+            const secondOperator = new LinkOperator(LogicOperator.Or);
+            const thirdOperator = new LinkOperator(LogicOperator.Not);
+            const aVariable = 'x';
+            const aRawValue = '1';
+            const aValueType = SparqlOperandDataTypes.Int;
+            const avalueAsNumber = 1;
+            const anOperator = SparqlRelationOperator.EqualThanRelation;
+
+            const operationTemplate = (c: LinkOperator[]): SolverExpression => {
+                return {
+                    variable: aVariable,
+                    rawValue: aRawValue,
+                    valueType: aValueType,
+                    valueAsNumber: avalueAsNumber,
+                    operator: anOperator,
+                    chainOperator: c
+                }
+            };
+
+            const firstOperation = {
+                variable: aVariable,
+                rawValue: aRawValue,
+                valueType: aValueType,
+                valueAsNumber: avalueAsNumber,
+                operator: SparqlRelationOperator.GeospatiallyContainsRelation,
+                chainOperator: [firstOperator]
+            };
+            const secondOperation = operationTemplate([firstOperator, secondOperator]);
+            const thirdOperation = operationTemplate([firstOperator, secondOperator, thirdOperator]);
+            const lastOperation1 = operationTemplate([firstOperator, secondOperator, thirdOperator, lastOperator]);
+
+            const equations: SolverExpression[] = [
+                firstOperation,
+                secondOperation,
+                thirdOperation,
+                lastOperation1,
+            ];
+            equations.sort(() => Math.random() - 0.5);
+            
+            expect(createEquationSystem(equations)).toBeUndefined();
         });
     });
 });

@@ -7,7 +7,7 @@ import type * as RDF from 'rdf-js';
 
 // The type of the relationship.
 // https://treecg.github.io/specification/#vocabulary
-export enum RelationOperator {
+export enum SparqlRelationOperator {
   /**
    * All elements in the related node have this prefix.
    */
@@ -51,8 +51,8 @@ export enum RelationOperator {
 /**
  * A map to access the value of the enum RelationOperator by it's value in O(1).
  */
-export const RelationOperatorReversed: Map<string, RelationOperator> =
-new Map(Object.values(RelationOperator).map(value => [ value, value ]));
+export const RelationOperatorReversed: Map<string, SparqlRelationOperator> =
+new Map(Object.values(SparqlRelationOperator).map(value => [ value, value ]));
 
 /**
  * Reference
@@ -109,7 +109,7 @@ export interface ITreeRelation {
   /**
    * The type of relationship.
    */
-  type?: RelationOperator;
+  type?: SparqlRelationOperator;
   /**
    * How many members can be reached when following this relation.
    */
@@ -147,7 +147,7 @@ export interface ITreeRelationRaw {
   /**
    * The relation operator type describe by the enum RelationOperator.
    */
-  operator?: [RelationOperator, RDF.Quad];
+  operator?: [SparqlRelationOperator, RDF.Quad];
   /**
    * Refer to the TreeNodes of the similar name.
    */

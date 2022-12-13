@@ -1,4 +1,4 @@
-import { RelationOperator } from '@comunica/types-link-traversal';
+import { SparqlRelationOperator } from '@comunica/types-link-traversal';
 import { SolutionRange } from './SolutionRange';
 import { LinkOperator } from './LinkOperator';
 /**
@@ -60,7 +60,7 @@ export interface SolverExpression {
     valueType: SparqlOperandDataTypes;
     valueAsNumber: number;
 
-    operator: RelationOperator;
+    operator: SparqlRelationOperator;
     chainOperator: LinkOperator[];
 };
 

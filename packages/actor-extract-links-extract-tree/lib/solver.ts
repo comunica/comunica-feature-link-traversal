@@ -1,4 +1,4 @@
-import { RelationOperator } from '@comunica/types-link-traversal';
+import { SparqlRelationOperator } from '@comunica/types-link-traversal';
 import type { ITreeRelation } from '@comunica/types-link-traversal';
 import type * as RDF from 'rdf-js';
 import { Algebra } from 'sparqlalgebrajs';
@@ -33,7 +33,7 @@ export function solveRelationWithFilter({ relation, filterExpression, variable }
   return true
 }
 
-export function resolveAFilterTerm(expression: Algebra.Expression, operator: RelationOperator, linksOperator: LinkOperator[]): SolverExpression | undefined {
+export function resolveAFilterTerm(expression: Algebra.Expression, operator: SparqlRelationOperator, linksOperator: LinkOperator[]): SolverExpression | undefined {
   let variable: string | undefined;
   let rawValue: string | undefined;
   let valueType: SparqlOperandDataTypes | undefined;
@@ -91,38 +91,6 @@ export function convertFilterExpressionToSolverExpression(expression: Algebra.Ex
   return filterExpressionList;
 }
 
-export function createEquationSystem(expressions: SolverExpression[]): [SolverEquationSystem, [SolverEquation, SolverEquation]] | undefined {
-  const system: SolverEquationSystem = new Map();
-  let firstEquationToEvaluate: [SolverEquation, SolverEquation] | undefined = undefined;
-
-  for (const expression of expressions) {
-    const lastOperator = expression.chainOperator.slice(-1).toString();
-    const solutionRange = getSolutionRange(expression.valueAsNumber, expression.operator);
-    if (!solutionRange) {
-      return undefined;
-    }
-    const equation: SolverEquation = {
-      chainOperator: expression.chainOperator,
-      solutionDomain: solutionRange
-    };
-    const lastEquation = system.get(lastOperator);
-    if (lastEquation) {
-      if (firstEquationToEvaluate) {
-        return undefined;
-      }
-      firstEquationToEvaluate = [lastEquation, equation];
-      system.delete(lastOperator);
-    } else {
-      system.set(lastOperator, equation);
-    }
-
-  }
-  if (!firstEquationToEvaluate) {
-    return undefined;
-  }
-  return [system, firstEquationToEvaluate];
-}
-
 export function resolveEquationSystem(equationSystem: SolverEquationSystem, firstEquation: [SolverEquation, SolverEquation]): SolutionDomain | undefined {
   const localEquationSystem = new Map(equationSystem);
   const localFistEquation = new Array(...firstEquation);
@@ -142,6 +110,41 @@ export function resolveEquationSystem(equationSystem: SolverEquationSystem, firs
   } while (currentEquation)
 
   return domain;
+}
+
+export function createEquationSystem(expressions: SolverExpression[]): [SolverEquationSystem, [SolverEquation, SolverEquation]] | undefined {
+  const system: SolverEquationSystem = new Map();
+  let firstEquationToEvaluate: [SolverEquation, SolverEquation] | undefined = undefined;
+  let firstEquationLastOperator: string = "";
+
+  for (const expression of expressions) {
+    const lastOperator = expression.chainOperator.slice(-1).toString();
+    const solutionRange = getSolutionRange(expression.valueAsNumber, expression.operator);
+    if (!solutionRange) {
+      return undefined;
+    }
+    const equation: SolverEquation = {
+      chainOperator: expression.chainOperator,
+      solutionDomain: solutionRange
+    };
+    const lastEquation = system.get(lastOperator);
+    if (lastEquation) {
+      if(firstEquationLastOperator !== ""){
+        return undefined;
+      }
+      firstEquationToEvaluate = [lastEquation, equation];
+      firstEquationLastOperator = lastOperator;
+    } else {
+      system.set(lastOperator, equation);
+    }
+  }
+
+  if (!firstEquationToEvaluate) {
+    return undefined;
+  }
+  system.delete(firstEquationLastOperator);
+
+  return [system, firstEquationToEvaluate];
 }
 
 export function resolveEquation(equation: SolverEquation, domain: SolutionDomain): [SolutionDomain, LastLogicalOperator] | undefined {
@@ -208,17 +211,17 @@ export function areTypesCompatible(expressions: SolverExpression[]): boolean {
   return true
 }
 
-export function getSolutionRange(value: number, operator: RelationOperator): SolutionRange | undefined {
+export function getSolutionRange(value: number, operator: SparqlRelationOperator): SolutionRange | undefined {
   switch (operator) {
-    case RelationOperator.GreaterThanRelation:
+    case SparqlRelationOperator.GreaterThanRelation:
       return new SolutionRange([value + Number.EPSILON, Number.POSITIVE_INFINITY]);
-    case RelationOperator.GreaterThanOrEqualToRelation:
+    case SparqlRelationOperator.GreaterThanOrEqualToRelation:
       return new SolutionRange([value, Number.POSITIVE_INFINITY]);
-    case RelationOperator.EqualThanRelation:
+    case SparqlRelationOperator.EqualThanRelation:
       return new SolutionRange([value, value]);
-    case RelationOperator.LessThanRelation:
+    case SparqlRelationOperator.LessThanRelation:
       return new SolutionRange([Number.NEGATIVE_INFINITY, value - Number.EPSILON]);
-    case RelationOperator.LessThanOrEqualToRelation:
+    case SparqlRelationOperator.LessThanOrEqualToRelation:
       return new SolutionRange([Number.NEGATIVE_INFINITY, value]);
     default:
       break;
@@ -258,22 +261,22 @@ export function isSparqlOperandNumberType(rdfTermType: SparqlOperandDataTypes): 
     rdfTermType === SparqlOperandDataTypes.PositiveInteger ||
     rdfTermType === SparqlOperandDataTypes.Float ||
     rdfTermType === SparqlOperandDataTypes.Double ||
-    rdfTermType === SparqlOperandDataTypes.Decimal||
+    rdfTermType === SparqlOperandDataTypes.Decimal ||
     rdfTermType === SparqlOperandDataTypes.Int;
 }
 
-export function filterOperatorToRelationOperator(filterOperator: string): RelationOperator | undefined {
+export function filterOperatorToRelationOperator(filterOperator: string): SparqlRelationOperator | undefined {
   switch (filterOperator) {
     case '=':
-      return RelationOperator.EqualThanRelation;
+      return SparqlRelationOperator.EqualThanRelation;
     case '<':
-      return RelationOperator.LessThanRelation;
+      return SparqlRelationOperator.LessThanRelation;
     case '<=':
-      return RelationOperator.LessThanOrEqualToRelation;
+      return SparqlRelationOperator.LessThanOrEqualToRelation;
     case '>':
-      return RelationOperator.GreaterThanRelation;
+      return SparqlRelationOperator.GreaterThanRelation;
     case '>=':
-      return RelationOperator.GreaterThanOrEqualToRelation;
+      return SparqlRelationOperator.GreaterThanOrEqualToRelation;
     default:
       return undefined;
   }
