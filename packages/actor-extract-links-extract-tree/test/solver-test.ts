@@ -4,13 +4,16 @@ import {
     castSparqlRdfTermIntoNumber,
     getSolutionRange,
     areTypesCompatible,
-    convertTreeRelationToSolverExpression
+    convertTreeRelationToSolverExpression,
+    resolveEquation
 } from '../lib/solver';
 import { SolutionRange } from '../lib/SolutionRange';
 import { ITreeRelation, RelationOperator } from '@comunica/types-link-traversal';
-import { SparqlOperandDataTypes, SolverExpression } from '../lib/solverInterfaces';
+import { SparqlOperandDataTypes, SolverExpression, SolverEquation, LogicOperator } from '../lib/solverInterfaces';
 import { DataFactory } from 'rdf-data-factory';
 import type * as RDF from 'rdf-js';
+import { SolutionDomain } from '../lib/SolutionDomain';
+import { LinkOperator } from '../lib/LinkOperator';
 
 const DF = new DataFactory<RDF.BaseQuad>();
 
@@ -395,6 +398,145 @@ describe('solver function', () => {
             const variable = "x";
 
             expect(convertTreeRelationToSolverExpression(relation, variable)).toBeUndefined();
+        });
+    });
+
+    describe('resolveEquation', () => {
+        it('given an empty domain and an equation with 2 operation chained that are not "NOT" should return a valid new domain and the last chained operator', () => {
+            const domain = new SolutionDomain();
+            const equation: SolverEquation = {
+                chainOperator: [
+                    new LinkOperator(LogicOperator.And),
+                    new LinkOperator(LogicOperator.Or),
+                ],
+                solutionDomain: new SolutionRange([0, 1])
+            };
+
+            const expectedDomain = SolutionDomain.newWithInitialValue(equation.solutionDomain);
+            const expectedLastLogicalOperator = equation.chainOperator.at(-2)?.toString();
+
+            const resp = resolveEquation(equation, domain);
+            if (resp) {
+                const [respDomain, respLastLogicalOperator] = resp;
+                expect(respDomain).toStrictEqual(expectedDomain);
+                expect(respLastLogicalOperator).toBe(expectedLastLogicalOperator);
+            } else {
+                expect(resp).toBeDefined();
+            }
+        });
+
+        it('given a domain and an equation with multiple chained that are not "NOT" should return a valid new domain and the next chained operator', () => {
+            const domain = SolutionDomain.newWithInitialValue(new SolutionRange([0, 1]));
+            const equation: SolverEquation = {
+                chainOperator: [
+                    new LinkOperator(LogicOperator.And),
+                    new LinkOperator(LogicOperator.Or),
+                    new LinkOperator(LogicOperator.Or),
+                    new LinkOperator(LogicOperator.And),
+                    new LinkOperator(LogicOperator.Or),
+                ],
+                solutionDomain: new SolutionRange([100, 221.3])
+            };
+
+            const expectedDomain = domain.add({ range: equation.solutionDomain, operator: <LogicOperator>equation.chainOperator.at(-1)?.operator });
+            const expectedLastLogicalOperator = equation.chainOperator.at(-2)?.toString();
+
+            const resp = resolveEquation(equation, domain);
+            if (resp) {
+                const [respDomain, respLastLogicalOperator] = resp;
+                expect(respDomain).toStrictEqual(expectedDomain);
+                expect(respLastLogicalOperator).toBe(expectedLastLogicalOperator);
+            } else {
+                expect(resp).toBeDefined();
+            }
+        });
+
+        it('given a domain and an equation one chained operation should return a valid new domain and an empty string has the next chained operator', () => {
+            const domain = SolutionDomain.newWithInitialValue(new SolutionRange([0, 1]));
+            const equation: SolverEquation = {
+                chainOperator: [
+                    new LinkOperator(LogicOperator.Or),
+                ],
+                solutionDomain: new SolutionRange([100, 221.3])
+            };
+
+            const expectedDomain = domain.add({ range: equation.solutionDomain, operator: <LogicOperator>equation.chainOperator.at(-1)?.operator });
+            const expectedLastLogicalOperator = "";
+
+            const resp = resolveEquation(equation, domain);
+            if (resp) {
+                const [respDomain, respLastLogicalOperator] = resp;
+                expect(respDomain).toStrictEqual(expectedDomain);
+                expect(respLastLogicalOperator).toBe(expectedLastLogicalOperator);
+            } else {
+                expect(resp).toBeDefined();
+            }
+        });
+
+        it('given a domain and an equation with multiple chainned operator where the later elements are "NOT" operators and the last element an "AND" operator should return a valid domain and the next last operator', () => {
+            const domain = SolutionDomain.newWithInitialValue(new SolutionRange([0, 1]));
+            const equation: SolverEquation = {
+                chainOperator: [
+                    new LinkOperator(LogicOperator.And),
+                    new LinkOperator(LogicOperator.Not),
+                    new LinkOperator(LogicOperator.Not),
+                    new LinkOperator(LogicOperator.Or),
+                ],
+                solutionDomain: new SolutionRange([100, 221.3])
+            };
+
+            let expectedDomain = domain.add({ range: equation.solutionDomain, operator: <LogicOperator>equation.chainOperator.at(-1)?.operator });
+            expectedDomain = expectedDomain.add({ operator: LogicOperator.Not });
+            expectedDomain = expectedDomain.add({ operator: LogicOperator.Not });
+
+            const expectedLastLogicalOperator = equation.chainOperator[0].toString();
+
+            const resp = resolveEquation(equation, domain);
+            if (resp) {
+                const [respDomain, respLastLogicalOperator] = resp;
+                expect(respDomain).toStrictEqual(expectedDomain);
+                expect(respLastLogicalOperator).toBe(expectedLastLogicalOperator);
+            } else {
+                expect(resp).toBeDefined();
+            }
+        });
+
+        it('given a domain and an equation with multiple chainned operator where the last elements are "NOT" operators should return a valid domain and an empty string as the next operator', () => {
+            const domain = SolutionDomain.newWithInitialValue(new SolutionRange([0, 1]));
+            const equation: SolverEquation = {
+                chainOperator: [
+                    new LinkOperator(LogicOperator.Not),
+                    new LinkOperator(LogicOperator.Not),
+                    new LinkOperator(LogicOperator.Or),
+                ],
+                solutionDomain: new SolutionRange([100, 221.3])
+            };
+
+            let expectedDomain = domain.add({ range: equation.solutionDomain, operator: <LogicOperator>equation.chainOperator.at(-1)?.operator });
+            expectedDomain = expectedDomain.add({ operator: LogicOperator.Not });
+            expectedDomain = expectedDomain.add({ operator: LogicOperator.Not });
+
+            const expectedLastLogicalOperator = "";
+
+            const resp = resolveEquation(equation, domain);
+            if (resp) {
+                const [respDomain, respLastLogicalOperator] = resp;
+                expect(respDomain).toStrictEqual(expectedDomain);
+                expect(respLastLogicalOperator).toBe(expectedLastLogicalOperator);
+            } else {
+                expect(resp).toBeDefined();
+            }
+        });
+
+        it('given an empty domain and an equation with no chained operation should return undefined', () => {
+            const domain = new SolutionDomain();
+            const equation: SolverEquation = {
+                chainOperator: [],
+                solutionDomain: new SolutionRange([0, 1])
+            };
+
+            expect(resolveEquation(equation, domain)).toBeUndefined();
+
         });
     });
 });
