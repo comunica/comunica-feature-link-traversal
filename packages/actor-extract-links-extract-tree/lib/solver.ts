@@ -33,36 +33,6 @@ export function solveRelationWithFilter({ relation, filterExpression, variable }
   return true
 }
 
-export function resolveAFilterTerm(expression: Algebra.Expression, operator: SparqlRelationOperator, linksOperator: LinkOperator[]): SolverExpression | undefined {
-  let variable: string | undefined;
-  let rawValue: string | undefined;
-  let valueType: SparqlOperandDataTypes | undefined;
-  let valueAsNumber: number | undefined;
-
-  for (const arg of expression.args) {
-    if ('term' in arg && arg.term.termType === 'Variable') {
-      variable = arg.term.value;
-    } else if ('term' in arg && arg.term.termType === 'Literal') {
-      rawValue = arg.term.value;
-      valueType = SparqlOperandDataTypesReversed.get(arg.term.datatype.value);
-      if (valueType) {
-        valueAsNumber = castSparqlRdfTermIntoNumber(rawValue!, valueType);
-      }
-    }
-  }
-  if (variable && rawValue && valueType && valueAsNumber) {
-    return {
-      variable,
-      rawValue,
-      valueType,
-      valueAsNumber,
-      operator,
-      chainOperator: linksOperator,
-    }
-  }
-  return undefined
-}
-
 export function convertFilterExpressionToSolverExpression(expression: Algebra.Expression, filterExpressionList: SolverExpression[], linksOperator: LinkOperator[]): SolverExpression[] {
 
   if (
@@ -91,12 +61,41 @@ export function convertFilterExpressionToSolverExpression(expression: Algebra.Ex
   return filterExpressionList;
 }
 
+export function resolveAFilterTerm(expression: Algebra.Expression, operator: SparqlRelationOperator, linksOperator: LinkOperator[]): SolverExpression | undefined {
+  let variable: string | undefined;
+  let rawValue: string | undefined;
+  let valueType: SparqlOperandDataTypes | undefined;
+  let valueAsNumber: number | undefined;
+
+  for (const arg of expression.args) {
+    if ('term' in arg && arg.term.termType === 'Variable') {
+      variable = arg.term.value;
+    } else if ('term' in arg && arg.term.termType === 'Literal') {
+      rawValue = arg.term.value;
+      valueType = SparqlOperandDataTypesReversed.get(arg.term.datatype.value);
+      if (valueType) {
+        valueAsNumber = castSparqlRdfTermIntoNumber(rawValue!, valueType);
+      }
+    }
+  }
+  if (variable && rawValue && valueType && valueAsNumber) {
+    return {
+      variable,
+      rawValue,
+      valueType,
+      valueAsNumber,
+      operator,
+      chainOperator: linksOperator,
+    }
+  }
+}
+
 export function resolveEquationSystem(equationSystem: SolverEquationSystem, firstEquation: [SolverEquation, SolverEquation]): SolutionDomain | undefined {
-  const localEquationSystem = new Map(equationSystem);
-  const localFistEquation = new Array(...firstEquation);
-  let domain: SolutionDomain = SolutionDomain.newWithInitialValue(localFistEquation[0].solutionDomain);
+  let domain: SolutionDomain = SolutionDomain.newWithInitialValue(firstEquation[0].solutionDomain);
   let idx: string = "";
-  let currentEquation: SolverEquation | undefined = localFistEquation[1];
+  // safety for no infinite loop
+  let i = 0;
+  let currentEquation: SolverEquation | undefined = firstEquation[1];
 
   do {
     const resp = resolveEquation(currentEquation, domain);
@@ -105,9 +104,9 @@ export function resolveEquationSystem(equationSystem: SolverEquationSystem, firs
     }
     [domain, idx] = resp;
 
-    currentEquation = localEquationSystem.get(idx);
-
-  } while (currentEquation)
+    currentEquation = equationSystem.get(idx);
+    i++
+  } while (currentEquation && i!= equationSystem.size + 1)
 
   return domain;
 }

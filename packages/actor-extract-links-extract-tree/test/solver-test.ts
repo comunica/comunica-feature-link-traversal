@@ -6,15 +6,19 @@ import {
     areTypesCompatible,
     convertTreeRelationToSolverExpression,
     resolveEquation,
-    createEquationSystem
+    createEquationSystem,
+    resolveEquationSystem,
+    resolveAFilterTerm
 } from '../lib/solver';
 import { SolutionRange } from '../lib/SolutionRange';
 import { ITreeRelation, SparqlRelationOperator } from '@comunica/types-link-traversal';
 import { SparqlOperandDataTypes, SolverExpression, SolverEquation, LogicOperator, SolverEquationSystem } from '../lib/solverInterfaces';
-import { DataFactory } from 'rdf-data-factory';
+import { DataFactory, DefaultGraph } from 'rdf-data-factory';
 import type * as RDF from 'rdf-js';
 import { SolutionDomain } from '../lib/SolutionDomain';
 import { LinkOperator } from '../lib/LinkOperator';
+import { Algebra } from 'sparqlalgebrajs';
+
 
 const DF = new DataFactory<RDF.BaseQuad>();
 
@@ -645,7 +649,7 @@ describe('solver function', () => {
                 lastOperation2
             ];
             equations.sort(() => Math.random() - 0.5);
-            
+
             expect(createEquationSystem(equations)).toBeUndefined();
         });
 
@@ -687,7 +691,7 @@ describe('solver function', () => {
                 lastOperation3
             ];
             equations.sort(() => Math.random() - 0.5);
-            
+
             expect(createEquationSystem(equations)).toBeUndefined();
         });
 
@@ -732,8 +736,283 @@ describe('solver function', () => {
                 lastOperation1,
             ];
             equations.sort(() => Math.random() - 0.5);
-            
+
             expect(createEquationSystem(equations)).toBeUndefined();
+        });
+    });
+
+    describe('resolveEquationSystem', () => {
+        it('should return a valid domain given a valid equation system', () => {
+
+            const firstOperator = new LinkOperator(LogicOperator.Or);
+            const secondOperator = new LinkOperator(LogicOperator.And);
+            const thirdOperator = new LinkOperator(LogicOperator.Not);
+            const forthOperator = new LinkOperator(LogicOperator.Or);
+            const fifthOperator = new LinkOperator(LogicOperator.And);
+            const firstEquation: SolverEquation = {
+                solutionDomain: new SolutionRange([Number.NEGATIVE_INFINITY, 33]),
+                chainOperator: [
+                    firstOperator,
+                ]
+            };
+
+            const secondEquation: SolverEquation = {
+                solutionDomain: new SolutionRange([75, 75]),
+                chainOperator: [
+                    firstOperator,
+                    secondOperator,
+                ]
+            };
+
+            const thirdEquation: SolverEquation = {
+                solutionDomain: new SolutionRange([100, Number.POSITIVE_INFINITY]),
+                chainOperator: [
+                    firstOperator,
+                    secondOperator,
+                    thirdOperator,
+                    forthOperator
+                ]
+            };
+            const equationSystem: SolverEquationSystem = new Map([
+                [firstEquation.chainOperator.slice(-1)[0].toString(), firstEquation],
+                [secondEquation.chainOperator.slice(-1)[0].toString(), secondEquation],
+                [thirdEquation.chainOperator.slice(-1)[0].toString(), thirdEquation]
+            ]);
+
+            const firstEquationToSolve: [SolverEquation, SolverEquation] = [
+                {
+                    solutionDomain: new SolutionRange([1000, Number.POSITIVE_INFINITY]),
+                    chainOperator: [
+                        firstOperator,
+                        secondOperator,
+                        thirdOperator,
+                        forthOperator,
+                        fifthOperator,
+                    ]
+                },
+                {
+                    solutionDomain: new SolutionRange([Number.NEGATIVE_INFINITY, 33 + Number.EPSILON]),
+                    chainOperator: [
+                        firstOperator,
+                        secondOperator,
+                        thirdOperator,
+                        forthOperator,
+                        fifthOperator,
+                    ]
+                }
+            ];
+            // Nothing => [100, infinity] =>[-infinity, 100- epsilon] => [75,75]=> [75, 75], [-infinity, 33]
+            const expectedDomain: SolutionRange[] = [new SolutionRange([Number.NEGATIVE_INFINITY, 33]), new SolutionRange([75, 75])];
+
+            const resp = resolveEquationSystem(equationSystem, firstEquationToSolve);
+
+            if (resp) {
+                expect(resp.get_domain()).toStrictEqual(expectedDomain);
+            } else {
+                expect(resp).toBeDefined();
+            }
+
+        });
+
+        it('should return undefined an equation system where the chain of operator is inconsistent', () => {
+            const firstOperator = new LinkOperator(LogicOperator.Or);
+            const secondOperator = new LinkOperator(LogicOperator.And);
+            const thirdOperator = new LinkOperator(LogicOperator.Not);
+            const forthOperator = new LinkOperator(LogicOperator.Or);
+            const fifthOperator = new LinkOperator(LogicOperator.And);
+            const firstEquation: SolverEquation = {
+                solutionDomain: new SolutionRange([Number.NEGATIVE_INFINITY, 33]),
+                chainOperator: [
+                    firstOperator,
+                ]
+            };
+
+            const secondEquation: SolverEquation = {
+                solutionDomain: new SolutionRange([75, 75]),
+                chainOperator: [
+                    firstOperator,
+                    secondOperator,
+                ]
+            };
+
+            const thirdEquation: SolverEquation = {
+                solutionDomain: new SolutionRange([100, Number.POSITIVE_INFINITY]),
+                chainOperator: [
+                ]
+            };
+            const equationSystem: SolverEquationSystem = new Map([
+                [firstEquation.chainOperator.slice(-1)[0].toString(), firstEquation],
+                [secondEquation.chainOperator.slice(-1)[0].toString(), secondEquation],
+                [forthOperator.toString(), thirdEquation]
+            ]);
+
+            const firstEquationToSolve: [SolverEquation, SolverEquation] = [
+                {
+                    solutionDomain: new SolutionRange([1000, Number.POSITIVE_INFINITY]),
+                    chainOperator: [
+                        firstOperator,
+                        secondOperator,
+                        thirdOperator,
+                        forthOperator,
+                        fifthOperator,
+                    ]
+                },
+                {
+                    solutionDomain: new SolutionRange([Number.NEGATIVE_INFINITY, 33 + Number.EPSILON]),
+                    chainOperator: [
+                        firstOperator,
+                        secondOperator,
+                        thirdOperator,
+                        forthOperator,
+                        fifthOperator,
+                    ]
+                }
+            ];
+
+            expect(resolveEquationSystem(equationSystem, firstEquationToSolve)).toBeUndefined();
+        });
+    });
+
+    describe('resolveAFilterTerm', () => {
+        it('given an algebra expression with all the solver expression parameters should return a valid expression', () => {
+            const expression: Algebra.Expression = {
+                type: Algebra.types.EXPRESSION,
+                expressionType: Algebra.expressionTypes.OPERATOR,
+                operator: "=",
+                args: [
+                    {
+                        type: Algebra.types.EXPRESSION,
+                        expressionType: Algebra.expressionTypes.TERM,
+                        term: DF.variable('x'),
+                    },
+                    {
+                        type: Algebra.types.EXPRESSION,
+                        expressionType: Algebra.expressionTypes.TERM,
+                        term: DF.literal('6', DF.namedNode('http://www.w3.org/2001/XMLSchema#integer')),
+                    },
+                ],
+            };
+            const operator = SparqlRelationOperator.EqualThanRelation;
+            const linksOperator: LinkOperator[] = [new LinkOperator(LogicOperator.And), new LinkOperator(LogicOperator.Or)];
+
+            const expectedSolverExpression: SolverExpression = {
+                variable: 'x',
+                rawValue: '6',
+                valueType: SparqlOperandDataTypes.Integer,
+                valueAsNumber: 6,
+                operator: operator,
+                chainOperator: linksOperator
+            };
+
+            const resp = resolveAFilterTerm(expression, operator, linksOperator);
+
+            if (resp) {
+                expect(resp).toStrictEqual(expectedSolverExpression);
+            } else {
+                expect(resp).toBeDefined();
+            }
+        });
+
+        it('given an algebra expression without a variable than should return undefined', () => {
+            const expression: Algebra.Expression = {
+                type: Algebra.types.EXPRESSION,
+                expressionType: Algebra.expressionTypes.OPERATOR,
+                operator: "=",
+                args: [
+                    {
+                        type: Algebra.types.EXPRESSION,
+                        expressionType: Algebra.expressionTypes.TERM,
+                        term: DF.literal('6', DF.namedNode('http://www.w3.org/2001/XMLSchema#integer')),
+                    },
+                ],
+            };
+            const operator = SparqlRelationOperator.EqualThanRelation;
+            const linksOperator: LinkOperator[] = [new LinkOperator(LogicOperator.And), new LinkOperator(LogicOperator.Or)];
+
+            expect(resolveAFilterTerm(expression, operator, linksOperator)).toBeUndefined();
+            
+        });
+
+        it('given an algebra expression without a litteral than should return undefined', () => {
+            const expression: Algebra.Expression = {
+                type: Algebra.types.EXPRESSION,
+                expressionType: Algebra.expressionTypes.OPERATOR,
+                operator: "=",
+                args: [
+                    {
+                        type: Algebra.types.EXPRESSION,
+                        expressionType: Algebra.expressionTypes.TERM,
+                        term: DF.variable('x'),
+                    }
+                ],
+            };
+            const operator = SparqlRelationOperator.EqualThanRelation;
+            const linksOperator: LinkOperator[] = [new LinkOperator(LogicOperator.And), new LinkOperator(LogicOperator.Or)];
+
+            expect(resolveAFilterTerm(expression, operator, linksOperator)).toBeUndefined();
+            
+        });
+
+        it('given an algebra expression without args than should return undefined', () => {
+            const expression: Algebra.Expression = {
+                type: Algebra.types.EXPRESSION,
+                expressionType: Algebra.expressionTypes.OPERATOR,
+                operator: "=",
+                args: [],
+            };
+            const operator = SparqlRelationOperator.EqualThanRelation;
+            const linksOperator: LinkOperator[] = [new LinkOperator(LogicOperator.And), new LinkOperator(LogicOperator.Or)];
+
+            expect(resolveAFilterTerm(expression, operator, linksOperator)).toBeUndefined();
+            
+        });
+
+        it('given an algebra expression with a litteral containing an invalid datatype than should return undefined', () => {
+            const expression: Algebra.Expression = {
+                type: Algebra.types.EXPRESSION,
+                expressionType: Algebra.expressionTypes.OPERATOR,
+                operator: "=",
+                args: [
+                    {
+                        type: Algebra.types.EXPRESSION,
+                        expressionType: Algebra.expressionTypes.TERM,
+                        term: DF.variable('x'),
+                    },
+                    {
+                        type: Algebra.types.EXPRESSION,
+                        expressionType: Algebra.expressionTypes.TERM,
+                        term: DF.literal('6', DF.namedNode('http://www.w3.org/2001/XMLSchema#foo')),
+                    },
+                ],
+            };
+            const operator = SparqlRelationOperator.EqualThanRelation;
+            const linksOperator: LinkOperator[] = [new LinkOperator(LogicOperator.And), new LinkOperator(LogicOperator.Or)];
+
+            expect(resolveAFilterTerm(expression, operator, linksOperator)).toBeUndefined();  
+        });
+
+        it('given an algebra expression with a litteral containing a literal that cannot be converted into number should return undefined', () => {
+            const expression: Algebra.Expression = {
+                type: Algebra.types.EXPRESSION,
+                expressionType: Algebra.expressionTypes.OPERATOR,
+                operator: "=",
+                args: [
+                    {
+                        type: Algebra.types.EXPRESSION,
+                        expressionType: Algebra.expressionTypes.TERM,
+                        term: DF.variable('x'),
+                    },
+                    {
+                        type: Algebra.types.EXPRESSION,
+                        expressionType: Algebra.expressionTypes.TERM,
+                        term: DF.literal('6', DF.namedNode('http://www.w3.org/2001/XMLSchema#string')),
+                    },
+                ],
+            };
+            const operator = SparqlRelationOperator.EqualThanRelation;
+            const linksOperator: LinkOperator[] = [new LinkOperator(LogicOperator.And), new LinkOperator(LogicOperator.Or)];
+
+            expect(resolveAFilterTerm(expression, operator, linksOperator)).toBeUndefined();  
         });
     });
 });
