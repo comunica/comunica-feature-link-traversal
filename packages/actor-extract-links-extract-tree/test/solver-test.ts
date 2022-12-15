@@ -8,16 +8,17 @@ import {
     resolveEquation,
     createEquationSystem,
     resolveEquationSystem,
-    resolveAFilterTerm
+    resolveAFilterTerm,
+    recursifFilterExpressionToSolverExpression
 } from '../lib/solver';
 import { SolutionRange } from '../lib/SolutionRange';
 import { ITreeRelation, SparqlRelationOperator } from '@comunica/types-link-traversal';
-import { SparqlOperandDataTypes, SolverExpression, SolverEquation, LogicOperator, SolverEquationSystem } from '../lib/solverInterfaces';
-import { DataFactory, DefaultGraph } from 'rdf-data-factory';
+import { SparqlOperandDataTypes, SolverExpression, SolverEquation, LogicOperator, SolverEquationSystem, Variable } from '../lib/solverInterfaces';
+import { DataFactory } from 'rdf-data-factory';
 import type * as RDF from 'rdf-js';
 import { SolutionDomain } from '../lib/SolutionDomain';
 import { LinkOperator } from '../lib/LinkOperator';
-import { Algebra } from 'sparqlalgebrajs';
+import { Algebra, translate } from 'sparqlalgebrajs';
 
 
 const DF = new DataFactory<RDF.BaseQuad>();
@@ -930,7 +931,7 @@ describe('solver function', () => {
             const linksOperator: LinkOperator[] = [new LinkOperator(LogicOperator.And), new LinkOperator(LogicOperator.Or)];
 
             expect(resolveAFilterTerm(expression, operator, linksOperator)).toBeUndefined();
-            
+
         });
 
         it('given an algebra expression without a litteral than should return undefined', () => {
@@ -950,7 +951,7 @@ describe('solver function', () => {
             const linksOperator: LinkOperator[] = [new LinkOperator(LogicOperator.And), new LinkOperator(LogicOperator.Or)];
 
             expect(resolveAFilterTerm(expression, operator, linksOperator)).toBeUndefined();
-            
+
         });
 
         it('given an algebra expression without args than should return undefined', () => {
@@ -964,7 +965,7 @@ describe('solver function', () => {
             const linksOperator: LinkOperator[] = [new LinkOperator(LogicOperator.And), new LinkOperator(LogicOperator.Or)];
 
             expect(resolveAFilterTerm(expression, operator, linksOperator)).toBeUndefined();
-            
+
         });
 
         it('given an algebra expression with a litteral containing an invalid datatype than should return undefined', () => {
@@ -988,7 +989,7 @@ describe('solver function', () => {
             const operator = SparqlRelationOperator.EqualThanRelation;
             const linksOperator: LinkOperator[] = [new LinkOperator(LogicOperator.And), new LinkOperator(LogicOperator.Or)];
 
-            expect(resolveAFilterTerm(expression, operator, linksOperator)).toBeUndefined();  
+            expect(resolveAFilterTerm(expression, operator, linksOperator)).toBeUndefined();
         });
 
         it('given an algebra expression with a litteral containing a literal that cannot be converted into number should return undefined', () => {
@@ -1012,7 +1013,188 @@ describe('solver function', () => {
             const operator = SparqlRelationOperator.EqualThanRelation;
             const linksOperator: LinkOperator[] = [new LinkOperator(LogicOperator.And), new LinkOperator(LogicOperator.Or)];
 
-            expect(resolveAFilterTerm(expression, operator, linksOperator)).toBeUndefined();  
+            expect(resolveAFilterTerm(expression, operator, linksOperator)).toBeUndefined();
+        });
+    });
+
+    describe('recursifFilterExpressionToSolverExpression', () => {
+        it('given an algebra expression with two logicals operators should return a list of solver expression', () => {
+            const expression = translate(`
+                SELECT * WHERE { ?x ?y ?z 
+                FILTER( !(?x=2 && ?x>5))
+                }`).input.expression;
+
+            const buildSolverExpression = (
+                variable: Variable,
+                rawValue: string,
+                valueType: SparqlOperandDataTypes,
+                valueAsNumber: number,
+                operator: SparqlRelationOperator,
+                chainOperator: LinkOperator[]): SolverExpression => {
+                return {
+                    rawValue,
+                    variable,
+                    valueType,
+                    valueAsNumber,
+                    operator,
+                    chainOperator
+                }
+            };
+            const variable = 'x';
+
+            LinkOperator.resetIdCount();
+            const notOperator = new LinkOperator(LogicOperator.Not);
+            const andOperator = new LinkOperator(LogicOperator.And);
+
+            const expectedEquation: SolverExpression[] = [
+                buildSolverExpression(
+                    variable,
+                    '2',
+                    SparqlOperandDataTypes.Integer,
+                    2,
+                    SparqlRelationOperator.EqualThanRelation,
+                    [notOperator, andOperator]),
+
+                buildSolverExpression(
+                    variable,
+                    '5',
+                    SparqlOperandDataTypes.Integer,
+                    5,
+                    SparqlRelationOperator.GreaterThanRelation,
+                    [notOperator, andOperator]),
+            ];
+
+            LinkOperator.resetIdCount();
+            expect(recursifFilterExpressionToSolverExpression(expression, [], [])).toStrictEqual(expectedEquation);
+
+        });
+
+        it('given an algebra expression with tree logicals operators should return a list of solver expression', () => {
+            const expression = translate(`
+                SELECT * WHERE { ?x ?y ?z 
+                FILTER( !(?x=2 && ?x>5) || ?x < 88.3)
+                }`).input.expression;
+
+            const buildSolverExpression = (
+                variable: Variable,
+                rawValue: string,
+                valueType: SparqlOperandDataTypes,
+                valueAsNumber: number,
+                operator: SparqlRelationOperator,
+                chainOperator: LinkOperator[]): SolverExpression => {
+                return {
+                    rawValue,
+                    variable,
+                    valueType,
+                    valueAsNumber,
+                    operator,
+                    chainOperator
+                }
+            };
+            const variable = 'x';
+
+            LinkOperator.resetIdCount();
+            const orOperator = new LinkOperator(LogicOperator.Or);
+            const notOperator = new LinkOperator(LogicOperator.Not);
+            const andOperator = new LinkOperator(LogicOperator.And);
+
+            const expectedEquation: SolverExpression[] = [
+                buildSolverExpression(
+                    variable,
+                    '2',
+                    SparqlOperandDataTypes.Integer,
+                    2,
+                    SparqlRelationOperator.EqualThanRelation,
+                    [orOperator, notOperator, andOperator]),
+
+                buildSolverExpression(
+                    variable,
+                    '5',
+                    SparqlOperandDataTypes.Integer,
+                    5,
+                    SparqlRelationOperator.GreaterThanRelation,
+                    [orOperator, notOperator, andOperator]),
+
+                buildSolverExpression(
+                    variable,
+                    '88.3',
+                    SparqlOperandDataTypes.Decimal,
+                    88.3,
+                    SparqlRelationOperator.LessThanRelation,
+                    [orOperator]),
+            ];
+
+            LinkOperator.resetIdCount();
+            expect(recursifFilterExpressionToSolverExpression(expression, [], [])).toStrictEqual(expectedEquation);
+        });
+
+        it('given an algebra expression with four logicals operators should return a list of solver expression', () => {
+            const expression = translate(`
+                SELECT * WHERE { ?x ?y ?z 
+                FILTER( !(?x=2 && ?x>5 || ?x>6) || ?x < 88.3)
+                }`).input.expression;
+
+            const buildSolverExpression = (
+                variable: Variable,
+                rawValue: string,
+                valueType: SparqlOperandDataTypes,
+                valueAsNumber: number,
+                operator: SparqlRelationOperator,
+                chainOperator: LinkOperator[]): SolverExpression => {
+                return {
+                    rawValue,
+                    variable,
+                    valueType,
+                    valueAsNumber,
+                    operator,
+                    chainOperator
+                }
+            };
+            const variable = 'x';
+
+            LinkOperator.resetIdCount();
+            const firstOrOperator = new LinkOperator(LogicOperator.Or);
+            const notOperator = new LinkOperator(LogicOperator.Not);
+            const secondOrOperator = new LinkOperator(LogicOperator.Or);
+            const andOperator = new LinkOperator(LogicOperator.And);
+
+
+            const expectedEquation: SolverExpression[] = [
+                buildSolverExpression(
+                    variable,
+                    '2',
+                    SparqlOperandDataTypes.Integer,
+                    2,
+                    SparqlRelationOperator.EqualThanRelation,
+                    [firstOrOperator, notOperator, secondOrOperator, andOperator]),
+
+                buildSolverExpression(
+                        variable,
+                        '5',
+                        SparqlOperandDataTypes.Integer,
+                        5,
+                        SparqlRelationOperator.GreaterThanRelation,
+                        [firstOrOperator, notOperator,secondOrOperator, andOperator]),
+
+                buildSolverExpression(
+                    variable,
+                    '6',
+                    SparqlOperandDataTypes.Integer,
+                    6,
+                    SparqlRelationOperator.GreaterThanRelation,
+                    [firstOrOperator, notOperator,secondOrOperator]),
+
+                buildSolverExpression(
+                    variable,
+                    '88.3',
+                    SparqlOperandDataTypes.Decimal,
+                    88.3,
+                    SparqlRelationOperator.LessThanRelation,
+                    [firstOrOperator]),
+            ];
+
+            LinkOperator.resetIdCount();
+            expect(recursifFilterExpressionToSolverExpression(expression, [], [])).toStrictEqual(expectedEquation);
         });
     });
 });

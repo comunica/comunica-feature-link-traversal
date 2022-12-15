@@ -23,7 +23,7 @@ export function solveRelationWithFilter({ relation, filterExpression, variable }
   if (typeof relationsolverExpressions === 'undefined') {
     return true;
   }
-  const filtersolverExpressions = convertFilterExpressionToSolverExpression(filterExpression, [], []);
+  const filtersolverExpressions = recursifFilterExpressionToSolverExpression(filterExpression, [], []);
   // the type are not compatible no evaluation is possible SPARQLEE will later return an error
   if (!areTypesCompatible(filtersolverExpressions.concat(relationsolverExpressions))) {
     return false;
@@ -33,27 +33,25 @@ export function solveRelationWithFilter({ relation, filterExpression, variable }
   return true
 }
 
-export function convertFilterExpressionToSolverExpression(expression: Algebra.Expression, filterExpressionList: SolverExpression[], linksOperator: LinkOperator[]): SolverExpression[] {
-
+export function recursifFilterExpressionToSolverExpression(expression: Algebra.Expression, filterExpressionList: SolverExpression[], linksOperator: LinkOperator[]): SolverExpression[] {
   if (
     expression.args[0].expressionType === Algebra.expressionTypes.TERM
   ) {
     const rawOperator = expression.operator;
     const operator = filterOperatorToRelationOperator(rawOperator)
-    if (typeof operator !== 'undefined') {
+    if (operator) {
       const solverExpression = resolveAFilterTerm(expression, operator, new Array(...linksOperator));
-      if (typeof solverExpression !== 'undefined') {
+      if (solverExpression) {
         filterExpressionList.push(solverExpression);
         return filterExpressionList;
       }
     }
   } else {
     const logicOperator = LogicOperatorReversed.get(expression.operator);
-    if (typeof logicOperator !== 'undefined') {
+    if (logicOperator) {
       const operator = new LinkOperator(logicOperator);
-      linksOperator.push(operator);
       for (const arg of expression.args) {
-        convertFilterExpressionToSolverExpression(arg, filterExpressionList, linksOperator);
+        recursifFilterExpressionToSolverExpression(arg, filterExpressionList, linksOperator.concat(operator));
       }
     }
 
@@ -106,7 +104,7 @@ export function resolveEquationSystem(equationSystem: SolverEquationSystem, firs
 
     currentEquation = equationSystem.get(idx);
     i++
-  } while (currentEquation && i!= equationSystem.size + 1)
+  } while (currentEquation && i != equationSystem.size + 1)
 
   return domain;
 }
