@@ -896,9 +896,9 @@ describe('solver function', () => {
             };
             const operator = SparqlRelationOperator.EqualThanRelation;
             const linksOperator: LinkOperator[] = [new LinkOperator(LogicOperator.And), new LinkOperator(LogicOperator.Or)];
-
+            const variable = 'x'
             const expectedSolverExpression: SolverExpression = {
-                variable: 'x',
+                variable,
                 rawValue: '6',
                 valueType: SparqlOperandDataTypes.Integer,
                 valueAsNumber: 6,
@@ -906,7 +906,7 @@ describe('solver function', () => {
                 chainOperator: linksOperator
             };
 
-            const resp = resolveAFilterTerm(expression, operator, linksOperator);
+            const resp = resolveAFilterTerm(expression, operator, linksOperator, variable);
 
             if (resp) {
                 expect(resp).toStrictEqual(expectedSolverExpression);
@@ -931,11 +931,12 @@ describe('solver function', () => {
             const operator = SparqlRelationOperator.EqualThanRelation;
             const linksOperator: LinkOperator[] = [new LinkOperator(LogicOperator.And), new LinkOperator(LogicOperator.Or)];
 
-            expect(resolveAFilterTerm(expression, operator, linksOperator)).toBeUndefined();
+            expect(resolveAFilterTerm(expression, operator, linksOperator, 'x')).toBeUndefined();
 
         });
 
         it('given an algebra expression without a litteral than should return undefined', () => {
+            const variable = 'x';
             const expression: Algebra.Expression = {
                 type: Algebra.types.EXPRESSION,
                 expressionType: Algebra.expressionTypes.OPERATOR,
@@ -944,14 +945,14 @@ describe('solver function', () => {
                     {
                         type: Algebra.types.EXPRESSION,
                         expressionType: Algebra.expressionTypes.TERM,
-                        term: DF.variable('x'),
+                        term: DF.variable(variable),
                     }
                 ],
             };
             const operator = SparqlRelationOperator.EqualThanRelation;
             const linksOperator: LinkOperator[] = [new LinkOperator(LogicOperator.And), new LinkOperator(LogicOperator.Or)];
 
-            expect(resolveAFilterTerm(expression, operator, linksOperator)).toBeUndefined();
+            expect(resolveAFilterTerm(expression, operator, linksOperator, variable)).toBeUndefined();
 
         });
 
@@ -965,11 +966,12 @@ describe('solver function', () => {
             const operator = SparqlRelationOperator.EqualThanRelation;
             const linksOperator: LinkOperator[] = [new LinkOperator(LogicOperator.And), new LinkOperator(LogicOperator.Or)];
 
-            expect(resolveAFilterTerm(expression, operator, linksOperator)).toBeUndefined();
+            expect(resolveAFilterTerm(expression, operator, linksOperator, 'x')).toBeUndefined();
 
         });
 
         it('given an algebra expression with a litteral containing an invalid datatype than should return undefined', () => {
+            const variable = 'x';
             const expression: Algebra.Expression = {
                 type: Algebra.types.EXPRESSION,
                 expressionType: Algebra.expressionTypes.OPERATOR,
@@ -978,7 +980,7 @@ describe('solver function', () => {
                     {
                         type: Algebra.types.EXPRESSION,
                         expressionType: Algebra.expressionTypes.TERM,
-                        term: DF.variable('x'),
+                        term: DF.variable(variable),
                     },
                     {
                         type: Algebra.types.EXPRESSION,
@@ -990,10 +992,11 @@ describe('solver function', () => {
             const operator = SparqlRelationOperator.EqualThanRelation;
             const linksOperator: LinkOperator[] = [new LinkOperator(LogicOperator.And), new LinkOperator(LogicOperator.Or)];
 
-            expect(resolveAFilterTerm(expression, operator, linksOperator)).toBeUndefined();
+            expect(resolveAFilterTerm(expression, operator, linksOperator, variable)).toBeUndefined();
         });
 
         it('given an algebra expression with a litteral containing a literal that cannot be converted into number should return undefined', () => {
+            const variable = 'x';
             const expression: Algebra.Expression = {
                 type: Algebra.types.EXPRESSION,
                 expressionType: Algebra.expressionTypes.OPERATOR,
@@ -1002,7 +1005,7 @@ describe('solver function', () => {
                     {
                         type: Algebra.types.EXPRESSION,
                         expressionType: Algebra.expressionTypes.TERM,
-                        term: DF.variable('x'),
+                        term: DF.variable(variable),
                     },
                     {
                         type: Algebra.types.EXPRESSION,
@@ -1014,7 +1017,7 @@ describe('solver function', () => {
             const operator = SparqlRelationOperator.EqualThanRelation;
             const linksOperator: LinkOperator[] = [new LinkOperator(LogicOperator.And), new LinkOperator(LogicOperator.Or)];
 
-            expect(resolveAFilterTerm(expression, operator, linksOperator)).toBeUndefined();
+            expect(resolveAFilterTerm(expression, operator, linksOperator, variable)).toBeUndefined();
         });
     });
 
@@ -1066,7 +1069,7 @@ describe('solver function', () => {
             ];
 
             LinkOperator.resetIdCount();
-            expect(recursifFilterExpressionToSolverExpression(expression, [], [])).toStrictEqual(expectedEquation);
+            expect(recursifFilterExpressionToSolverExpression(expression, [], [], variable)).toStrictEqual(expectedEquation);
 
         });
 
@@ -1126,7 +1129,7 @@ describe('solver function', () => {
             ];
 
             LinkOperator.resetIdCount();
-            expect(recursifFilterExpressionToSolverExpression(expression, [], [])).toStrictEqual(expectedEquation);
+            expect(recursifFilterExpressionToSolverExpression(expression, [], [], variable)).toStrictEqual(expectedEquation);
         });
 
         it('given an algebra expression with four logicals operators should return a list of solver expression', () => {
@@ -1195,7 +1198,7 @@ describe('solver function', () => {
             ];
 
             LinkOperator.resetIdCount();
-            expect(recursifFilterExpressionToSolverExpression(expression, [], [])).toStrictEqual(expectedEquation);
+            expect(recursifFilterExpressionToSolverExpression(expression, [], [], variable)).toStrictEqual(expectedEquation);
         });
     });
 

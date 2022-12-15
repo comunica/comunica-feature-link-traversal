@@ -23,7 +23,7 @@ export function isRelationFilterExpressionDomainEmpty({ relation, filterExpressi
   if (!relationsolverExpressions) {
     return true;
   }
-  const filtersolverExpressions = recursifFilterExpressionToSolverExpression(filterExpression, [], []);
+  const filtersolverExpressions = recursifFilterExpressionToSolverExpression(filterExpression, [], [], variable);
   // the type are not compatible no evaluation is possible SPARQLEE will later return an error
   if (!areTypesCompatible(filtersolverExpressions.concat(relationsolverExpressions))) {
     return true;
@@ -58,14 +58,14 @@ export function isRelationFilterExpressionDomainEmpty({ relation, filterExpressi
   return !solutionDomain.isDomainEmpty();
 }
 
-export function recursifFilterExpressionToSolverExpression(expression: Algebra.Expression, filterExpressionList: SolverExpression[], linksOperator: LinkOperator[]): SolverExpression[] {
+export function recursifFilterExpressionToSolverExpression(expression: Algebra.Expression, filterExpressionList: SolverExpression[], linksOperator: LinkOperator[], variable: Variable): SolverExpression[] {
   if (
     expression.args[0].expressionType === Algebra.expressionTypes.TERM
   ) {
     const rawOperator = expression.operator;
     const operator = filterOperatorToRelationOperator(rawOperator)
     if (operator) {
-      const solverExpression = resolveAFilterTerm(expression, operator, new Array(...linksOperator));
+      const solverExpression = resolveAFilterTerm(expression, operator, new Array(...linksOperator), variable);
       if (solverExpression) {
         filterExpressionList.push(solverExpression);
         return filterExpressionList;
@@ -76,7 +76,7 @@ export function recursifFilterExpressionToSolverExpression(expression: Algebra.E
     if (logicOperator) {
       const operator = new LinkOperator(logicOperator);
       for (const arg of expression.args) {
-        recursifFilterExpressionToSolverExpression(arg, filterExpressionList, linksOperator.concat(operator));
+        recursifFilterExpressionToSolverExpression(arg, filterExpressionList, linksOperator.concat(operator), variable);
       }
     }
 
@@ -84,15 +84,19 @@ export function recursifFilterExpressionToSolverExpression(expression: Algebra.E
   return filterExpressionList;
 }
 
-export function resolveAFilterTerm(expression: Algebra.Expression, operator: SparqlRelationOperator, linksOperator: LinkOperator[]): SolverExpression | undefined {
-  let variable: string | undefined;
+export function resolveAFilterTerm(expression: Algebra.Expression, operator: SparqlRelationOperator, linksOperator: LinkOperator[], variable: Variable): SolverExpression | undefined {
   let rawValue: string | undefined;
   let valueType: SparqlOperandDataTypes | undefined;
   let valueAsNumber: number | undefined;
+  let hasVariable = false;
 
   for (const arg of expression.args) {
     if ('term' in arg && arg.term.termType === 'Variable') {
-      variable = arg.term.value;
+      if(arg.term.value !== variable){
+        return undefined;
+      }else{
+        hasVariable = true;
+      }
     } else if ('term' in arg && arg.term.termType === 'Literal') {
       rawValue = arg.term.value;
       valueType = SparqlOperandDataTypesReversed.get(arg.term.datatype.value);
@@ -101,7 +105,7 @@ export function resolveAFilterTerm(expression: Algebra.Expression, operator: Spa
       }
     }
   }
-  if (variable && rawValue && valueType && valueAsNumber) {
+  if (hasVariable && rawValue && valueType && valueAsNumber) {
     return {
       variable,
       rawValue,
