@@ -9,7 +9,8 @@ import {
     createEquationSystem,
     resolveEquationSystem,
     resolveAFilterTerm,
-    recursifFilterExpressionToSolverExpression
+    recursifFilterExpressionToSolverExpression,
+    isRelationFilterExpressionDomainEmpty
 } from '../lib/solver';
 import { SolutionRange } from '../lib/SolutionRange';
 import { ITreeRelation, SparqlRelationOperator } from '@comunica/types-link-traversal';
@@ -870,7 +871,7 @@ describe('solver function', () => {
                 }
             ];
 
-            expect(resolveEquationSystem(equationSystem, firstEquationToSolve)).toBeUndefined();
+            expect(()=>{resolveEquationSystem(equationSystem, firstEquationToSolve)}).toThrow();
         });
     });
 
@@ -1169,12 +1170,12 @@ describe('solver function', () => {
                     [firstOrOperator, notOperator, secondOrOperator, andOperator]),
 
                 buildSolverExpression(
-                        variable,
-                        '5',
-                        SparqlOperandDataTypes.Integer,
-                        5,
-                        SparqlRelationOperator.GreaterThanRelation,
-                        [firstOrOperator, notOperator,secondOrOperator, andOperator]),
+                    variable,
+                    '5',
+                    SparqlOperandDataTypes.Integer,
+                    5,
+                    SparqlRelationOperator.GreaterThanRelation,
+                    [firstOrOperator, notOperator, secondOrOperator, andOperator]),
 
                 buildSolverExpression(
                     variable,
@@ -1182,7 +1183,7 @@ describe('solver function', () => {
                     SparqlOperandDataTypes.Integer,
                     6,
                     SparqlRelationOperator.GreaterThanRelation,
-                    [firstOrOperator, notOperator,secondOrOperator]),
+                    [firstOrOperator, notOperator, secondOrOperator]),
 
                 buildSolverExpression(
                     variable,
@@ -1196,5 +1197,207 @@ describe('solver function', () => {
             LinkOperator.resetIdCount();
             expect(recursifFilterExpressionToSolverExpression(expression, [], [])).toStrictEqual(expectedEquation);
         });
+    });
+
+    describe('isRelationFilterExpressionDomainEmpty', () => {
+        it('given a relation that is not able to be converted into a solverExpression should return true', () => {
+            const relation: ITreeRelation = {
+                node: "https://www.example.com",
+                value: {
+                    value: "abc",
+                    term: DF.literal('abc', DF.namedNode('foo'))
+                }
+            };
+
+            const filterExpression = translate(`
+            SELECT * WHERE { ?x ?y ?z 
+            FILTER( !(?x=2 && ?x>5) || ?x < 88.3)
+            }`).input.expression;
+
+            const variable = 'x';
+
+            expect(isRelationFilterExpressionDomainEmpty({ relation, filterExpression, variable })).toBe(true)
+        });
+
+        it('should return true given a relation and a filter operation where types are not compatible', () => {
+            const relation: ITreeRelation = {
+                type: SparqlRelationOperator.EqualThanRelation,
+                remainingItems: 10,
+                path: "ex:path",
+                value: {
+                    value: "5",
+                    term: DF.literal('5', DF.namedNode('http://www.w3.org/2001/XMLSchema#string'))
+                },
+                node: "https://www.example.be"
+            };
+
+            const filterExpression = translate(`
+            SELECT * WHERE { ?x ?y ?z 
+            FILTER( !(?x=2 && ?x>5) || ?x < 88.3)
+            }`).input.expression;
+
+            const variable = 'x';
+
+            expect(isRelationFilterExpressionDomainEmpty({ relation, filterExpression, variable })).toBe(true);
+        });
+
+        it('should return false given a relation and a filter operation where types are not compatible', () => {
+            const relation: ITreeRelation = {
+                type: SparqlRelationOperator.EqualThanRelation,
+                remainingItems: 10,
+                path: "ex:path",
+                value: {
+                    value: "5",
+                    term: DF.literal('5', DF.namedNode('http://www.w3.org/2001/XMLSchema#string'))
+                },
+                node: "https://www.example.be"
+            };
+
+            const filterExpression = translate(`
+            SELECT * WHERE { ?x ?y ?z 
+            FILTER( !(?x=2 && ?x>5) || ?x < 88.3)
+            }`).input.expression;
+
+            const variable = 'x';
+
+            expect(isRelationFilterExpressionDomainEmpty({ relation, filterExpression, variable })).toBe(true);
+        });
+
+        it('should return true when the solution range is not valid of the relation', () => {
+            const relation: ITreeRelation = {
+                type: SparqlRelationOperator.GeospatiallyContainsRelation,
+                remainingItems: 10,
+                path: "ex:path",
+                value: {
+                    value: "5",
+                    term: DF.literal('5', DF.namedNode('http://www.w3.org/2001/XMLSchema#string'))
+                },
+                node: "https://www.example.be"
+            };
+
+            const filterExpression = translate(`
+            SELECT * WHERE { ?x ?y ?z 
+            FILTER( !(?x=2 && ?x>5) || ?x < 88.3)
+            }`).input.expression;
+
+            const variable = 'x';
+
+            expect(isRelationFilterExpressionDomainEmpty({ relation, filterExpression, variable })).toBe(true);
+        });
+
+        it('should return true when the equation system is not valid', () => {
+            const relation: ITreeRelation = {
+                type: SparqlRelationOperator.GeospatiallyContainsRelation,
+                remainingItems: 10,
+                path: "ex:path",
+                value: {
+                    value: "5",
+                    term: DF.literal('5', DF.namedNode('http://www.w3.org/2001/XMLSchema#string'))
+                },
+                node: "https://www.example.be"
+            };
+
+            const filterExpression:Algebra.Expression = {
+                type: Algebra.types.EXPRESSION,
+                expressionType: Algebra.expressionTypes.OPERATOR,
+                operator: "&&",
+                args: [
+                    {
+                        type: Algebra.types.EXPRESSION,
+                        expressionType: Algebra.expressionTypes.OPERATOR,
+                        operator: "=",
+                        args: [
+                            {
+                                type: Algebra.types.EXPRESSION,
+                                expressionType: Algebra.expressionTypes.TERM,
+                                term: DF.variable('x'),
+                            },
+                            {
+                                type: Algebra.types.EXPRESSION,
+                                expressionType: Algebra.expressionTypes.TERM,
+                                term: DF.literal('2', DF.namedNode("http://www.w3.org/2001/XMLSchema#integer")),
+                            },
+                        ],
+                    }
+                ]
+            };
+
+            const variable = 'x';
+
+            expect(isRelationFilterExpressionDomainEmpty({ relation, filterExpression, variable })).toBe(true);
+        });
+
+        it('should return true when there is a solution for the filter expression and the relation', ()=>{
+            const relation: ITreeRelation = {
+                type: SparqlRelationOperator.EqualThanRelation,
+                remainingItems: 10,
+                path: "ex:path",
+                value: {
+                    value: "5",
+                    term: DF.literal('5', DF.namedNode('http://www.w3.org/2001/XMLSchema#integer'))
+                },
+                node: "https://www.example.be"
+            };
+
+            const filterExpression = translate(`
+            SELECT * WHERE { ?x ?y ?z 
+            FILTER( !(?x=2 && ?x>5) || ?x < 88.3)
+            }`).input.expression;
+
+           const solver = require('../lib/solver');
+            const variable = 'x';
+           jest.spyOn(solver, 'resolveEquationSystem').mockReturnValue(undefined);
+
+            expect(isRelationFilterExpressionDomainEmpty({ relation, filterExpression, variable })).toBe(true);
+        });
+
+        it('should return false when the filter expression has no solution ', ()=>{
+            const relation: ITreeRelation = {
+                type: SparqlRelationOperator.EqualThanRelation,
+                remainingItems: 10,
+                path: "ex:path",
+                value: {
+                    value: "5",
+                    term: DF.literal('5', DF.namedNode('http://www.w3.org/2001/XMLSchema#integer'))
+                },
+                node: "https://www.example.be"
+            };
+
+            const filterExpression = translate(`
+            SELECT * WHERE { ?x ?y ?z 
+            FILTER( ?x=2 && ?x>5 && ?x > 88.3)
+            }`).input.expression;
+
+           const solver = require('../lib/solver');
+            const variable = 'x';
+           jest.spyOn(solver, 'resolveEquationSystem').mockReturnValue(undefined);
+
+            expect(isRelationFilterExpressionDomainEmpty({ relation, filterExpression, variable })).toBe(false);
+        });
+
+        it('should return false when the filter has a possible solution but the addition of the relation produce no possible solution', ()=>{
+            const relation: ITreeRelation = {
+                type: SparqlRelationOperator.GreaterThanOrEqualToRelation,
+                remainingItems: 10,
+                path: "ex:path",
+                value: {
+                    value: "100",
+                    term: DF.literal('100', DF.namedNode('http://www.w3.org/2001/XMLSchema#integer'))
+                },
+                node: "https://www.example.be"
+            };
+
+            const filterExpression = translate(`
+            SELECT * WHERE { ?x ?y ?z 
+            FILTER( !(?x=2 && ?x>5) || ?x < 88.3)
+            }`).input.expression;
+
+           const solver = require('../lib/solver');
+            const variable = 'x';
+           jest.spyOn(solver, 'resolveEquationSystem').mockReturnValue(undefined);
+
+            expect(isRelationFilterExpressionDomainEmpty({ relation, filterExpression, variable })).toBe(false);
+        });
+
     });
 });

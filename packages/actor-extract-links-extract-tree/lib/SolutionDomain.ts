@@ -12,6 +12,10 @@ export class SolutionDomain {
         return new Array(...this.domain);
     }
 
+    public isDomainEmpty(): boolean {
+        return this.domain.length === 0;
+    }
+
     public static newWithInitialValue(initialRange: SolutionRange): SolutionDomain {
         const newSolutionDomain = new SolutionDomain();
         newSolutionDomain.domain = [initialRange];

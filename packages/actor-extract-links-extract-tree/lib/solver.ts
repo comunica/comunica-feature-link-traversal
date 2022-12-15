@@ -12,7 +12,7 @@ import {
 } from './solverInterfaces';
 import { LastLogicalOperator } from './solverInterfaces';
 
-export function solveRelationWithFilter({ relation, filterExpression, variable }: {
+export function isRelationFilterExpressionDomainEmpty({ relation, filterExpression, variable }: {
   relation: ITreeRelation,
   filterExpression: Algebra.Expression,
   variable: Variable
@@ -20,17 +20,42 @@ export function solveRelationWithFilter({ relation, filterExpression, variable }
   LinkOperator.resetIdCount();
   const relationsolverExpressions = convertTreeRelationToSolverExpression(relation, variable);
   // the relation doesn't have a value or a type, so we accept it
-  if (typeof relationsolverExpressions === 'undefined') {
+  if (!relationsolverExpressions) {
     return true;
   }
   const filtersolverExpressions = recursifFilterExpressionToSolverExpression(filterExpression, [], []);
   // the type are not compatible no evaluation is possible SPARQLEE will later return an error
   if (!areTypesCompatible(filtersolverExpressions.concat(relationsolverExpressions))) {
+    return true;
+  }
+
+  const relationSolutionRange = getSolutionRange(relationsolverExpressions.valueAsNumber, relationsolverExpressions.operator);
+  // the relation is invalid so we filter it
+  if (!relationSolutionRange) {
     return false;
   }
-  const filterEquationSystem = createEquationSystem(filtersolverExpressions);
+  const equationSystemFirstEquation = createEquationSystem(filtersolverExpressions);
 
-  return true
+  // cannot create the equation system we don't filter the relation in case the error is internal to not
+  // loss results
+  if (!equationSystemFirstEquation) {
+    return true
+  }
+
+  const [equationSystem, firstEquationToResolved] = equationSystemFirstEquation;
+
+  // we check if the filter expression itself has a solution
+  let solutionDomain = resolveEquationSystem(equationSystem, firstEquationToResolved);
+
+  // don't pass the relation if the filter cannot be resolved
+  if (solutionDomain.isDomainEmpty()) {
+    return false;
+  }
+
+  solutionDomain = solutionDomain.add({ range: relationSolutionRange, operator: LogicOperator.And });
+
+  // if there is a possible solution we don't filter the link
+  return !solutionDomain.isDomainEmpty();
 }
 
 export function recursifFilterExpressionToSolverExpression(expression: Algebra.Expression, filterExpressionList: SolverExpression[], linksOperator: LinkOperator[]): SolverExpression[] {
@@ -88,7 +113,7 @@ export function resolveAFilterTerm(expression: Algebra.Expression, operator: Spa
   }
 }
 
-export function resolveEquationSystem(equationSystem: SolverEquationSystem, firstEquation: [SolverEquation, SolverEquation]): SolutionDomain | undefined {
+export function resolveEquationSystem(equationSystem: SolverEquationSystem, firstEquation: [SolverEquation, SolverEquation]): SolutionDomain {
   let domain: SolutionDomain = SolutionDomain.newWithInitialValue(firstEquation[0].solutionDomain);
   let idx: string = "";
   // safety for no infinite loop
@@ -98,7 +123,7 @@ export function resolveEquationSystem(equationSystem: SolverEquationSystem, firs
   do {
     const resp = resolveEquation(currentEquation, domain);
     if (!resp) {
-      return undefined;
+      throw new Error(`unable to resolve the equation ${currentEquation}`)
     }
     [domain, idx] = resp;
 
@@ -126,7 +151,7 @@ export function createEquationSystem(expressions: SolverExpression[]): [SolverEq
     };
     const lastEquation = system.get(lastOperator);
     if (lastEquation) {
-      if(firstEquationLastOperator !== ""){
+      if (firstEquationLastOperator !== "") {
         return undefined;
       }
       firstEquationToEvaluate = [lastEquation, equation];

@@ -260,4 +260,18 @@ describe('SolutionDomain', () => {
             expect(spyAddWithOrOperator).toBeCalledTimes(1);
         });
     });
+
+    describe('isDomainEmpty', ()=>{
+        it('should return true when the domain is empty', ()=>{
+            const domain = new SolutionDomain();
+
+            expect(domain.isDomainEmpty()).toBe(true);
+        });
+
+        it('should return false when the domain is not empty', ()=>{
+            const domain = SolutionDomain.newWithInitialValue(new SolutionRange([0,1]));
+
+            expect(domain.isDomainEmpty()).toBe(false);
+        });
+    });
 });

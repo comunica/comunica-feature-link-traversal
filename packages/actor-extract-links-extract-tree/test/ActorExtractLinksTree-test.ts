@@ -1,7 +1,7 @@
 import { KeysRdfResolveQuadPattern, KeysInitQuery } from '@comunica/context-entries';
 import { ActionContext, Bus } from '@comunica/core';
 import type { ITreeRelation } from '@comunica/types-link-traversal';
-import { RelationOperator } from '@comunica/types-link-traversal';
+import { SparqlRelationOperator } from '@comunica/types-link-traversal';
 import { DataFactory } from 'rdf-data-factory';
 import type * as RDF from 'rdf-js';
 import { Algebra } from 'sparqlalgebrajs';
@@ -268,7 +268,7 @@ describe('ActorExtractLinksExtractLinksTree', () => {
         {
           node: prunedUrl,
           remainingItems: 66,
-          type: RelationOperator.GreaterThanRelation,
+          type: SparqlRelationOperator.GreaterThanRelation,
           value: {
             value: '66',
             term: DF.literal('66'),

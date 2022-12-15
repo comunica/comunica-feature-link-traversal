@@ -1,5 +1,5 @@
 import type { ITreeRelationRaw, ITreeRelation } from '@comunica/types-link-traversal';
-import { TreeNodes, RelationOperator } from '@comunica/types-link-traversal';
+import { TreeNodes, SparqlRelationOperator } from '@comunica/types-link-traversal';
 import { DataFactory } from 'rdf-data-factory';
 import type * as RDF from 'rdf-js';
 import { buildRelationElement, addRelationDescription, materializeTreeRelation } from '../lib/treeMetadataExtraction';
@@ -13,10 +13,10 @@ describe('treeMetadataExtraction', () => {
         const quad: RDF.Quad = DF.quad(
           DF.namedNode('ex:s'),
           DF.namedNode(TreeNodes.RDFTypeNode),
-          DF.namedNode(RelationOperator.EqualThanRelation),
+          DF.namedNode(SparqlRelationOperator.EqualThanRelation),
         );
         const relationDescriptions: Map<string, ITreeRelationRaw> = new Map();
-        addRelationDescription(relationDescriptions, quad, RelationOperator.EqualThanRelation, 'operator');
+        addRelationDescription(relationDescriptions, quad, SparqlRelationOperator.EqualThanRelation, 'operator');
 
         expect(relationDescriptions.size).toBe(1);
       });
@@ -26,9 +26,9 @@ describe('treeMetadataExtraction', () => {
     () => {
       const quad: RDF.Quad = DF.quad(DF.namedNode('ex:s'),
         DF.namedNode(TreeNodes.RDFTypeNode),
-        DF.namedNode(RelationOperator.EqualThanRelation));
+        DF.namedNode(SparqlRelationOperator.EqualThanRelation));
       const relationDescriptions: Map<string, ITreeRelationRaw> = new Map([[ 'ex:s', { value: 22 }]]);
-      addRelationDescription(relationDescriptions, quad, RelationOperator.EqualThanRelation, 'operator');
+      addRelationDescription(relationDescriptions, quad, SparqlRelationOperator.EqualThanRelation, 'operator');
       expect(relationDescriptions.size).toBe(1);
     });
 
@@ -36,9 +36,9 @@ describe('treeMetadataExtraction', () => {
       () => {
         const quad: RDF.Quad = DF.quad(DF.namedNode('ex:s'),
           DF.namedNode(TreeNodes.RDFTypeNode),
-          DF.namedNode(RelationOperator.EqualThanRelation));
+          DF.namedNode(SparqlRelationOperator.EqualThanRelation));
         const relationDescriptions: Map<string, ITreeRelationRaw> = new Map([[ 'ex:s2', { value: 22 }]]);
-        addRelationDescription(relationDescriptions, quad, RelationOperator.EqualThanRelation, 'operator');
+        addRelationDescription(relationDescriptions, quad, SparqlRelationOperator.EqualThanRelation, 'operator');
         expect(relationDescriptions.size).toBe(2);
       });
 
@@ -102,13 +102,13 @@ describe('treeMetadataExtraction', () => {
       () => {
         const quad: RDF.Quad = DF.quad(DF.namedNode('ex:s'),
           DF.namedNode(TreeNodes.RDFTypeNode),
-          DF.namedNode(RelationOperator.EqualThanRelation));
+          DF.namedNode(SparqlRelationOperator.EqualThanRelation));
 
         const res = buildRelationElement(quad);
         expect(res).toBeDefined();
         const [ value, key ] = <any> res;
         expect(key).toBe(<keyof ITreeRelationRaw> 'operator');
-        expect(value).toBe(RelationOperator.EqualThanRelation);
+        expect(value).toBe(SparqlRelationOperator.EqualThanRelation);
       });
 
     it('should return undefined when the type does not exist',
@@ -126,7 +126,7 @@ describe('treeMetadataExtraction', () => {
     it('should materialize a tree Relation when all the raw relation are provided', () => {
       const aSubject = 'foo';
       const aValue = '0';
-      const anOperator = RelationOperator.PrefixRelation;
+      const anOperator = SparqlRelationOperator.PrefixRelation;
       const aRemainingItemDefinition = 44;
       const aQuad = DF.quad(
         DF.blankNode(''),
@@ -159,7 +159,7 @@ describe('treeMetadataExtraction', () => {
     it('should materialize a tree Relation when the remaining item is missing', () => {
       const aSubject = 'foo';
       const aValue = '0';
-      const anOperator = RelationOperator.PrefixRelation;
+      const anOperator = SparqlRelationOperator.PrefixRelation;
       const aQuad = DF.quad(
         DF.blankNode(''),
         DF.namedNode(''),
@@ -188,7 +188,7 @@ describe('treeMetadataExtraction', () => {
 
     it('should materialize a tree Relation when the value is missing', () => {
       const aSubject = 'foo';
-      const anOperator = RelationOperator.PrefixRelation;
+      const anOperator = SparqlRelationOperator.PrefixRelation;
       const aQuad = DF.quad(
         DF.blankNode(''),
         DF.namedNode(''),
