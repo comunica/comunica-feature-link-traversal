@@ -1,20 +1,20 @@
 import {
-    filterOperatorToRelationOperator,
+    filterOperatorToSparqlRelationOperator,
     isSparqlOperandNumberType,
     castSparqlRdfTermIntoNumber,
     getSolutionRange,
     areTypesCompatible,
     convertTreeRelationToSolverExpression,
-    resolveEquation,
+    resolveSolutionDomainWithAnExpression,
     createEquationSystem,
-    resolveEquationSystem,
+    resolveSolutionDomainEquationSystem,
     resolveAFilterTerm,
     recursifFilterExpressionToSolverExpression,
     isRelationFilterExpressionDomainEmpty
 } from '../lib/solver';
 import { SolutionRange } from '../lib/SolutionRange';
 import { ITreeRelation, SparqlRelationOperator } from '@comunica/types-link-traversal';
-import { SparqlOperandDataTypes, SolverExpression, SolverEquation, LogicOperator, SolverEquationSystem, Variable } from '../lib/solverInterfaces';
+import { SparqlOperandDataTypes, SolverExpression, SolverExpressionRange, LogicOperator, SolverEquationSystem, Variable } from '../lib/solverInterfaces';
 import { DataFactory } from 'rdf-data-factory';
 import type * as RDF from 'rdf-js';
 import { SolutionDomain } from '../lib/SolutionDomain';
@@ -25,7 +25,7 @@ import { Algebra, translate } from 'sparqlalgebrajs';
 const DF = new DataFactory<RDF.BaseQuad>();
 
 describe('solver function', () => {
-    describe('filterOperatorToRelationOperator', () => {
+    describe('filterOperatorToSparqlRelationOperator', () => {
         it('should return the RelationOperator given a string representation', () => {
             const testTable: [string, SparqlRelationOperator][] = [
                 ['=', SparqlRelationOperator.EqualThanRelation],
@@ -36,11 +36,11 @@ describe('solver function', () => {
             ];
 
             for (const [value, expectedAnswer] of testTable) {
-                expect(filterOperatorToRelationOperator(value)).toBe(expectedAnswer);
+                expect(filterOperatorToSparqlRelationOperator(value)).toBe(expectedAnswer);
             }
         });
         it('should return undefined given a string not representing a RelationOperator', () => {
-            expect(filterOperatorToRelationOperator("foo")).toBeUndefined();
+            expect(filterOperatorToSparqlRelationOperator("foo")).toBeUndefined();
         });
     });
 
@@ -408,10 +408,10 @@ describe('solver function', () => {
         });
     });
 
-    describe('resolveEquation', () => {
+    describe('resolveSolutionDomainWithAnExpression', () => {
         it('given an empty domain and an equation with 2 operation chained that are not "NOT" should return a valid new domain and the last chained operator', () => {
             const domain = new SolutionDomain();
-            const equation: SolverEquation = {
+            const equation: SolverExpressionRange = {
                 chainOperator: [
                     new LinkOperator(LogicOperator.And),
                     new LinkOperator(LogicOperator.Or),
@@ -422,7 +422,7 @@ describe('solver function', () => {
             const expectedDomain = SolutionDomain.newWithInitialValue(equation.solutionDomain);
             const expectedLastLogicalOperator = equation.chainOperator.at(-2)?.toString();
 
-            const resp = resolveEquation(equation, domain);
+            const resp = resolveSolutionDomainWithAnExpression(equation, domain);
             if (resp) {
                 const [respDomain, respLastLogicalOperator] = resp;
                 expect(respDomain).toStrictEqual(expectedDomain);
@@ -434,7 +434,7 @@ describe('solver function', () => {
 
         it('given a domain and an equation with multiple chained that are not "NOT" should return a valid new domain and the next chained operator', () => {
             const domain = SolutionDomain.newWithInitialValue(new SolutionRange([0, 1]));
-            const equation: SolverEquation = {
+            const equation: SolverExpressionRange = {
                 chainOperator: [
                     new LinkOperator(LogicOperator.And),
                     new LinkOperator(LogicOperator.Or),
@@ -448,7 +448,7 @@ describe('solver function', () => {
             const expectedDomain = domain.add({ range: equation.solutionDomain, operator: <LogicOperator>equation.chainOperator.at(-1)?.operator });
             const expectedLastLogicalOperator = equation.chainOperator.at(-2)?.toString();
 
-            const resp = resolveEquation(equation, domain);
+            const resp = resolveSolutionDomainWithAnExpression(equation, domain);
             if (resp) {
                 const [respDomain, respLastLogicalOperator] = resp;
                 expect(respDomain).toStrictEqual(expectedDomain);
@@ -460,7 +460,7 @@ describe('solver function', () => {
 
         it('given a domain and an equation one chained operation should return a valid new domain and an empty string has the next chained operator', () => {
             const domain = SolutionDomain.newWithInitialValue(new SolutionRange([0, 1]));
-            const equation: SolverEquation = {
+            const equation: SolverExpressionRange = {
                 chainOperator: [
                     new LinkOperator(LogicOperator.Or),
                 ],
@@ -470,7 +470,7 @@ describe('solver function', () => {
             const expectedDomain = domain.add({ range: equation.solutionDomain, operator: <LogicOperator>equation.chainOperator.at(-1)?.operator });
             const expectedLastLogicalOperator = "";
 
-            const resp = resolveEquation(equation, domain);
+            const resp = resolveSolutionDomainWithAnExpression(equation, domain);
             if (resp) {
                 const [respDomain, respLastLogicalOperator] = resp;
                 expect(respDomain).toStrictEqual(expectedDomain);
@@ -482,7 +482,7 @@ describe('solver function', () => {
 
         it('given a domain and an equation with multiple chainned operator where the later elements are "NOT" operators and the last element an "AND" operator should return a valid domain and the next last operator', () => {
             const domain = SolutionDomain.newWithInitialValue(new SolutionRange([0, 1]));
-            const equation: SolverEquation = {
+            const equation: SolverExpressionRange = {
                 chainOperator: [
                     new LinkOperator(LogicOperator.And),
                     new LinkOperator(LogicOperator.Not),
@@ -498,7 +498,7 @@ describe('solver function', () => {
 
             const expectedLastLogicalOperator = equation.chainOperator[0].toString();
 
-            const resp = resolveEquation(equation, domain);
+            const resp = resolveSolutionDomainWithAnExpression(equation, domain);
             if (resp) {
                 const [respDomain, respLastLogicalOperator] = resp;
                 expect(respDomain).toStrictEqual(expectedDomain);
@@ -510,7 +510,7 @@ describe('solver function', () => {
 
         it('given a domain and an equation with multiple chainned operator where the last elements are "NOT" operators should return a valid domain and an empty string as the next operator', () => {
             const domain = SolutionDomain.newWithInitialValue(new SolutionRange([0, 1]));
-            const equation: SolverEquation = {
+            const equation: SolverExpressionRange = {
                 chainOperator: [
                     new LinkOperator(LogicOperator.Not),
                     new LinkOperator(LogicOperator.Not),
@@ -525,7 +525,7 @@ describe('solver function', () => {
 
             const expectedLastLogicalOperator = "";
 
-            const resp = resolveEquation(equation, domain);
+            const resp = resolveSolutionDomainWithAnExpression(equation, domain);
             if (resp) {
                 const [respDomain, respLastLogicalOperator] = resp;
                 expect(respDomain).toStrictEqual(expectedDomain);
@@ -537,12 +537,12 @@ describe('solver function', () => {
 
         it('given an empty domain and an equation with no chained operation should return undefined', () => {
             const domain = new SolutionDomain();
-            const equation: SolverEquation = {
+            const equation: SolverExpressionRange = {
                 chainOperator: [],
                 solutionDomain: new SolutionRange([0, 1])
             };
 
-            expect(resolveEquation(equation, domain)).toBeUndefined();
+            expect(resolveSolutionDomainWithAnExpression(equation, domain)).toBeUndefined();
 
         });
     });
@@ -571,15 +571,15 @@ describe('solver function', () => {
             };
 
             const firstOperation = operationTemplate([firstOperator]);
-            const firstEquation: SolverEquation = { chainOperator: firstOperation.chainOperator, solutionDomain: new SolutionRange([1, 1]) };
+            const firstEquation: SolverExpressionRange = { chainOperator: firstOperation.chainOperator, solutionDomain: new SolutionRange([1, 1]) };
             const secondOperation = operationTemplate([firstOperator, secondOperator]);
-            const secondEquation: SolverEquation = { chainOperator: secondOperation.chainOperator, solutionDomain: new SolutionRange([1, 1]) };
+            const secondEquation: SolverExpressionRange = { chainOperator: secondOperation.chainOperator, solutionDomain: new SolutionRange([1, 1]) };
             const thirdOperation = operationTemplate([firstOperator, secondOperator, thirdOperator]);
-            const thirdEquation: SolverEquation = { chainOperator: thirdOperation.chainOperator, solutionDomain: new SolutionRange([1, 1]) };
+            const thirdEquation: SolverExpressionRange = { chainOperator: thirdOperation.chainOperator, solutionDomain: new SolutionRange([1, 1]) };
             const lastOperation1 = operationTemplate([firstOperator, secondOperator, thirdOperator, lastOperator]);
-            const expectedFirstEquation1: SolverEquation = { chainOperator: lastOperation1.chainOperator, solutionDomain: new SolutionRange([1, 1]) };
+            const expectedFirstEquation1: SolverExpressionRange = { chainOperator: lastOperation1.chainOperator, solutionDomain: new SolutionRange([1, 1]) };
             const lastOperation2 = operationTemplate([firstOperator, secondOperator, thirdOperator, lastOperator]);
-            const expectedFirstEquation2: SolverEquation = { chainOperator: lastOperation2.chainOperator, solutionDomain: new SolutionRange([1, 1]) };
+            const expectedFirstEquation2: SolverExpressionRange = { chainOperator: lastOperation2.chainOperator, solutionDomain: new SolutionRange([1, 1]) };
 
             const equations: SolverExpression[] = [
                 firstOperation,
@@ -743,7 +743,7 @@ describe('solver function', () => {
         });
     });
 
-    describe('resolveEquationSystem', () => {
+    describe('resolveSolutionDomainEquationSystem', () => {
         it('should return a valid domain given a valid equation system', () => {
 
             const firstOperator = new LinkOperator(LogicOperator.Or);
@@ -751,14 +751,14 @@ describe('solver function', () => {
             const thirdOperator = new LinkOperator(LogicOperator.Not);
             const forthOperator = new LinkOperator(LogicOperator.Or);
             const fifthOperator = new LinkOperator(LogicOperator.And);
-            const firstEquation: SolverEquation = {
+            const firstEquation: SolverExpressionRange = {
                 solutionDomain: new SolutionRange([Number.NEGATIVE_INFINITY, 33]),
                 chainOperator: [
                     firstOperator,
                 ]
             };
 
-            const secondEquation: SolverEquation = {
+            const secondEquation: SolverExpressionRange = {
                 solutionDomain: new SolutionRange([75, 75]),
                 chainOperator: [
                     firstOperator,
@@ -766,7 +766,7 @@ describe('solver function', () => {
                 ]
             };
 
-            const thirdEquation: SolverEquation = {
+            const thirdEquation: SolverExpressionRange = {
                 solutionDomain: new SolutionRange([100, Number.POSITIVE_INFINITY]),
                 chainOperator: [
                     firstOperator,
@@ -781,7 +781,7 @@ describe('solver function', () => {
                 [thirdEquation.chainOperator.slice(-1)[0].toString(), thirdEquation]
             ]);
 
-            const firstEquationToSolve: [SolverEquation, SolverEquation] = [
+            const firstEquationToSolve: [SolverExpressionRange, SolverExpressionRange] = [
                 {
                     solutionDomain: new SolutionRange([1000, Number.POSITIVE_INFINITY]),
                     chainOperator: [
@@ -806,7 +806,7 @@ describe('solver function', () => {
             // Nothing => [100, infinity] =>[-infinity, 100- epsilon] => [75,75]=> [75, 75], [-infinity, 33]
             const expectedDomain: SolutionRange[] = [new SolutionRange([Number.NEGATIVE_INFINITY, 33]), new SolutionRange([75, 75])];
 
-            const resp = resolveEquationSystem(equationSystem, firstEquationToSolve);
+            const resp = resolveSolutionDomainEquationSystem(equationSystem, firstEquationToSolve);
 
             if (resp) {
                 expect(resp.get_domain()).toStrictEqual(expectedDomain);
@@ -822,14 +822,14 @@ describe('solver function', () => {
             const thirdOperator = new LinkOperator(LogicOperator.Not);
             const forthOperator = new LinkOperator(LogicOperator.Or);
             const fifthOperator = new LinkOperator(LogicOperator.And);
-            const firstEquation: SolverEquation = {
+            const firstEquation: SolverExpressionRange = {
                 solutionDomain: new SolutionRange([Number.NEGATIVE_INFINITY, 33]),
                 chainOperator: [
                     firstOperator,
                 ]
             };
 
-            const secondEquation: SolverEquation = {
+            const secondEquation: SolverExpressionRange = {
                 solutionDomain: new SolutionRange([75, 75]),
                 chainOperator: [
                     firstOperator,
@@ -837,7 +837,7 @@ describe('solver function', () => {
                 ]
             };
 
-            const thirdEquation: SolverEquation = {
+            const thirdEquation: SolverExpressionRange = {
                 solutionDomain: new SolutionRange([100, Number.POSITIVE_INFINITY]),
                 chainOperator: [
                 ]
@@ -848,7 +848,7 @@ describe('solver function', () => {
                 [forthOperator.toString(), thirdEquation]
             ]);
 
-            const firstEquationToSolve: [SolverEquation, SolverEquation] = [
+            const firstEquationToSolve: [SolverExpressionRange, SolverExpressionRange] = [
                 {
                     solutionDomain: new SolutionRange([1000, Number.POSITIVE_INFINITY]),
                     chainOperator: [
@@ -871,7 +871,7 @@ describe('solver function', () => {
                 }
             ];
 
-            expect(()=>{resolveEquationSystem(equationSystem, firstEquationToSolve)}).toThrow();
+            expect(()=>{resolveSolutionDomainEquationSystem(equationSystem, firstEquationToSolve)}).toThrow();
         });
     });
 
@@ -1349,7 +1349,7 @@ describe('solver function', () => {
 
            const solver = require('../lib/solver');
             const variable = 'x';
-           jest.spyOn(solver, 'resolveEquationSystem').mockReturnValue(undefined);
+           jest.spyOn(solver, 'resolveSolutionDomainEquationSystem').mockReturnValue(undefined);
 
             expect(isRelationFilterExpressionDomainEmpty({ relation, filterExpression, variable })).toBe(true);
         });
@@ -1373,7 +1373,7 @@ describe('solver function', () => {
 
            const solver = require('../lib/solver');
             const variable = 'x';
-           jest.spyOn(solver, 'resolveEquationSystem').mockReturnValue(undefined);
+           jest.spyOn(solver, 'resolveSolutionDomainEquationSystem').mockReturnValue(undefined);
 
             expect(isRelationFilterExpressionDomainEmpty({ relation, filterExpression, variable })).toBe(false);
         });
@@ -1397,7 +1397,7 @@ describe('solver function', () => {
 
            const solver = require('../lib/solver');
             const variable = 'x';
-           jest.spyOn(solver, 'resolveEquationSystem').mockReturnValue(undefined);
+           jest.spyOn(solver, 'resolveSolutionDomainEquationSystem').mockReturnValue(undefined);
 
             expect(isRelationFilterExpressionDomainEmpty({ relation, filterExpression, variable })).toBe(false);
         });
