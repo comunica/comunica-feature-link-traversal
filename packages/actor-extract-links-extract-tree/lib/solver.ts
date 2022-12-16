@@ -8,7 +8,7 @@ import { LinkOperator } from './LinkOperator';
 import {
   SparqlOperandDataTypes, SolverEquationSystem,
   LogicOperatorReversed, LogicOperator, SolverExpression,
-  Variable, SolverEquation, SparqlOperandDataTypesReversed
+  Variable, SolverExpressionRange, SparqlOperandDataTypesReversed
 } from './solverInterfaces';
 import { LastLogicalOperator } from './solverInterfaces';
 
@@ -117,12 +117,12 @@ export function resolveAFilterTerm(expression: Algebra.Expression, operator: Spa
   }
 }
 
-export function resolveEquationSystem(equationSystem: SolverEquationSystem, firstEquation: [SolverEquation, SolverEquation]): SolutionDomain {
+export function resolveEquationSystem(equationSystem: SolverEquationSystem, firstEquation: [SolverExpressionRange, SolverExpressionRange]): SolutionDomain {
   let domain: SolutionDomain = SolutionDomain.newWithInitialValue(firstEquation[0].solutionDomain);
   let idx: string = "";
   // safety for no infinite loop
   let i = 0;
-  let currentEquation: SolverEquation | undefined = firstEquation[1];
+  let currentEquation: SolverExpressionRange | undefined = firstEquation[1];
 
   do {
     const resp = resolveEquation(currentEquation, domain);
@@ -138,9 +138,9 @@ export function resolveEquationSystem(equationSystem: SolverEquationSystem, firs
   return domain;
 }
 
-export function createEquationSystem(expressions: SolverExpression[]): [SolverEquationSystem, [SolverEquation, SolverEquation]] | undefined {
+export function createEquationSystem(expressions: SolverExpression[]): [SolverEquationSystem, [SolverExpressionRange, SolverExpressionRange]] | undefined {
   const system: SolverEquationSystem = new Map();
-  let firstEquationToEvaluate: [SolverEquation, SolverEquation] | undefined = undefined;
+  let firstEquationToEvaluate: [SolverExpressionRange, SolverExpressionRange] | undefined = undefined;
   let firstEquationLastOperator: string = "";
 
   for (const expression of expressions) {
@@ -149,7 +149,7 @@ export function createEquationSystem(expressions: SolverExpression[]): [SolverEq
     if (!solutionRange) {
       return undefined;
     }
-    const equation: SolverEquation = {
+    const equation: SolverExpressionRange = {
       chainOperator: expression.chainOperator,
       solutionDomain: solutionRange
     };
@@ -173,7 +173,7 @@ export function createEquationSystem(expressions: SolverExpression[]): [SolverEq
   return [system, firstEquationToEvaluate];
 }
 
-export function resolveEquation(equation: SolverEquation, domain: SolutionDomain): [SolutionDomain, LastLogicalOperator] | undefined {
+export function resolveEquation(equation: SolverExpressionRange, domain: SolutionDomain): [SolutionDomain, LastLogicalOperator] | undefined {
   let localDomain = domain.clone();
   let i = -1;
   let currentLastOperator = equation.chainOperator.at(i);

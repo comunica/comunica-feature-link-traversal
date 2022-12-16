@@ -3,6 +3,7 @@ import { SolutionRange } from './SolutionRange';
 import { LinkOperator } from './LinkOperator';
 /**
  * Valid SPARQL data type for operation.
+ * reference: https://www.w3.org/TR/sparql11-query/#operandDataTypes
  */
 export enum SparqlOperandDataTypes {
     Integer = 'http://www.w3.org/2001/XMLSchema#integer',
@@ -28,39 +29,82 @@ export enum SparqlOperandDataTypes {
 }
 
 /**
-   * A map to access the value of the enum SparqlOperandDataTypesReversed by it's value in O(1).
-   */
- export const SparqlOperandDataTypesReversed: Map<string, SparqlOperandDataTypes> =
- new Map(Object.values(SparqlOperandDataTypes).map(value => [value, value]));
+ * A map to access the value of the enum SparqlOperandDataTypesReversed by it's value in O(1) time complexity.
+*/
+export const SparqlOperandDataTypesReversed: Map<string, SparqlOperandDataTypes> =
+    new Map(Object.values(SparqlOperandDataTypes).map(value => [value, value]));
 
+/**
+ * Logical operator that linked logical expression together.
+ */
 export enum LogicOperator {
     And = '&&',
     Or = '||',
     Not = '!',
 };
 
+/**
+ * A map to access the value of the enum LogicOperator by it's value in O(1) time complexity.
+ */
 export const LogicOperatorReversed: Map<string, LogicOperator> =
     new Map(Object.values(LogicOperator).map(value => [value, value]));
-    
 
-export interface SolverEquation {
+/**
+ * A range of a solver expression with his chain of logical operation.
+ */
+export interface SolverExpressionRange {
+    /**
+     * The chain of operation attached to the expression.
+     */
     chainOperator: LinkOperator[];
+    /**
+     * The domain of the solution of this expression.
+     */
     solutionDomain: SolutionRange;
 }
 
-export type SolverEquationSystem = Map<LastLogicalOperator,SolverEquation>;
+/**
+ * A system of equation to be solved by the solver. It is indexed by the last logical operation that has to be apply
+ * to the expression
+ */
+export type SolverEquationSystem = Map<LastLogicalOperator, SolverExpressionRange>;
 
+/**
+ * A last logical expression of a chain of logical expression.
+ */
 export type LastLogicalOperator = string;
+/**
+ * A variable to be solved by the solver.
+ */
 export type Variable = string;
-
+/**
+ * An expression of the solver containing also the chain of operation attached to it.
+ * eg: x>=5.5 chained with &&, ||, !
+ */
 export interface SolverExpression {
+    /**
+     * The variable of the expression
+     */
     variable: Variable;
-
+    /**
+     * The constant value attached to the expression as a String.
+     */
     rawValue: string;
+    /**
+     * The data type of the constant value.
+     */
     valueType: SparqlOperandDataTypes;
+    /**
+     * The value repressented as a number
+     */
     valueAsNumber: number;
-
+    /**
+     * The operator binding the value and the variable.
+     */
     operator: SparqlRelationOperator;
+    /**
+     * The chain of logical operator attached to the expression.
+     */
     chainOperator: LinkOperator[];
 };
 
