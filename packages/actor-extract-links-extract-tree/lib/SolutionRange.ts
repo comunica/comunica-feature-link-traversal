@@ -1,3 +1,6 @@
+/**
+ * 
+ */
 export class SolutionRange {
     public readonly upper: number;
     public readonly lower: number;

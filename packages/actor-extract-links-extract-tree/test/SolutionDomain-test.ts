@@ -274,4 +274,14 @@ describe('SolutionDomain', () => {
             expect(domain.isDomainEmpty()).toBe(false);
         });
     });
+
+    describe('clone', ()=>{
+        it('should return a deep copy of an existing domain', ()=>{
+            let domain = SolutionDomain.newWithInitialValue(new SolutionRange([0,1]));
+            const clonedDomain = domain.clone();
+            domain = domain.addWithOrOperator(new SolutionRange([100,200]));
+            expect(clonedDomain.get_domain()).not.toStrictEqual(domain.get_domain());
+
+        })
+    })
 });
