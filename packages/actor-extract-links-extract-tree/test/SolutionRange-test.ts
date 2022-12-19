@@ -239,15 +239,6 @@ describe('SolutionRange', ()=>{
             expect(aSolutionRange.inverse().length).toBe(0);
         });
 
-        it('given an unique solution should return no range', ()=>{
-            const aSolutionRange = new SolutionRange([
-                1,
-                1
-            ]);
-            
-            expect(aSolutionRange.inverse().length).toBe(0);
-        });
-
         it('given a range with an infinite upper bound should return a new range', ()=>{
             const aSolutionRange = new SolutionRange([
                 21,
@@ -299,14 +290,14 @@ describe('SolutionRange', ()=>{
             const aSolutionRange = new SolutionRange([0, 20]);
             const aSecondSolutionRange = new SolutionRange([30, 40]);
 
-            expect(aSolutionRange.getIntersection(aSecondSolutionRange)).toBeUndefined();
+            expect(SolutionRange.getIntersection(aSolutionRange, aSecondSolutionRange)).toBeUndefined();
         });
 
         it('given two range when one is inside the other should return the range at the inside', ()=>{
             const aSolutionRange = new SolutionRange([0, 20]);
             const aSecondSolutionRange = new SolutionRange([5, 10]);
 
-            expect(aSolutionRange.getIntersection(aSecondSolutionRange)).toStrictEqual(aSecondSolutionRange);
+            expect(SolutionRange.getIntersection(aSolutionRange, aSecondSolutionRange)).toStrictEqual(aSecondSolutionRange);
         });
 
         it('given two range when they overlap should return the intersection', ()=>{
@@ -315,7 +306,7 @@ describe('SolutionRange', ()=>{
 
             const expectedIntersection = new SolutionRange([5, 20]);
 
-            expect(aSolutionRange.getIntersection(aSecondSolutionRange)).toStrictEqual(expectedIntersection);
+            expect(SolutionRange.getIntersection(aSolutionRange, aSecondSolutionRange)).toStrictEqual(expectedIntersection);
         });
     });
 });

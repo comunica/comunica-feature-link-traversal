@@ -75,7 +75,7 @@ export class SolutionDomain {
         }
 
         this.domain.forEach((el) => {
-            const intersection = el.getIntersection(range);
+            const intersection = SolutionRange.getIntersection(el, range);
             if (typeof intersection !== 'undefined') {
                 newDomain.domain.push(intersection);
             }
