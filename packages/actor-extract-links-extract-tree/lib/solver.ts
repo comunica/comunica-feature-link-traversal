@@ -75,8 +75,8 @@ export function isRelationFilterExpressionDomainEmpty({ relation, filterExpressi
 
   // if there is a possible solution we don't filter the link
   return !solutionDomain.isDomainEmpty();
-
 }
+
 /**
  * A recursif function that traverse the Algebra expression to capture each boolean expression and there associated
  * chain of logical expression. On the first call the filterExpressionList and linksOperator must be empty, they serve
