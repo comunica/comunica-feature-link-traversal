@@ -52,20 +52,30 @@ export function isRelationFilterExpressionDomainEmpty({ relation, filterExpressi
     return true
   }
 
-  const [equationSystem, firstEquationToResolved] = equationSystemFirstEquation;
+  let solutionDomain: SolutionDomain;
 
-  // we check if the filter expression itself has a solution
-  let solutionDomain = resolveSolutionDomainEquationSystem(equationSystem, firstEquationToResolved);
+  if (Array.isArray(equationSystemFirstEquation)) {
+    const [equationSystem, firstEquationToResolved] = equationSystemFirstEquation;
 
-  // don't pass the relation if the filter cannot be resolved
-  if (solutionDomain.isDomainEmpty()) {
-    return false;
+    // we check if the filter expression itself has a solution
+    solutionDomain = resolveSolutionDomainEquationSystem(equationSystem, firstEquationToResolved);
+
+    // don't pass the relation if the filter cannot be resolved
+    if (solutionDomain.isDomainEmpty()) {
+      return false;
+    }
+
+    
+  }else {
+    solutionDomain = SolutionDomain.newWithInitialValue(equationSystemFirstEquation.solutionDomain);
   }
 
+  // evaluate the solution domain when adding the relation
   solutionDomain = solutionDomain.add({ range: relationSolutionRange, operator: LogicOperator.And });
 
   // if there is a possible solution we don't filter the link
   return !solutionDomain.isDomainEmpty();
+
 }
 /**
  * A recursif function that traverse the Algebra expression to capture each boolean expression and there associated
@@ -182,7 +192,18 @@ export function resolveSolutionDomainEquationSystem(equationSystem: SolverEquati
  * @returns {[SolverEquationSystem, [SolverExpressionRange, SolverExpressionRange]] | undefined} if the expression form a possible system of equation return
  * the system of equation and the first expression to evaluate.
  */
-export function createEquationSystem(expressions: SolverExpression[]): [SolverEquationSystem, [SolverExpressionRange, SolverExpressionRange]] | undefined {
+export function createEquationSystem(expressions: SolverExpression[]): [SolverEquationSystem, [SolverExpressionRange, SolverExpressionRange]] | SolverExpressionRange | undefined {
+  if (expressions.length === 1) {
+    const solutionRange = getSolutionRange(expressions[0].valueAsNumber, expressions[0].operator);
+    if (!solutionRange) {
+      return undefined;
+    }
+    return {
+      chainOperator: [],
+      solutionDomain: solutionRange
+    };
+  }
+
   const system: SolverEquationSystem = new Map();
   // the first expression that has to be evaluated
   let firstEquationToEvaluate: [SolverExpressionRange, SolverExpressionRange] | undefined = undefined;

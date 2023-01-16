@@ -4,12 +4,12 @@ import type { Bindings, IActionContext } from '@comunica/types';
 import type { ITreeRelation, ITreeNode } from '@comunica/types-link-traversal';
 import type * as RDF from 'rdf-js';
 import { Algebra, Factory as AlgebraFactory } from 'sparqlalgebrajs';
-import { AsyncEvaluator } from 'sparqlee';
+import { Variable } from './solverInterfaces';
+import { isRelationFilterExpressionDomainEmpty } from './solver';
 
 
 const AF = new AlgebraFactory();
 const BF = new BindingsFactory();
-const Utf8Encode = new TextEncoder();
 
 /**
  * A class to apply [SPAQL filters](https://www.w3.org/TR/sparql11-query/#evaluation)
@@ -53,6 +53,7 @@ export class FilterNode {
     if (queryBody.length === 0) {
       return new Map();
     }
+
     // Capture the relation from the function argument.
     const relations: ITreeRelation[] = node.relation!;
 
@@ -63,43 +64,36 @@ export class FilterNode {
         continue;
       }
       // Find the quad from the bgp that are related to the TREE relation.
-      const relevantQuads = FilterNode.findRelevantQuad(queryBody, relation.path);
+      const variables = FilterNode.findRelevantVariableFromBgp(queryBody, relation.path);
 
-      // Accept the relation if no quad are linked with the relation.
-      if (relevantQuads.length === 0) {
+      // Accept the relation if no variable are linked with the relation.
+      if (variables.length === 0) {
         filterMap.set(relation.node, true);
         continue;
       }
-
-      // Create the binding from the relevant quad in association with the TREE relation.
-      const bindings = FilterNode.createBinding(relevantQuads, relation.value.term);
-      const filterExpression: Algebra.Operation = FilterNode.generateTreeRelationFilter(filterOperation, bindings);
-
-      // Accept the relation if no filter are associated with the relation.
-      if (filterExpression.args.length === 0) {
-        filterMap.set(relation.node, true);
-        continue;
+      let filtered = false;
+      // For all the variable check if one is has a possible solutions.
+      for (const variable of variables) {
+        filtered = filtered || isRelationFilterExpressionDomainEmpty({ relation, filterExpression: filterOperation, variable })
       }
-      const evaluator = new AsyncEvaluator(filterExpression);
-      // Evaluate the filter with the relevant quad binding.
-      const result: boolean = await evaluator.evaluateAsEBV(bindings);
-      filterMap.set(relation.node, result);
+
+      filterMap.set(relation.node, filtered);
     }
     return filterMap;
   }
 
   /**
-   * Find the quad that match the predicate defined by the TREE:path from a TREE relation.
+   * Find the variables from the BGP that match the predicate defined by the TREE:path from a TREE relation.
    *  The subject can be anyting.
    * @param {RDF.Quad[]} queryBody - the body of the query
    * @param {string} path - TREE path
-   * @returns {RDF.Quad[]} the quad that contain the TREE path as predicate and a variable as object
+   * @returns {Variable[]} the variables of the Quad objects that contain the TREE path as predicate
    */
-  private static findRelevantQuad(queryBody: RDF.Quad[], path: string): RDF.Quad[] {
-    const resp: RDF.Quad[] = [];
+  private static findRelevantVariableFromBgp(queryBody: RDF.Quad[], path: string): Variable[] {
+    const resp: Variable[] = [];
     for (const quad of queryBody) {
       if (quad.predicate.value === path && quad.object.termType === 'Variable') {
-        resp.push(quad);
+        resp.push(quad.object.value);
       }
     }
     return resp;
@@ -183,6 +177,10 @@ export class FilterNode {
 
       if ('input' in currentNode) {
         currentNode = currentNode.input;
+      }
+      
+      if (currentNode.patterns) {
+        return currentNode.patterns;
       }
       // If the node is an array
       if (Array.isArray(currentNode)) {
