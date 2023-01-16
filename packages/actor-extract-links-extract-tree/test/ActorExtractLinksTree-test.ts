@@ -7,8 +7,6 @@ import type * as RDF from 'rdf-js';
 import { Algebra, translate } from 'sparqlalgebrajs';
 import { ActorExtractLinksTree } from '../lib/ActorExtractLinksTree';
 
-
-
 const stream = require('streamify-array');
 
 const DF = new DataFactory<RDF.BaseQuad>();
@@ -504,10 +502,9 @@ describe('ActorExtractLinksExtractLinksTree', () => {
             DF.namedNode('ex:gx')),
           DF.quad(DF.blankNode('_:_g1'),
             DF.blankNode(TreeNodes.RDFTypeNode),
-            DF.namedNode(SparqlRelationOperator.LessThanOrEqualToRelation))
+            DF.namedNode(SparqlRelationOperator.LessThanOrEqualToRelation)),
         ]);
 
-        
         const query = translate(`
         SELECT ?o WHERE {
           ex:foo ex:path ?o.
@@ -516,8 +513,8 @@ describe('ActorExtractLinksExtractLinksTree', () => {
           ex:foo ex:p3 ex:o3.
           FILTER(?o=550)
         }
-        `, { prefixes: { 'ex': 'http://example.com#' } });
-        
+        `, { prefixes: { ex: 'http://example.com#' }});
+
         const contextWithQuery = new ActionContext({
           [KeysRdfResolveQuadPattern.source.name]: treeUrl,
           [KeysInitQuery.query.name]: query,

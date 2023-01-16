@@ -4,9 +4,8 @@ import type { Bindings, IActionContext } from '@comunica/types';
 import type { ITreeRelation, ITreeNode } from '@comunica/types-link-traversal';
 import type * as RDF from 'rdf-js';
 import { Algebra, Factory as AlgebraFactory } from 'sparqlalgebrajs';
-import { Variable } from './solverInterfaces';
 import { isRelationFilterExpressionDomainEmpty } from './solver';
-
+import type { Variable } from './solverInterfaces';
 
 const AF = new AlgebraFactory();
 const BF = new BindingsFactory();
@@ -74,7 +73,9 @@ export class FilterNode {
       let filtered = false;
       // For all the variable check if one is has a possible solutions.
       for (const variable of variables) {
-        filtered = filtered || isRelationFilterExpressionDomainEmpty({ relation, filterExpression: filterOperation, variable })
+        filtered = filtered || isRelationFilterExpressionDomainEmpty(
+          { relation, filterExpression: filterOperation, variable },
+        );
       }
 
       filterMap.set(relation.node, filtered);
@@ -178,7 +179,7 @@ export class FilterNode {
       if ('input' in currentNode) {
         currentNode = currentNode.input;
       }
-      
+
       if (currentNode.patterns) {
         return currentNode.patterns;
       }
