@@ -1193,6 +1193,44 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
           new Map([['http://bar.com', true]]),
         );
       });
+
+      it('should accept the relation when a complex filter respect the relation', async () => {
+        const treeSubject = 'tree';
+
+        const node: ITreeNode = {
+          identifier: treeSubject,
+          relation: [
+            {
+              node: 'http://bar.com',
+              path: 'ex:path',
+              value: {
+                value: '5',
+                term: DF.literal('5', DF.namedNode('http://www.w3.org/2001/XMLSchema#integer')),
+              },
+              type: SparqlRelationOperator.GreaterThanOrEqualToRelation
+            },
+          ],
+        };
+
+        const query = translate(`
+        SELECT ?o ?x WHERE {
+          ex:foo ex:path ?o.
+          ex:foo ex:p ex:o.
+          ex:foo ex:p2 ?x.
+          FILTER(?o>2|| ?x=4 || (?x<3 && ?o<3) )
+        }
+        `, { prefixes: { 'ex': 'http://example.com#' } });
+
+        const context = new ActionContext({
+          [KeysInitQuery.query.name]: query,
+        });
+
+        const result = await filterNode.run(node, context);
+
+        expect(result).toStrictEqual(
+          new Map([['http://bar.com', true]]),
+        );
+      });
     });
   });
 });

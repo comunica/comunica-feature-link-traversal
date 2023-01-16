@@ -1,11 +1,13 @@
 import { KeysRdfResolveQuadPattern, KeysInitQuery } from '@comunica/context-entries';
 import { ActionContext, Bus } from '@comunica/core';
 import type { ITreeRelation } from '@comunica/types-link-traversal';
-import { SparqlRelationOperator } from '@comunica/types-link-traversal';
+import { SparqlRelationOperator, TreeNodes } from '@comunica/types-link-traversal';
 import { DataFactory } from 'rdf-data-factory';
 import type * as RDF from 'rdf-js';
-import { Algebra } from 'sparqlalgebrajs';
+import { Algebra, translate } from 'sparqlalgebrajs';
 import { ActorExtractLinksTree } from '../lib/ActorExtractLinksTree';
+
+
 
 const stream = require('streamify-array');
 
@@ -494,63 +496,28 @@ describe('ActorExtractLinksExtractLinksTree', () => {
             DF.namedNode('ex:gx')),
           DF.quad(DF.blankNode('_:_g1'),
             DF.namedNode('https://w3id.org/tree#path'),
-            DF.literal('ex:path'),
+            DF.literal('http://example.com#path'),
             DF.namedNode('ex:gx')),
           DF.quad(DF.blankNode('_:_g1'),
             DF.namedNode('https://w3id.org/tree#value'),
             DF.literal('500', DF.namedNode('http://www.w3.org/2001/XMLSchema#integer')),
             DF.namedNode('ex:gx')),
-
+          DF.quad(DF.blankNode('_:_g1'),
+            DF.blankNode(TreeNodes.RDFTypeNode),
+            DF.namedNode(SparqlRelationOperator.LessThanOrEqualToRelation))
         ]);
 
-        const bgp = <RDF.Quad[]>[
-          DF.quad(DF.namedNode('ex:foo'), DF.namedNode('ex:path'), DF.variable('o')),
-          DF.quad(DF.namedNode('ex:foo'), DF.namedNode('ex:p'), DF.namedNode('ex:o')),
-          DF.quad(DF.namedNode('ex:bar'), DF.namedNode('ex:p2'), DF.namedNode('ex:o2')),
-          DF.quad(DF.namedNode('ex:too'), DF.namedNode('ex:p3'), DF.namedNode('ex:o3')),
-        ];
-        const filterExpression = {
-          expressionType: Algebra.expressionTypes.OPERATOR,
-          operator: '=',
-          type: Algebra.types.EXPRESSION,
-          args: [
-            {
-              expressionType: Algebra.expressionTypes.TERM,
-              type: Algebra.types.EXPRESSION,
-              term: {
-                termType: 'Variable',
-                value: 'o',
-              },
-            },
-            {
-              expressionType: Algebra.expressionTypes.TERM,
-              type: Algebra.types.EXPRESSION,
-              term: {
-                termType: 'Literal',
-                langugage: '',
-                value: '5',
-                datatype: {
-                  termType: 'namedNode',
-                  value: 'http://www.w3.org/2001/XMLSchema#integer',
-                },
-              },
-            },
-          ],
-        };
-
-        const query = {
-          type: Algebra.types.PROJECT,
-          input: {
-            type: Algebra.types.FILTER,
-            expression: filterExpression,
-            input: {
-              input: {
-                type: Algebra.types.JOIN,
-                input: bgp,
-              },
-            },
-          },
-        };
+        
+        const query = translate(`
+        SELECT ?o WHERE {
+          ex:foo ex:path ?o.
+          ex:foo ex:p ex:o.
+          ex:foo ex:p2 ex:o2.
+          ex:foo ex:p3 ex:o3.
+          FILTER(?o=550)
+        }
+        `, { prefixes: { 'ex': 'http://example.com#' } });
+        
         const contextWithQuery = new ActionContext({
           [KeysRdfResolveQuadPattern.source.name]: treeUrl,
           [KeysInitQuery.query.name]: query,
