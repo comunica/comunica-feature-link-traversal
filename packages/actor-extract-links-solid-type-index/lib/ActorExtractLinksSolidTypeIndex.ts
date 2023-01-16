@@ -143,7 +143,11 @@ export class ActorExtractLinksSolidTypeIndex extends ActorExtractLinks {
     return typeLinks;
   }
 
-  // To fetch the domain of the predicate.
+  /**
+   * To fetch the domain of the predicate.
+   * @param predicateSubjectRec A dictionary of predicate and its subjects from the query.
+   * @param typeSubjects A dictionary of class type and its subjects from the query.
+   */
   public async linkPredicateDomain(predicateSubjectRec: Record<string, RDF.Term>,
     typeSubjects: Record<string, RDF.Term[]>): Promise<void> {
     const predicateDomains = await this.getRDFTypeFromPredicates(Object.keys(predicateSubjectRec));
@@ -160,7 +164,11 @@ export class ActorExtractLinksSolidTypeIndex extends ActorExtractLinks {
     }
   }
 
-  // Fetch the rdf type from the vocabulary if the type is not already present.
+  /**
+   * To fetch the rdf type from the vocabulary if the type is not already present.
+   * @param predicateValue Array of predicate values from the query.
+   * @return predicateTypeLinks A record mapping predicate URIs to it's domain.
+   */
   public async getRDFTypeFromPredicates(predicateValue: string[]): Promise<Record<string, string>> {
     const vocabSource: [IDataSource, ...IDataSource[]] =
       [ predicateValue[0], ...predicateValue.slice(1).toString().split(',') ];
