@@ -1,9 +1,11 @@
 import { KeysInitQuery } from '@comunica/context-entries';
 import { ActionContext } from '@comunica/core';
 import type { ITreeNode } from '@comunica/types-link-traversal';
+import { SparqlRelationOperator } from '@comunica/types-link-traversal';
+
 import { DataFactory } from 'rdf-data-factory';
 import type * as RDF from 'rdf-js';
-import { Algebra } from 'sparqlalgebrajs';
+import { Algebra, translate } from 'sparqlalgebrajs';
 import { FilterNode } from '../lib/FilterNode';
 
 const DF = new DataFactory<RDF.BaseQuad>();
@@ -76,10 +78,6 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
     });
 
     describe('run method', () => {
-      const aQuad: RDF.Quad = <RDF.Quad>DF.quad(DF.namedNode('ex:s'),
-        DF.namedNode('ex:p'),
-        DF.namedNode('ex:o'));
-
       it('should accept the relation when the filter respect the relation', async() => {
         const treeSubject = 'tree';
 
@@ -93,58 +91,18 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
                 value: '5',
                 term: DF.literal('5', DF.namedNode('http://www.w3.org/2001/XMLSchema#integer')),
               },
+              type: SparqlRelationOperator.EqualThanRelation,
             },
           ],
         };
 
-        const bgp = <RDF.Quad[]>[
-          DF.quad(DF.namedNode('ex:foo'), DF.namedNode('ex:path'), DF.variable('o')),
-          DF.quad(DF.namedNode('ex:foo'), DF.namedNode('ex:p'), DF.namedNode('ex:o')),
-          DF.quad(DF.namedNode('ex:bar'), DF.namedNode('ex:p2'), DF.namedNode('ex:o2')),
-          DF.quad(DF.namedNode('ex:too'), DF.namedNode('ex:p3'), DF.namedNode('ex:o3')),
-        ];
-        const filterExpression = {
-          expressionType: Algebra.expressionTypes.OPERATOR,
-          operator: '=',
-          type: Algebra.types.EXPRESSION,
-          args: [
-            {
-              expressionType: Algebra.expressionTypes.TERM,
-              type: Algebra.types.EXPRESSION,
-              term: {
-                termType: 'Variable',
-                value: 'o',
-              },
-            },
-            {
-              expressionType: Algebra.expressionTypes.TERM,
-              type: Algebra.types.EXPRESSION,
-              term: {
-                termType: 'Literal',
-                langugage: '',
-                value: '5',
-                datatype: {
-                  termType: 'namedNode',
-                  value: 'http://www.w3.org/2001/XMLSchema#integer',
-                },
-              },
-            },
-          ],
-        };
-
-        const query = {
-          type: Algebra.types.PROJECT,
-          input: {
-            type: Algebra.types.FILTER,
-            expression: filterExpression,
-            input: {
-              input: {
-                type: Algebra.types.JOIN,
-                input: bgp,
-              },
-            },
-          },
-        };
+        const query = translate(`
+        SELECT ?o WHERE {
+          ex:foo ex:path ?o.
+          ex:foo ex:p ex:o.
+          FILTER(?o=5)
+        }
+        `, { prefixes: { ex: 'http://example.com#' }});
 
         const context = new ActionContext({
           [KeysInitQuery.query.name]: query,
@@ -170,6 +128,7 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
                 value: '5',
                 term: DF.literal('5', DF.namedNode('http://www.w3.org/2001/XMLSchema#integer')),
               },
+              type: SparqlRelationOperator.EqualThanRelation,
             },
           ],
         };
@@ -241,6 +200,7 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
                 value: '5',
                 term: DF.literal('5', DF.namedNode('http://www.w3.org/2001/XMLSchema#integer')),
               },
+              type: SparqlRelationOperator.EqualThanRelation,
             },
           ],
         };
@@ -369,6 +329,7 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
                   value: '5',
                   term: DF.literal('5', DF.namedNode('http://www.w3.org/2001/XMLSchema#integer')),
                 },
+                type: SparqlRelationOperator.EqualThanRelation,
               },
             ],
           };
@@ -477,6 +438,8 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
                   value: '5',
                   term: DF.literal('5', DF.namedNode('http://www.w3.org/2001/XMLSchema#integer')),
                 },
+                type: SparqlRelationOperator.EqualThanRelation,
+
               },
 
               {
@@ -552,6 +515,7 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
                 value: '5',
                 term: DF.literal('5', DF.namedNode('http://www.w3.org/2001/XMLSchema#integer')),
               },
+              type: SparqlRelationOperator.EqualThanRelation,
             },
           ],
         };
@@ -623,6 +587,7 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
                 value: '5',
                 term: DF.literal('5', DF.namedNode('http://www.w3.org/2001/XMLSchema#integer')),
               },
+              type: SparqlRelationOperator.EqualThanRelation,
             },
           ],
         };
@@ -727,6 +692,7 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
                 value: '5',
                 term: DF.literal('5', DF.namedNode('http://www.w3.org/2001/XMLSchema#integer')),
               },
+              type: SparqlRelationOperator.EqualThanRelation,
             },
           ],
         };
@@ -841,6 +807,7 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
                 value: '5',
                 term: DF.literal('5', DF.namedNode('http://www.w3.org/2001/XMLSchema#integer')),
               },
+              type: SparqlRelationOperator.EqualThanRelation,
             },
           ],
         };
@@ -910,6 +877,7 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
                 value: '5',
                 term: DF.literal('5', DF.namedNode('http://www.w3.org/2001/XMLSchema#integer')),
               },
+              type: SparqlRelationOperator.EqualThanRelation,
             },
           ],
         };
@@ -973,6 +941,7 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
                 value: '5',
                 term: DF.literal('5', DF.namedNode('http://www.w3.org/2001/XMLSchema#integer')),
               },
+              type: SparqlRelationOperator.EqualThanRelation,
             },
           ],
         };
@@ -1051,6 +1020,7 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
                 value: '5',
                 term: DF.literal('5', DF.namedNode('http://www.w3.org/2001/XMLSchema#integer')),
               },
+              type: SparqlRelationOperator.EqualThanRelation,
             },
           ],
         };
@@ -1211,6 +1181,44 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
             },
           ],
         };
+
+        const context = new ActionContext({
+          [KeysInitQuery.query.name]: query,
+        });
+
+        const result = await filterNode.run(node, context);
+
+        expect(result).toStrictEqual(
+          new Map([[ 'http://bar.com', true ]]),
+        );
+      });
+
+      it('should accept the relation when a complex filter respect the relation', async() => {
+        const treeSubject = 'tree';
+
+        const node: ITreeNode = {
+          identifier: treeSubject,
+          relation: [
+            {
+              node: 'http://bar.com',
+              path: 'ex:path',
+              value: {
+                value: '5',
+                term: DF.literal('5', DF.namedNode('http://www.w3.org/2001/XMLSchema#integer')),
+              },
+              type: SparqlRelationOperator.GreaterThanOrEqualToRelation,
+            },
+          ],
+        };
+
+        const query = translate(`
+        SELECT ?o ?x WHERE {
+          ex:foo ex:path ?o.
+          ex:foo ex:p ex:o.
+          ex:foo ex:p2 ?x.
+          FILTER(?o>2|| ?x=4 || (?x<3 && ?o<3) )
+        }
+        `, { prefixes: { ex: 'http://example.com#' }});
 
         const context = new ActionContext({
           [KeysInitQuery.query.name]: query,

@@ -1,4 +1,4 @@
-import type { ITreeRelation, ITreeRelationRaw, RelationOperator } from '@comunica/types-link-traversal';
+import type { ITreeRelation, ITreeRelationRaw, SparqlRelationOperator } from '@comunica/types-link-traversal';
 import { TreeNodes, RelationOperatorReversed } from '@comunica/types-link-traversal';
 import type * as RDF from 'rdf-js';
 import { termToString } from 'rdf-string';
@@ -39,15 +39,15 @@ export function materializeTreeRelation(
 /**
  * From a quad stream return a relation element if it exist
  * @param {RDF.Quad} quad - Current quad of the stream.
- * @returns {[RelationOperator | number | string, keyof ITreeRelationRaw] | undefined} The relation element
+ * @returns {[SparqlRelationOperator | number | string, keyof ITreeRelationRaw] | undefined} The relation element
  * and the key associated with it.
  */
 export function buildRelationElement(
   quad: RDF.Quad,
-): [RelationOperator | number | string, keyof ITreeRelationRaw] | undefined {
+): [SparqlRelationOperator | number | string, keyof ITreeRelationRaw] | undefined {
   if (quad.predicate.value === TreeNodes.RDFTypeNode) {
     // Set the operator of the relation
-    const operator: RelationOperator | undefined = RelationOperatorReversed.get(quad.object.value);
+    const operator: SparqlRelationOperator | undefined = RelationOperatorReversed.get(quad.object.value);
     if (typeof operator !== 'undefined') {
       return [ operator, 'operator' ];
     }
@@ -69,13 +69,13 @@ export function buildRelationElement(
  * Update the relationDescriptions with the new quad value
  * @param {Map<string, ITreeRelationRaw>} relationDescriptions - Maps relationship identifiers to their description.
  * @param {RDF.Quad} quad - Current quad of the steam.
- * @param {RelationOperator | number | string} value - Current description value fetch
+ * @param {SparqlRelationOperator | number | string} value - Current description value fetch
  * @param {keyof ITreeRelationRaw} key - Key associated with the value.
  */
 export function addRelationDescription(
   relationDescriptions: Map<string, ITreeRelationRaw>,
   quad: RDF.Quad,
-  value: RelationOperator | number | string,
+  value: SparqlRelationOperator | number | string,
   key: keyof ITreeRelationRaw,
 ): void {
   const rawRelation: ITreeRelationRaw = relationDescriptions?.get(termToString(quad.subject)) || {};
