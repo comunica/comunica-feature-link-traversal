@@ -9,8 +9,10 @@ import {
   SparqlOperandDataTypes,
   LogicOperatorReversed, LogicOperator, SparqlOperandDataTypesReversed,
 } from './solverInterfaces';
-import type { LastLogicalOperator, SolverEquationSystem, ISolverExpression,
-  Variable, ISolverExpressionRange } from './solverInterfaces';
+import type {
+  LastLogicalOperator, SolverEquationSystem, ISolverExpression,
+  Variable, ISolverExpressionRange,
+} from './solverInterfaces';
 
 /**
  * Check if the solution domain of a system of equation compose of the expressions of the filter
@@ -42,9 +44,9 @@ export function isRelationFilterExpressionDomainEmpty({ relation, filterExpressi
     relationsolverExpressions.valueAsNumber,
     relationsolverExpressions.operator,
   );
-  // The relation is invalid so we filter it
+  // We don't prune the relation because we do not implement yet the solution range for this expression
   if (!relationSolutionRange) {
-    return false;
+    return true;
   }
   const equationSystemFirstEquation = createEquationSystem(filtersolverExpressions);
 
@@ -56,6 +58,7 @@ export function isRelationFilterExpressionDomainEmpty({ relation, filterExpressi
 
   let solutionDomain: SolutionDomain;
 
+  // If the filter has multiple expression
   if (Array.isArray(equationSystemFirstEquation)) {
     const [ equationSystem, firstEquationToResolved ] = equationSystemFirstEquation;
 
@@ -316,7 +319,7 @@ export function convertTreeRelationToSolverExpression(relation: ITreeRelation,
       return undefined;
     }
     const valueNumber = castSparqlRdfTermIntoNumber(relation.value.value, valueType);
-    if (!valueNumber) {
+    if (!valueNumber && valueNumber !== 0) {
       return undefined;
     }
 
@@ -389,6 +392,18 @@ export function castSparqlRdfTermIntoNumber(rdfTermValue: string,
   ) {
     const val = Number.parseFloat(rdfTermValue);
     return Number.isNaN(val) ? undefined : val;
+  }
+
+  if (rdfTermType === SparqlOperandDataTypes.Boolean) {
+    if (rdfTermValue === 'true') {
+      return 1;
+    }
+
+    if (rdfTermValue === 'false') {
+      return 0;
+    }
+
+    return undefined;
   }
 
   if (

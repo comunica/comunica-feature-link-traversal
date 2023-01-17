@@ -12,6 +12,8 @@ export class SolutionDomain {
      */
   private domain: SolutionRange[] = [];
 
+  private lastOperation: LogicOperator | undefined = undefined;
+
   /**
      * Get the multiple segment of the domain.
      * @returns {SolutionRange[]}
@@ -46,6 +48,7 @@ export class SolutionDomain {
   public clone(): SolutionDomain {
     const newSolutionDomain = new SolutionDomain();
     newSolutionDomain.domain = new Array(...this.domain);
+    newSolutionDomain.lastOperation = this.lastOperation;
     return newSolutionDomain;
   }
 
@@ -61,17 +64,23 @@ export class SolutionDomain {
         if (typeof range === 'undefined') {
           throw new ReferenceError('range should be defined with "AND" operator');
         }
-        return this.addWithAndOperator(range);
+        const newDomain = this.addWithAndOperator(range);
+        newDomain.lastOperation = LogicOperator.And;
+        return newDomain;
       }
       case LogicOperator.Or: {
         if (typeof range === 'undefined') {
           throw new ReferenceError('range should be defined with "OR" operator');
         }
-        return this.addWithOrOperator(range);
+        const newDomain = this.addWithOrOperator(range);
+        newDomain.lastOperation = LogicOperator.Or;
+        return newDomain;
       }
 
       case LogicOperator.Not: {
-        return this.notOperation();
+        const newDomain = this.notOperation();
+        newDomain.lastOperation = LogicOperator.Not;
+        return newDomain;
       }
     }
   }
@@ -118,6 +127,10 @@ export class SolutionDomain {
   public addWithAndOperator(range: SolutionRange): SolutionDomain {
     const newDomain = new SolutionDomain();
 
+    // If the domain is empty and the last operation was an "AND"
+    if (this.domain.length === 0 && this.lastOperation === LogicOperator.And) {
+      return newDomain;
+    }
     // If the domain is empty then simply add the new range
     if (this.domain.length === 0) {
       newDomain.domain.push(range);
@@ -164,11 +177,6 @@ export class SolutionDomain {
     if (firstRange.lower < secondRange.lower) {
       return -1;
     }
-
-    if (firstRange.lower > secondRange.lower) {
-      return 1;
-    }
-
-    return 0;
+    return 1;
   }
 }

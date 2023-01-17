@@ -1,6 +1,6 @@
 import { BindingsFactory } from '@comunica/bindings-factory';
 import { KeysInitQuery } from '@comunica/context-entries';
-import type { Bindings, IActionContext } from '@comunica/types';
+import type { IActionContext } from '@comunica/types';
 import type { ITreeRelation, ITreeNode } from '@comunica/types-link-traversal';
 import type * as RDF from 'rdf-js';
 import { Algebra, Factory as AlgebraFactory } from 'sparqlalgebrajs';
@@ -98,63 +98,6 @@ export class FilterNode {
       }
     }
     return resp;
-  }
-
-  /**
-   * Delete the filters that are not related to the TREE relation
-   * @param {Algebra.Expression} filterExpression - the expression of the filter taken from the original query
-   * @param {Bindings} binding - binding that the resulting filter should contain
-   * @returns {Algebra.Expression} the resulting filter expression contain only filter related to the TREE relation
-   */
-  private static generateTreeRelationFilter(filterExpression: Algebra.Expression,
-    binding: Bindings): Algebra.Expression {
-    // Generate an empty filter algebra.
-    let newFilterExpression: Algebra.Expression = AF.createOperatorExpression(filterExpression.operator, []);
-
-    // Check if there is one filter or multiple.
-    if ('operator' in filterExpression.args[0]) {
-      // Add the argument into the empty the new filter.
-      newFilterExpression.args = (<Algebra.Expression[]>filterExpression.args).filter(expression => {
-        for (const arg of expression.args) {
-          if ('term' in arg && arg.term.termType === 'Variable') {
-            // Check if the argument of the filter is present into the binding.
-            return binding.has(arg.term.value);
-          }
-        }
-        return false;
-      });
-
-      // If the filter has now a size of 1 change the form to respect the algebra specification.
-      if (newFilterExpression.args.length === 1) {
-        newFilterExpression = newFilterExpression.args[0];
-      }
-    } else {
-      // Add the argument into the empty the new filter.
-      for (const arg of (<Algebra.Expression[]>filterExpression.args)) {
-        // Check if the argument of the filter is present into the binding.
-        if ('term' in arg && arg.term.termType === 'Variable' && !binding.has(arg.term.value)) {
-          newFilterExpression.args = [];
-          break;
-        }
-        newFilterExpression.args.push(arg);
-      }
-    }
-    return newFilterExpression;
-  }
-
-  /**
-   * Create the binding from quad related to the TREE:path that will be used with sparqlee
-   * for the filtering of relation.
-   * @param {RDF.Quad[]} relevantQuad - the quads related to the TREE relation
-   * @param {RDF.Quad} relationValue - the quad related to the TREE path
-   * @returns {Bindings} the resulting binding
-   */
-  private static createBinding(relevantQuad: RDF.Quad[], relationValue: RDF.Term): Bindings {
-    let binding: Bindings = BF.bindings();
-    for (const quad of relevantQuad) {
-      binding = binding.set(quad.object.value, relationValue);
-    }
-    return binding;
   }
 
   /**

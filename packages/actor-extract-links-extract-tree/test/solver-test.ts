@@ -117,6 +117,17 @@ describe('solver function', () => {
       }
     });
 
+    it('should return undefined if a non fraction is pass with SparqlOperandDataTypes fraction compatible type', () => {
+      const testTable: [string, SparqlOperandDataTypes][] = [
+        [ 'asbd', SparqlOperandDataTypes.Double ],
+        [ '', SparqlOperandDataTypes.Float ],
+      ];
+
+      for (const [ value, valueType ] of testTable) {
+        expect(castSparqlRdfTermIntoNumber(value, valueType)).toBeUndefined();
+      }
+    });
+
     it('should return the expected number when given an decimal', () => {
       const testTable: [string, SparqlOperandDataTypes, number][] = [
         [ '1.1', SparqlOperandDataTypes.Decimal, 1.1 ],
@@ -127,6 +138,21 @@ describe('solver function', () => {
       for (const [ value, valueType, expectedNumber ] of testTable) {
         expect(castSparqlRdfTermIntoNumber(value, valueType)).toBe(expectedNumber);
       }
+    });
+
+    it('should return the expected number given a boolean', () => {
+      const testTable: [string, number][] = [
+        [ 'true', 1 ],
+        [ 'false', 0 ],
+      ];
+
+      for (const [ value, expectedNumber ] of testTable) {
+        expect(castSparqlRdfTermIntoNumber(value, SparqlOperandDataTypes.Boolean)).toBe(expectedNumber);
+      }
+    });
+
+    it('should return undefined if the boolean string is not "true" or "false"', () => {
+      expect(castSparqlRdfTermIntoNumber('abc', SparqlOperandDataTypes.Boolean)).toBeUndefined();
     });
 
     it('should return the expected unix time given a date time', () => {
@@ -430,7 +456,7 @@ describe('solver function', () => {
       const resp = resolveSolutionDomainWithAnExpression(equation, domain);
       if (resp) {
         const [ respDomain, respLastLogicalOperator ] = resp;
-        expect(respDomain).toStrictEqual(expectedDomain);
+        expect(respDomain.get_domain()).toStrictEqual(expectedDomain.get_domain());
         expect(respLastLogicalOperator).toBe(expectedLastLogicalOperator);
       } else {
         expect(resp).toBeDefined();
@@ -455,15 +481,17 @@ describe('solver function', () => {
         fail('should be able to get the expected operator check the test implementation');
       }
       const expectedDomain = domain.add(
-        { range: equation.solutionDomain,
-          operator: expectedOperator.operator },
+        {
+          range: equation.solutionDomain,
+          operator: expectedOperator.operator,
+        },
       );
       const expectedLastLogicalOperator = equation.chainOperator.at(-2)?.toString();
 
       const resp = resolveSolutionDomainWithAnExpression(equation, domain);
       if (resp) {
         const [ respDomain, respLastLogicalOperator ] = resp;
-        expect(respDomain).toStrictEqual(expectedDomain);
+        expect(respDomain.get_domain()).toStrictEqual(expectedDomain.get_domain());
         expect(respLastLogicalOperator).toBe(expectedLastLogicalOperator);
       } else {
         expect(resp).toBeDefined();
@@ -496,7 +524,7 @@ describe('solver function', () => {
       const resp = resolveSolutionDomainWithAnExpression(equation, domain);
       if (resp) {
         const [ respDomain, respLastLogicalOperator ] = resp;
-        expect(respDomain).toStrictEqual(expectedDomain);
+        expect(respDomain.get_domain()).toStrictEqual(expectedDomain.get_domain());
         expect(respLastLogicalOperator).toBe(expectedLastLogicalOperator);
       } else {
         expect(resp).toBeDefined();
@@ -879,6 +907,25 @@ describe('solver function', () => {
       } else {
         expect(resp).toBeDefined();
       }
+    });
+
+    it('given one equation where one we cannot derived a solution range should return undefined', () => {
+      const lastOperator = new LinkOperator(LogicOperator.And);
+
+      const equation: ISolverExpression[] = [
+        {
+          chainOperator: [ lastOperator ],
+          operator: SparqlRelationOperator.GeospatiallyContainsRelation,
+          rawValue: '88',
+          valueAsNumber: 88,
+          valueType: SparqlOperandDataTypes.Int,
+          variable: 'x',
+        },
+      ];
+
+      const resp = createEquationSystem(equation);
+
+      expect(resp).toBeUndefined();
     });
   });
 
@@ -1398,8 +1445,8 @@ describe('solver function', () => {
         remainingItems: 10,
         path: 'ex:path',
         value: {
-          value: '5',
-          term: DF.literal('5', DF.namedNode('http://www.w3.org/2001/XMLSchema#string')),
+          value: 'false',
+          term: DF.literal('false', DF.namedNode('http://www.w3.org/2001/XMLSchema#boolean')),
         },
         node: 'https://www.example.be',
       };
@@ -1443,7 +1490,7 @@ describe('solver function', () => {
         path: 'ex:path',
         value: {
           value: '5',
-          term: DF.literal('5', DF.namedNode('http://www.w3.org/2001/XMLSchema#string')),
+          term: DF.literal('5', DF.namedNode('http://www.w3.org/2001/XMLSchema#integer')),
         },
         node: 'https://www.example.be',
       };
@@ -1536,7 +1583,7 @@ describe('solver function', () => {
 
       const filterExpression = translate(`
             SELECT * WHERE { ?x ?y ?z 
-            FILTER( ?x=2 && ?x>5 && ?x > 88.3)
+            FILTER( ?x = 2 && ?x > 5 && ?x > 88.3)
             }`).input.expression;
 
       const variable = 'x';
