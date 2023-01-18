@@ -11,7 +11,7 @@ export class SolutionDomain {
      * of the SolutionRange.
      */
   private domain: SolutionRange[] = [];
-  
+
   /**
     * The last operation apply to the domain
     *
