@@ -451,7 +451,7 @@ describe('solver function', () => {
       };
 
       const expectedDomain = SolutionDomain.newWithInitialValue(equation.solutionDomain);
-      const expectedLastLogicalOperator = equation.chainOperator.at(-2)?.toString();
+      const expectedLastLogicalOperator = equation.chainOperator.at(-2).toString();
 
       const resp = resolveSolutionDomainWithAnExpression(equation, domain);
       if (resp) {
@@ -486,7 +486,7 @@ describe('solver function', () => {
           operator: expectedOperator.operator,
         },
       );
-      const expectedLastLogicalOperator = equation.chainOperator.at(-2)?.toString();
+      const expectedLastLogicalOperator = equation.chainOperator.at(-2).toString();
 
       const resp = resolveSolutionDomainWithAnExpression(equation, domain);
       if (resp) {

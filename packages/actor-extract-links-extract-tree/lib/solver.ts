@@ -275,9 +275,9 @@ export function resolveSolutionDomainWithAnExpression(equation: ISolverExpressio
   let localDomain = domain.clone();
   // To keep track of the last expression because we resolved all the not operator
   // next to the current last logical operator
-  let i = -1;
+  let i = equation.chainOperator.length - 1;
   // We find the last logical expression that has to be resolved
-  let currentLastOperator = equation.chainOperator.at(i);
+  let currentLastOperator = equation.chainOperator[i];
   if (!currentLastOperator) {
     return undefined;
   }
@@ -285,7 +285,7 @@ export function resolveSolutionDomainWithAnExpression(equation: ISolverExpressio
   // Resolve the new domain
   localDomain = localDomain.add({ range: equation.solutionDomain, operator: currentLastOperator?.operator });
 
-  currentLastOperator = equation.chainOperator.at(i);
+  currentLastOperator = equation.chainOperator[i];
   // If it was the last expression
   if (!currentLastOperator) {
     return [ localDomain, '' ];
@@ -294,7 +294,7 @@ export function resolveSolutionDomainWithAnExpression(equation: ISolverExpressio
   while (currentLastOperator?.operator === LogicOperator.Not) {
     localDomain = localDomain.add({ operator: currentLastOperator?.operator });
     i--;
-    currentLastOperator = equation.chainOperator.at(i);
+    currentLastOperator = equation.chainOperator[i];
     // It the last operator was a NOT
     if (!currentLastOperator?.operator) {
       return [ localDomain, '' ];
