@@ -153,7 +153,7 @@ describe('ActorExtractLinksSolidTypeIndex', () => {
     });
   });
 
-  describe('An ActorExtractLinksSolidTypeIndex instance with onlyMatchingTypes and enableDomainSupport:true', () => {
+  describe('An ActorExtractLinksSolidTypeIndex instance with onlyMatchingTypes and inference:true', () => {
     let actor: ActorExtractLinksSolidTypeIndex;
 
     beforeEach(() => {
@@ -165,7 +165,7 @@ describe('ActorExtractLinksSolidTypeIndex', () => {
           'ex:typeIndex2',
         ],
         onlyMatchingTypes: true,
-        enableDomainSupport: true,
+        inference: true,
         mediatorDereferenceRdf,
         actorInitQuery,
       });
@@ -440,7 +440,7 @@ describe('ActorExtractLinksSolidTypeIndex', () => {
     });
   });
 
-  describe('An ActorExtractLinksSolidTypeIndex instance with enableDomainSupport: false', () => {
+  describe('An ActorExtractLinksSolidTypeIndex instance with inference: false', () => {
     let actor: ActorExtractLinksSolidTypeIndex;
 
     beforeEach(() => {
@@ -452,7 +452,7 @@ describe('ActorExtractLinksSolidTypeIndex', () => {
           'ex:typeIndex2',
         ],
         onlyMatchingTypes: true,
-        enableDomainSupport: false,
+        inference: false,
         mediatorDereferenceRdf,
         actorInitQuery,
       });
