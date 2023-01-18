@@ -51,7 +51,7 @@ export function isRelationFilterExpressionDomainEmpty({ relation, filterExpressi
   const equationSystemFirstEquation = createEquationSystem(filtersolverExpressions);
 
   // Cannot create the equation system we don't filter the relation in case the error is internal to not
-  // loss results
+  // lose results
   if (!equationSystemFirstEquation) {
     return true;
   }
