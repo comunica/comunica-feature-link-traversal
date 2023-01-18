@@ -451,7 +451,7 @@ describe('solver function', () => {
       };
 
       const expectedDomain = SolutionDomain.newWithInitialValue(equation.solutionDomain);
-      const expectedLastLogicalOperator = equation.chainOperator.at(-2).toString();
+      const expectedLastLogicalOperator = equation.chainOperator[equation.chainOperator.length - 2].toString();
 
       const resp = resolveSolutionDomainWithAnExpression(equation, domain);
       if (resp) {
@@ -476,7 +476,7 @@ describe('solver function', () => {
         ],
         solutionDomain: new SolutionRange([ 100, 221.3 ]),
       };
-      const expectedOperator = equation.chainOperator.at(-1);
+      const expectedOperator = equation.chainOperator[equation.chainOperator.length - 1];
       if (!expectedOperator) {
         fail('should be able to get the expected operator check the test implementation');
       }
@@ -486,7 +486,7 @@ describe('solver function', () => {
           operator: expectedOperator.operator,
         },
       );
-      const expectedLastLogicalOperator = equation.chainOperator.at(-2).toString();
+      const expectedLastLogicalOperator = equation.chainOperator[equation.chainOperator.length - 2].toString();
 
       const resp = resolveSolutionDomainWithAnExpression(equation, domain);
       if (resp) {
@@ -508,7 +508,7 @@ describe('solver function', () => {
         solutionDomain: new SolutionRange([ 100, 221.3 ]),
       };
 
-      const expectedOperator = equation.chainOperator.at(-1);
+      const expectedOperator = equation.chainOperator[equation.chainOperator.length - 1];
       if (!expectedOperator) {
         fail('should be able to get the expected operator check the test implementation');
       }
@@ -545,7 +545,7 @@ describe('solver function', () => {
         solutionDomain: new SolutionRange([ 100, 221.3 ]),
       };
 
-      const expectedOperator = equation.chainOperator.at(-1);
+      const expectedOperator = equation.chainOperator[equation.chainOperator.length - 1];
       if (!expectedOperator) {
         fail('should be able to get the expected operator check the test implementation');
       }
@@ -584,7 +584,7 @@ describe('solver function', () => {
         solutionDomain: new SolutionRange([ 100, 221.3 ]),
       };
 
-      const expectedOperator = equation.chainOperator.at(-1);
+      const expectedOperator = equation.chainOperator[equation.chainOperator.length - 1];
       if (!expectedOperator) {
         fail('should be able to get the expected operator check the test implementation');
       }
@@ -960,9 +960,9 @@ describe('solver function', () => {
           forthOperator,
         ],
       };
-      const lastOperatorFirstEquation = firstEquation.chainOperator.at(-1);
-      const lastOperatorSecondEquation = secondEquation.chainOperator.at(-1);
-      const lastOperatorThirdEquation = thirdEquation.chainOperator.at(-1);
+      const lastOperatorFirstEquation = firstEquation.chainOperator[firstEquation.chainOperator.length - 1];
+      const lastOperatorSecondEquation = secondEquation.chainOperator[secondEquation.chainOperator.length - 1];
+      const lastOperatorThirdEquation = thirdEquation.chainOperator[thirdEquation.chainOperator.length - 1];
       if (
         !(lastOperatorFirstEquation &&
         lastOperatorSecondEquation &&
@@ -1039,8 +1039,8 @@ describe('solver function', () => {
         chainOperator: [
         ],
       };
-      const lastOperatorFirstEquation = firstEquation.chainOperator.at(-1);
-      const lastOperatorSecondEquation = secondEquation.chainOperator.at(-1);
+      const lastOperatorFirstEquation = firstEquation.chainOperator[firstEquation.chainOperator.length - 1];
+      const lastOperatorSecondEquation = secondEquation.chainOperator[secondEquation.chainOperator.length - 1];
       if (
         !(lastOperatorFirstEquation &&
         lastOperatorSecondEquation)
