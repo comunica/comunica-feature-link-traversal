@@ -25,10 +25,12 @@ export class ActorExtractLinksSolidTypeIndex extends ActorExtractLinks {
   private readonly inference: boolean;
   public readonly mediatorDereferenceRdf: MediatorDereferenceRdf;
   public readonly queryEngine: QueryEngineBase;
+  public readonly queryEngineLocal: QueryEngineBase;
 
   public constructor(args: IActorExtractLinksSolidTypeIndexArgs) {
     super(args);
     this.queryEngine = new QueryEngineBase(args.actorInitQuery);
+    this.queryEngineLocal = new QueryEngineBase(args.actorInitQuery);
   }
 
   public async test(action: IActionExtractLinks): Promise<IActorTest> {
@@ -150,18 +152,30 @@ export class ActorExtractLinksSolidTypeIndex extends ActorExtractLinks {
    * @param predicateSubjects A dictionary of predicate and its subjects from the query.
    * @param typeSubjects A dictionary of class type and its subjects from the query.
    */
-  public async linkPredicateDomain(predicateSubjects: Record<string, RDF.Term>,
+  public async linkPredicateDomains(predicateSubjects: Record<string, RDF.Term>,
     typeSubjects: Record<string, RDF.Term[]>): Promise<void> {
     if (Object.keys(predicateSubjects).length > 0) {
-      const predicateDomains = await this.fetchPredicateDomains(Object.keys(predicateSubjects));
-
-      for (const [ predicate, subject ] of Object.entries(predicateSubjects)) {
-        const typeName = predicateDomains[predicate];
-        if (typeName) {
-          if (!typeSubjects[typeName]) {
-            typeSubjects[typeName] = [];
+      const predicateDomainsRec = (await Promise.all(Object.keys(predicateSubjects)
+        .map(predicate => this.fetchPredicateDomains(predicate))))
+        // eslint-disable-next-line unicorn/prefer-object-from-entries
+        .reduce<Record<string, string[]>>((predicateDomains, predicateDomainInner) => {
+        for (const [ type, domainInner ] of Object.entries(predicateDomainInner)) {
+          if (!predicateDomains[type]) {
+            predicateDomains[type] = [];
           }
-          typeSubjects[typeName].push(subject);
+          predicateDomains[type].push(...domainInner);
+        }
+        return predicateDomains;
+      }, {});
+      for (const [ predicate, subject ] of Object.entries(predicateSubjects)) {
+        const typeNames = predicateDomainsRec[predicate];
+        if (typeNames) {
+          for (const typeName of typeNames) {
+            if (!typeSubjects[typeName]) {
+              typeSubjects[typeName] = [];
+            }
+            typeSubjects[typeName].push(subject);
+          }
         }
       }
     }
@@ -172,24 +186,26 @@ export class ActorExtractLinksSolidTypeIndex extends ActorExtractLinks {
    * @param predicateValue Array of predicate values from the query.
    * @return predicateTypeLinks A record mapping predicate URIs to it's domain.
    */
-  public async fetchPredicateDomains(predicateValue: string[]): Promise<Record<string, string>> {
-    const vocabSource: [IDataSource, ...IDataSource[]] =
-    <[IDataSource, ...IDataSource[]]> predicateValue;
-
-    const bindings = await this.queryEngine.queryBindings(`
+  public async fetchPredicateDomains(predicateValue: IDataSource): Promise<Record<string, string[]>> {
+    const bindings = await this.queryEngineLocal.queryBindings(`
         PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
         SELECT * WHERE {
           ?s rdfs:domain ?domain.
         }`, {
-      sources: vocabSource,
+      sources: [ predicateValue ],
       [KeysRdfResolveHypermediaLinks.traverse.name]: false,
     });
 
     const bindingsArray = await bindings.toArray();
-    const predicateTypeLinks: Record<string, string> = {};
+    const predicateTypeLinks: Record<string, string[]> = {};
+    // A predicate can have multiple domains
     for (const binding of bindingsArray) {
-      predicateTypeLinks[binding?.get('s')?.value || ''] = binding?.get('domain')?.value || '';
+      if (!predicateTypeLinks[binding.get('s')!.value]) {
+        predicateTypeLinks[binding.get('s')!.value] = [];
+      }
+      predicateTypeLinks[binding.get('s')!.value].push(binding.get('domain')!.value);
     }
+
     return predicateTypeLinks;
   }
 
@@ -251,7 +267,7 @@ export class ActorExtractLinksSolidTypeIndex extends ActorExtractLinks {
     });
 
     if (this.inference) {
-      await this.linkPredicateDomain(predicateSubjects, typeSubjects);
+      await this.linkPredicateDomains(predicateSubjects, typeSubjects);
     }
 
     // Check if the current pattern has any of the allowed subjects,
