@@ -46,7 +46,7 @@
   ],
   "dependencies": {
     "@comunica/query-sparql-link-traversal": "^0.0.1",
-    "@comunica/query-sparql-solid": "^2.3.0",
+    "@comunica/query-sparql-solid": "^2.4.0",
     "@comunica/actor-rdf-join-entries-sort-traversal-zero-knowledge": "^0.0.1",
     "@comunica/actor-rdf-metadata-extract-shapetrees": "^0.0.1",
     "@comunica/actor-rdf-metadata-extract-traverse": "^0.0.1",
