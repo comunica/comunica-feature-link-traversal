@@ -155,18 +155,9 @@ export class ActorExtractLinksSolidTypeIndex extends ActorExtractLinks {
   public async linkPredicateDomains(predicateSubjects: Record<string, RDF.Term>,
     typeSubjects: Record<string, RDF.Term[]>): Promise<void> {
     if (Object.keys(predicateSubjects).length > 0) {
-      const predicateDomainsRec = (await Promise.all(Object.keys(predicateSubjects)
-        .map(predicate => this.fetchPredicateDomains(predicate))))
-        // eslint-disable-next-line unicorn/prefer-object-from-entries
-        .reduce<Record<string, string[]>>((predicateDomains, predicateDomainInner) => {
-        for (const [ type, domainInner ] of Object.entries(predicateDomainInner)) {
-          if (!predicateDomains[type]) {
-            predicateDomains[type] = [];
-          }
-          predicateDomains[type].push(...domainInner);
-        }
-        return predicateDomains;
-      }, {});
+      const predicateDomainsInner = await Promise.all(Object.keys(predicateSubjects)
+        .map(predicate => this.fetchPredicateDomains(predicate)));
+      const predicateDomainsRec = Object.fromEntries(predicateDomainsInner);
       for (const [ predicate, subject ] of Object.entries(predicateSubjects)) {
         const typeNames = predicateDomainsRec[predicate];
         if (typeNames) {
@@ -183,11 +174,11 @@ export class ActorExtractLinksSolidTypeIndex extends ActorExtractLinks {
 
   /**
    * To fetch the rdf type from the vocabulary if the type is not already present.
-   * @param predicateValue Array of predicate values from the query.
+   * @param predicateValue Predicate value from the query.
    * @return predicateTypeLinks A record mapping predicate URIs to it's domain.
    */
-  public async fetchPredicateDomains(predicateValue: IDataSource): Promise<Record<string, string[]>> {
-    const bindings = await this.queryEngineLocal.queryBindings(`
+  public async fetchPredicateDomains(predicateValue: IDataSource): Promise<(string | string[])[]> {
+    const bindings = await this.queryEngine.queryBindings(`
         PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
         SELECT * WHERE {
           ?s rdfs:domain ?domain.
@@ -197,15 +188,15 @@ export class ActorExtractLinksSolidTypeIndex extends ActorExtractLinks {
     });
 
     const bindingsArray = await bindings.toArray();
-    const predicateTypeLinks: Record<string, string[]> = {};
+    const predicateTypeLinks: (string | string[])[] = [];
+    const domainsArray: string[] = [];
+    let predicate = '';
     // A predicate can have multiple domains
     for (const binding of bindingsArray) {
-      if (!predicateTypeLinks[binding.get('s')!.value]) {
-        predicateTypeLinks[binding.get('s')!.value] = [];
-      }
-      predicateTypeLinks[binding.get('s')!.value].push(binding.get('domain')!.value);
+      predicate = binding.get('s')!.value;
+      domainsArray.push(binding.get('domain')!.value);
     }
-
+    predicateTypeLinks.push(predicate, domainsArray);
     return predicateTypeLinks;
   }
 
@@ -291,6 +282,7 @@ export class ActorExtractLinksSolidTypeIndex extends ActorExtractLinks {
     if (allSubjects.size > 0) {
       return Object.values(typeLinks).flat();
     }
+
     return links;
   }
 }
