@@ -370,8 +370,7 @@ describe('ActorExtractLinksSolidTypeIndex', () => {
         }; }
         return {
           toArray: async() => [
-            BF.fromRecord({ domain: DF.namedNode('ex:class2'),
-              s: DF.namedNode('ex:predicate7') }),
+            BF.fromRecord({ domain: DF.namedNode('ex:class2') }),
           ],
         };
       };
@@ -415,14 +414,18 @@ describe('ActorExtractLinksSolidTypeIndex', () => {
             BF.fromRecord({ instance: DF.namedNode('ex:file2'), class: DF.namedNode('ex:class2') }),
           ],
         }; }
-        return {
+        if (query.includes('ex:predicate8'))
+        { return {
           toArray: async() => [
-            BF.fromRecord({ domain: DF.namedNode('ex:class2'),
-              s: DF.namedNode('ex:predicate8') }),
+            BF.fromRecord({ domain: DF.namedNode('ex:class2') }),
           ],
         };
-      };
+        }
 
+        return {
+          toArray: async() => [],
+        };
+      };
       context = new ActionContext({
         [KeysInitQuery.query.name]: AF.createBgp([
           AF.createPattern(DF.variable('s1'), DF.namedNode('ex:predicate8'), DF.namedNode('ex:bla')),
@@ -442,6 +445,55 @@ describe('ActorExtractLinksSolidTypeIndex', () => {
             },
             {
               url: 'ex:file2',
+            },
+          ],
+        });
+      expect(mediatorDereferenceRdf.mediate).toHaveBeenCalledTimes(1);
+      expect(mediatorDereferenceRdf.mediate).toHaveBeenCalledWith({ url: 'ex:index1', context });
+    });
+
+    it('should run on a stream with type index predicate with multiple domains', async() => {
+      input = stream([
+        quad('ex:s1', 'ex:typeIndex1', 'ex:index1'),
+        quad('ex:s3', 'ex:px', 'ex:o3', 'ex:gx'),
+        quad('ex:s4', 'ex:p', 'ex:o4', 'ex:g'),
+        quad('ex:s5', 'ex:p', 'ex:o5', 'ex:gx'),
+      ]);
+      (<any> actor).queryEngine.queryBindings = (query: string) => {
+        if (query.includes('solid:TypeRegistration'))
+        { return {
+          toArray: async() => [
+            BF.fromRecord({ instance: DF.namedNode('ex:file1'), class: DF.namedNode('ex:class1') }),
+            BF.fromRecord({ instance: DF.namedNode('ex:file2'), class: DF.namedNode('ex:class2') }),
+          ],
+        }; }
+        if (query.includes('ex:predicate10'))
+        { return {
+          toArray: async() => [
+            BF.fromRecord({ domain: DF.namedNode('ex:class2') }),
+            BF.fromRecord({ domain: DF.namedNode('ex:class1') }),
+          ],
+        };
+        }
+      };
+      context = new ActionContext({
+        [KeysInitQuery.query.name]: AF.createBgp([
+          AF.createPattern(DF.variable('s1'), DF.namedNode('ex:predicate10'), DF.namedNode('ex:bla')),
+        ]),
+        [KeysQueryOperation.operation.name]: AF.createPattern(
+          DF.variable('s1'),
+          DF.namedNode('ex:predicate10'),
+          DF.namedNode('ex:bla'),
+        ),
+      });
+      await expect(actor.run({ url: '', metadata: input, requestTime: 0, context })).resolves
+        .toEqual({
+          links: [
+            {
+              url: 'ex:file2',
+            },
+            {
+              url: 'ex:file1',
             },
           ],
         });

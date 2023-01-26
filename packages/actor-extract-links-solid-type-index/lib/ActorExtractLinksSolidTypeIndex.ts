@@ -7,7 +7,7 @@ import type { ILink } from '@comunica/bus-rdf-resolve-hypermedia-links';
 import { KeysInitQuery, KeysQueryOperation } from '@comunica/context-entries';
 import { KeysRdfResolveHypermediaLinks } from '@comunica/context-entries-link-traversal';
 import type { IActorArgs, IActorTest } from '@comunica/core';
-import type { IActionContext, IDataSource } from '@comunica/types';
+import type { IActionContext } from '@comunica/types';
 import type * as RDF from '@rdfjs/types';
 import { storeStream } from 'rdf-store-stream';
 import { termToString } from 'rdf-string';
@@ -25,12 +25,10 @@ export class ActorExtractLinksSolidTypeIndex extends ActorExtractLinks {
   private readonly inference: boolean;
   public readonly mediatorDereferenceRdf: MediatorDereferenceRdf;
   public readonly queryEngine: QueryEngineBase;
-  public readonly queryEngineLocal: QueryEngineBase;
 
   public constructor(args: IActorExtractLinksSolidTypeIndexArgs) {
     super(args);
     this.queryEngine = new QueryEngineBase(args.actorInitQuery);
-    this.queryEngineLocal = new QueryEngineBase(args.actorInitQuery);
   }
 
   public async test(action: IActionExtractLinks): Promise<IActorTest> {
@@ -177,11 +175,11 @@ export class ActorExtractLinksSolidTypeIndex extends ActorExtractLinks {
    * @param predicateValue Predicate value from the query.
    * @return predicateTypeLinks A record mapping predicate URIs to it's domain.
    */
-  public async fetchPredicateDomains(predicateValue: IDataSource): Promise<(string | string[])[]> {
+  public async fetchPredicateDomains(predicateValue: string): Promise<(string | string[])[]> {
     const bindings = await this.queryEngine.queryBindings(`
         PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
         SELECT * WHERE {
-          ?s rdfs:domain ?domain.
+          <${predicateValue}> rdfs:domain ?domain.
         }`, {
       sources: [ predicateValue ],
       [KeysRdfResolveHypermediaLinks.traverse.name]: false,
@@ -190,13 +188,11 @@ export class ActorExtractLinksSolidTypeIndex extends ActorExtractLinks {
     const bindingsArray = await bindings.toArray();
     const predicateTypeLinks: (string | string[])[] = [];
     const domainsArray: string[] = [];
-    let predicate = '';
     // A predicate can have multiple domains
     for (const binding of bindingsArray) {
-      predicate = binding.get('s')!.value;
       domainsArray.push(binding.get('domain')!.value);
     }
-    predicateTypeLinks.push(predicate, domainsArray);
+    predicateTypeLinks.push(predicateValue, domainsArray);
     return predicateTypeLinks;
   }
 
