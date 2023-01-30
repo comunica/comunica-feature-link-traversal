@@ -42,7 +42,7 @@ export class ActorExtractLinksSolidTypeIndex extends ActorExtractLinks {
 
   public async run(action: IActionExtractLinks): Promise<IActorExtractLinksOutput> {
     // Determine links to type indexes
-    const typeIndexes = await this.extractTypeIndexLinks(action.metadata);
+    const typeIndexes = [ ...await this.extractTypeIndexLinks(action.metadata) ];
 
     // Dereference all type indexes, and collect them in one record
     const typeLinks = (await Promise.all(typeIndexes
@@ -87,9 +87,9 @@ export class ActorExtractLinksSolidTypeIndex extends ActorExtractLinks {
    * Extract links to type index from the metadata stream.
    * @param metadata A metadata quad stream.
    */
-  public extractTypeIndexLinks(metadata: RDF.Stream): Promise<string[]> {
-    return new Promise<string[]>((resolve, reject) => {
-      const typeIndexesInner: string[] = [];
+  public extractTypeIndexLinks(metadata: RDF.Stream): Promise<Set<string>> {
+    return new Promise<Set<string>>((resolve, reject) => {
+      const typeIndexesInner: Set<string> = new Set();
 
       // Forward errors
       metadata.on('error', reject);
@@ -97,7 +97,7 @@ export class ActorExtractLinksSolidTypeIndex extends ActorExtractLinks {
       // Invoke callback on each metadata quad
       metadata.on('data', (quad: RDF.Quad) => {
         if (this.typeIndexPredicates.includes(quad.predicate.value)) {
-          typeIndexesInner.push(quad.object.value);
+          typeIndexesInner.add(quad.object.value);
         }
       });
 
