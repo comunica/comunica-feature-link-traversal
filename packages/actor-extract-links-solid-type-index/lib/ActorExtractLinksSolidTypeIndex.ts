@@ -154,7 +154,7 @@ export class ActorExtractLinksSolidTypeIndex extends ActorExtractLinks {
     typeSubjects: Record<string, RDF.Term[]>): Promise<void> {
     if (Object.keys(predicateSubjects).length > 0) {
       const predicateDomainsInner = await Promise.all(Object.keys(predicateSubjects)
-        .map(predicate => this.fetchPredicateDomains(predicate)));
+        .map(async predicate => [ predicate, await this.fetchPredicateDomains(predicate) ]));
       const predicateDomainsRec = Object.fromEntries(predicateDomainsInner);
       for (const [ predicate, subject ] of Object.entries(predicateSubjects)) {
         const typeNames = predicateDomainsRec[predicate];
@@ -175,7 +175,7 @@ export class ActorExtractLinksSolidTypeIndex extends ActorExtractLinks {
    * @param predicateValue Predicate value from the query.
    * @return predicateTypeLinks A record mapping predicate URIs to it's domain.
    */
-  public async fetchPredicateDomains(predicateValue: string): Promise<(string | string[])[]> {
+  public async fetchPredicateDomains(predicateValue: string): Promise<string[]> {
     const bindings = await this.queryEngine.queryBindings(`
         PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
         SELECT * WHERE {
@@ -186,14 +186,12 @@ export class ActorExtractLinksSolidTypeIndex extends ActorExtractLinks {
     });
 
     const bindingsArray = await bindings.toArray();
-    const predicateTypeLinks: (string | string[])[] = [];
     const domainsArray: string[] = [];
     // A predicate can have multiple domains
     for (const binding of bindingsArray) {
       domainsArray.push(binding.get('domain')!.value);
     }
-    predicateTypeLinks.push(predicateValue, domainsArray);
-    return predicateTypeLinks;
+    return domainsArray;
   }
 
   /**
