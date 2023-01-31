@@ -103,6 +103,7 @@
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="actor_extract_links_solid_type_index.ActorExtractLinksSolidTypeIndex.html#beforeActors" class="tsd-kind-icon">before<wbr>Actors</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="actor_extract_links_solid_type_index.ActorExtractLinksSolidTypeIndex.html#bus" class="tsd-kind-icon">bus</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="actor_extract_links_solid_type_index.ActorExtractLinksSolidTypeIndex.html#inference" class="tsd-kind-icon">inference</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="actor_extract_links_solid_type_index.ActorExtractLinksSolidTypeIndex.html#mediatorDereferenceRdf" class="tsd-kind-icon">mediator<wbr>Dereference<wbr>Rdf</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="actor_extract_links_solid_type_index.ActorExtractLinksSolidTypeIndex.html#name" class="tsd-kind-icon">name</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="actor_extract_links_solid_type_index.ActorExtractLinksSolidTypeIndex.html#onlyMatchingTypes" class="tsd-kind-icon">only<wbr>Matching<wbr>Types</a></li>
@@ -117,9 +118,11 @@
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="actor_extract_links_solid_type_index.ActorExtractLinksSolidTypeIndex.html#deinitialize" class="tsd-kind-icon">deinitialize</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="actor_extract_links_solid_type_index.ActorExtractLinksSolidTypeIndex.html#dereferenceTypeIndex" class="tsd-kind-icon">dereference<wbr>Type<wbr>Index</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="actor_extract_links_solid_type_index.ActorExtractLinksSolidTypeIndex.html#extractTypeIndexLinks" class="tsd-kind-icon">extract<wbr>Type<wbr>Index<wbr>Links</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="actor_extract_links_solid_type_index.ActorExtractLinksSolidTypeIndex.html#fetchPredicateDomains" class="tsd-kind-icon">fetch<wbr>Predicate<wbr>Domains</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected tsd-is-external"><a href="actor_extract_links_solid_type_index.ActorExtractLinksSolidTypeIndex.html#getDefaultLogData" class="tsd-kind-icon">get<wbr>Default<wbr>Log<wbr>Data</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="actor_extract_links_solid_type_index.ActorExtractLinksSolidTypeIndex.html#getLinksMatchingQuery" class="tsd-kind-icon">get<wbr>Links<wbr>Matching<wbr>Query</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="actor_extract_links_solid_type_index.ActorExtractLinksSolidTypeIndex.html#initialize" class="tsd-kind-icon">initialize</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="actor_extract_links_solid_type_index.ActorExtractLinksSolidTypeIndex.html#linkPredicateDomains" class="tsd-kind-icon">link<wbr>Predicate<wbr>Domains</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected tsd-is-external"><a href="actor_extract_links_solid_type_index.ActorExtractLinksSolidTypeIndex.html#logDebug" class="tsd-kind-icon">log<wbr>Debug</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected tsd-is-external"><a href="actor_extract_links_solid_type_index.ActorExtractLinksSolidTypeIndex.html#logError" class="tsd-kind-icon">log<wbr>Error</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected tsd-is-external"><a href="actor_extract_links_solid_type_index.ActorExtractLinksSolidTypeIndex.html#logFatal" class="tsd-kind-icon">log<wbr>Fatal</a></li>
@@ -149,7 +152,7 @@
 							<aside class="tsd-sources">
 								<p>Overrides <a href="bus_extract_links.ActorExtractLinks.html">ActorExtractLinks</a>.<a href="bus_extract_links.ActorExtractLinks.html#constructor">constructor</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/comunica/comunica-feature-link-traversal/blob/f5d6eb9/packages/actor-extract-links-solid-type-index/lib/ActorExtractLinksSolidTypeIndex.ts#L28">packages/actor-extract-links-solid-type-index/lib/ActorExtractLinksSolidTypeIndex.ts:28</a></li>
+									<li>Defined in <a href="https://github.com/comunica/comunica-feature-link-traversal/blob/211f717/packages/actor-extract-links-solid-type-index/lib/ActorExtractLinksSolidTypeIndex.ts#L29">packages/actor-extract-links-solid-type-index/lib/ActorExtractLinksSolidTypeIndex.ts:29</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -187,13 +190,23 @@
 						</ul>
 					</aside>
 				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
+					<a name="inference" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> <span class="tsd-flag ts-flagReadonly">Readonly</span> inference</h3>
+					<div class="tsd-signature tsd-kind-icon">inference<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/comunica/comunica-feature-link-traversal/blob/211f717/packages/actor-extract-links-solid-type-index/lib/ActorExtractLinksSolidTypeIndex.ts#L25">packages/actor-extract-links-solid-type-index/lib/ActorExtractLinksSolidTypeIndex.ts:25</a></li>
+						</ul>
+					</aside>
+				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
 					<a name="mediatorDereferenceRdf" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagReadonly">Readonly</span> mediator<wbr>Dereference<wbr>Rdf</h3>
 					<div class="tsd-signature tsd-kind-icon">mediator<wbr>Dereference<wbr>Rdf<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">MediatorDereferenceRdf</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/comunica/comunica-feature-link-traversal/blob/f5d6eb9/packages/actor-extract-links-solid-type-index/lib/ActorExtractLinksSolidTypeIndex.ts#L25">packages/actor-extract-links-solid-type-index/lib/ActorExtractLinksSolidTypeIndex.ts:25</a></li>
+							<li>Defined in <a href="https://github.com/comunica/comunica-feature-link-traversal/blob/211f717/packages/actor-extract-links-solid-type-index/lib/ActorExtractLinksSolidTypeIndex.ts#L26">packages/actor-extract-links-solid-type-index/lib/ActorExtractLinksSolidTypeIndex.ts:26</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -214,7 +227,7 @@
 					<div class="tsd-signature tsd-kind-icon">only<wbr>Matching<wbr>Types<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/comunica/comunica-feature-link-traversal/blob/f5d6eb9/packages/actor-extract-links-solid-type-index/lib/ActorExtractLinksSolidTypeIndex.ts#L24">packages/actor-extract-links-solid-type-index/lib/ActorExtractLinksSolidTypeIndex.ts:24</a></li>
+							<li>Defined in <a href="https://github.com/comunica/comunica-feature-link-traversal/blob/211f717/packages/actor-extract-links-solid-type-index/lib/ActorExtractLinksSolidTypeIndex.ts#L24">packages/actor-extract-links-solid-type-index/lib/ActorExtractLinksSolidTypeIndex.ts:24</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -224,7 +237,7 @@
 					<div class="tsd-signature tsd-kind-icon">query<wbr>Engine<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">QueryEngineBase</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">IQueryContextCommon</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/comunica/comunica-feature-link-traversal/blob/f5d6eb9/packages/actor-extract-links-solid-type-index/lib/ActorExtractLinksSolidTypeIndex.ts#L26">packages/actor-extract-links-solid-type-index/lib/ActorExtractLinksSolidTypeIndex.ts:26</a></li>
+							<li>Defined in <a href="https://github.com/comunica/comunica-feature-link-traversal/blob/211f717/packages/actor-extract-links-solid-type-index/lib/ActorExtractLinksSolidTypeIndex.ts#L27">packages/actor-extract-links-solid-type-index/lib/ActorExtractLinksSolidTypeIndex.ts:27</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -234,7 +247,7 @@
 					<div class="tsd-signature tsd-kind-icon">type<wbr>Index<wbr>Predicates<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/comunica/comunica-feature-link-traversal/blob/f5d6eb9/packages/actor-extract-links-solid-type-index/lib/ActorExtractLinksSolidTypeIndex.ts#L23">packages/actor-extract-links-solid-type-index/lib/ActorExtractLinksSolidTypeIndex.ts:23</a></li>
+							<li>Defined in <a href="https://github.com/comunica/comunica-feature-link-traversal/blob/211f717/packages/actor-extract-links-solid-type-index/lib/ActorExtractLinksSolidTypeIndex.ts#L23">packages/actor-extract-links-solid-type-index/lib/ActorExtractLinksSolidTypeIndex.ts:23</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -244,7 +257,7 @@
 					<div class="tsd-signature tsd-kind-icon">RDF_<wbr>TYPE<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">&quot;http://www.w3.org/1999/02/22-rdf-syntax-ns#type&quot;</span><span class="tsd-signature-symbol"> = &#x27;http://www.w3.org/1999/02/22-rdf-syntax-ns#type&#x27;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/comunica/comunica-feature-link-traversal/blob/f5d6eb9/packages/actor-extract-links-solid-type-index/lib/ActorExtractLinksSolidTypeIndex.ts#L21">packages/actor-extract-links-solid-type-index/lib/ActorExtractLinksSolidTypeIndex.ts:21</a></li>
+							<li>Defined in <a href="https://github.com/comunica/comunica-feature-link-traversal/blob/211f717/packages/actor-extract-links-solid-type-index/lib/ActorExtractLinksSolidTypeIndex.ts#L21">packages/actor-extract-links-solid-type-index/lib/ActorExtractLinksSolidTypeIndex.ts:21</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -287,7 +300,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/comunica/comunica-feature-link-traversal/blob/f5d6eb9/packages/actor-extract-links-solid-type-index/lib/ActorExtractLinksSolidTypeIndex.ts#L117">packages/actor-extract-links-solid-type-index/lib/ActorExtractLinksSolidTypeIndex.ts:117</a></li>
+									<li>Defined in <a href="https://github.com/comunica/comunica-feature-link-traversal/blob/211f717/packages/actor-extract-links-solid-type-index/lib/ActorExtractLinksSolidTypeIndex.ts#L118">packages/actor-extract-links-solid-type-index/lib/ActorExtractLinksSolidTypeIndex.ts:118</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -325,7 +338,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/comunica/comunica-feature-link-traversal/blob/f5d6eb9/packages/actor-extract-links-solid-type-index/lib/ActorExtractLinksSolidTypeIndex.ts#L90">packages/actor-extract-links-solid-type-index/lib/ActorExtractLinksSolidTypeIndex.ts:90</a></li>
+									<li>Defined in <a href="https://github.com/comunica/comunica-feature-link-traversal/blob/211f717/packages/actor-extract-links-solid-type-index/lib/ActorExtractLinksSolidTypeIndex.ts#L91">packages/actor-extract-links-solid-type-index/lib/ActorExtractLinksSolidTypeIndex.ts:91</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -343,6 +356,38 @@
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Set</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="fetchPredicateDomains" class="tsd-anchor"></a>
+					<h3>fetch<wbr>Predicate<wbr>Domains</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">fetch<wbr>Predicate<wbr>Domains<span class="tsd-signature-symbol">(</span>predicateValue<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/comunica/comunica-feature-link-traversal/blob/211f717/packages/actor-extract-links-solid-type-index/lib/ActorExtractLinksSolidTypeIndex.ts#L178">packages/actor-extract-links-solid-type-index/lib/ActorExtractLinksSolidTypeIndex.ts:178</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>To fetch the rdf type from the vocabulary if the type is not already present.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>predicateValue: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Predicate value from the query.</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<p>predicateTypeLinks A record mapping predicate URIs to it&#39;s domain.</p>
 						</li>
 					</ul>
 				</section>
@@ -395,7 +440,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/comunica/comunica-feature-link-traversal/blob/f5d6eb9/packages/actor-extract-links-solid-type-index/lib/ActorExtractLinksSolidTypeIndex.ts#L153">packages/actor-extract-links-solid-type-index/lib/ActorExtractLinksSolidTypeIndex.ts:153</a></li>
+									<li>Defined in <a href="https://github.com/comunica/comunica-feature-link-traversal/blob/211f717/packages/actor-extract-links-solid-type-index/lib/ActorExtractLinksSolidTypeIndex.ts#L203">packages/actor-extract-links-solid-type-index/lib/ActorExtractLinksSolidTypeIndex.ts:203</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -451,6 +496,43 @@
 							</div>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></h4>
 							<p>A promise that resolves when the actor has been initialized.</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="linkPredicateDomains" class="tsd-anchor"></a>
+					<h3>link<wbr>Predicate<wbr>Domains</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">link<wbr>Predicate<wbr>Domains<span class="tsd-signature-symbol">(</span>predicateSubjects<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Record</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">Term</span><span class="tsd-signature-symbol">&gt;</span>, typeSubjects<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Record</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">Term</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/comunica/comunica-feature-link-traversal/blob/211f717/packages/actor-extract-links-solid-type-index/lib/ActorExtractLinksSolidTypeIndex.ts#L153">packages/actor-extract-links-solid-type-index/lib/ActorExtractLinksSolidTypeIndex.ts:153</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>To fetch the domain of the predicate.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>predicateSubjects: <span class="tsd-signature-type">Record</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">Term</span><span class="tsd-signature-symbol">&gt;</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>A dictionary of predicate and its subjects from the query.</p>
+									</div>
+								</li>
+								<li>
+									<h5>typeSubjects: <span class="tsd-signature-type">Record</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">Term</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>A dictionary of class type and its subjects from the query.</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -717,7 +799,7 @@
 							<aside class="tsd-sources">
 								<p>Overrides <a href="bus_extract_links.ActorExtractLinks.html">ActorExtractLinks</a>.<a href="bus_extract_links.ActorExtractLinks.html#run">run</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/comunica/comunica-feature-link-traversal/blob/f5d6eb9/packages/actor-extract-links-solid-type-index/lib/ActorExtractLinksSolidTypeIndex.ts#L43">packages/actor-extract-links-solid-type-index/lib/ActorExtractLinksSolidTypeIndex.ts:43</a></li>
+									<li>Defined in <a href="https://github.com/comunica/comunica-feature-link-traversal/blob/211f717/packages/actor-extract-links-solid-type-index/lib/ActorExtractLinksSolidTypeIndex.ts#L44">packages/actor-extract-links-solid-type-index/lib/ActorExtractLinksSolidTypeIndex.ts:44</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -782,7 +864,7 @@
 							<aside class="tsd-sources">
 								<p>Overrides <a href="bus_extract_links.ActorExtractLinks.html">ActorExtractLinks</a>.<a href="bus_extract_links.ActorExtractLinks.html#test">test</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/comunica/comunica-feature-link-traversal/blob/f5d6eb9/packages/actor-extract-links-solid-type-index/lib/ActorExtractLinksSolidTypeIndex.ts#L33">packages/actor-extract-links-solid-type-index/lib/ActorExtractLinksSolidTypeIndex.ts:33</a></li>
+									<li>Defined in <a href="https://github.com/comunica/comunica-feature-link-traversal/blob/211f717/packages/actor-extract-links-solid-type-index/lib/ActorExtractLinksSolidTypeIndex.ts#L34">packages/actor-extract-links-solid-type-index/lib/ActorExtractLinksSolidTypeIndex.ts:34</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -812,7 +894,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="bus_extract_links.ActorExtractLinks.html">ActorExtractLinks</a>.<a href="bus_extract_links.ActorExtractLinks.html#collectStream">collectStream</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/comunica/comunica-feature-link-traversal/blob/f5d6eb9/packages/bus-extract-links/lib/ActorExtractLinks.ts#L31">packages/bus-extract-links/lib/ActorExtractLinks.ts:31</a></li>
+									<li>Defined in <a href="https://github.com/comunica/comunica-feature-link-traversal/blob/211f717/packages/bus-extract-links/lib/ActorExtractLinks.ts#L31">packages/bus-extract-links/lib/ActorExtractLinks.ts:31</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -944,6 +1026,9 @@
 									<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external">
 										<a href="actor_extract_links_solid_type_index.ActorExtractLinksSolidTypeIndex.html#bus" class="tsd-kind-icon">bus</a>
 									</li>
+									<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
+										<a href="actor_extract_links_solid_type_index.ActorExtractLinksSolidTypeIndex.html#inference" class="tsd-kind-icon">inference</a>
+									</li>
 									<li class=" tsd-kind-property tsd-parent-kind-class">
 										<a href="actor_extract_links_solid_type_index.ActorExtractLinksSolidTypeIndex.html#mediatorDereferenceRdf" class="tsd-kind-icon">mediator<wbr>Dereference<wbr>Rdf</a>
 									</li>
@@ -971,6 +1056,9 @@
 									<li class=" tsd-kind-method tsd-parent-kind-class">
 										<a href="actor_extract_links_solid_type_index.ActorExtractLinksSolidTypeIndex.html#extractTypeIndexLinks" class="tsd-kind-icon">extract<wbr>Type<wbr>Index<wbr>Links</a>
 									</li>
+									<li class=" tsd-kind-method tsd-parent-kind-class">
+										<a href="actor_extract_links_solid_type_index.ActorExtractLinksSolidTypeIndex.html#fetchPredicateDomains" class="tsd-kind-icon">fetch<wbr>Predicate<wbr>Domains</a>
+									</li>
 									<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected tsd-is-external">
 										<a href="actor_extract_links_solid_type_index.ActorExtractLinksSolidTypeIndex.html#getDefaultLogData" class="tsd-kind-icon">get<wbr>Default<wbr>Log<wbr>Data</a>
 									</li>
@@ -979,6 +1067,9 @@
 									</li>
 									<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
 										<a href="actor_extract_links_solid_type_index.ActorExtractLinksSolidTypeIndex.html#initialize" class="tsd-kind-icon">initialize</a>
+									</li>
+									<li class=" tsd-kind-method tsd-parent-kind-class">
+										<a href="actor_extract_links_solid_type_index.ActorExtractLinksSolidTypeIndex.html#linkPredicateDomains" class="tsd-kind-icon">link<wbr>Predicate<wbr>Domains</a>
 									</li>
 									<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected tsd-is-external">
 										<a href="actor_extract_links_solid_type_index.ActorExtractLinksSolidTypeIndex.html#logDebug" class="tsd-kind-icon">log<wbr>Debug</a>
