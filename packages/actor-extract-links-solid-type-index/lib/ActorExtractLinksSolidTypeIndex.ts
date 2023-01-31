@@ -1,5 +1,5 @@
-import type { ActorInitQueryBase } from '@comunica/actor-init-query';
 import { QueryEngineBase } from '@comunica/actor-init-query';
+import type { ActorInitQueryBase } from '@comunica/actor-init-query';
 import type { MediatorDereferenceRdf } from '@comunica/bus-dereference-rdf';
 import type { IActionExtractLinks, IActorExtractLinksOutput } from '@comunica/bus-extract-links';
 import { ActorExtractLinks } from '@comunica/bus-extract-links';
@@ -22,6 +22,7 @@ export class ActorExtractLinksSolidTypeIndex extends ActorExtractLinks {
 
   private readonly typeIndexPredicates: string[];
   private readonly onlyMatchingTypes: boolean;
+  private readonly inference: boolean;
   public readonly mediatorDereferenceRdf: MediatorDereferenceRdf;
   public readonly queryEngine: QueryEngineBase;
 
@@ -145,6 +146,55 @@ export class ActorExtractLinksSolidTypeIndex extends ActorExtractLinks {
   }
 
   /**
+   * To fetch the domain of the predicate.
+   * @param predicateSubjects A dictionary of predicate and its subjects from the query.
+   * @param typeSubjects A dictionary of class type and its subjects from the query.
+   */
+  public async linkPredicateDomains(predicateSubjects: Record<string, RDF.Term>,
+    typeSubjects: Record<string, RDF.Term[]>): Promise<void> {
+    if (Object.keys(predicateSubjects).length > 0) {
+      const predicateDomainsInner = await Promise.all(Object.keys(predicateSubjects)
+        .map(async predicate => [ predicate, await this.fetchPredicateDomains(predicate) ]));
+      const predicateDomainsRec = Object.fromEntries(predicateDomainsInner);
+      for (const [ predicate, subject ] of Object.entries(predicateSubjects)) {
+        const typeNames = predicateDomainsRec[predicate];
+        if (typeNames) {
+          for (const typeName of typeNames) {
+            if (!typeSubjects[typeName]) {
+              typeSubjects[typeName] = [];
+            }
+            typeSubjects[typeName].push(subject);
+          }
+        }
+      }
+    }
+  }
+
+  /**
+   * To fetch the rdf type from the vocabulary if the type is not already present.
+   * @param predicateValue Predicate value from the query.
+   * @return predicateTypeLinks A record mapping predicate URIs to it's domain.
+   */
+  public async fetchPredicateDomains(predicateValue: string): Promise<string[]> {
+    const bindings = await this.queryEngine.queryBindings(`
+        PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+        SELECT * WHERE {
+          <${predicateValue}> rdfs:domain ?domain.
+        }`, {
+      sources: [ predicateValue ],
+      [KeysRdfResolveHypermediaLinks.traverse.name]: false,
+    });
+
+    const bindingsArray = await bindings.toArray();
+    const domainsArray: string[] = [];
+    // A predicate can have multiple domains
+    for (const binding of bindingsArray) {
+      domainsArray.push(binding.get('domain')!.value);
+    }
+    return domainsArray;
+  }
+
+  /**
    * Determine all links that match with the current query pattern.
    * @param typeLinks The type index links.
    * @param query The original query that is being executed.
@@ -158,6 +208,7 @@ export class ActorExtractLinksSolidTypeIndex extends ActorExtractLinks {
     // Collect all subjects, and all subjects in the original query that refer to a specific type.
     const allSubjects: Set<string> = new Set();
     const typeSubjects: Record<string, RDF.Term[]> = {};
+    const predicateSubjects: Record<string, RDF.Term> = {};
 
     // Helper function for walking through query
     function handleQueryTriple(subject: RDF.Term, predicate: RDF.Term, object: RDF.Term): void {
@@ -169,6 +220,11 @@ export class ActorExtractLinksSolidTypeIndex extends ActorExtractLinks {
           typeSubjects[type] = [];
         }
         typeSubjects[type].push(subject);
+      }
+
+      // Aggregates all the predicates from the query.
+      if (predicate.value !== ActorExtractLinksSolidTypeIndex.RDF_TYPE) {
+        predicateSubjects[predicate.value] = subject;
       }
     }
 
@@ -195,9 +251,14 @@ export class ActorExtractLinksSolidTypeIndex extends ActorExtractLinks {
       },
     });
 
+    if (this.inference) {
+      await this.linkPredicateDomains(predicateSubjects, typeSubjects);
+    }
+
     // Check if the current pattern has any of the allowed subjects,
     // and consider the type index entry's links in that case.
     const links: ILink[] = [];
+
     for (const [ type, subjects ] of Object.entries(typeSubjects)) {
       const currentLinks = typeLinks[type];
       if (currentLinks && subjects.some(subject => subject.equals(pattern.subject))) {
@@ -234,6 +295,12 @@ export interface IActorExtractLinksSolidTypeIndexArgs
    * @default {true}
    */
   onlyMatchingTypes: boolean;
+  /**
+   * If the domains of query predicates will be considered when checking the type index.
+   * If false, no predicates will be considered.
+   * @default {true}
+   */
+  inference: boolean;
   /**
    * An init query actor that is used to query shapes.
    * @default {<urn:comunica:default:init/actors#query>}
