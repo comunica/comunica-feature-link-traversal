@@ -222,6 +222,7 @@ export function createEquationSystem(expressions: ISolverExpression[]):
   // The first expression that has to be evaluated
   let firstEquationToEvaluate: [ISolverExpressionRange, ISolverExpressionRange] | undefined;
   // The last logical operator apply to the first expression to be evaluated
+  // it is the one at the end of the chain of operation
   let firstEquationLastOperator = '';
 
   for (const expression of expressions) {
