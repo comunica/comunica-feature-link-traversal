@@ -131,6 +131,7 @@ export class ActorExtractLinksSolidTypeIndex extends ActorExtractLinks {
         }`, {
         sources: [ store ],
         [KeysRdfResolveHypermediaLinks.traverse.name]: false,
+        lenient: true,
       })).toArray();
 
     // Collect links per type
@@ -183,6 +184,7 @@ export class ActorExtractLinksSolidTypeIndex extends ActorExtractLinks {
         }`, {
       sources: [ predicateValue ],
       [KeysRdfResolveHypermediaLinks.traverse.name]: false,
+      lenient: true,
     });
 
     const bindingsArray = await bindings.toArray();
