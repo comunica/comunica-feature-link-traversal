@@ -60,7 +60,7 @@ export function isRelationFilterExpressionDomainEmpty({ relation, filterExpressi
 
   // If the filter has multiple expression
   if (Array.isArray(equationSystemFirstEquation)) {
-    const [ equationSystem, firstEquationToResolved ] = equationSystemFirstEquation;
+    const [equationSystem, firstEquationToResolved] = equationSystemFirstEquation;
 
     // We check if the filter expression itself has a solution
     solutionDomain = resolveSolutionDomainEquationSystem(equationSystem, firstEquationToResolved);
@@ -122,6 +122,44 @@ export function recursifFilterExpressionToSolverExpression(filterExpression: Alg
   }
   return filterExpressionList;
 }
+
+export function recursifResolve(filterExpression: Algebra.Expression,
+  domain: SolutionDomain,
+  logicOperator: LogicOperator,
+  variable: Variable,
+  notExpression: boolean
+): SolutionDomain {
+  // If it's an array of term then we should be able to create a solver expression
+  if (
+    filterExpression.args[0].expressionType === Algebra.expressionTypes.TERM
+  ) {
+    const rawOperator = filterExpression.operator;
+    const operator = filterOperatorToSparqlRelationOperator(rawOperator);
+    if (operator) {
+      const solverExpression = resolveAFilterTerm(filterExpression, operator, [], variable);
+      if (!solverExpression?.valueAsNumber) {
+        throw new Error('unable to get the number value of the expression');
+      }
+      const solverRange = getSolutionRange(solverExpression?.valueAsNumber, solverExpression?.operator);
+      domain = domain.add({ range: solverRange, operator: logicOperator });
+    }
+    // Else we store the logical operator an go deeper into the Algebra graph
+  } else {
+    const newLogicOperator = LogicOperatorReversed.get(filterExpression.operator);
+    notExpression = newLogicOperator === LogicOperator.Not;
+    if (newLogicOperator) {
+      for (const arg of filterExpression.args) {
+        if (notExpression) {
+          recursifResolve(arg, domain, logicOperator, variable, notExpression);
+        }
+        recursifResolve(arg, domain, newLogicOperator, variable, notExpression);
+      }
+    }
+  }
+  return domain;
+}
+
+
 /**
  * From an Algebra expression return an solver expression if possible
  * @param {Algebra.Expression} expression - Algebra expression containing the a variable and a litteral.
@@ -190,7 +228,7 @@ export function resolveSolutionDomainEquationSystem(equationSystem: SolverEquati
     if (!resp) {
       throw new Error(`unable to resolve the equation ${currentEquation.chainOperator}`);
     }
-    [ domain, idx ] = resp;
+    [domain, idx] = resp;
 
     currentEquation = equationSystem.get(idx);
     i++;
@@ -206,7 +244,7 @@ export function resolveSolutionDomainEquationSystem(equationSystem: SolverEquati
  * the system of equation and the first expression to evaluate.
  */
 export function createEquationSystem(expressions: ISolverExpression[]):
-[SolverEquationSystem, [ISolverExpressionRange, ISolverExpressionRange]] | ISolverExpressionRange | undefined {
+  [SolverEquationSystem, [ISolverExpressionRange, ISolverExpressionRange]] | ISolverExpressionRange | undefined {
   if (expressions.length === 1) {
     const solutionRange = getSolutionRange(expressions[0].valueAsNumber, expressions[0].operator);
     if (!solutionRange) {
@@ -241,7 +279,7 @@ export function createEquationSystem(expressions: ISolverExpression[]):
       if (firstEquationLastOperator !== '') {
         return undefined;
       }
-      firstEquationToEvaluate = [ lastEquation, equation ];
+      firstEquationToEvaluate = [lastEquation, equation];
       firstEquationLastOperator = lastOperator;
     } else {
       system.set(lastOperator, equation);
@@ -254,7 +292,7 @@ export function createEquationSystem(expressions: ISolverExpression[]):
   // We delete the fist equation to be evaluated from the system of equation because it is a value returned
   system.delete(firstEquationLastOperator);
 
-  return [ system, firstEquationToEvaluate ];
+  return [system, firstEquationToEvaluate];
 }
 /**
  * Resolve the solution domain when we add a new expression and
@@ -289,7 +327,7 @@ export function resolveSolutionDomainWithAnExpression(equation: ISolverExpressio
   currentLastOperator = equation.chainOperator[i];
   // If it was the last expression
   if (!currentLastOperator) {
-    return [ localDomain, '' ];
+    return [localDomain, ''];
   }
   // We solved all the NOT operator next to the last logical operator
   while (currentLastOperator?.operator === LogicOperator.Not) {
@@ -298,11 +336,11 @@ export function resolveSolutionDomainWithAnExpression(equation: ISolverExpressio
     currentLastOperator = equation.chainOperator[i];
     // It the last operator was a NOT
     if (!currentLastOperator?.operator) {
-      return [ localDomain, '' ];
+      return [localDomain, ''];
     }
   }
 
-  return [ localDomain, currentLastOperator.toString() ];
+  return [localDomain, currentLastOperator.toString()];
 }
 /**
  * Convert a TREE relation into a solver expression.
@@ -363,15 +401,15 @@ export function areTypesCompatible(expressions: ISolverExpression[]): boolean {
 export function getSolutionRange(value: number, operator: SparqlRelationOperator): SolutionRange | undefined {
   switch (operator) {
     case SparqlRelationOperator.GreaterThanRelation:
-      return new SolutionRange([ value + Number.EPSILON, Number.POSITIVE_INFINITY ]);
+      return new SolutionRange([value + Number.EPSILON, Number.POSITIVE_INFINITY]);
     case SparqlRelationOperator.GreaterThanOrEqualToRelation:
-      return new SolutionRange([ value, Number.POSITIVE_INFINITY ]);
+      return new SolutionRange([value, Number.POSITIVE_INFINITY]);
     case SparqlRelationOperator.EqualThanRelation:
-      return new SolutionRange([ value, value ]);
+      return new SolutionRange([value, value]);
     case SparqlRelationOperator.LessThanRelation:
-      return new SolutionRange([ Number.NEGATIVE_INFINITY, value - Number.EPSILON ]);
+      return new SolutionRange([Number.NEGATIVE_INFINITY, value - Number.EPSILON]);
     case SparqlRelationOperator.LessThanOrEqualToRelation:
-      return new SolutionRange([ Number.NEGATIVE_INFINITY, value ]);
+      return new SolutionRange([Number.NEGATIVE_INFINITY, value]);
     default:
       // Not an operator that is compatible with number.
       break;
