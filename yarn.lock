@@ -1792,7 +1792,7 @@
     "@comunica/types" "^2.4.0"
     asyncjoin "^1.1.1"
 
-"@comunica/actor-rdf-join-inner-multi-bind@2.4.0", "@comunica/actor-rdf-join-inner-multi-bind@^2.4.0":
+"@comunica/actor-rdf-join-inner-multi-bind@^2.4.0":
   version "2.4.0"
   resolved "https://registry.yarnpkg.com/@comunica/actor-rdf-join-inner-multi-bind/-/actor-rdf-join-inner-multi-bind-2.4.0.tgz#ee3c1347480acd22980f2693ef11f92394bdc67f"
   integrity sha512-DNsSn8DmmqPDAvtYKLuIBiSO5T00L/AZqeID0uQ1ub1fTVgYlIggnm+fTSS6R687iwN0yqfwLmhCIg4GERfiSQ==
@@ -2156,7 +2156,7 @@
     rdf-terms "^1.6.2"
     sparqlalgebrajs "^4.0.0"
 
-"@comunica/actor-rdf-resolve-quad-pattern-federated@2.4.0", "@comunica/actor-rdf-resolve-quad-pattern-federated@^2.4.0":
+"@comunica/actor-rdf-resolve-quad-pattern-federated@^2.4.0":
   version "2.4.0"
   resolved "https://registry.yarnpkg.com/@comunica/actor-rdf-resolve-quad-pattern-federated/-/actor-rdf-resolve-quad-pattern-federated-2.4.0.tgz#005139d7d5eaeff2be460baae60bdb35da5d14c7"
   integrity sha512-617CVy2S9FNnmlelrwl8pHtNgFWl/xSSKl5w9dxqw8CikthnYtgCEsyCySoukKISmpCyjzSDc4XYCW5UAlSh8w==
@@ -4603,10 +4603,25 @@
   resolved "https://registry.yarnpkg.com/@types/minimist/-/minimist-1.2.2.tgz#ee771e2ba4b3dc5b372935d549fd9617bf345b8c"
   integrity sha512-jhuKLIRrhvCPLqwPcx6INqmKeiA5EWrsCOPhrlFSrbrmU4ZMPjj5Ul/oLCMDO98XRUIwVm78xICz4EPCektzeQ==
 
-"@types/node@*", "@types/node@18.0.0", "@types/node@^14.14.7", "@types/node@^16.0.0", "@types/node@^18.0.0", "@types/node@^18.0.3":
+"@types/node@*", "@types/node@^18.0.0":
   version "18.0.0"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-18.0.0.tgz#67c7b724e1bcdd7a8821ce0d5ee184d3b4dd525a"
   integrity sha512-cHlGmko4gWLVI27cGJntjs/Sj8th9aYwplmZFwmmgYQQvL5NUsgVJG7OddLvNfLqYS31KFN0s3qlaD9qCaxACA==
+
+"@types/node@^14.14.7":
+  version "14.18.36"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-14.18.36.tgz#c414052cb9d43fab67d679d5f3c641be911f5835"
+  integrity sha512-FXKWbsJ6a1hIrRxv+FoukuHnGTgEzKYGi7kilfMae96AL9UNkPFNWJEEYWzdRI9ooIkbr4AKldyuSTLql06vLQ==
+
+"@types/node@^16.0.0":
+  version "16.18.12"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-16.18.12.tgz#e3bfea80e31523fde4292a6118f19ffa24fd6f65"
+  integrity sha512-vzLe5NaNMjIE3mcddFVGlAXN1LEWueUsMsOJWaT6wWMJGyljHAWHznqfnKUQWGzu7TLPrGvWdNAsvQYW+C0xtw==
+
+"@types/node@^18.0.3":
+  version "18.13.0"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.13.0.tgz#0400d1e6ce87e9d3032c19eb6c58205b0d3f7850"
+  integrity sha512-gC3TazRzGoOnoKAhUx+Q0t8S9Tzs74z7m0ipwGpSqQrleP14hKxP4/JUeEQcD3W1/aIpnWl8pHowI7WokuZpXg==
 
 "@types/normalize-package-data@^2.4.0":
   version "2.4.1"
@@ -4678,7 +4693,7 @@
   resolved "https://registry.yarnpkg.com/@types/yargs-parser/-/yargs-parser-21.0.0.tgz#0c60e537fa790f5f9472ed2776c2b71ec117351b"
   integrity sha512-iO9ZQHkZxHn4mSakYV0vFHAVDyEOIJQrV2uZ06HxEPcx+mt8swXoZHIbaaJ2crJYFfErySgktuTZ3BeLz+XmFA==
 
-"@types/yargs@17.0.13", "@types/yargs@^17.0.2", "@types/yargs@^17.0.8":
+"@types/yargs@^17.0.2", "@types/yargs@^17.0.8":
   version "17.0.13"
   resolved "https://registry.yarnpkg.com/@types/yargs/-/yargs-17.0.13.tgz#34cced675ca1b1d51fcf4d34c3c6f0fa142a5c76"
   integrity sha512-9sWaruZk2JGxIQU+IhI1fhPYRcQ0UuTNuKuCW9bR5fp7qi2Llf7WDzNa17Cy7TKnh3cdxDOiyTu6gaLS0eDatg==
@@ -11442,6 +11457,11 @@ uglify-js@^3.1.4:
   version "3.17.0"
   resolved "https://registry.yarnpkg.com/uglify-js/-/uglify-js-3.17.0.tgz#55bd6e9d19ce5eef0d5ad17cd1f587d85b180a85"
   integrity sha512-aTeNPVmgIMPpm1cxXr2Q/nEbvkmV8yq66F3om7X3P/cvOXQ0TMQ64Wk63iyT1gPlmdmGzjGpyLh1f3y8MZWXGg==
+
+ulp@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/ulp/-/ulp-1.0.1.tgz#e3a4a5b4de9bd0faae63e4544ee63a0d9bd34bc5"
+  integrity sha512-fXPzKroJ6XJXrepjd4AIHfeN84qUtZfLojIPYExlF/rm/BWb8/2o64lsGEKSMSwjH9X6VKmDv9+zbd+ZNHa4nw==
 
 unbox-primitive@^1.0.2:
   version "1.0.2"

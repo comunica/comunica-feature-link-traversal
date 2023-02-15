@@ -14,6 +14,10 @@ import type {
   Variable, ISolverExpressionRange,
 } from './solverInterfaces';
 
+const nextUp = require('ulp').nextUp;
+const nextDown = require('ulp').nextDown;
+
+const A_TRUE_EXPRESSION: SolutionRange = new SolutionRange([Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY]);
 /**
  * Check if the solution domain of a system of equation compose of the expressions of the filter
  * expression and the relation is not empty.
@@ -123,13 +127,30 @@ export function recursifFilterExpressionToSolverExpression(filterExpression: Alg
   return filterExpressionList;
 }
 
-export function recursifResolve(filterExpression: Algebra.Expression,
+/**
+ *
+ * @param {Algebra.Expression} filterExpression - The current filter expression that we are traversing
+ * @param {SolutionDomain} domain - The current resultant solution domain
+ * @param {LogicOperator} logicOperator - The current logic operator that we have to apply to the boolean expression
+ * @param {Variable} variable - The variable targeted inside the filter expression
+ * @param {boolean} notExpression
+ * @returns {SolutionDomain} The solution domain of the whole expression
+ */
+export function recursifResolve(
+  filterExpression: Algebra.Expression,
   domain: SolutionDomain,
-  logicOperator: LogicOperator,
+  logicOperator: LogicOperator | undefined,
   variable: Variable,
-  notExpression: boolean
+  notExpression: boolean,
 ): SolutionDomain {
+
+  // we apply an or operator by default
+  if (!logicOperator) {
+    logicOperator = LogicOperator.Or;
+  }
   // If it's an array of term then we should be able to create a solver expression
+  // hence get a subdomain appendable to the current global domain with consideration
+  // to the logic operator
   if (
     filterExpression.args[0].expressionType === Algebra.expressionTypes.TERM
   ) {
@@ -141,24 +162,36 @@ export function recursifResolve(filterExpression: Algebra.Expression,
         throw new Error('unable to get the number value of the expression');
       }
       const solverRange = getSolutionRange(solverExpression?.valueAsNumber, solverExpression?.operator);
-      domain = domain.add({ range: solverRange, operator: logicOperator });
+      if (!solverRange) {
+        throw new Error('unable to get the range of an expression');
+      }
+      // We can distribute a not expression, so we inverse each statement
+      if (notExpression) {
+        const invertedRanges = solverRange.inverse();
+        // We first solve the new inverted expression of the form
+        // (E1 AND E2) after that we apply the original operator
+        for (const range of invertedRanges) {
+          domain = domain.add({ range, operator: logicOperator });
+        }
+      } else {
+        domain = domain.add({ range: solverRange, operator: logicOperator });
+      }
     }
     // Else we store the logical operator an go deeper into the Algebra graph
   } else {
     const newLogicOperator = LogicOperatorReversed.get(filterExpression.operator);
-    notExpression = newLogicOperator === LogicOperator.Not;
+    notExpression = newLogicOperator === LogicOperator.Not || notExpression;
     if (newLogicOperator) {
       for (const arg of filterExpression.args) {
         if (notExpression) {
-          recursifResolve(arg, domain, logicOperator, variable, notExpression);
+          domain = recursifResolve(arg, domain, logicOperator, variable, notExpression);
         }
-        recursifResolve(arg, domain, newLogicOperator, variable, notExpression);
+        domain = recursifResolve(arg, domain, newLogicOperator, variable, notExpression);
       }
     }
   }
   return domain;
 }
-
 
 /**
  * From an Algebra expression return an solver expression if possible
@@ -401,13 +434,13 @@ export function areTypesCompatible(expressions: ISolverExpression[]): boolean {
 export function getSolutionRange(value: number, operator: SparqlRelationOperator): SolutionRange | undefined {
   switch (operator) {
     case SparqlRelationOperator.GreaterThanRelation:
-      return new SolutionRange([value + Number.EPSILON, Number.POSITIVE_INFINITY]);
+      return new SolutionRange([nextUp(value), Number.POSITIVE_INFINITY]);
     case SparqlRelationOperator.GreaterThanOrEqualToRelation:
       return new SolutionRange([value, Number.POSITIVE_INFINITY]);
     case SparqlRelationOperator.EqualThanRelation:
       return new SolutionRange([value, value]);
     case SparqlRelationOperator.LessThanRelation:
-      return new SolutionRange([Number.NEGATIVE_INFINITY, value - Number.EPSILON]);
+      return new SolutionRange([Number.NEGATIVE_INFINITY, nextDown(value)]);
     case SparqlRelationOperator.LessThanOrEqualToRelation:
       return new SolutionRange([Number.NEGATIVE_INFINITY, value]);
     default:

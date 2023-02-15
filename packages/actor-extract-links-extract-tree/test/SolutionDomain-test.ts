@@ -2,6 +2,9 @@ import { SolutionRange } from '../lib//SolutionRange';
 import { SolutionDomain } from '../lib/SolutionDomain';
 import { LogicOperator } from '../lib/solverInterfaces';
 
+const nextUp = require('ulp').nextUp;
+const nextDown = require('ulp').nextDown;
+
 describe('SolutionDomain', () => {
   describe('constructor', () => {
     it('should return an empty solution domain', () => {
@@ -108,8 +111,8 @@ describe('SolutionDomain', () => {
       const solutionDomain = SolutionDomain.newWithInitialValue(solutionRange);
 
       const expectedDomain = [
-        new SolutionRange([ Number.NEGATIVE_INFINITY, 0 - Number.EPSILON ]),
-        new SolutionRange([ 1 + Number.EPSILON, Number.POSITIVE_INFINITY ]),
+        new SolutionRange([ Number.NEGATIVE_INFINITY, nextDown(0) ]),
+        new SolutionRange([ nextUp(1) , Number.POSITIVE_INFINITY ]),
       ];
       const newDomain = solutionDomain.notOperation();
 
