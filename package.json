@@ -83,7 +83,7 @@
   "resolutions": {
     "@types/yargs": "17.0.13",
     "@types/node": "^18.0.0",
-    "@comunica/actor-rdf-resolve-quad-pattern-federated": "2.6.0",
-    "@comunica/actor-rdf-join-inner-multi-bind": "2.6.0"
+    "@comunica/actor-rdf-resolve-quad-pattern-federated": "2.6.7",
+    "@comunica/actor-rdf-join-inner-multi-bind": "2.6.7"
   }
 }
