@@ -37,12 +37,14 @@
     "config",
     "bin/**/*.d.ts",
     "bin/**/*.js",
+    "bin/**/*.js.map",
     "lib/**/*.d.ts",
     "lib/**/*.js",
+    "lib/**/*.js.map",
     "engine-default.js"
   ],
   "dependencies": {
-    "@comunica/query-sparql": "2.4.3",
+    "@comunica/query-sparql": "^2.6.5",
     "@comunica/actor-optimize-query-operation-set-seed-sources-quadpattern-iris": "^0.0.1",
     "@comunica/actor-rdf-join-entries-sort-traversal-zero-knowledge": "^0.0.1",
     "@comunica/actor-rdf-metadata-extract-traverse": "^0.0.1",
@@ -58,8 +60,8 @@
     "@comunica/actor-rdf-resolve-hypermedia-links-queue-wrapper-limit-depth": "^0.0.1",
     "@comunica/config-query-sparql-link-traversal": "^0.0.1",
     "@comunica/mediator-combine-array": "^0.0.1",
-    "@comunica/actor-init-query": "^2.2.0",
-    "@comunica/runner-cli": "^2.2.0"
+    "@comunica/actor-init-query": "^2.6.0",
+    "@comunica/runner-cli": "^2.6.0"
   },
   "scripts": {
     "build": "npm run build:ts",
