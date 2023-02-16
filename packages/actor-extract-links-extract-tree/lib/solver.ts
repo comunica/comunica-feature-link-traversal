@@ -144,8 +144,8 @@ export function recursifResolve(
   notExpression: boolean,
 ): SolutionDomain {
 
-  // we apply an or operator by default
-  if (!logicOperator) {
+  // we apply an or operator by default or if the domain is empty
+  if (!logicOperator || domain.isDomainEmpty()) {
     logicOperator = LogicOperator.Or;
   }
   // If it's an array of term then we should be able to create a solver expression
@@ -179,13 +179,11 @@ export function recursifResolve(
     }
     // Else we store the logical operator an go deeper into the Algebra graph
   } else {
-    const newLogicOperator = LogicOperatorReversed.get(filterExpression.operator);
+    let newLogicOperator = LogicOperatorReversed.get(filterExpression.operator);
     notExpression = newLogicOperator === LogicOperator.Not || notExpression;
     if (newLogicOperator) {
+      newLogicOperator = newLogicOperator === LogicOperator.Not ? logicOperator : newLogicOperator
       for (const arg of filterExpression.args) {
-        if (notExpression) {
-          domain = recursifResolve(arg, domain, logicOperator, variable, notExpression);
-        }
         domain = recursifResolve(arg, domain, newLogicOperator, variable, notExpression);
       }
     }
