@@ -13,20 +13,13 @@ import {
   getSolutionRange,
   areTypesCompatible,
   convertTreeRelationToSolverExpression,
-  resolveSolutionDomainWithAnExpression,
-  createEquationSystem,
-  resolveSolutionDomainEquationSystem,
   resolveAFilterTerm,
-  recursifFilterExpressionToSolverExpression,
   isRelationFilterExpressionDomainEmpty,
   recursifResolve,
 } from '../lib/solver';
 import { SparqlOperandDataTypes, LogicOperator } from '../lib/solverInterfaces';
 import type {
   ISolverExpression,
-  ISolverExpressionRange,
-  SolverEquationSystem,
-  Variable
 } from '../lib/solverInterfaces';
 
 const nextUp = require('ulp').nextUp;
@@ -38,14 +31,14 @@ describe('solver function', () => {
   describe('filterOperatorToSparqlRelationOperator', () => {
     it('should return the RelationOperator given a string representation', () => {
       const testTable: [string, SparqlRelationOperator][] = [
-        ['=', SparqlRelationOperator.EqualThanRelation],
-        ['<', SparqlRelationOperator.LessThanRelation],
-        ['<=', SparqlRelationOperator.LessThanOrEqualToRelation],
-        ['>', SparqlRelationOperator.GreaterThanRelation],
-        ['>=', SparqlRelationOperator.GreaterThanOrEqualToRelation],
+        [ '=', SparqlRelationOperator.EqualThanRelation ],
+        [ '<', SparqlRelationOperator.LessThanRelation ],
+        [ '<=', SparqlRelationOperator.LessThanOrEqualToRelation ],
+        [ '>', SparqlRelationOperator.GreaterThanRelation ],
+        [ '>=', SparqlRelationOperator.GreaterThanOrEqualToRelation ],
       ];
 
-      for (const [value, expectedAnswer] of testTable) {
+      for (const [ value, expectedAnswer ] of testTable) {
         expect(filterOperatorToSparqlRelationOperator(value)).toBe(expectedAnswer);
       }
     });
@@ -94,65 +87,65 @@ describe('solver function', () => {
   describe('castSparqlRdfTermIntoNumber', () => {
     it('should return the expected number when given an integer', () => {
       const testTable: [string, SparqlOperandDataTypes, number][] = [
-        ['19273', SparqlOperandDataTypes.Integer, 19_273],
-        ['0', SparqlOperandDataTypes.NonPositiveInteger, 0],
-        ['-12313459', SparqlOperandDataTypes.NegativeInteger, -12_313_459],
-        ['121312321321321', SparqlOperandDataTypes.Long, 121_312_321_321_321],
-        ['1213123213213213', SparqlOperandDataTypes.Short, 1_213_123_213_213_213],
-        ['283', SparqlOperandDataTypes.NonNegativeInteger, 283],
-        ['-12131293912831', SparqlOperandDataTypes.UnsignedLong, -12_131_293_912_831],
-        ['-1234', SparqlOperandDataTypes.UnsignedInt, -1_234],
-        ['-123341231231234', SparqlOperandDataTypes.UnsignedShort, -123_341_231_231_234],
-        ['1234', SparqlOperandDataTypes.PositiveInteger, 1_234],
+        [ '19273', SparqlOperandDataTypes.Integer, 19_273 ],
+        [ '0', SparqlOperandDataTypes.NonPositiveInteger, 0 ],
+        [ '-12313459', SparqlOperandDataTypes.NegativeInteger, -12_313_459 ],
+        [ '121312321321321', SparqlOperandDataTypes.Long, 121_312_321_321_321 ],
+        [ '1213123213213213', SparqlOperandDataTypes.Short, 1_213_123_213_213_213 ],
+        [ '283', SparqlOperandDataTypes.NonNegativeInteger, 283 ],
+        [ '-12131293912831', SparqlOperandDataTypes.UnsignedLong, -12_131_293_912_831 ],
+        [ '-1234', SparqlOperandDataTypes.UnsignedInt, -1_234 ],
+        [ '-123341231231234', SparqlOperandDataTypes.UnsignedShort, -123_341_231_231_234 ],
+        [ '1234', SparqlOperandDataTypes.PositiveInteger, 1_234 ],
       ];
 
-      for (const [value, valueType, expectedNumber] of testTable) {
+      for (const [ value, valueType, expectedNumber ] of testTable) {
         expect(castSparqlRdfTermIntoNumber(value, valueType)).toBe(expectedNumber);
       }
     });
 
     it('should return undefined if a non integer is pass with SparqlOperandDataTypes integer compatible type', () => {
       const testTable: [string, SparqlOperandDataTypes][] = [
-        ['1.6751', SparqlOperandDataTypes.Integer],
-        ['asbd', SparqlOperandDataTypes.PositiveInteger],
-        ['', SparqlOperandDataTypes.NegativeInteger],
+        [ '1.6751', SparqlOperandDataTypes.Integer ],
+        [ 'asbd', SparqlOperandDataTypes.PositiveInteger ],
+        [ '', SparqlOperandDataTypes.NegativeInteger ],
       ];
 
-      for (const [value, valueType] of testTable) {
+      for (const [ value, valueType ] of testTable) {
         expect(castSparqlRdfTermIntoNumber(value, valueType)).toBeUndefined();
       }
     });
 
     it('should return undefined if a non fraction is pass with SparqlOperandDataTypes fraction compatible type', () => {
       const testTable: [string, SparqlOperandDataTypes][] = [
-        ['asbd', SparqlOperandDataTypes.Double],
-        ['', SparqlOperandDataTypes.Float],
+        [ 'asbd', SparqlOperandDataTypes.Double ],
+        [ '', SparqlOperandDataTypes.Float ],
       ];
 
-      for (const [value, valueType] of testTable) {
+      for (const [ value, valueType ] of testTable) {
         expect(castSparqlRdfTermIntoNumber(value, valueType)).toBeUndefined();
       }
     });
 
     it('should return the expected number when given an decimal', () => {
       const testTable: [string, SparqlOperandDataTypes, number][] = [
-        ['1.1', SparqlOperandDataTypes.Decimal, 1.1],
-        ['2132131.121321321', SparqlOperandDataTypes.Float, 2_132_131.121_321_321],
-        ['1234.123', SparqlOperandDataTypes.Double, 1_234.123],
+        [ '1.1', SparqlOperandDataTypes.Decimal, 1.1 ],
+        [ '2132131.121321321', SparqlOperandDataTypes.Float, 2_132_131.121_321_321 ],
+        [ '1234.123', SparqlOperandDataTypes.Double, 1_234.123 ],
       ];
 
-      for (const [value, valueType, expectedNumber] of testTable) {
+      for (const [ value, valueType, expectedNumber ] of testTable) {
         expect(castSparqlRdfTermIntoNumber(value, valueType)).toBe(expectedNumber);
       }
     });
 
     it('should return the expected number given a boolean', () => {
       const testTable: [string, number][] = [
-        ['true', 1],
-        ['false', 0],
+        [ 'true', 1 ],
+        [ 'false', 0 ],
       ];
 
-      for (const [value, expectedNumber] of testTable) {
+      for (const [ value, expectedNumber ] of testTable) {
         expect(castSparqlRdfTermIntoNumber(value, SparqlOperandDataTypes.Boolean)).toBe(expectedNumber);
       }
     });
@@ -187,27 +180,27 @@ describe('solver function', () => {
       const testTable: [SparqlRelationOperator, SolutionRange][] = [
         [
           SparqlRelationOperator.GreaterThanRelation,
-          new SolutionRange([nextUp(value), Number.POSITIVE_INFINITY]),
+          new SolutionRange([ nextUp(value), Number.POSITIVE_INFINITY ]),
         ],
         [
           SparqlRelationOperator.GreaterThanOrEqualToRelation,
-          new SolutionRange([value, Number.POSITIVE_INFINITY]),
+          new SolutionRange([ value, Number.POSITIVE_INFINITY ]),
         ],
         [
           SparqlRelationOperator.EqualThanRelation,
-          new SolutionRange([value, value]),
+          new SolutionRange([ value, value ]),
         ],
         [
           SparqlRelationOperator.LessThanRelation,
-          new SolutionRange([Number.NEGATIVE_INFINITY, nextDown(value)]),
+          new SolutionRange([ Number.NEGATIVE_INFINITY, nextDown(value) ]),
         ],
         [
           SparqlRelationOperator.LessThanOrEqualToRelation,
-          new SolutionRange([Number.NEGATIVE_INFINITY, value]),
+          new SolutionRange([ Number.NEGATIVE_INFINITY, value ]),
         ],
       ];
 
-      for (const [operator, expectedRange] of testTable) {
+      for (const [ operator, expectedRange ] of testTable) {
         expect(getSolutionRange(value, operator)).toStrictEqual(expectedRange);
       }
     });
@@ -444,649 +437,6 @@ describe('solver function', () => {
     });
   });
 
-  describe('resolveSolutionDomainWithAnExpression', () => {
-    it(`given an empty domain and an equation with 2 operation chained 
-    that are not "NOT" should return a valid new domain and the last chained operator`, () => {
-      const domain = new SolutionDomain();
-      const equation: ISolverExpressionRange = {
-        chainOperator: [
-          new LinkOperator(LogicOperator.And),
-          new LinkOperator(LogicOperator.Or),
-        ],
-        solutionDomain: new SolutionRange([0, 1]),
-      };
-
-      const expectedDomain = SolutionDomain.newWithInitialValue(equation.solutionDomain);
-      const expectedLastLogicalOperator = equation.chainOperator[equation.chainOperator.length - 2].toString();
-
-      const resp = resolveSolutionDomainWithAnExpression(equation, domain);
-      if (resp) {
-        const [respDomain, respLastLogicalOperator] = resp;
-        expect(respDomain.get_domain()).toStrictEqual(expectedDomain.get_domain());
-        expect(respLastLogicalOperator).toBe(expectedLastLogicalOperator);
-      } else {
-        expect(resp).toBeDefined();
-      }
-    });
-
-    it(`given a domain and an equation with multiple chained that are 
-    not "NOT" should return a valid new domain and the next chained operator`, () => {
-      const domain = SolutionDomain.newWithInitialValue(new SolutionRange([0, 1]));
-      const equation: ISolverExpressionRange = {
-        chainOperator: [
-          new LinkOperator(LogicOperator.And),
-          new LinkOperator(LogicOperator.Or),
-          new LinkOperator(LogicOperator.Or),
-          new LinkOperator(LogicOperator.And),
-          new LinkOperator(LogicOperator.Or),
-        ],
-        solutionDomain: new SolutionRange([100, 221.3]),
-      };
-      const expectedOperator = equation.chainOperator[equation.chainOperator.length - 1];
-      if (!expectedOperator) {
-        fail('should be able to get the expected operator check the test implementation');
-      }
-      const expectedDomain = domain.add(
-        {
-          range: equation.solutionDomain,
-          operator: expectedOperator.operator,
-        },
-      );
-      const expectedLastLogicalOperator = equation.chainOperator[equation.chainOperator.length - 2].toString();
-
-      const resp = resolveSolutionDomainWithAnExpression(equation, domain);
-      if (resp) {
-        const [respDomain, respLastLogicalOperator] = resp;
-        expect(respDomain.get_domain()).toStrictEqual(expectedDomain.get_domain());
-        expect(respLastLogicalOperator).toBe(expectedLastLogicalOperator);
-      } else {
-        expect(resp).toBeDefined();
-      }
-    });
-
-    it(`given a domain and an equation one chained operation 
-    should return a valid new domain and an empty string has the next chained operator`, () => {
-      const domain = SolutionDomain.newWithInitialValue(new SolutionRange([0, 1]));
-      const equation: ISolverExpressionRange = {
-        chainOperator: [
-          new LinkOperator(LogicOperator.Or),
-        ],
-        solutionDomain: new SolutionRange([100, 221.3]),
-      };
-
-      const expectedOperator = equation.chainOperator[equation.chainOperator.length - 1];
-      if (!expectedOperator) {
-        fail('should be able to get the expected operator check the test implementation');
-      }
-
-      const expectedDomain = domain.add(
-        {
-          range: equation.solutionDomain,
-          operator: expectedOperator.operator,
-        },
-      );
-      const expectedLastLogicalOperator = '';
-
-      const resp = resolveSolutionDomainWithAnExpression(equation, domain);
-      if (resp) {
-        const [respDomain, respLastLogicalOperator] = resp;
-        expect(respDomain.get_domain()).toStrictEqual(expectedDomain.get_domain());
-        expect(respLastLogicalOperator).toBe(expectedLastLogicalOperator);
-      } else {
-        expect(resp).toBeDefined();
-      }
-    });
-
-    it(`given a domain and an equation with multiple chainned operator where the later elements 
-    are "NOT" operators and the last element an "AND"
-     operator should return a valid domain and the next last operator`, () => {
-      const domain = SolutionDomain.newWithInitialValue(new SolutionRange([0, 1]));
-      const equation: ISolverExpressionRange = {
-        chainOperator: [
-          new LinkOperator(LogicOperator.And),
-          new LinkOperator(LogicOperator.Not),
-          new LinkOperator(LogicOperator.Not),
-          new LinkOperator(LogicOperator.Or),
-        ],
-        solutionDomain: new SolutionRange([100, 221.3]),
-      };
-
-      const expectedOperator = equation.chainOperator[equation.chainOperator.length - 1];
-      if (!expectedOperator) {
-        fail('should be able to get the expected operator check the test implementation');
-      }
-
-      let expectedDomain = domain.add(
-        {
-          range: equation.solutionDomain,
-          operator: expectedOperator.operator,
-        },
-      );
-      expectedDomain = expectedDomain.add({ operator: LogicOperator.Not });
-      expectedDomain = expectedDomain.add({ operator: LogicOperator.Not });
-
-      const expectedLastLogicalOperator = equation.chainOperator[0].toString();
-
-      const resp = resolveSolutionDomainWithAnExpression(equation, domain);
-      if (resp) {
-        const [respDomain, respLastLogicalOperator] = resp;
-        expect(respDomain).toStrictEqual(expectedDomain);
-        expect(respLastLogicalOperator).toBe(expectedLastLogicalOperator);
-      } else {
-        expect(resp).toBeDefined();
-      }
-    });
-
-    it(`given a domain and an equation with multiple chainned operator 
-    where the last elements are "NOT" operators should 
-    return a valid domain and an empty string as the next operator`, () => {
-      const domain = SolutionDomain.newWithInitialValue(new SolutionRange([0, 1]));
-      const equation: ISolverExpressionRange = {
-        chainOperator: [
-          new LinkOperator(LogicOperator.Not),
-          new LinkOperator(LogicOperator.Not),
-          new LinkOperator(LogicOperator.Or),
-        ],
-        solutionDomain: new SolutionRange([100, 221.3]),
-      };
-
-      const expectedOperator = equation.chainOperator[equation.chainOperator.length - 1];
-      if (!expectedOperator) {
-        fail('should be able to get the expected operator check the test implementation');
-      }
-
-      let expectedDomain = domain.add(
-        {
-          range: equation.solutionDomain,
-          operator: expectedOperator.operator,
-        },
-      );
-      expectedDomain = expectedDomain.add({ operator: LogicOperator.Not });
-      expectedDomain = expectedDomain.add({ operator: LogicOperator.Not });
-
-      const expectedLastLogicalOperator = '';
-
-      const resp = resolveSolutionDomainWithAnExpression(equation, domain);
-      if (resp) {
-        const [respDomain, respLastLogicalOperator] = resp;
-        expect(respDomain).toStrictEqual(expectedDomain);
-        expect(respLastLogicalOperator).toBe(expectedLastLogicalOperator);
-      } else {
-        expect(resp).toBeDefined();
-      }
-    });
-
-    it('given an empty domain and an equation with no chained operation should return undefined', () => {
-      const domain = new SolutionDomain();
-      const equation: ISolverExpressionRange = {
-        chainOperator: [],
-        solutionDomain: new SolutionRange([0, 1]),
-      };
-
-      expect(resolveSolutionDomainWithAnExpression(equation, domain)).toBeUndefined();
-    });
-  });
-
-  describe('createEquationSystem', () => {
-    it(`given multiple equations that are consistent with one
-     and another should return a valid equation system and the first equation to resolve`, () => {
-      const lastOperator = new LinkOperator(LogicOperator.And);
-      const firstOperator = new LinkOperator(LogicOperator.Or);
-      const secondOperator = new LinkOperator(LogicOperator.Or);
-      const thirdOperator = new LinkOperator(LogicOperator.Not);
-      const aVariable = 'x';
-      const aRawValue = '1';
-      const aValueType = SparqlOperandDataTypes.Int;
-      const avalueAsNumber = 1;
-      const anOperator = SparqlRelationOperator.EqualThanRelation;
-
-      const operationTemplate = (c: LinkOperator[]): ISolverExpression => {
-        return {
-          variable: aVariable,
-          rawValue: aRawValue,
-          valueType: aValueType,
-          valueAsNumber: avalueAsNumber,
-          operator: anOperator,
-          chainOperator: c,
-        };
-      };
-
-      const firstOperation = operationTemplate([firstOperator]);
-      const firstEquation: ISolverExpressionRange = {
-        chainOperator: firstOperation.chainOperator,
-        solutionDomain: new SolutionRange([1, 1]),
-      };
-      const secondOperation = operationTemplate([firstOperator, secondOperator]);
-      const secondEquation: ISolverExpressionRange = {
-        chainOperator: secondOperation.chainOperator,
-        solutionDomain: new SolutionRange([1, 1]),
-      };
-      const thirdOperation = operationTemplate([firstOperator, secondOperator, thirdOperator]);
-      const thirdEquation: ISolverExpressionRange = {
-        chainOperator: thirdOperation.chainOperator,
-        solutionDomain: new SolutionRange([1, 1]),
-      };
-      const lastOperation1 = operationTemplate([firstOperator, secondOperator, thirdOperator, lastOperator]);
-      const expectedFirstEquation1: ISolverExpressionRange = {
-        chainOperator: lastOperation1.chainOperator,
-        solutionDomain: new SolutionRange([1, 1]),
-      };
-      const lastOperation2 = operationTemplate([firstOperator, secondOperator, thirdOperator, lastOperator]);
-      const expectedFirstEquation2: ISolverExpressionRange = {
-        chainOperator: lastOperation2.chainOperator,
-        solutionDomain: new SolutionRange([1, 1]),
-      };
-
-      const equations: ISolverExpression[] = [
-        firstOperation,
-        secondOperation,
-        thirdOperation,
-        lastOperation1,
-        lastOperation2,
-      ];
-      equations.sort(() => Math.random() - 0.5);
-
-      const expectedEquationSystem: SolverEquationSystem = new Map([
-        [firstOperator.toString(), firstEquation],
-        [secondOperator.toString(), secondEquation],
-        [thirdOperator.toString(), thirdEquation],
-      ]);
-
-      const resp = createEquationSystem(equations);
-      if (!Array.isArray(resp)) {
-        fail('should return an array');
-      }
-      else if (resp) {
-        const [respEquationSystem, [respFirstEquation1, respFirstEquation2]] = resp;
-        expect(respEquationSystem).toStrictEqual(expectedEquationSystem);
-        expect(respFirstEquation1).toStrictEqual(expectedFirstEquation1);
-        expect(respFirstEquation2).toStrictEqual(expectedFirstEquation2);
-      } else {
-        expect(resp).toBeDefined();
-      }
-    });
-
-    it(`given multiples equations where it is not possible to 
-    get the solution range of an equation it should return undefined`, () => {
-      const lastOperator = new LinkOperator(LogicOperator.And);
-      const firstOperator = new LinkOperator(LogicOperator.Or);
-      const secondOperator = new LinkOperator(LogicOperator.Or);
-      const thirdOperator = new LinkOperator(LogicOperator.Not);
-      const aVariable = 'x';
-      const aRawValue = '1';
-      const aValueType = SparqlOperandDataTypes.Int;
-      const avalueAsNumber = 1;
-      const anOperator = SparqlRelationOperator.EqualThanRelation;
-
-      const operationTemplate = (c: LinkOperator[]): ISolverExpression => {
-        return {
-          variable: aVariable,
-          rawValue: aRawValue,
-          valueType: aValueType,
-          valueAsNumber: avalueAsNumber,
-          operator: anOperator,
-          chainOperator: c,
-        };
-      };
-
-      const firstOperation = {
-        variable: aVariable,
-        rawValue: aRawValue,
-        valueType: aValueType,
-        valueAsNumber: avalueAsNumber,
-        operator: SparqlRelationOperator.GeospatiallyContainsRelation,
-        chainOperator: [firstOperator],
-      };
-      const secondOperation = operationTemplate([firstOperator, secondOperator]);
-      const thirdOperation = operationTemplate([firstOperator, secondOperator, thirdOperator]);
-      const lastOperation1 = operationTemplate([firstOperator, secondOperator, thirdOperator, lastOperator]);
-      const lastOperation2 = operationTemplate([firstOperator, secondOperator, thirdOperator, lastOperator]);
-
-      const equations: ISolverExpression[] = [
-        firstOperation,
-        secondOperation,
-        thirdOperation,
-        lastOperation1,
-        lastOperation2,
-      ];
-      equations.sort(() => Math.random() - 0.5);
-
-      expect(createEquationSystem(equations)).toBeUndefined();
-    });
-
-    it(`given multiples equations where there is multiple equation 
-    that could be the first equation to be resolved it should return undefined`, () => {
-      const lastOperator = new LinkOperator(LogicOperator.And);
-      const firstOperator = new LinkOperator(LogicOperator.Or);
-      const secondOperator = new LinkOperator(LogicOperator.Or);
-      const thirdOperator = new LinkOperator(LogicOperator.Not);
-      const aVariable = 'x';
-      const aRawValue = '1';
-      const aValueType = SparqlOperandDataTypes.Int;
-      const avalueAsNumber = 1;
-      const anOperator = SparqlRelationOperator.EqualThanRelation;
-
-      const operationTemplate = (c: LinkOperator[]): ISolverExpression => {
-        return {
-          variable: aVariable,
-          rawValue: aRawValue,
-          valueType: aValueType,
-          valueAsNumber: avalueAsNumber,
-          operator: anOperator,
-          chainOperator: c,
-        };
-      };
-
-      const firstOperation = operationTemplate([firstOperator]);
-      const secondOperation = operationTemplate([firstOperator, secondOperator]);
-      const thirdOperation = operationTemplate([firstOperator, secondOperator, thirdOperator]);
-      const lastOperation1 = operationTemplate([firstOperator, secondOperator, thirdOperator, lastOperator]);
-      const lastOperation2 = operationTemplate([firstOperator, secondOperator, thirdOperator, lastOperator]);
-      const lastOperation3 = operationTemplate([firstOperator, secondOperator, thirdOperator, lastOperator]);
-
-      const equations: ISolverExpression[] = [
-        firstOperation,
-        secondOperation,
-        thirdOperation,
-        lastOperation1,
-        lastOperation2,
-        lastOperation3,
-      ];
-      equations.sort(() => Math.random() - 0.5);
-
-      expect(createEquationSystem(equations)).toBeUndefined();
-    });
-
-    it('given multiples equations where there is no first equation to be resolved should return undefined', () => {
-      const lastOperator = new LinkOperator(LogicOperator.And);
-      const firstOperator = new LinkOperator(LogicOperator.Or);
-      const secondOperator = new LinkOperator(LogicOperator.Or);
-      const thirdOperator = new LinkOperator(LogicOperator.Not);
-      const aVariable = 'x';
-      const aRawValue = '1';
-      const aValueType = SparqlOperandDataTypes.Int;
-      const avalueAsNumber = 1;
-      const anOperator = SparqlRelationOperator.EqualThanRelation;
-
-      const operationTemplate = (c: LinkOperator[]): ISolverExpression => {
-        return {
-          variable: aVariable,
-          rawValue: aRawValue,
-          valueType: aValueType,
-          valueAsNumber: avalueAsNumber,
-          operator: anOperator,
-          chainOperator: c,
-        };
-      };
-
-      const firstOperation = {
-        variable: aVariable,
-        rawValue: aRawValue,
-        valueType: aValueType,
-        valueAsNumber: avalueAsNumber,
-        operator: SparqlRelationOperator.GeospatiallyContainsRelation,
-        chainOperator: [firstOperator],
-      };
-      const secondOperation = operationTemplate([firstOperator, secondOperator]);
-      const thirdOperation = operationTemplate([firstOperator, secondOperator, thirdOperator]);
-      const lastOperation1 = operationTemplate([firstOperator, secondOperator, thirdOperator, lastOperator]);
-
-      const equations: ISolverExpression[] = [
-        firstOperation,
-        secondOperation,
-        thirdOperation,
-        lastOperation1,
-      ];
-      equations.sort(() => Math.random() - 0.5);
-
-      expect(createEquationSystem(equations)).toBeUndefined();
-    });
-
-    it('given an equation should return a valid system of equation', () => {
-      const equation: ISolverExpression[] = [
-        {
-          chainOperator: [],
-          operator: SparqlRelationOperator.EqualThanRelation,
-          rawValue: '88',
-          valueAsNumber: 88,
-          valueType: SparqlOperandDataTypes.Int,
-          variable: 'x',
-        },
-      ];
-
-      const expectedEquationSystem: ISolverExpressionRange = {
-        chainOperator: [],
-        solutionDomain: new SolutionRange([88, 88]),
-      };
-
-      const resp = createEquationSystem(equation);
-      if (Array.isArray(resp)) {
-        fail('should not return an array');
-      }
-      else if (resp && !Array.isArray(resp)) {
-        expect(resp).toStrictEqual(expectedEquationSystem);
-      } else {
-        expect(resp).toBeDefined();
-      }
-    });
-
-    it('given two equations should return a valid system of equation', () => {
-      const lastOperator = new LinkOperator(LogicOperator.And);
-
-      const equation: ISolverExpression[] = [
-        {
-          chainOperator: [lastOperator],
-          operator: SparqlRelationOperator.EqualThanRelation,
-          rawValue: '88',
-          valueAsNumber: 88,
-          valueType: SparqlOperandDataTypes.Int,
-          variable: 'x',
-        },
-        {
-          chainOperator: [lastOperator],
-          operator: SparqlRelationOperator.EqualThanRelation,
-          rawValue: '33',
-          valueAsNumber: 33,
-          valueType: SparqlOperandDataTypes.Int,
-          variable: 'x',
-        },
-      ];
-
-      const expectedFirstEquation1: ISolverExpressionRange = {
-        chainOperator: [lastOperator],
-        solutionDomain: new SolutionRange([88, 88]),
-      };
-      const expectedFirstEquation2: ISolverExpressionRange = {
-        chainOperator: [lastOperator],
-        solutionDomain: new SolutionRange([33, 33]),
-      };
-
-      const resp = createEquationSystem(equation);
-      if (!Array.isArray(resp)) {
-        fail('should return an array');
-      }
-      else if (resp && Array.isArray(resp)) {
-        const [respEquationSystem, [respFirstEquation1, respFirstEquation2]] = resp;
-        expect(respEquationSystem.size).toBe(0);
-        expect(respFirstEquation1).toStrictEqual(expectedFirstEquation1);
-        expect(respFirstEquation2).toStrictEqual(expectedFirstEquation2);
-      } else {
-        expect(resp).toBeDefined();
-      }
-    });
-
-    it('given one equation where one we cannot derived a solution range should return undefined', () => {
-      const lastOperator = new LinkOperator(LogicOperator.And);
-
-      const equation: ISolverExpression[] = [
-        {
-          chainOperator: [lastOperator],
-          operator: SparqlRelationOperator.GeospatiallyContainsRelation,
-          rawValue: '88',
-          valueAsNumber: 88,
-          valueType: SparqlOperandDataTypes.Int,
-          variable: 'x',
-        },
-      ];
-
-      const resp = createEquationSystem(equation);
-
-      expect(resp).toBeUndefined();
-    });
-
-  });
-
-  describe('resolveSolutionDomainEquationSystem', () => {
-    it('should return a valid domain given a valid equation system', () => {
-      const firstOperator = new LinkOperator(LogicOperator.Or);
-      const secondOperator = new LinkOperator(LogicOperator.And);
-      const thirdOperator = new LinkOperator(LogicOperator.Not);
-      const forthOperator = new LinkOperator(LogicOperator.Or);
-      const fifthOperator = new LinkOperator(LogicOperator.And);
-      const firstEquation: ISolverExpressionRange = {
-        solutionDomain: new SolutionRange([Number.NEGATIVE_INFINITY, 33]),
-        chainOperator: [
-          firstOperator,
-        ],
-      };
-
-      const secondEquation: ISolverExpressionRange = {
-        solutionDomain: new SolutionRange([75, 75]),
-        chainOperator: [
-          firstOperator,
-          secondOperator,
-        ],
-      };
-
-      const thirdEquation: ISolverExpressionRange = {
-        solutionDomain: new SolutionRange([100, Number.POSITIVE_INFINITY]),
-        chainOperator: [
-          firstOperator,
-          secondOperator,
-          thirdOperator,
-          forthOperator,
-        ],
-      };
-      const lastOperatorFirstEquation = firstEquation.chainOperator[firstEquation.chainOperator.length - 1];
-      const lastOperatorSecondEquation = secondEquation.chainOperator[secondEquation.chainOperator.length - 1];
-      const lastOperatorThirdEquation = thirdEquation.chainOperator[thirdEquation.chainOperator.length - 1];
-      if (
-        !(lastOperatorFirstEquation &&
-          lastOperatorSecondEquation &&
-          lastOperatorThirdEquation)
-      ) {
-        fail('should be able to retrieved the last chain operator of the equation check the test implementation');
-      }
-      const equationSystem: SolverEquationSystem = new Map([
-        [lastOperatorFirstEquation.toString(), firstEquation],
-        [lastOperatorSecondEquation.toString(), secondEquation],
-        [lastOperatorThirdEquation.toString(), thirdEquation],
-      ]);
-
-      const firstEquationToSolve: [ISolverExpressionRange, ISolverExpressionRange] = [
-        {
-          solutionDomain: new SolutionRange([1_000, Number.POSITIVE_INFINITY]),
-          chainOperator: [
-            firstOperator,
-            secondOperator,
-            thirdOperator,
-            forthOperator,
-            fifthOperator,
-          ],
-        },
-        {
-          solutionDomain: new SolutionRange([Number.NEGATIVE_INFINITY, nextUp(33)]),
-          chainOperator: [
-            firstOperator,
-            secondOperator,
-            thirdOperator,
-            forthOperator,
-            fifthOperator,
-          ],
-        },
-      ];
-      // Nothing => [100, infinity] =>[-infinity, 100- epsilon] => [75,75]=> [75, 75], [-infinity, 33]
-      const expectedDomain: SolutionRange[] = [
-        new SolutionRange([Number.NEGATIVE_INFINITY, 33]),
-        new SolutionRange([75, 75]),
-      ];
-
-      const resp = resolveSolutionDomainEquationSystem(equationSystem, firstEquationToSolve);
-
-      if (resp) {
-        expect(resp.get_domain()).toStrictEqual(expectedDomain);
-      } else {
-        expect(resp).toBeDefined();
-      }
-    });
-
-    it('should return undefined an equation system where the chain of operator is inconsistent', () => {
-      const firstOperator = new LinkOperator(LogicOperator.Or);
-      const secondOperator = new LinkOperator(LogicOperator.And);
-      const thirdOperator = new LinkOperator(LogicOperator.Not);
-      const forthOperator = new LinkOperator(LogicOperator.Or);
-      const fifthOperator = new LinkOperator(LogicOperator.And);
-      const firstEquation: ISolverExpressionRange = {
-        solutionDomain: new SolutionRange([Number.NEGATIVE_INFINITY, 33]),
-        chainOperator: [
-          firstOperator,
-        ],
-      };
-
-      const secondEquation: ISolverExpressionRange = {
-        solutionDomain: new SolutionRange([75, 75]),
-        chainOperator: [
-          firstOperator,
-          secondOperator,
-        ],
-      };
-
-      const thirdEquation: ISolverExpressionRange = {
-        solutionDomain: new SolutionRange([100, Number.POSITIVE_INFINITY]),
-        chainOperator: [
-        ],
-      };
-      const lastOperatorFirstEquation = firstEquation.chainOperator[firstEquation.chainOperator.length - 1];
-      const lastOperatorSecondEquation = secondEquation.chainOperator[secondEquation.chainOperator.length - 1];
-      if (
-        !(lastOperatorFirstEquation &&
-          lastOperatorSecondEquation)
-      ) {
-        fail('should be able to retrieved the last chain operator of the equation check the test implementation');
-      }
-      const equationSystem: SolverEquationSystem = new Map([
-        [lastOperatorFirstEquation.toString(), firstEquation],
-        [lastOperatorSecondEquation.toString(), secondEquation],
-        [forthOperator.toString(), thirdEquation],
-      ]);
-
-      const firstEquationToSolve: [ISolverExpressionRange, ISolverExpressionRange] = [
-        {
-          solutionDomain: new SolutionRange([1_000, Number.POSITIVE_INFINITY]),
-          chainOperator: [
-            firstOperator,
-            secondOperator,
-            thirdOperator,
-            forthOperator,
-            fifthOperator,
-          ],
-        },
-        {
-          solutionDomain: new SolutionRange([Number.NEGATIVE_INFINITY, nextUp(33)]),
-          chainOperator: [
-            firstOperator,
-            secondOperator,
-            thirdOperator,
-            forthOperator,
-            fifthOperator,
-          ],
-        },
-      ];
-
-      expect(() => { resolveSolutionDomainEquationSystem(equationSystem, firstEquationToSolve); }).toThrow();
-    });
-  });
-
   describe('resolveAFilterTerm', () => {
     it('given an algebra expression with all the solver expression parameters should return a valid expression', () => {
       const expression: Algebra.Expression = {
@@ -1107,7 +457,7 @@ describe('solver function', () => {
         ],
       };
       const operator = SparqlRelationOperator.EqualThanRelation;
-      const linksOperator: LinkOperator[] = [new LinkOperator(LogicOperator.And), new LinkOperator(LogicOperator.Or)];
+      const linksOperator: LinkOperator[] = [ new LinkOperator(LogicOperator.And), new LinkOperator(LogicOperator.Or) ];
       const variable = 'x';
       const expectedSolverExpression: ISolverExpression = {
         variable,
@@ -1141,7 +491,7 @@ describe('solver function', () => {
         ],
       };
       const operator = SparqlRelationOperator.EqualThanRelation;
-      const linksOperator: LinkOperator[] = [new LinkOperator(LogicOperator.And), new LinkOperator(LogicOperator.Or)];
+      const linksOperator: LinkOperator[] = [ new LinkOperator(LogicOperator.And), new LinkOperator(LogicOperator.Or) ];
 
       expect(resolveAFilterTerm(expression, operator, linksOperator, 'x')).toBeUndefined();
     });
@@ -1161,7 +511,7 @@ describe('solver function', () => {
         ],
       };
       const operator = SparqlRelationOperator.EqualThanRelation;
-      const linksOperator: LinkOperator[] = [new LinkOperator(LogicOperator.And), new LinkOperator(LogicOperator.Or)];
+      const linksOperator: LinkOperator[] = [ new LinkOperator(LogicOperator.And), new LinkOperator(LogicOperator.Or) ];
 
       expect(resolveAFilterTerm(expression, operator, linksOperator, variable)).toBeUndefined();
     });
@@ -1174,7 +524,7 @@ describe('solver function', () => {
         args: [],
       };
       const operator = SparqlRelationOperator.EqualThanRelation;
-      const linksOperator: LinkOperator[] = [new LinkOperator(LogicOperator.And), new LinkOperator(LogicOperator.Or)];
+      const linksOperator: LinkOperator[] = [ new LinkOperator(LogicOperator.And), new LinkOperator(LogicOperator.Or) ];
 
       expect(resolveAFilterTerm(expression, operator, linksOperator, 'x')).toBeUndefined();
     });
@@ -1229,200 +579,9 @@ describe('solver function', () => {
         ],
       };
       const operator = SparqlRelationOperator.EqualThanRelation;
-      const linksOperator: LinkOperator[] = [new LinkOperator(LogicOperator.And), new LinkOperator(LogicOperator.Or)];
+      const linksOperator: LinkOperator[] = [ new LinkOperator(LogicOperator.And), new LinkOperator(LogicOperator.Or) ];
 
       expect(resolveAFilterTerm(expression, operator, linksOperator, variable)).toBeUndefined();
-    });
-  });
-
-  describe('recursifFilterExpressionToSolverExpression', () => {
-    it('given an algebra expression with two logicals operators should return a list of solver expression', () => {
-      const expression = translate(`
-                SELECT * WHERE { ?x ?y ?z 
-                FILTER( !(?x=2 && ?x>5))
-                }`).input.expression;
-
-      const buildSolverExpression = (
-        variable: Variable,
-        rawValue: string,
-        valueType: SparqlOperandDataTypes,
-        valueAsNumber: number,
-        operator: SparqlRelationOperator,
-        chainOperator: LinkOperator[],
-      ): ISolverExpression => {
-        return {
-          rawValue,
-          variable,
-          valueType,
-          valueAsNumber,
-          operator,
-          chainOperator,
-        };
-      };
-      const variable = 'x';
-
-      LinkOperator.resetIdCount();
-      const notOperator = new LinkOperator(LogicOperator.Not);
-      const andOperator = new LinkOperator(LogicOperator.And);
-
-      const expectedEquation: ISolverExpression[] = [
-        buildSolverExpression(
-          variable,
-          '2',
-          SparqlOperandDataTypes.Integer,
-          2,
-          SparqlRelationOperator.EqualThanRelation,
-          [notOperator, andOperator],
-        ),
-
-        buildSolverExpression(
-          variable,
-          '5',
-          SparqlOperandDataTypes.Integer,
-          5,
-          SparqlRelationOperator.GreaterThanRelation,
-          [notOperator, andOperator],
-        ),
-      ];
-
-      LinkOperator.resetIdCount();
-      expect(recursifFilterExpressionToSolverExpression(expression, [], [], variable)).toStrictEqual(expectedEquation);
-    });
-
-    it('given an algebra expression with tree logicals operators should return a list of solver expression', () => {
-      const expression = translate(`
-                SELECT * WHERE { ?x ?y ?z 
-                FILTER( !(?x=2 && ?x>5) || ?x < 88.3)
-                }`).input.expression;
-
-      const buildSolverExpression = (
-        variable: Variable,
-        rawValue: string,
-        valueType: SparqlOperandDataTypes,
-        valueAsNumber: number,
-        operator: SparqlRelationOperator,
-        chainOperator: LinkOperator[],
-      ): ISolverExpression => {
-        return {
-          rawValue,
-          variable,
-          valueType,
-          valueAsNumber,
-          operator,
-          chainOperator,
-        };
-      };
-      const variable = 'x';
-
-      LinkOperator.resetIdCount();
-      const orOperator = new LinkOperator(LogicOperator.Or);
-      const notOperator = new LinkOperator(LogicOperator.Not);
-      const andOperator = new LinkOperator(LogicOperator.And);
-
-      const expectedEquation: ISolverExpression[] = [
-        buildSolverExpression(
-          variable,
-          '2',
-          SparqlOperandDataTypes.Integer,
-          2,
-          SparqlRelationOperator.EqualThanRelation,
-          [orOperator, notOperator, andOperator],
-        ),
-
-        buildSolverExpression(
-          variable,
-          '5',
-          SparqlOperandDataTypes.Integer,
-          5,
-          SparqlRelationOperator.GreaterThanRelation,
-          [orOperator, notOperator, andOperator],
-        ),
-
-        buildSolverExpression(
-          variable,
-          '88.3',
-          SparqlOperandDataTypes.Decimal,
-          88.3,
-          SparqlRelationOperator.LessThanRelation,
-          [orOperator],
-        ),
-      ];
-
-      LinkOperator.resetIdCount();
-      expect(recursifFilterExpressionToSolverExpression(expression, [], [], variable)).toStrictEqual(expectedEquation);
-    });
-
-    it('given an algebra expression with four logicals operators should return a list of solver expression', () => {
-      const expression = translate(`
-                SELECT * WHERE { ?x ?y ?z 
-                FILTER( !(?x=2 && ?x>5 || ?x>6) || ?x < 88.3)
-                }`).input.expression;
-
-      const buildSolverExpression = (
-        variable: Variable,
-        rawValue: string,
-        valueType: SparqlOperandDataTypes,
-        valueAsNumber: number,
-        operator: SparqlRelationOperator,
-        chainOperator: LinkOperator[],
-      ): ISolverExpression => {
-        return {
-          rawValue,
-          variable,
-          valueType,
-          valueAsNumber,
-          operator,
-          chainOperator,
-        };
-      };
-      const variable = 'x';
-
-      LinkOperator.resetIdCount();
-      const firstOrOperator = new LinkOperator(LogicOperator.Or);
-      const notOperator = new LinkOperator(LogicOperator.Not);
-      const secondOrOperator = new LinkOperator(LogicOperator.Or);
-      const andOperator = new LinkOperator(LogicOperator.And);
-
-      const expectedEquation: ISolverExpression[] = [
-        buildSolverExpression(
-          variable,
-          '2',
-          SparqlOperandDataTypes.Integer,
-          2,
-          SparqlRelationOperator.EqualThanRelation,
-          [firstOrOperator, notOperator, secondOrOperator, andOperator],
-        ),
-
-        buildSolverExpression(
-          variable,
-          '5',
-          SparqlOperandDataTypes.Integer,
-          5,
-          SparqlRelationOperator.GreaterThanRelation,
-          [firstOrOperator, notOperator, secondOrOperator, andOperator],
-        ),
-
-        buildSolverExpression(
-          variable,
-          '6',
-          SparqlOperandDataTypes.Integer,
-          6,
-          SparqlRelationOperator.GreaterThanRelation,
-          [firstOrOperator, notOperator, secondOrOperator],
-        ),
-
-        buildSolverExpression(
-          variable,
-          '88.3',
-          SparqlOperandDataTypes.Decimal,
-          88.3,
-          SparqlRelationOperator.LessThanRelation,
-          [firstOrOperator],
-        ),
-      ];
-
-      LinkOperator.resetIdCount();
-      expect(recursifFilterExpressionToSolverExpression(expression, [], [], variable)).toStrictEqual(expectedEquation);
     });
   });
 
@@ -1713,89 +872,87 @@ describe('solver function', () => {
       expect(isRelationFilterExpressionDomainEmpty({ relation, filterExpression, variable })).toBe(true);
     });
   });
-});
+  describe('recursifResolve', () => {
+    it('given an algebra expression with two logicals operators should return the valid solution domain', () => {
+      const expression = translate(`
+      SELECT * WHERE { ?x ?y ?z 
+      FILTER( ?x=2 && ?x<5)
+      }`).input.expression;
 
-describe('recursifResolve', () => {
-  it('given an algebra expression with two logicals operators should return the valid solution domain', () => {
-    const expression = translate(`
-    SELECT * WHERE { ?x ?y ?z 
-    FILTER( ?x=2 && ?x<5)
-    }`).input.expression;
+      const resp = recursifResolve(
+        expression,
+        new SolutionDomain(),
+        undefined,
+        'x',
+        false,
+      );
 
+      const expectedDomain = SolutionDomain.newWithInitialValue(new SolutionRange([ 2, 2 ]));
 
-    const resp = recursifResolve(
-      expression,
-      new SolutionDomain(),
-      undefined,
-      'x',
-      false,
-    );
+      expect(resp.get_domain()).toStrictEqual(expectedDomain.get_domain());
+    });
 
-    const expectedDomain = SolutionDomain.newWithInitialValue(new SolutionRange([2, 2]));
+    it(`given an algebra expression with two logicals operators 
+    that cannot be satified should return an empty domain`, () => {
+      const expression = translate(`
+      SELECT * WHERE { ?x ?y ?z 
+      FILTER( ?x=2 && ?x>5)
+      }`).input.expression;
 
-    expect(resp.get_domain()).toStrictEqual(expectedDomain.get_domain());
+      const resp = recursifResolve(
+        expression,
+        new SolutionDomain(),
+        undefined,
+        'x',
+        false,
+      );
 
-  });
+      const expectedDomain = new SolutionDomain();
 
-  it('given an algebra expression with two logicals operators that cannot be satified should return an empty domain', () => {
-    const expression = translate(`
-    SELECT * WHERE { ?x ?y ?z 
-    FILTER( ?x=2 && ?x>5)
-    }`).input.expression;
+      expect(resp.get_domain()).toStrictEqual(expectedDomain.get_domain());
+    });
 
+    it(`given an algebra expression with two logicals operators that are negated
+     should return the valid solution domain`, () => {
+      const expression = translate(`
+      SELECT * WHERE { ?x ?y ?z 
+      FILTER( !(?x=2 && ?x<5))
+      }`).input.expression;
 
-    const resp = recursifResolve(
-      expression,
-      new SolutionDomain(),
-      undefined,
-      'x',
-      false,
-    );
+      const resp = recursifResolve(
+        expression,
+        new SolutionDomain(),
+        undefined,
+        'x',
+        false,
+      );
 
-    const expectedDomain = new SolutionDomain();
+      const expectedDomain = SolutionDomain.newWithInitialValue(new SolutionRange([ 5, Number.POSITIVE_INFINITY ]));
 
-    expect(resp.get_domain()).toStrictEqual(expectedDomain.get_domain());
-  });
+      expect(resp.get_domain()).toStrictEqual(expectedDomain.get_domain());
+    });
 
-  it('given an algebra expression with two logicals operators that are negated should return the valid solution domain', () => {
-    const expression = translate(`
-    SELECT * WHERE { ?x ?y ?z 
-    FILTER( !(?x=2 && ?x<5))
-    }`).input.expression;
+    it(`given an algebra expression with three logicals operators where the priority of operation should start with the not operator than 
+    should return the valid solution domain`, () => {
+      const expression = translate(`
+      SELECT * WHERE { ?x ?y ?z 
+      FILTER( ?x=2 && ?x>2 || !(?x=3))
+      }`).input.expression;
 
+      const resp = recursifResolve(
+        expression,
+        new SolutionDomain(),
+        undefined,
+        'x',
+        false,
+      );
 
-    const resp = recursifResolve(
-      expression,
-      new SolutionDomain(),
-      undefined,
-      'x',
-      false,
-    );
-
-    const expectedDomain = SolutionDomain.newWithInitialValue(new SolutionRange([5, Number.POSITIVE_INFINITY]));
-
-    expect(resp.get_domain()).toStrictEqual(expectedDomain.get_domain());
-
-  });
-
-  it('given an algebra expression with three logicals operators where the priority of operation should start with the not operator than should return the valid solution domain', () => {
-    const expression = translate(`
-    SELECT * WHERE { ?x ?y ?z 
-    FILTER( ?x=2 && ?x>2 || !(?x=3))
-    }`).input.expression;
-
-
-    const resp = recursifResolve(
-      expression,
-      new SolutionDomain(),
-      undefined,
-      'x',
-      false,
-    );
-
-    let expectedDomain = SolutionDomain.newWithInitialValue(new SolutionRange([Number.NEGATIVE_INFINITY, nextDown(3)]));
-    expectedDomain = expectedDomain.addWithOrOperator(new SolutionRange([nextUp(3), Number.POSITIVE_INFINITY]));
-    expect(resp.get_domain()).toStrictEqual(expectedDomain.get_domain());
-
+      let expectedDomain = SolutionDomain.newWithInitialValue(new SolutionRange(
+        [ Number.NEGATIVE_INFINITY, nextDown(3) ],
+      ));
+      expectedDomain = expectedDomain.addWithOrOperator(new SolutionRange([ nextUp(3), Number.POSITIVE_INFINITY ]));
+      expect(resp.get_domain()).toStrictEqual(expectedDomain.get_domain());
+    });
   });
 });
+

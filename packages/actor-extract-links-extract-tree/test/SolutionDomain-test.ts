@@ -112,7 +112,7 @@ describe('SolutionDomain', () => {
 
       const expectedDomain = [
         new SolutionRange([ Number.NEGATIVE_INFINITY, nextDown(0) ]),
-        new SolutionRange([ nextUp(1) , Number.POSITIVE_INFINITY ]),
+        new SolutionRange([ nextUp(1), Number.POSITIVE_INFINITY ]),
       ];
       const newDomain = solutionDomain.notOperation();
 
