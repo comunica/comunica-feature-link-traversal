@@ -31,7 +31,7 @@ by authenticating through the https://solidcommunity.net/ identity provider
 $ comunica-sparql-link-traversal-solid --idp https://solidcommunity.net/ \
   "PREFIX snvoc: <https://solidbench.linkeddatafragments.org/www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/>
   SELECT DISTINCT ?forumId ?forumTitle WHERE {
-    ?message snvoc:hasCreator <https://solidbench.linkeddatafragments.org/pods/00000000000000000933/profile/card#me>.
+    ?message snvoc:hasCreator <https://solidbench.linkeddatafragments.org/pods/00000006597069767117/profile/card#me>.
     ?forum snvoc:containerOf ?message;
       snvoc:id ?forumId;
       snvoc:title ?forumTitle.
@@ -48,11 +48,11 @@ If no sources are provided, the URLs inside the query will be considered startin
 Since passing sources is optional, the following is equivalent:
 
 ```bash
-$ comunica-sparql-link-traversal-solid https://solidbench.linkeddatafragments.org/pods/00000000000000000933/profile/card \
+$ comunica-sparql-link-traversal-solid https://solidbench.linkeddatafragments.org/pods/00000006597069767117/profile/card \
  --idp https://solidcommunity.net/ \
   "PREFIX snvoc: <https://solidbench.linkeddatafragments.org/www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/>
   SELECT DISTINCT ?forumId ?forumTitle WHERE {
-    ?message snvoc:hasCreator <https://solidbench.linkeddatafragments.org/pods/00000000000000000933/profile/card#me>.
+    ?message snvoc:hasCreator <https://solidbench.linkeddatafragments.org/pods/00000006597069767117/profile/card#me>.
     ?forum snvoc:containerOf ?message;
       snvoc:id ?forumId;
       snvoc:title ?forumTitle.
@@ -85,7 +85,7 @@ const myEngine = new QueryEngine();
 const bindingsStream = await myEngine.queryBindings(`
   PREFIX snvoc: <https://solidbench.linkeddatafragments.org/www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/>
   SELECT DISTINCT ?forumId ?forumTitle WHERE {
-    ?message snvoc:hasCreator <https://solidbench.linkeddatafragments.org/pods/00000000000000000933/profile/card#me>.
+    ?message snvoc:hasCreator <https://solidbench.linkeddatafragments.org/pods/00000006597069767117/profile/card#me>.
     ?forum snvoc:containerOf ?message;
       snvoc:id ?forumId;
       snvoc:title ?forumTitle.
