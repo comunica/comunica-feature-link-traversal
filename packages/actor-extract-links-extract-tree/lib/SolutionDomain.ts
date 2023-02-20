@@ -41,7 +41,7 @@ export class SolutionDomain {
      */
   public static newWithInitialValue(initialRange: SolutionRange): SolutionDomain {
     const newSolutionDomain = new SolutionDomain();
-    newSolutionDomain.domain = [ initialRange ];
+    newSolutionDomain.domain = [initialRange];
     return newSolutionDomain;
   }
 

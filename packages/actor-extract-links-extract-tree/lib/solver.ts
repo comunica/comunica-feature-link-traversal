@@ -13,11 +13,17 @@ import type {
   ISolverExpression,
   Variable,
 } from './solverInterfaces';
+import {
+  MissMatchVariableError,
+  MisformatedFilterTermError,
+  UnsupportedDataTypeError,
+  UnsupportedOperatorError
+} from './error';
 
 const nextUp = require('ulp').nextUp;
 const nextDown = require('ulp').nextDown;
 
-const A_TRUE_EXPRESSION: SolutionRange = new SolutionRange([ Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY ]);
+const A_TRUE_EXPRESSION: SolutionRange = new SolutionRange([Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY]);
 /**
  * Check if the solution domain of a system of equation compose of the expressions of the filter
  * expression and the relation is not empty.
@@ -57,16 +63,23 @@ export function isRelationFilterExpressionDomainEmpty({ relation, filterExpressi
       false,
     );
   } catch (error: unknown) {
-    // Was not able to create a boolean expression from a filter argument
-    // it is because either the TREE document is badly formated or the variable doesn't match
-    if (error instanceof SyntaxError) {
+    // A filter term was missformed we let the query engine return an error to the user and by precaution we accept the link
+    // in case the error is from the solver and not the filter expression
+    if (error instanceof MisformatedFilterTermError) {
       return true;
     }
 
-    // We don't support the data type of relation yet, so we don't prune the link
-    if (error instanceof TypeError) {
+    // We don't support the data type so let need to explore that link to not diminush the completness of the result
+    if (error instanceof UnsupportedDataTypeError) {
       return true;
     }
+
+    // We don't support the operator so let need to explore that link to not diminush the completness of the result
+    if (error instanceof UnsupportedOperatorError) {
+      return true;
+    }
+
+    // if it's unexpected error we throw it
     throw error;
   }
 
@@ -76,6 +89,66 @@ export function isRelationFilterExpressionDomainEmpty({ relation, filterExpressi
   // If there is a possible solution we don't filter the link
   return !solutionDomain.isDomainEmpty();
 }
+
+/**
+ * From an Algebra expression return an solver expression if possible
+ * @param {Algebra.Expression} expression - Algebra expression containing the a variable and a litteral.
+ * @param {SparqlRelationOperator} operator - The SPARQL operator defining the expression.
+ * @param {LinkOperator[]} linksOperator - The logical operator prior to this expression.
+ * @param {Variable} variable - The variable the expression should have to be part of a system of equation.
+ * @returns {ISolverExpression | undefined} Return a solver expression if possible
+ */
+export function resolveAFilterTerm(expression: Algebra.Expression,
+  operator: SparqlRelationOperator,
+  linksOperator: LinkOperator[],
+  variable: Variable):
+  ISolverExpression | Error {
+  let rawValue: string | undefined;
+  let valueType: SparqlOperandDataTypes | undefined;
+  let valueAsNumber: number | undefined;
+  let hasVariable = false;
+
+  // Find the constituant element of the solver expression
+  for (const arg of expression.args) {
+    if ('term' in arg && arg.term.termType === 'Variable') {
+      // Check if the expression has the same variable as the one the solver try to resolved
+      if (arg.term.value !== variable) {
+        return new MissMatchVariableError(`the variable ${arg.term.value} is in the filter whereas we are looking for the varibale ${variable}`);
+      }
+      hasVariable = true;
+    } else if ('term' in arg && arg.term.termType === 'Literal') {
+      rawValue = arg.term.value;
+      valueType = SparqlOperandDataTypesReversed.get(arg.term.datatype.value);
+      if (valueType) {
+        valueAsNumber = castSparqlRdfTermIntoNumber(rawValue!, valueType);
+        if( !valueAsNumber){
+          return new UnsupportedDataTypeError(`we do not support the datatype "${valueType}" in the solver for the moment`)
+
+        }
+      } else {
+        return new UnsupportedDataTypeError(`The datatype "${valueType}" is not supported by the SPARQL 1.1 Query Language W3C recommandation`)
+      }
+    }
+  }
+  // Return if a fully form solver expression can be created
+  if (hasVariable && rawValue && valueType && valueAsNumber) {
+    return {
+      variable,
+      rawValue,
+      valueType,
+      valueAsNumber,
+      operator,
+      chainOperator: linksOperator,
+    };
+  }
+  const missingTerm = [];
+  !hasVariable ? missingTerm.push('Variable') : null;
+  !rawValue ? missingTerm.push('Litteral') : null;
+
+  return new MisformatedFilterTermError(`the filter expressions doesn\'t have the term ${missingTerm.toString()}`);
+
+}
+
 
 /**
  * Recursively traverse the filter expression and calculate the domain until it get to the current expression.
@@ -108,12 +181,16 @@ export function recursifResolve(
     const operator = filterOperatorToSparqlRelationOperator(rawOperator);
     if (operator) {
       const solverExpression = resolveAFilterTerm(filterExpression, operator, [], variable);
-      if (!solverExpression?.valueAsNumber) {
-        throw new SyntaxError('unable to get the number value of the expression');
-      }
-      const solverRange = getSolutionRange(solverExpression?.valueAsNumber, solverExpression?.operator);
-      if (!solverRange) {
-        throw new TypeError('unable to get the range of an expression');
+      let solverRange: SolutionRange | undefined;
+      if (solverExpression instanceof MissMatchVariableError) {
+        solverRange = A_TRUE_EXPRESSION;
+      } else if (solverExpression instanceof Error) {
+        throw solverExpression;
+      } else {
+        solverRange = getSolutionRange(solverExpression.valueAsNumber, solverExpression.operator);
+        if (!solverRange) {
+          throw new UnsupportedOperatorError(`the operator "${solverExpression.operator}" of the ISolverExpression is not supported yet`);
+        }
       }
       // We can distribute a not expression, so we inverse each statement
       if (notExpression) {
@@ -139,53 +216,6 @@ export function recursifResolve(
     }
   }
   return domain;
-}
-
-/**
- * From an Algebra expression return an solver expression if possible
- * @param {Algebra.Expression} expression - Algebra expression containing the a variable and a litteral.
- * @param {SparqlRelationOperator} operator - The SPARQL operator defining the expression.
- * @param {LinkOperator[]} linksOperator - The logical operator prior to this expression.
- * @param {Variable} variable - The variable the expression should have to be part of a system of equation.
- * @returns {ISolverExpression | undefined} Return a solver expression if possible
- */
-export function resolveAFilterTerm(expression: Algebra.Expression,
-  operator: SparqlRelationOperator,
-  linksOperator: LinkOperator[],
-  variable: Variable):
-  ISolverExpression | undefined {
-  let rawValue: string | undefined;
-  let valueType: SparqlOperandDataTypes | undefined;
-  let valueAsNumber: number | undefined;
-  let hasVariable = false;
-
-  // Find the constituant element of the solver expression
-  for (const arg of expression.args) {
-    if ('term' in arg && arg.term.termType === 'Variable') {
-      // Check if the expression has the same variable as the one the solver try to resolved
-      if (arg.term.value !== variable) {
-        return undefined;
-      }
-      hasVariable = true;
-    } else if ('term' in arg && arg.term.termType === 'Literal') {
-      rawValue = arg.term.value;
-      valueType = SparqlOperandDataTypesReversed.get(arg.term.datatype.value);
-      if (valueType) {
-        valueAsNumber = castSparqlRdfTermIntoNumber(rawValue!, valueType);
-      }
-    }
-  }
-  // Return if a fully form solver expression can be created
-  if (hasVariable && rawValue && valueType && valueAsNumber) {
-    return {
-      variable,
-      rawValue,
-      valueType,
-      valueAsNumber,
-      operator,
-      chainOperator: linksOperator,
-    };
-  }
 }
 
 /**
@@ -247,15 +277,15 @@ export function areTypesCompatible(expressions: ISolverExpression[]): boolean {
 export function getSolutionRange(value: number, operator: SparqlRelationOperator): SolutionRange | undefined {
   switch (operator) {
     case SparqlRelationOperator.GreaterThanRelation:
-      return new SolutionRange([ nextUp(value), Number.POSITIVE_INFINITY ]);
+      return new SolutionRange([nextUp(value), Number.POSITIVE_INFINITY]);
     case SparqlRelationOperator.GreaterThanOrEqualToRelation:
-      return new SolutionRange([ value, Number.POSITIVE_INFINITY ]);
+      return new SolutionRange([value, Number.POSITIVE_INFINITY]);
     case SparqlRelationOperator.EqualThanRelation:
-      return new SolutionRange([ value, value ]);
+      return new SolutionRange([value, value]);
     case SparqlRelationOperator.LessThanRelation:
-      return new SolutionRange([ Number.NEGATIVE_INFINITY, nextDown(value) ]);
+      return new SolutionRange([Number.NEGATIVE_INFINITY, nextDown(value)]);
     case SparqlRelationOperator.LessThanOrEqualToRelation:
-      return new SolutionRange([ Number.NEGATIVE_INFINITY, value ]);
+      return new SolutionRange([Number.NEGATIVE_INFINITY, value]);
     default:
       // Not an operator that is compatible with number.
       break;

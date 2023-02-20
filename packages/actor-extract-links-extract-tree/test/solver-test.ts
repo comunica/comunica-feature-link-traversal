@@ -21,6 +21,12 @@ import { SparqlOperandDataTypes, LogicOperator } from '../lib/solverInterfaces';
 import type {
   ISolverExpression,
 } from '../lib/solverInterfaces';
+import {
+  MissMatchVariableError,
+  MisformatedFilterTermError,
+  UnsupportedDataTypeError,
+  UnsupportedOperatorError
+} from '../lib/error';
 
 const nextUp = require('ulp').nextUp;
 const nextDown = require('ulp').nextDown;
@@ -477,7 +483,7 @@ describe('solver function', () => {
       }
     });
 
-    it('given an algebra expression without a variable than should return undefined', () => {
+    it('given an algebra expression without a variable than should return an misformated error', () => {
       const expression: Algebra.Expression = {
         type: Algebra.types.EXPRESSION,
         expressionType: Algebra.expressionTypes.OPERATOR,
@@ -493,10 +499,10 @@ describe('solver function', () => {
       const operator = SparqlRelationOperator.EqualThanRelation;
       const linksOperator: LinkOperator[] = [ new LinkOperator(LogicOperator.And), new LinkOperator(LogicOperator.Or) ];
 
-      expect(resolveAFilterTerm(expression, operator, linksOperator, 'x')).toBeUndefined();
+      expect(resolveAFilterTerm(expression, operator, linksOperator, 'x')).toBeInstanceOf(MisformatedFilterTermError);
     });
 
-    it('given an algebra expression without a litteral than should return undefined', () => {
+    it('given an algebra expression without a litteral than should return an misformated error', () => {
       const variable = 'x';
       const expression: Algebra.Expression = {
         type: Algebra.types.EXPRESSION,
@@ -513,10 +519,10 @@ describe('solver function', () => {
       const operator = SparqlRelationOperator.EqualThanRelation;
       const linksOperator: LinkOperator[] = [ new LinkOperator(LogicOperator.And), new LinkOperator(LogicOperator.Or) ];
 
-      expect(resolveAFilterTerm(expression, operator, linksOperator, variable)).toBeUndefined();
+      expect(resolveAFilterTerm(expression, operator, linksOperator, variable)).toBeInstanceOf(MisformatedFilterTermError);
     });
 
-    it('given an algebra expression without args than should return undefined', () => {
+    it('given an algebra expression without args than should return a misformated error', () => {
       const expression: Algebra.Expression = {
         type: Algebra.types.EXPRESSION,
         expressionType: Algebra.expressionTypes.OPERATOR,
@@ -526,10 +532,10 @@ describe('solver function', () => {
       const operator = SparqlRelationOperator.EqualThanRelation;
       const linksOperator: LinkOperator[] = [ new LinkOperator(LogicOperator.And), new LinkOperator(LogicOperator.Or) ];
 
-      expect(resolveAFilterTerm(expression, operator, linksOperator, 'x')).toBeUndefined();
+      expect(resolveAFilterTerm(expression, operator, linksOperator, 'x')).toBeInstanceOf(MisformatedFilterTermError);
     });
 
-    it('given an algebra expression with a litteral containing an invalid datatype than should return undefined',
+    it('given an algebra expression with a litteral containing an invalid datatype than should return an unsupported datatype error',
       () => {
         const variable = 'x';
         const expression: Algebra.Expression = {
@@ -555,11 +561,11 @@ describe('solver function', () => {
           new LinkOperator(LogicOperator.Or),
         ];
 
-        expect(resolveAFilterTerm(expression, operator, linksOperator, variable)).toBeUndefined();
+        expect(resolveAFilterTerm(expression, operator, linksOperator, variable)).toBeInstanceOf(UnsupportedDataTypeError);
       });
 
     it(`given an algebra expression with a litteral containing a 
-    literal that cannot be converted into number should return undefined`, () => {
+    literal that cannot be converted into number should return an unsupported datatype error`, () => {
       const variable = 'x';
       const expression: Algebra.Expression = {
         type: Algebra.types.EXPRESSION,
@@ -581,7 +587,90 @@ describe('solver function', () => {
       const operator = SparqlRelationOperator.EqualThanRelation;
       const linksOperator: LinkOperator[] = [ new LinkOperator(LogicOperator.And), new LinkOperator(LogicOperator.Or) ];
 
-      expect(resolveAFilterTerm(expression, operator, linksOperator, variable)).toBeUndefined();
+      expect(resolveAFilterTerm(expression, operator, linksOperator, variable)).toBeInstanceOf(UnsupportedDataTypeError);
+    });
+  });
+
+  describe('recursifResolve', () => {
+    it('given an algebra expression with two logicals operators should return the valid solution domain', () => {
+      const expression = translate(`
+      SELECT * WHERE { ?x ?y ?z 
+      FILTER( ?x=2 && ?x<5)
+      }`).input.expression;
+
+      const resp = recursifResolve(
+        expression,
+        new SolutionDomain(),
+        undefined,
+        'x',
+        false,
+      );
+
+      const expectedDomain = SolutionDomain.newWithInitialValue(new SolutionRange([ 2, 2 ]));
+
+      expect(resp.get_domain()).toStrictEqual(expectedDomain.get_domain());
+    });
+
+    it(`given an algebra expression with two logicals operators 
+    that cannot be satified should return an empty domain`, () => {
+      const expression = translate(`
+      SELECT * WHERE { ?x ?y ?z 
+      FILTER( ?x=2 && ?x>5)
+      }`).input.expression;
+
+      const resp = recursifResolve(
+        expression,
+        new SolutionDomain(),
+        undefined,
+        'x',
+        false,
+      );
+
+      const expectedDomain = new SolutionDomain();
+
+      expect(resp.get_domain()).toStrictEqual(expectedDomain.get_domain());
+    });
+
+    it(`given an algebra expression with two logicals operators that are negated
+     should return the valid solution domain`, () => {
+      const expression = translate(`
+      SELECT * WHERE { ?x ?y ?z 
+      FILTER( !(?x=2 && ?x<5))
+      }`).input.expression;
+
+      const resp = recursifResolve(
+        expression,
+        new SolutionDomain(),
+        undefined,
+        'x',
+        false,
+      );
+
+      const expectedDomain = SolutionDomain.newWithInitialValue(new SolutionRange([ 5, Number.POSITIVE_INFINITY ]));
+
+      expect(resp.get_domain()).toStrictEqual(expectedDomain.get_domain());
+    });
+
+    it(`given an algebra expression with three logicals operators where the priority of operation should start with the not operator than 
+    should return the valid solution domain`, () => {
+      const expression = translate(`
+      SELECT * WHERE { ?x ?y ?z 
+      FILTER( ?x=2 && ?x>2 || !(?x=3))
+      }`).input.expression;
+
+      const resp = recursifResolve(
+        expression,
+        new SolutionDomain(),
+        undefined,
+        'x',
+        false,
+      );
+
+      let expectedDomain = SolutionDomain.newWithInitialValue(new SolutionRange(
+        [ Number.NEGATIVE_INFINITY, nextDown(3) ],
+      ));
+      expectedDomain = expectedDomain.addWithOrOperator(new SolutionRange([ nextUp(3), Number.POSITIVE_INFINITY ]));
+      expect(resp.get_domain()).toStrictEqual(expectedDomain.get_domain());
     });
   });
 
@@ -871,88 +960,28 @@ describe('solver function', () => {
 
       expect(isRelationFilterExpressionDomainEmpty({ relation, filterExpression, variable })).toBe(true);
     });
-  });
-  describe('recursifResolve', () => {
-    it('given an algebra expression with two logicals operators should return the valid solution domain', () => {
-      const expression = translate(`
-      SELECT * WHERE { ?x ?y ?z 
-      FILTER( ?x=2 && ?x<5)
-      }`).input.expression;
 
-      const resp = recursifResolve(
-        expression,
-        new SolutionDomain(),
-        undefined,
-        'x',
-        false,
-      );
+    it('should accept the link given that recursifResolve return a SyntaxError', ()=>{
+      const relation: ITreeRelation = {
+        type: SparqlRelationOperator.EqualThanRelation,
+        remainingItems: 10,
+        path: 'ex:path',
+        value: {
+          value: '5',
+          term: DF.literal('5', DF.namedNode('http://www.w3.org/2001/XMLSchema#integer')),
+        },
+        node: 'https://www.example.be',
+      };
 
-      const expectedDomain = SolutionDomain.newWithInitialValue(new SolutionRange([ 2, 2 ]));
+      const filterExpression = translate(`
+            SELECT * WHERE { ?x ?y ?z 
+            FILTER( ?x = 2 && ?x > 5 && ?x > 88.3)
+            }`).input.expression;
 
-      expect(resp.get_domain()).toStrictEqual(expectedDomain.get_domain());
-    });
+      const variable = 'x';
 
-    it(`given an algebra expression with two logicals operators 
-    that cannot be satified should return an empty domain`, () => {
-      const expression = translate(`
-      SELECT * WHERE { ?x ?y ?z 
-      FILTER( ?x=2 && ?x>5)
-      }`).input.expression;
-
-      const resp = recursifResolve(
-        expression,
-        new SolutionDomain(),
-        undefined,
-        'x',
-        false,
-      );
-
-      const expectedDomain = new SolutionDomain();
-
-      expect(resp.get_domain()).toStrictEqual(expectedDomain.get_domain());
-    });
-
-    it(`given an algebra expression with two logicals operators that are negated
-     should return the valid solution domain`, () => {
-      const expression = translate(`
-      SELECT * WHERE { ?x ?y ?z 
-      FILTER( !(?x=2 && ?x<5))
-      }`).input.expression;
-
-      const resp = recursifResolve(
-        expression,
-        new SolutionDomain(),
-        undefined,
-        'x',
-        false,
-      );
-
-      const expectedDomain = SolutionDomain.newWithInitialValue(new SolutionRange([ 5, Number.POSITIVE_INFINITY ]));
-
-      expect(resp.get_domain()).toStrictEqual(expectedDomain.get_domain());
-    });
-
-    it(`given an algebra expression with three logicals operators where the priority of operation should start with the not operator than 
-    should return the valid solution domain`, () => {
-      const expression = translate(`
-      SELECT * WHERE { ?x ?y ?z 
-      FILTER( ?x=2 && ?x>2 || !(?x=3))
-      }`).input.expression;
-
-      const resp = recursifResolve(
-        expression,
-        new SolutionDomain(),
-        undefined,
-        'x',
-        false,
-      );
-
-      let expectedDomain = SolutionDomain.newWithInitialValue(new SolutionRange(
-        [ Number.NEGATIVE_INFINITY, nextDown(3) ],
-      ));
-      expectedDomain = expectedDomain.addWithOrOperator(new SolutionRange([ nextUp(3), Number.POSITIVE_INFINITY ]));
-      expect(resp.get_domain()).toStrictEqual(expectedDomain.get_domain());
+      expect(isRelationFilterExpressionDomainEmpty({ relation, filterExpression, variable })).toBe(false);
     });
   });
+ 
 });
-
