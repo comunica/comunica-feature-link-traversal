@@ -1,4 +1,3 @@
-import { assert } from 'console';
 import { SolutionRange } from '../lib//SolutionRange';
 import { SolutionDomain } from '../lib/SolutionDomain';
 import { LogicOperator } from '../lib/solverInterfaces';
@@ -209,12 +208,12 @@ describe('SolutionDomain', () => {
       expect(newDomain.get_domain()).toStrictEqual(expectedDomain);
     });
 
-    it('given an empty domain and a last operator and should return an empty domain', ()=>{
+    it('given an empty domain and a last operator and should return an empty domain', () => {
       const aRange = new SolutionRange([ -2, 25 ]);
-      const anotherRangeNonOverlapping = new SolutionRange([ 2000, 3000  ]);
+      const anotherRangeNonOverlapping = new SolutionRange([ 2_000, 3_000 ]);
 
       let newDomain = aDomain.addWithAndOperator(aRange);
-      newDomain = newDomain.add({range: anotherRangeNonOverlapping,  operator: LogicOperator.And});
+      newDomain = newDomain.add({ range: anotherRangeNonOverlapping, operator: LogicOperator.And });
       expect(newDomain.isDomainEmpty()).toBe(true);
 
       newDomain = newDomain.addWithAndOperator(aRange);

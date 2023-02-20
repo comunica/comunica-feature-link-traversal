@@ -3,6 +3,10 @@ import { SparqlRelationOperator } from '@comunica/types-link-traversal';
 import { DataFactory } from 'rdf-data-factory';
 import type * as RDF from 'rdf-js';
 import { Algebra, translate } from 'sparqlalgebrajs';
+import {
+  MisformatedFilterTermError,
+  UnsupportedDataTypeError,
+} from '../lib/error';
 import { LinkOperator } from '../lib/LinkOperator';
 import { SolutionDomain } from '../lib/SolutionDomain';
 import { SolutionRange } from '../lib/SolutionRange';
@@ -21,12 +25,6 @@ import { SparqlOperandDataTypes, LogicOperator } from '../lib/solverInterfaces';
 import type {
   ISolverExpression,
 } from '../lib/solverInterfaces';
-import {
-  MissMatchVariableError,
-  MisformatedFilterTermError,
-  UnsupportedDataTypeError,
-  UnsupportedOperatorError
-} from '../lib/error';
 
 const nextUp = require('ulp').nextUp;
 const nextDown = require('ulp').nextDown;
@@ -519,7 +517,8 @@ describe('solver function', () => {
       const operator = SparqlRelationOperator.EqualThanRelation;
       const linksOperator: LinkOperator[] = [ new LinkOperator(LogicOperator.And), new LinkOperator(LogicOperator.Or) ];
 
-      expect(resolveAFilterTerm(expression, operator, linksOperator, variable)).toBeInstanceOf(MisformatedFilterTermError);
+      expect(resolveAFilterTerm(expression, operator, linksOperator, variable))
+        .toBeInstanceOf(MisformatedFilterTermError);
     });
 
     it('given an algebra expression without args than should return a misformated error', () => {
@@ -535,34 +534,36 @@ describe('solver function', () => {
       expect(resolveAFilterTerm(expression, operator, linksOperator, 'x')).toBeInstanceOf(MisformatedFilterTermError);
     });
 
-    it('given an algebra expression with a litteral containing an invalid datatype than should return an unsupported datatype error',
-      () => {
-        const variable = 'x';
-        const expression: Algebra.Expression = {
-          type: Algebra.types.EXPRESSION,
-          expressionType: Algebra.expressionTypes.OPERATOR,
-          operator: '=',
-          args: [
-            {
-              type: Algebra.types.EXPRESSION,
-              expressionType: Algebra.expressionTypes.TERM,
-              term: DF.variable(variable),
-            },
-            {
-              type: Algebra.types.EXPRESSION,
-              expressionType: Algebra.expressionTypes.TERM,
-              term: DF.literal('6', DF.namedNode('http://www.w3.org/2001/XMLSchema#foo')),
-            },
-          ],
-        };
-        const operator = SparqlRelationOperator.EqualThanRelation;
-        const linksOperator: LinkOperator[] = [
-          new LinkOperator(LogicOperator.And),
-          new LinkOperator(LogicOperator.Or),
-        ];
+    it(`given an algebra expression with a litteral containing an invalid datatype than 
+    should return an unsupported datatype error`,
+    () => {
+      const variable = 'x';
+      const expression: Algebra.Expression = {
+        type: Algebra.types.EXPRESSION,
+        expressionType: Algebra.expressionTypes.OPERATOR,
+        operator: '=',
+        args: [
+          {
+            type: Algebra.types.EXPRESSION,
+            expressionType: Algebra.expressionTypes.TERM,
+            term: DF.variable(variable),
+          },
+          {
+            type: Algebra.types.EXPRESSION,
+            expressionType: Algebra.expressionTypes.TERM,
+            term: DF.literal('6', DF.namedNode('http://www.w3.org/2001/XMLSchema#foo')),
+          },
+        ],
+      };
+      const operator = SparqlRelationOperator.EqualThanRelation;
+      const linksOperator: LinkOperator[] = [
+        new LinkOperator(LogicOperator.And),
+        new LinkOperator(LogicOperator.Or),
+      ];
 
-        expect(resolveAFilterTerm(expression, operator, linksOperator, variable)).toBeInstanceOf(UnsupportedDataTypeError);
-      });
+      expect(resolveAFilterTerm(expression, operator, linksOperator, variable))
+        .toBeInstanceOf(UnsupportedDataTypeError);
+    });
 
     it(`given an algebra expression with a litteral containing a 
     literal that cannot be converted into number should return an unsupported datatype error`, () => {
@@ -587,7 +588,8 @@ describe('solver function', () => {
       const operator = SparqlRelationOperator.EqualThanRelation;
       const linksOperator: LinkOperator[] = [ new LinkOperator(LogicOperator.And), new LinkOperator(LogicOperator.Or) ];
 
-      expect(resolveAFilterTerm(expression, operator, linksOperator, variable)).toBeInstanceOf(UnsupportedDataTypeError);
+      expect(resolveAFilterTerm(expression, operator, linksOperator, variable))
+        .toBeInstanceOf(UnsupportedDataTypeError);
     });
   });
 
@@ -961,7 +963,7 @@ describe('solver function', () => {
       expect(isRelationFilterExpressionDomainEmpty({ relation, filterExpression, variable })).toBe(true);
     });
 
-    it('should accept the link given that recursifResolve return a SyntaxError', ()=>{
+    it('should accept the link given that recursifResolve return a SyntaxError', () => {
       const relation: ITreeRelation = {
         type: SparqlRelationOperator.EqualThanRelation,
         remainingItems: 10,
@@ -983,5 +985,4 @@ describe('solver function', () => {
       expect(isRelationFilterExpressionDomainEmpty({ relation, filterExpression, variable })).toBe(false);
     });
   });
- 
 });

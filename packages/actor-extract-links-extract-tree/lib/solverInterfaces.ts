@@ -1,6 +1,5 @@
 import type { SparqlRelationOperator } from '@comunica/types-link-traversal';
 import type { LinkOperator } from './LinkOperator';
-import type { SolutionRange } from './SolutionRange';
 /**
  * Valid SPARQL data type for operation.
  * reference: https://www.w3.org/TR/sparql11-query/#operandDataTypes
@@ -49,30 +48,6 @@ export enum LogicOperator {
 export const LogicOperatorReversed: Map<string, LogicOperator> =
     new Map(Object.values(LogicOperator).map(value => [ value, value ]));
 
-/**
- * A range of a solver expression with his chain of logical operation.
- */
-export interface ISolverExpressionRange {
-  /**
-     * The chain of operation attached to the expression.
-     */
-  chainOperator: LinkOperator[];
-  /**
-     * The domain of the solution of this expression.
-     */
-  solutionDomain: SolutionRange;
-}
-
-/**
- * A system of equation to be solved by the solver. It is indexed by the last logical operation that has to be apply
- * to the expression
- */
-export type SolverEquationSystem = Map<LastLogicalOperator, ISolverExpressionRange>;
-
-/**
- * A last logical expression of a chain of logical expression.
- */
-export type LastLogicalOperator = string;
 /**
  * A variable to be solved by the solver.
  */

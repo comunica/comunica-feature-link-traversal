@@ -2,6 +2,12 @@ import { SparqlRelationOperator } from '@comunica/types-link-traversal';
 import type { ITreeRelation } from '@comunica/types-link-traversal';
 import type * as RDF from 'rdf-js';
 import { Algebra } from 'sparqlalgebrajs';
+import {
+  MissMatchVariableError,
+  MisformatedFilterTermError,
+  UnsupportedDataTypeError,
+  UnsupportedOperatorError,
+} from './error';
 import { LinkOperator } from './LinkOperator';
 import { SolutionDomain } from './SolutionDomain';
 import { SolutionRange } from './SolutionRange';
@@ -13,17 +19,11 @@ import type {
   ISolverExpression,
   Variable,
 } from './solverInterfaces';
-import {
-  MissMatchVariableError,
-  MisformatedFilterTermError,
-  UnsupportedDataTypeError,
-  UnsupportedOperatorError
-} from './error';
 
 const nextUp = require('ulp').nextUp;
 const nextDown = require('ulp').nextDown;
 
-const A_TRUE_EXPRESSION: SolutionRange = new SolutionRange([Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY]);
+const A_TRUE_EXPRESSION: SolutionRange = new SolutionRange([ Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY ]);
 /**
  * Check if the solution domain of a system of equation compose of the expressions of the filter
  * expression and the relation is not empty.
@@ -63,8 +63,8 @@ export function isRelationFilterExpressionDomainEmpty({ relation, filterExpressi
       false,
     );
   } catch (error: unknown) {
-    // A filter term was missformed we let the query engine return an error to the user and by precaution we accept the link
-    // in case the error is from the solver and not the filter expression
+    // A filter term was missformed we let the query engine return an error to the user and by precaution
+    // we accept the link in case the error is from the solver and not the filter expression
     if (error instanceof MisformatedFilterTermError) {
       return true;
     }
@@ -79,7 +79,7 @@ export function isRelationFilterExpressionDomainEmpty({ relation, filterExpressi
       return true;
     }
 
-    // if it's unexpected error we throw it
+    // If it's unexpected error we throw it
     throw error;
   }
 
@@ -121,12 +121,11 @@ export function resolveAFilterTerm(expression: Algebra.Expression,
       valueType = SparqlOperandDataTypesReversed.get(arg.term.datatype.value);
       if (valueType) {
         valueAsNumber = castSparqlRdfTermIntoNumber(rawValue!, valueType);
-        if( !valueAsNumber){
-          return new UnsupportedDataTypeError(`we do not support the datatype "${valueType}" in the solver for the moment`)
-
+        if (!valueAsNumber) {
+          return new UnsupportedDataTypeError(`we do not support the datatype "${valueType}" in the solver for the moment`);
         }
       } else {
-        return new UnsupportedDataTypeError(`The datatype "${valueType}" is not supported by the SPARQL 1.1 Query Language W3C recommandation`)
+        return new UnsupportedDataTypeError(`The datatype "${valueType}" is not supported by the SPARQL 1.1 Query Language W3C recommandation`);
       }
     }
   }
@@ -142,13 +141,15 @@ export function resolveAFilterTerm(expression: Algebra.Expression,
     };
   }
   const missingTerm = [];
-  !hasVariable ? missingTerm.push('Variable') : null;
-  !rawValue ? missingTerm.push('Litteral') : null;
+  if (!hasVariable) {
+    missingTerm.push('Variable');
+  }
+  if (!rawValue) {
+    missingTerm.push('Litteral');
+  }
 
-  return new MisformatedFilterTermError(`the filter expressions doesn\'t have the term ${missingTerm.toString()}`);
-
+  return new MisformatedFilterTermError(`the filter expressions doesn't have the term ${missingTerm.toString()}`);
 }
-
 
 /**
  * Recursively traverse the filter expression and calculate the domain until it get to the current expression.
@@ -277,15 +278,15 @@ export function areTypesCompatible(expressions: ISolverExpression[]): boolean {
 export function getSolutionRange(value: number, operator: SparqlRelationOperator): SolutionRange | undefined {
   switch (operator) {
     case SparqlRelationOperator.GreaterThanRelation:
-      return new SolutionRange([nextUp(value), Number.POSITIVE_INFINITY]);
+      return new SolutionRange([ nextUp(value), Number.POSITIVE_INFINITY ]);
     case SparqlRelationOperator.GreaterThanOrEqualToRelation:
-      return new SolutionRange([value, Number.POSITIVE_INFINITY]);
+      return new SolutionRange([ value, Number.POSITIVE_INFINITY ]);
     case SparqlRelationOperator.EqualThanRelation:
-      return new SolutionRange([value, value]);
+      return new SolutionRange([ value, value ]);
     case SparqlRelationOperator.LessThanRelation:
-      return new SolutionRange([Number.NEGATIVE_INFINITY, nextDown(value)]);
+      return new SolutionRange([ Number.NEGATIVE_INFINITY, nextDown(value) ]);
     case SparqlRelationOperator.LessThanOrEqualToRelation:
-      return new SolutionRange([Number.NEGATIVE_INFINITY, value]);
+      return new SolutionRange([ Number.NEGATIVE_INFINITY, value ]);
     default:
       // Not an operator that is compatible with number.
       break;
