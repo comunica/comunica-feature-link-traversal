@@ -1,7 +1,7 @@
 import type { ITreeRelation } from '@comunica/types-link-traversal';
 import { SparqlRelationOperator } from '@comunica/types-link-traversal';
 import { DataFactory } from 'rdf-data-factory';
-import * as RDF from 'rdf-js';
+import type * as RDF from 'rdf-js';
 import { Algebra, translate } from 'sparqlalgebrajs';
 import {
   MisformatedFilterTermError,
@@ -35,14 +35,14 @@ describe('solver function', () => {
   describe('filterOperatorToSparqlRelationOperator', () => {
     it('should return the RelationOperator given a string representation', () => {
       const testTable: [string, SparqlRelationOperator][] = [
-        ['=', SparqlRelationOperator.EqualThanRelation],
-        ['<', SparqlRelationOperator.LessThanRelation],
-        ['<=', SparqlRelationOperator.LessThanOrEqualToRelation],
-        ['>', SparqlRelationOperator.GreaterThanRelation],
-        ['>=', SparqlRelationOperator.GreaterThanOrEqualToRelation],
+        [ '=', SparqlRelationOperator.EqualThanRelation ],
+        [ '<', SparqlRelationOperator.LessThanRelation ],
+        [ '<=', SparqlRelationOperator.LessThanOrEqualToRelation ],
+        [ '>', SparqlRelationOperator.GreaterThanRelation ],
+        [ '>=', SparqlRelationOperator.GreaterThanOrEqualToRelation ],
       ];
 
-      for (const [value, expectedAnswer] of testTable) {
+      for (const [ value, expectedAnswer ] of testTable) {
         expect(filterOperatorToSparqlRelationOperator(value)).toBe(expectedAnswer);
       }
     });
@@ -91,65 +91,65 @@ describe('solver function', () => {
   describe('castSparqlRdfTermIntoNumber', () => {
     it('should return the expected number when given an integer', () => {
       const testTable: [string, SparqlOperandDataTypes, number][] = [
-        ['19273', SparqlOperandDataTypes.Integer, 19_273],
-        ['0', SparqlOperandDataTypes.NonPositiveInteger, 0],
-        ['-12313459', SparqlOperandDataTypes.NegativeInteger, -12_313_459],
-        ['121312321321321', SparqlOperandDataTypes.Long, 121_312_321_321_321],
-        ['1213123213213213', SparqlOperandDataTypes.Short, 1_213_123_213_213_213],
-        ['283', SparqlOperandDataTypes.NonNegativeInteger, 283],
-        ['-12131293912831', SparqlOperandDataTypes.UnsignedLong, -12_131_293_912_831],
-        ['-1234', SparqlOperandDataTypes.UnsignedInt, -1_234],
-        ['-123341231231234', SparqlOperandDataTypes.UnsignedShort, -123_341_231_231_234],
-        ['1234', SparqlOperandDataTypes.PositiveInteger, 1_234],
+        [ '19273', SparqlOperandDataTypes.Integer, 19_273 ],
+        [ '0', SparqlOperandDataTypes.NonPositiveInteger, 0 ],
+        [ '-12313459', SparqlOperandDataTypes.NegativeInteger, -12_313_459 ],
+        [ '121312321321321', SparqlOperandDataTypes.Long, 121_312_321_321_321 ],
+        [ '1213123213213213', SparqlOperandDataTypes.Short, 1_213_123_213_213_213 ],
+        [ '283', SparqlOperandDataTypes.NonNegativeInteger, 283 ],
+        [ '-12131293912831', SparqlOperandDataTypes.UnsignedLong, -12_131_293_912_831 ],
+        [ '-1234', SparqlOperandDataTypes.UnsignedInt, -1_234 ],
+        [ '-123341231231234', SparqlOperandDataTypes.UnsignedShort, -123_341_231_231_234 ],
+        [ '1234', SparqlOperandDataTypes.PositiveInteger, 1_234 ],
       ];
 
-      for (const [value, valueType, expectedNumber] of testTable) {
+      for (const [ value, valueType, expectedNumber ] of testTable) {
         expect(castSparqlRdfTermIntoNumber(value, valueType)).toBe(expectedNumber);
       }
     });
 
     it('should return undefined if a non integer is pass with SparqlOperandDataTypes integer compatible type', () => {
       const testTable: [string, SparqlOperandDataTypes][] = [
-        ['1.6751', SparqlOperandDataTypes.Integer],
-        ['asbd', SparqlOperandDataTypes.PositiveInteger],
-        ['', SparqlOperandDataTypes.NegativeInteger],
+        [ '1.6751', SparqlOperandDataTypes.Integer ],
+        [ 'asbd', SparqlOperandDataTypes.PositiveInteger ],
+        [ '', SparqlOperandDataTypes.NegativeInteger ],
       ];
 
-      for (const [value, valueType] of testTable) {
+      for (const [ value, valueType ] of testTable) {
         expect(castSparqlRdfTermIntoNumber(value, valueType)).toBeUndefined();
       }
     });
 
     it('should return undefined if a non fraction is pass with SparqlOperandDataTypes fraction compatible type', () => {
       const testTable: [string, SparqlOperandDataTypes][] = [
-        ['asbd', SparqlOperandDataTypes.Double],
-        ['', SparqlOperandDataTypes.Float],
+        [ 'asbd', SparqlOperandDataTypes.Double ],
+        [ '', SparqlOperandDataTypes.Float ],
       ];
 
-      for (const [value, valueType] of testTable) {
+      for (const [ value, valueType ] of testTable) {
         expect(castSparqlRdfTermIntoNumber(value, valueType)).toBeUndefined();
       }
     });
 
     it('should return the expected number when given an decimal', () => {
       const testTable: [string, SparqlOperandDataTypes, number][] = [
-        ['1.1', SparqlOperandDataTypes.Decimal, 1.1],
-        ['2132131.121321321', SparqlOperandDataTypes.Float, 2_132_131.121_321_321],
-        ['1234.123', SparqlOperandDataTypes.Double, 1_234.123],
+        [ '1.1', SparqlOperandDataTypes.Decimal, 1.1 ],
+        [ '2132131.121321321', SparqlOperandDataTypes.Float, 2_132_131.121_321_321 ],
+        [ '1234.123', SparqlOperandDataTypes.Double, 1_234.123 ],
       ];
 
-      for (const [value, valueType, expectedNumber] of testTable) {
+      for (const [ value, valueType, expectedNumber ] of testTable) {
         expect(castSparqlRdfTermIntoNumber(value, valueType)).toBe(expectedNumber);
       }
     });
 
     it('should return the expected number given a boolean', () => {
       const testTable: [string, number][] = [
-        ['true', 1],
-        ['false', 0],
+        [ 'true', 1 ],
+        [ 'false', 0 ],
       ];
 
-      for (const [value, expectedNumber] of testTable) {
+      for (const [ value, expectedNumber ] of testTable) {
         expect(castSparqlRdfTermIntoNumber(value, SparqlOperandDataTypes.Boolean)).toBe(expectedNumber);
       }
     });
@@ -184,27 +184,27 @@ describe('solver function', () => {
       const testTable: [SparqlRelationOperator, SolutionRange][] = [
         [
           SparqlRelationOperator.GreaterThanRelation,
-          new SolutionRange([nextUp(value), Number.POSITIVE_INFINITY]),
+          new SolutionRange([ nextUp(value), Number.POSITIVE_INFINITY ]),
         ],
         [
           SparqlRelationOperator.GreaterThanOrEqualToRelation,
-          new SolutionRange([value, Number.POSITIVE_INFINITY]),
+          new SolutionRange([ value, Number.POSITIVE_INFINITY ]),
         ],
         [
           SparqlRelationOperator.EqualThanRelation,
-          new SolutionRange([value, value]),
+          new SolutionRange([ value, value ]),
         ],
         [
           SparqlRelationOperator.LessThanRelation,
-          new SolutionRange([Number.NEGATIVE_INFINITY, nextDown(value)]),
+          new SolutionRange([ Number.NEGATIVE_INFINITY, nextDown(value) ]),
         ],
         [
           SparqlRelationOperator.LessThanOrEqualToRelation,
-          new SolutionRange([Number.NEGATIVE_INFINITY, value]),
+          new SolutionRange([ Number.NEGATIVE_INFINITY, value ]),
         ],
       ];
 
-      for (const [operator, expectedRange] of testTable) {
+      for (const [ operator, expectedRange ] of testTable) {
         expect(getSolutionRange(value, operator)).toStrictEqual(expectedRange);
       }
     });
@@ -461,7 +461,7 @@ describe('solver function', () => {
         ],
       };
       const operator = SparqlRelationOperator.EqualThanRelation;
-      const linksOperator: LinkOperator[] = [new LinkOperator(LogicOperator.And), new LinkOperator(LogicOperator.Or)];
+      const linksOperator: LinkOperator[] = [ new LinkOperator(LogicOperator.And), new LinkOperator(LogicOperator.Or) ];
       const variable = 'x';
       const expectedSolverExpression: ISolverExpression = {
         variable,
@@ -495,7 +495,7 @@ describe('solver function', () => {
         ],
       };
       const operator = SparqlRelationOperator.EqualThanRelation;
-      const linksOperator: LinkOperator[] = [new LinkOperator(LogicOperator.And), new LinkOperator(LogicOperator.Or)];
+      const linksOperator: LinkOperator[] = [ new LinkOperator(LogicOperator.And), new LinkOperator(LogicOperator.Or) ];
 
       expect(resolveAFilterTerm(expression, operator, linksOperator, 'x')).toBeInstanceOf(MisformatedFilterTermError);
     });
@@ -515,7 +515,7 @@ describe('solver function', () => {
         ],
       };
       const operator = SparqlRelationOperator.EqualThanRelation;
-      const linksOperator: LinkOperator[] = [new LinkOperator(LogicOperator.And), new LinkOperator(LogicOperator.Or)];
+      const linksOperator: LinkOperator[] = [ new LinkOperator(LogicOperator.And), new LinkOperator(LogicOperator.Or) ];
 
       expect(resolveAFilterTerm(expression, operator, linksOperator, variable))
         .toBeInstanceOf(MisformatedFilterTermError);
@@ -529,41 +529,41 @@ describe('solver function', () => {
         args: [],
       };
       const operator = SparqlRelationOperator.EqualThanRelation;
-      const linksOperator: LinkOperator[] = [new LinkOperator(LogicOperator.And), new LinkOperator(LogicOperator.Or)];
+      const linksOperator: LinkOperator[] = [ new LinkOperator(LogicOperator.And), new LinkOperator(LogicOperator.Or) ];
 
       expect(resolveAFilterTerm(expression, operator, linksOperator, 'x')).toBeInstanceOf(MisformatedFilterTermError);
     });
 
     it(`given an algebra expression with a litteral containing an invalid datatype than 
     should return an unsupported datatype error`,
-      () => {
-        const variable = 'x';
-        const expression: Algebra.Expression = {
-          type: Algebra.types.EXPRESSION,
-          expressionType: Algebra.expressionTypes.OPERATOR,
-          operator: '=',
-          args: [
-            {
-              type: Algebra.types.EXPRESSION,
-              expressionType: Algebra.expressionTypes.TERM,
-              term: DF.variable(variable),
-            },
-            {
-              type: Algebra.types.EXPRESSION,
-              expressionType: Algebra.expressionTypes.TERM,
-              term: DF.literal('6', DF.namedNode('http://www.w3.org/2001/XMLSchema#foo')),
-            },
-          ],
-        };
-        const operator = SparqlRelationOperator.EqualThanRelation;
-        const linksOperator: LinkOperator[] = [
-          new LinkOperator(LogicOperator.And),
-          new LinkOperator(LogicOperator.Or),
-        ];
+    () => {
+      const variable = 'x';
+      const expression: Algebra.Expression = {
+        type: Algebra.types.EXPRESSION,
+        expressionType: Algebra.expressionTypes.OPERATOR,
+        operator: '=',
+        args: [
+          {
+            type: Algebra.types.EXPRESSION,
+            expressionType: Algebra.expressionTypes.TERM,
+            term: DF.variable(variable),
+          },
+          {
+            type: Algebra.types.EXPRESSION,
+            expressionType: Algebra.expressionTypes.TERM,
+            term: DF.literal('6', DF.namedNode('http://www.w3.org/2001/XMLSchema#foo')),
+          },
+        ],
+      };
+      const operator = SparqlRelationOperator.EqualThanRelation;
+      const linksOperator: LinkOperator[] = [
+        new LinkOperator(LogicOperator.And),
+        new LinkOperator(LogicOperator.Or),
+      ];
 
-        expect(resolveAFilterTerm(expression, operator, linksOperator, variable))
-          .toBeInstanceOf(UnsupportedDataTypeError);
-      });
+      expect(resolveAFilterTerm(expression, operator, linksOperator, variable))
+        .toBeInstanceOf(UnsupportedDataTypeError);
+    });
 
     it(`given an algebra expression with a litteral containing a 
     literal that cannot be converted into number should return an unsupported datatype error`, () => {
@@ -586,7 +586,7 @@ describe('solver function', () => {
         ],
       };
       const operator = SparqlRelationOperator.EqualThanRelation;
-      const linksOperator: LinkOperator[] = [new LinkOperator(LogicOperator.And), new LinkOperator(LogicOperator.Or)];
+      const linksOperator: LinkOperator[] = [ new LinkOperator(LogicOperator.And), new LinkOperator(LogicOperator.Or) ];
 
       expect(resolveAFilterTerm(expression, operator, linksOperator, variable))
         .toBeInstanceOf(UnsupportedDataTypeError);
@@ -608,7 +608,7 @@ describe('solver function', () => {
         false,
       );
 
-      const expectedDomain = SolutionDomain.newWithInitialValue(new SolutionRange([2, 2]));
+      const expectedDomain = SolutionDomain.newWithInitialValue(new SolutionRange([ 2, 2 ]));
 
       expect(resp.get_domain()).toStrictEqual(expectedDomain.get_domain());
     });
@@ -648,7 +648,7 @@ describe('solver function', () => {
         false,
       );
 
-      const expectedDomain = SolutionDomain.newWithInitialValue(new SolutionRange([5, Number.POSITIVE_INFINITY]));
+      const expectedDomain = SolutionDomain.newWithInitialValue(new SolutionRange([ 5, Number.POSITIVE_INFINITY ]));
 
       expect(resp.get_domain()).toStrictEqual(expectedDomain.get_domain());
     });
@@ -669,9 +669,9 @@ describe('solver function', () => {
       );
 
       let expectedDomain = SolutionDomain.newWithInitialValue(new SolutionRange(
-        [Number.NEGATIVE_INFINITY, nextDown(3)],
+        [ Number.NEGATIVE_INFINITY, nextDown(3) ],
       ));
-      expectedDomain = expectedDomain.addWithOrOperator(new SolutionRange([nextUp(3), Number.POSITIVE_INFINITY]));
+      expectedDomain = expectedDomain.addWithOrOperator(new SolutionRange([ nextUp(3), Number.POSITIVE_INFINITY ]));
       expect(resp.get_domain()).toStrictEqual(expectedDomain.get_domain());
     });
   });
@@ -1022,13 +1022,13 @@ describe('solver function', () => {
       const filterExpression: Algebra.Expression = {
         type: Algebra.types.EXPRESSION,
         expressionType: Algebra.expressionTypes.OPERATOR,
-        operator: "=",
+        operator: '=',
         args: [
           {
             type: Algebra.types.EXPRESSION,
             expressionType: Algebra.expressionTypes.TERM,
-            term:DF.variable('x')
-          }
+            term: DF.variable('x'),
+          },
         ],
       };
 
