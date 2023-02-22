@@ -1,0 +1,7 @@
+# [SolidBench] Discover 5.5
+# Datasources: /
+PREFIX snvoc: <https://solidbench.linkeddatafragments.org/www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/>
+SELECT DISTINCT ?locationIp WHERE {
+  ?message snvoc:hasCreator <https://solidbench.linkeddatafragments.org/pods/00000006597069767117/profile/card#me>;
+    snvoc:locationIP ?locationIp.
+}

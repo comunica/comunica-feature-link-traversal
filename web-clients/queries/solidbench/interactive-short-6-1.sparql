@@ -1,0 +1,19 @@
+# [SolidBench] Short 6
+# Datasources: /
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX snvoc: <https://solidbench.linkeddatafragments.org/www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/>
+SELECT ?forumId ?forumTitle ?moderatorId ?moderatorFirstName ?moderatorLastName WHERE {
+  <https://solidbench.linkeddatafragments.org/pods/00000000000000001269/comments/India#1030792429365> snvoc:id ?messageId.
+  OPTIONAL {
+    <https://solidbench.linkeddatafragments.org/pods/00000000000000001269/comments/India#1030792429365> (snvoc:replyOf*) ?originalPostInner.
+    ?originalPostInner rdf:type snvoc:Post.
+  }
+  BIND(COALESCE(?originalPostInner, <https://solidbench.linkeddatafragments.org/pods/00000000000000001269/comments/India#1030792429365>) AS ?originalPost)
+  ?forum snvoc:containerOf ?originalPost;
+    snvoc:id ?forumId;
+    snvoc:title ?forumTitle;
+    snvoc:hasModerator ?moderator.
+  ?moderator snvoc:id ?moderatorId;
+    snvoc:firstName ?moderatorFirstName;
+    snvoc:lastName ?moderatorLastName.
+}

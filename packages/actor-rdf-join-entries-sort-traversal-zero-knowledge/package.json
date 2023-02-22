@@ -1,6 +1,6 @@
 {
   "name": "@comunica/actor-rdf-join-entries-sort-traversal-zero-knowledge",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "A rdf-join-entries-sort actor that orders by increasing traversal-zero-knowledge",
   "lsd:module": true,
   "main": "lib/index.js",
@@ -28,14 +28,15 @@
   "files": [
     "components",
     "lib/**/*.d.ts",
-    "lib/**/*.js"
+    "lib/**/*.js",
+    "lib/**/*.js.map"
   ],
   "dependencies": {
-    "@comunica/bus-rdf-join-entries-sort": "^2.0.1",
-    "@comunica/bus-rdf-resolve-quad-pattern": "^2.0.1",
-    "@comunica/core": "^2.0.1",
-    "@comunica/context-entries": "^2.0.1",
-    "@comunica/types": "^2.0.1",
+    "@comunica/bus-rdf-join-entries-sort": "^2.6.7",
+    "@comunica/bus-rdf-resolve-quad-pattern": "^2.6.7",
+    "@comunica/context-entries": "^2.6.7",
+    "@comunica/core": "^2.6.7",
+    "@comunica/types": "^2.6.7",
     "@rdfjs/types": "*",
     "rdf-terms": "^1.7.0",
     "sparqlalgebrajs": "^4.0.2"

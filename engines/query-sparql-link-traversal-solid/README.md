@@ -1,4 +1,4 @@
-# Comunica SPARQL Link Traversal Solid Init Actor
+# Comunica SPARQL Link Traversal
 
 [![npm version](https://badge.fury.io/js/%40comunica%2Fquery-sparql-link-traversal-solid.svg)](https://www.npmjs.com/package/@comunica/query-sparql-link-traversal-solid)
 [![Docker Pulls](https://img.shields.io/docker/pulls/comunica/query-sparql-link-traversal-solid.svg)](https://hub.docker.com/r/comunica/query-sparql-link-traversal-solid/)
@@ -21,37 +21,43 @@ or
 $ npm install -g @comunica/query-sparql-link-traversal-solid
 ```
 
-## Install a prerelease
-
-Since this package is still in testing phase, you may want to install a prerelease of this package, which you can do by appending `@next` to the package name during installation.
-
-```bash
-$ yarn add @comunica/query-sparql-link-traversal-solid@next
-```
-
-or
-
-```bash
-$ npm install -g @comunica/query-sparql-link-traversal-solid@next
-
 ## Usage
 
-Show 100 triples from a private resource
-by authenticating through the https://solidcommunity.net/ identity provider (when using https://pod.inrupt.com/, your IDP will be https://broker.pod.inrupt.com/):
+Execute a query over a Solid pod
+by authenticating through the https://solidcommunity.net/ identity provider
+(when using https://pod.inrupt.com/, your IDP will be https://login.inrupt.com/):
 
 ```bash
-$ comunica-sparql-link-traversal-solid  --idp https://solidcommunity.net/ \
-  https://www.rubensworks.net/ \
-  "SELECT DISTINCT * WHERE {
-       <https://www.rubensworks.net/#me> <http://xmlns.com/foaf/0.1/knows> ?p.
-       <https://ruben.verborgh.org/profile/#me> <http://xmlns.com/foaf/0.1/knows> ?p.
-       ?p <http://xmlns.com/foaf/0.1/name> ?name.
-   }" --lenient
+$ comunica-sparql-link-traversal-solid --idp https://solidcommunity.net/ \
+  "PREFIX snvoc: <https://solidbench.linkeddatafragments.org/www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/>
+  SELECT DISTINCT ?forumId ?forumTitle WHERE {
+    ?message snvoc:hasCreator <https://solidbench.linkeddatafragments.org/pods/00000006597069767117/profile/card#me>.
+    ?forum snvoc:containerOf ?message;
+      snvoc:id ?forumId;
+      snvoc:title ?forumTitle.
+  }" --lenient
 ```
 
 This command will connect with the given identity provider,
 and open your browser to log in with your WebID.
 After logging in, the query engine will be able to access all the documents you have access to.
+
+If you want to disable the login step, you can pass `--idp void`.
+
+If no sources are provided, the URLs inside the query will be considered starting sources.
+Since passing sources is optional, the following is equivalent:
+
+```bash
+$ comunica-sparql-link-traversal-solid https://solidbench.linkeddatafragments.org/pods/00000006597069767117/profile/card \
+ --idp https://solidcommunity.net/ \
+  "PREFIX snvoc: <https://solidbench.linkeddatafragments.org/www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/>
+  SELECT DISTINCT ?forumId ?forumTitle WHERE {
+    ?message snvoc:hasCreator <https://solidbench.linkeddatafragments.org/pods/00000006597069767117/profile/card#me>.
+    ?forum snvoc:containerOf ?message;
+      snvoc:id ?forumId;
+      snvoc:title ?forumTitle.
+  }" --lenient
+```
 
 Show the help with all options:
 
@@ -77,12 +83,15 @@ const session = await interactiveLogin({oidcIssuer: 'https://solidcommunity.net/
 const myEngine = new QueryEngine();
 
 const bindingsStream = await myEngine.queryBindings(`
-  SELECT DISTINCT * WHERE {
-      <https://www.rubensworks.net/#me> <http://xmlns.com/foaf/0.1/knows> ?p.
-      <https://ruben.verborgh.org/profile/#me> <http://xmlns.com/foaf/0.1/knows> ?p.
-      ?p <http://xmlns.com/foaf/0.1/name> ?name.
+  PREFIX snvoc: <https://solidbench.linkeddatafragments.org/www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/>
+  SELECT DISTINCT ?forumId ?forumTitle WHERE {
+    ?message snvoc:hasCreator <https://solidbench.linkeddatafragments.org/pods/00000006597069767117/profile/card#me>.
+    ?forum snvoc:containerOf ?message;
+      snvoc:id ?forumId;
+      snvoc:title ?forumTitle.
   }`, {
-    sources: [session.info.webId], // Sets your profile as query source
+    // Sources field is optional. Will be derived from query if not provided.
+    //sources: [session.info.webId], // Sets your profile as query source
     '@comunica/actor-http-inrupt-solid-client-authn:session': session,
     lenient: true,
 });
@@ -116,7 +125,15 @@ _[**Read more** about querying an application](https://comunica.dev/docs/query/g
 
 ### Usage as a SPARQL endpoint
 
-Start a webservice exposing https://www.rubensworks.net/ via the SPARQL protocol, i.e., a _SPARQL endpoint_,
+Start a webservice exposing traversal via the SPARQL protocol, i.e., a _SPARQL endpoint_,
+by authenticating through the https://solidcommunity.net/ identity provider.
+
+```bash
+$ comunica-sparql-link-traversal-solid-http --idp https://solidcommunity.net/ \
+  --lenient
+```
+
+Start a webservice exposing traversal from https://www.rubensworks.net/ via the SPARQL protocol, i.e., a _SPARQL endpoint_,
 by authenticating through the https://solidcommunity.net/ identity provider.
 
 ```bash

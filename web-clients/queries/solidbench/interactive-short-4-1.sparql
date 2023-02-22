@@ -1,0 +1,8 @@
+# [SolidBench] Short 4
+# Datasources: /
+PREFIX snvoc: <https://solidbench.linkeddatafragments.org/www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/>
+SELECT ?messageCreationDate ?messageContent WHERE {
+  <https://solidbench.linkeddatafragments.org/pods/00000000000000000150/comments/Mexico#68719564521> snvoc:id ?messageId;
+    snvoc:creationDate ?messageCreationDate;
+    (snvoc:content|snvoc:imageFile) ?messageContent.
+}

@@ -1,6 +1,6 @@
 {
   "name": "@comunica/actor-optimize-query-operation-set-seed-sources-quadpattern-iris",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "A set-seed-sources-quadpattern-iris optimize-query-operation actor",
   "lsd:module": true,
   "main": "lib/index.js",
@@ -28,13 +28,14 @@
   "files": [
     "components",
     "lib/**/*.d.ts",
-    "lib/**/*.js"
+    "lib/**/*.js",
+    "lib/**/*.js.map"
   ],
   "dependencies": {
-    "@comunica/core": "^2.0.1",
-    "@comunica/bus-optimize-query-operation": "^2.0.1",
-    "@comunica/context-entries": "^2.0.1",
-    "@comunica/types": "^2.0.1",
+    "@comunica/bus-optimize-query-operation": "^2.6.7",
+    "@comunica/context-entries": "^2.6.7",
+    "@comunica/core": "^2.6.7",
+    "@comunica/types": "^2.6.7",
     "sparqlalgebrajs": "^4.0.2"
   },
   "scripts": {

@@ -1,6 +1,6 @@
 {
   "name": "@comunica/context-entries-link-traversal",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "A collection of reusable Comunica context key definitions for link traversal.",
   "main": "lib/index.js",
   "typings": "lib/index",
@@ -27,11 +27,12 @@
   "files": [
     "components",
     "lib/**/*.d.ts",
-    "lib/**/*.js"
+    "lib/**/*.js",
+    "lib/**/*.js.map"
   ],
   "dependencies": {
-    "@comunica/core": "^2.2.0",
-    "@comunica/types-link-traversal": "^0.0.1"
+    "@comunica/core": "^2.6.7",
+    "@comunica/types-link-traversal": "^0.1.0"
   },
   "scripts": {
     "build": "node \"../../node_modules/typescript/bin/tsc\""

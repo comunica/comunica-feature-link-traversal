@@ -153,7 +153,7 @@ describe('ActorExtractLinksSolidTypeIndex', () => {
     });
   });
 
-  describe('An ActorExtractLinksSolidTypeIndex instance with onlyMatchingTypes: true', () => {
+  describe('An ActorExtractLinksSolidTypeIndex instance with onlyMatchingTypes and inference:true', () => {
     let actor: ActorExtractLinksSolidTypeIndex;
 
     beforeEach(() => {
@@ -165,6 +165,7 @@ describe('ActorExtractLinksSolidTypeIndex', () => {
           'ex:typeIndex2',
         ],
         onlyMatchingTypes: true,
+        inference: true,
         mediatorDereferenceRdf,
         actorInitQuery,
       });
@@ -199,6 +200,18 @@ describe('ActorExtractLinksSolidTypeIndex', () => {
         quad('ex:s4', 'ex:p', 'ex:o4', 'ex:g'),
         quad('ex:s5', 'ex:p', 'ex:o5', 'ex:gx'),
       ]);
+      (<any> actor).queryEngine.queryBindings = (query: string) => {
+        if (query.includes('solid:TypeRegistration'))
+        { return {
+          toArray: async() => [
+            BF.fromRecord({ instance: DF.namedNode('ex:file1'), class: DF.namedNode('ex:class1') }),
+            BF.fromRecord({ instance: DF.namedNode('ex:file2'), class: DF.namedNode('ex:class2') }),
+          ],
+        }; }
+        return {
+          toArray: async() => [ ],
+        };
+      };
       await expect(actor.run({ url: '', metadata: input, requestTime: 0, context })).resolves
         .toEqual({
           links: [
@@ -219,6 +232,19 @@ describe('ActorExtractLinksSolidTypeIndex', () => {
         quad('ex:s4', 'ex:p', 'ex:o4', 'ex:g'),
         quad('ex:s5', 'ex:p', 'ex:o5', 'ex:gx'),
       ]);
+      (<any> actor).queryEngine.queryBindings = (query: string) => {
+        if (query.includes('solid:TypeRegistration'))
+        { return {
+          toArray: async() => [
+            BF.fromRecord({ instance: DF.namedNode('ex:file1'), class: DF.namedNode('ex:class1') }),
+            BF.fromRecord({ instance: DF.namedNode('ex:file2'), class: DF.namedNode('ex:class2') }),
+          ],
+        }; }
+        return {
+          toArray: async() => [ ],
+        };
+      };
+
       context = new ActionContext({
         [KeysInitQuery.query.name]: AF.createBgp([
           AF.createPattern(
@@ -250,6 +276,18 @@ describe('ActorExtractLinksSolidTypeIndex', () => {
         quad('ex:s4', 'ex:p', 'ex:o4', 'ex:g'),
         quad('ex:s5', 'ex:p', 'ex:o5', 'ex:gx'),
       ]);
+      (<any> actor).queryEngine.queryBindings = (query: string) => {
+        if (query.includes('solid:TypeRegistration'))
+        { return {
+          toArray: async() => [
+            BF.fromRecord({ instance: DF.namedNode('ex:file1'), class: DF.namedNode('ex:class1') }),
+            BF.fromRecord({ instance: DF.namedNode('ex:file2'), class: DF.namedNode('ex:class2') }),
+          ],
+        }; }
+        return {
+          toArray: async() => [ ],
+        };
+      };
       context = new ActionContext({
         [KeysInitQuery.query.name]: AF.createBgp([
           AF.createPattern(
@@ -315,6 +353,154 @@ describe('ActorExtractLinksSolidTypeIndex', () => {
       expect(mediatorDereferenceRdf.mediate).toHaveBeenCalledWith({ url: 'ex:index1', context });
     });
 
+    it('should run on a stream with type index predicates without class in query', async() => {
+      input = stream([
+        quad('ex:s1', 'ex:typeIndex1', 'ex:index1'),
+        quad('ex:s3', 'ex:px', 'ex:o3', 'ex:gx'),
+        quad('ex:s4', 'ex:p', 'ex:o4', 'ex:g'),
+        quad('ex:s5', 'ex:p', 'ex:o5', 'ex:gx'),
+      ]);
+      (<any> actor).queryEngine.queryBindings = (query: string) => {
+        if (query.includes('solid:TypeRegistration'))
+        { return {
+          toArray: async() => [
+            BF.fromRecord({ instance: DF.namedNode('ex:file1'), class: DF.namedNode('ex:class1') }),
+            BF.fromRecord({ instance: DF.namedNode('ex:file2'), class: DF.namedNode('ex:class2') }),
+          ],
+        }; }
+        return {
+          toArray: async() => [
+            BF.fromRecord({ domain: DF.namedNode('ex:class2') }),
+          ],
+        };
+      };
+
+      context = new ActionContext({
+        [KeysInitQuery.query.name]: AF.createPattern(
+          DF.variable('s'),
+          DF.namedNode('ex:predicate7'),
+          DF.namedNode('ex:blabla'),
+        ),
+        [KeysQueryOperation.operation.name]: AF.createPattern(
+          DF.variable('s'),
+          DF.namedNode('ex:predicate7'),
+          DF.namedNode('ex:bla'),
+        ),
+      });
+      await expect(actor.run({ url: '', metadata: input, requestTime: 0, context })).resolves
+        .toEqual({
+          links: [
+            {
+              url: 'ex:file2',
+            },
+          ],
+        });
+      expect(mediatorDereferenceRdf.mediate).toHaveBeenCalledTimes(1);
+      expect(mediatorDereferenceRdf.mediate).toHaveBeenCalledWith({ url: 'ex:index1', context });
+    });
+
+    it('should run on a stream with multiple type index predicates without class explicit in query', async() => {
+      input = stream([
+        quad('ex:s1', 'ex:typeIndex1', 'ex:index1'),
+        quad('ex:s3', 'ex:px', 'ex:o3', 'ex:gx'),
+        quad('ex:s4', 'ex:p', 'ex:o4', 'ex:g'),
+        quad('ex:s5', 'ex:p', 'ex:o5', 'ex:gx'),
+      ]);
+      (<any> actor).queryEngine.queryBindings = (query: string) => {
+        if (query.includes('solid:TypeRegistration'))
+        { return {
+          toArray: async() => [
+            BF.fromRecord({ instance: DF.namedNode('ex:file1'), class: DF.namedNode('ex:class1') }),
+            BF.fromRecord({ instance: DF.namedNode('ex:file2'), class: DF.namedNode('ex:class2') }),
+          ],
+        }; }
+        if (query.includes('ex:predicate8'))
+        { return {
+          toArray: async() => [
+            BF.fromRecord({ domain: DF.namedNode('ex:class2') }),
+          ],
+        };
+        }
+
+        return {
+          toArray: async() => [],
+        };
+      };
+      context = new ActionContext({
+        [KeysInitQuery.query.name]: AF.createBgp([
+          AF.createPattern(DF.variable('s1'), DF.namedNode('ex:predicate8'), DF.namedNode('ex:bla')),
+          AF.createPattern(DF.variable('s2'), DF.namedNode('ex:predicate9'), DF.namedNode('ex:bla')),
+        ]),
+        [KeysQueryOperation.operation.name]: AF.createPattern(
+          DF.variable('s1'),
+          DF.namedNode('ex:predicate1'),
+          DF.namedNode('ex:bla'),
+        ),
+      });
+      await expect(actor.run({ url: '', metadata: input, requestTime: 0, context })).resolves
+        .toEqual({
+          links: [
+            {
+              url: 'ex:file1',
+            },
+            {
+              url: 'ex:file2',
+            },
+          ],
+        });
+      expect(mediatorDereferenceRdf.mediate).toHaveBeenCalledTimes(1);
+      expect(mediatorDereferenceRdf.mediate).toHaveBeenCalledWith({ url: 'ex:index1', context });
+    });
+
+    it('should run on a stream with type index predicate with multiple domains', async() => {
+      input = stream([
+        quad('ex:s1', 'ex:typeIndex1', 'ex:index1'),
+        quad('ex:s3', 'ex:px', 'ex:o3', 'ex:gx'),
+        quad('ex:s4', 'ex:p', 'ex:o4', 'ex:g'),
+        quad('ex:s5', 'ex:p', 'ex:o5', 'ex:gx'),
+      ]);
+      (<any> actor).queryEngine.queryBindings = (query: string) => {
+        if (query.includes('solid:TypeRegistration'))
+        { return {
+          toArray: async() => [
+            BF.fromRecord({ instance: DF.namedNode('ex:file1'), class: DF.namedNode('ex:class1') }),
+            BF.fromRecord({ instance: DF.namedNode('ex:file2'), class: DF.namedNode('ex:class2') }),
+          ],
+        }; }
+        if (query.includes('ex:predicate10'))
+        { return {
+          toArray: async() => [
+            BF.fromRecord({ domain: DF.namedNode('ex:class2') }),
+            BF.fromRecord({ domain: DF.namedNode('ex:class1') }),
+          ],
+        };
+        }
+      };
+      context = new ActionContext({
+        [KeysInitQuery.query.name]: AF.createBgp([
+          AF.createPattern(DF.variable('s1'), DF.namedNode('ex:predicate10'), DF.namedNode('ex:bla')),
+        ]),
+        [KeysQueryOperation.operation.name]: AF.createPattern(
+          DF.variable('s1'),
+          DF.namedNode('ex:predicate10'),
+          DF.namedNode('ex:bla'),
+        ),
+      });
+      await expect(actor.run({ url: '', metadata: input, requestTime: 0, context })).resolves
+        .toEqual({
+          links: [
+            {
+              url: 'ex:file2',
+            },
+            {
+              url: 'ex:file1',
+            },
+          ],
+        });
+      expect(mediatorDereferenceRdf.mediate).toHaveBeenCalledTimes(1);
+      expect(mediatorDereferenceRdf.mediate).toHaveBeenCalledWith({ url: 'ex:index1', context });
+    });
+
     it('should run on a stream with type index predicates for an nps property path query', async() => {
       input = stream([
         quad('ex:s1', 'ex:typeIndex1', 'ex:index1'),
@@ -322,6 +508,19 @@ describe('ActorExtractLinksSolidTypeIndex', () => {
         quad('ex:s4', 'ex:p', 'ex:o4', 'ex:g'),
         quad('ex:s5', 'ex:p', 'ex:o5', 'ex:gx'),
       ]);
+      (<any> actor).queryEngine.queryBindings = (query: string) => {
+        if (query.includes('solid:TypeRegistration'))
+        { return {
+          toArray: async() => [
+            BF.fromRecord({ instance: DF.namedNode('ex:file1'), class: DF.namedNode('ex:class1') }),
+            BF.fromRecord({ instance: DF.namedNode('ex:file2'), class: DF.namedNode('ex:class2') }),
+          ],
+        }; }
+        return {
+          toArray: async() => [
+
+          ],
+        }; };
       context = new ActionContext({
         [KeysInitQuery.query.name]: AF.createPath(
           DF.variable('s1'),
@@ -347,6 +546,98 @@ describe('ActorExtractLinksSolidTypeIndex', () => {
           ],
         });
 
+      expect(mediatorDereferenceRdf.mediate).toHaveBeenCalledTimes(1);
+      expect(mediatorDereferenceRdf.mediate).toHaveBeenCalledWith({ url: 'ex:index1', context });
+    });
+  });
+
+  describe('An ActorExtractLinksSolidTypeIndex instance with inference: false', () => {
+    let actor: ActorExtractLinksSolidTypeIndex;
+
+    beforeEach(() => {
+      actor = new ActorExtractLinksSolidTypeIndex({
+        name: 'actor',
+        bus,
+        typeIndexPredicates: [
+          'ex:typeIndex1',
+          'ex:typeIndex2',
+        ],
+        onlyMatchingTypes: true,
+        inference: false,
+        mediatorDereferenceRdf,
+        actorInitQuery,
+      });
+      (<any> actor).queryEngine = {
+        queryBindings: jest.fn(async() => ({
+          toArray: async() => [
+            BF.fromRecord({ instance: DF.namedNode('ex:file1'), class: DF.namedNode('ex:class1') }),
+            BF.fromRecord({ instance: DF.namedNode('ex:file2'), class: DF.namedNode('ex:class2') }),
+          ],
+        })),
+      };
+    });
+
+    it('should run on a stream with type index predicates without class in query', async() => {
+      input = stream([
+        quad('ex:s1', 'ex:typeIndex1', 'ex:index1'),
+        quad('ex:s3', 'ex:px', 'ex:o3', 'ex:gx'),
+        quad('ex:s4', 'ex:p', 'ex:o4', 'ex:g'),
+        quad('ex:s5', 'ex:p', 'ex:o5', 'ex:gx'),
+      ]);
+      context = new ActionContext({
+        [KeysInitQuery.query.name]: AF.createPattern(
+          DF.variable('s'),
+          DF.namedNode('ex:predicate1'),
+          DF.namedNode('ex:blabla'),
+        ),
+        [KeysQueryOperation.operation.name]: AF.createPattern(
+          DF.variable('s'),
+          DF.namedNode('ex:predicate1'),
+          DF.namedNode('ex:bla'),
+        ),
+      });
+      await expect(actor.run({ url: '', metadata: input, requestTime: 0, context })).resolves
+        .toEqual({
+          links: [
+            {
+              url: 'ex:file1',
+            }, {
+              url: 'ex:file2',
+            },
+          ],
+        });
+      expect(mediatorDereferenceRdf.mediate).toHaveBeenCalledTimes(1);
+      expect(mediatorDereferenceRdf.mediate).toHaveBeenCalledWith({ url: 'ex:index1', context });
+    });
+
+    it('should run on a stream with multiple type index predicates without class in query', async() => {
+      input = stream([
+        quad('ex:s1', 'ex:typeIndex1', 'ex:index1'),
+        quad('ex:s3', 'ex:px', 'ex:o3', 'ex:gx'),
+        quad('ex:s4', 'ex:p', 'ex:o4', 'ex:g'),
+        quad('ex:s5', 'ex:p', 'ex:o5', 'ex:gx'),
+      ]);
+      context = new ActionContext({
+        [KeysInitQuery.query.name]: AF.createBgp([
+          AF.createPattern(DF.variable('s1'), DF.namedNode('ex:predicate1'), DF.namedNode('ex:bla')),
+          AF.createPattern(DF.variable('s2'), DF.namedNode('ex:predicate2'), DF.namedNode('ex:bla')),
+        ]),
+        [KeysQueryOperation.operation.name]: AF.createPattern(
+          DF.variable('s1'),
+          DF.namedNode('ex:predicate1'),
+          DF.namedNode('ex:bla'),
+        ),
+      });
+      await expect(actor.run({ url: '', metadata: input, requestTime: 0, context })).resolves
+        .toEqual({
+          links: [
+            {
+              url: 'ex:file1',
+            }, {
+              url: 'ex:file2',
+            },
+          ],
+        });
       expect(mediatorDereferenceRdf.mediate).toHaveBeenCalledTimes(1);
       expect(mediatorDereferenceRdf.mediate).toHaveBeenCalledWith({ url: 'ex:index1', context });
     });

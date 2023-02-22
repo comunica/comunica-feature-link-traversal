@@ -1,6 +1,6 @@
 {
   "name": "@comunica/actor-extract-links-quad-pattern",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "A traverse-quad-pattern extract-links actor",
   "lsd:module": true,
   "main": "lib/index.js",
@@ -28,13 +28,14 @@
   "files": [
     "components",
     "lib/**/*.d.ts",
-    "lib/**/*.js"
+    "lib/**/*.js",
+    "lib/**/*.js.map"
   ],
   "dependencies": {
-    "@comunica/context-entries": "^2.0.1",
-    "@comunica/core": "^2.0.1",
-    "@comunica/bus-extract-links": "^0.0.1",
-    "@comunica/types": "^2.0.1",
+    "@comunica/bus-extract-links": "^0.1.0",
+    "@comunica/context-entries": "^2.6.7",
+    "@comunica/core": "^2.6.7",
+    "@comunica/types": "^2.6.7",
     "rdf-terms": "^1.7.0",
     "sparqlalgebrajs": "^4.0.2"
   },

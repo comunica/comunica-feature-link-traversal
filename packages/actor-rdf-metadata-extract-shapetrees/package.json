@@ -1,6 +1,6 @@
 {
   "name": "@comunica/actor-rdf-metadata-extract-shapetrees",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "A shapetrees rdf-metadata-extract actor",
   "lsd:module": true,
   "main": "lib/index.js",
@@ -28,22 +28,23 @@
   "files": [
     "components",
     "lib/**/*.d.ts",
-    "lib/**/*.js"
+    "lib/**/*.js",
+    "lib/**/*.js.map"
   ],
   "dependencies": {
-    "@comunica/actor-init-query": "^2.0.6",
-    "@comunica/context-entries": "^2.0.1",
-    "@comunica/core": "^2.0.1",
-    "@comunica/bus-dereference-rdf": "^2.0.1",
-    "@comunica/bus-rdf-metadata-extract": "^2.0.1",
-    "@comunica/bus-http": "^2.0.1",
+    "@comunica/actor-init-query": "^2.6.7",
+    "@comunica/bus-dereference-rdf": "^2.6.7",
+    "@comunica/bus-http": "^2.6.7",
+    "@comunica/bus-rdf-metadata-extract": "^2.6.7",
+    "@comunica/context-entries": "^2.6.7",
+    "@comunica/core": "^2.6.7",
     "@shexjs/parser": "1.0.0-alpha.21",
     "@shexjs/visitor": "1.0.0-alpha.22",
     "@types/parse-link-header": "^2.0.0",
     "@types/shexj": "2.1.1",
     "parse-link-header": "^2.0.0",
-    "relative-to-absolute-iri": "^1.0.6",
     "rdf-store-stream": "^1.3.0",
+    "relative-to-absolute-iri": "^1.0.6",
     "sparqlalgebrajs": "^4.0.2"
   },
   "scripts": {

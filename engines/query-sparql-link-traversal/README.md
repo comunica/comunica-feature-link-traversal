@@ -1,4 +1,4 @@
-# Comunica SPARQL Link Traversal Init Actor
+# Comunica SPARQL Link Traversal
 
 [![npm version](https://badge.fury.io/js/%40comunica%2Fquery-sparql-link-traversal.svg)](https://www.npmjs.com/package/@comunica/query-sparql-link-traversal)
 [![Docker Pulls](https://img.shields.io/docker/pulls/comunica/query-sparql-link-traversal.svg)](https://hub.docker.com/r/comunica/query-sparql-link-traversal/)
@@ -21,31 +21,29 @@ or
 $ npm install -g @comunica/query-sparql-link-traversal
 ```
 
-## Install a prerelease
-
-Since this package is still in testing phase, you may want to install a prerelease of this package, which you can do by appending `@next` to the package name during installation.
-
-```bash
-$ yarn add @comunica/query-sparql-link-traversal@next
-```
-
-or
-
-```bash
-$ npm install -g @comunica/query-sparql-link-traversal@next
-```
-
 ## Usage
 
-Show 100 triples from http://fragments.dbpedia.org/2015-10/en:
+Find the common friends of 2 people:
 
 ```bash
-$ comunica-sparql-link-traversal https://www.rubensworks.net/ \
+$ comunica-sparql-link-traversal \
   "SELECT DISTINCT * WHERE {
-       <https://www.rubensworks.net/#me> <http://xmlns.com/foaf/0.1/knows> ?p.
-       <https://ruben.verborgh.org/profile/#me> <http://xmlns.com/foaf/0.1/knows> ?p.
-       ?p <http://xmlns.com/foaf/0.1/name> ?name.
-   }" --lenient
+    <https://www.rubensworks.net/#me> foaf:knows ?person.
+    <https://ruben.verborgh.org/profile/#me> foaf:knows ?person.
+    ?person foaf:name ?name.
+  }" --lenient
+```
+
+If no sources are provided, the URLs inside the query will be considered starting sources.
+Since passing sources is optional, the following is equivalent:
+
+```bash
+$ comunica-sparql-link-traversal https://www.rubensworks.net/ https://ruben.verborgh.org/profile/ \
+  "SELECT DISTINCT * WHERE {
+    <https://www.rubensworks.net/#me> foaf:knows ?person.
+    <https://ruben.verborgh.org/profile/#me> foaf:knows ?person.
+    ?person foaf:name ?name.
+  }" --lenient
 ```
 
 Show the help with all options:
@@ -69,10 +67,11 @@ const myEngine = new QueryEngine();
 
 const bindingsStream = await myEngine.queryBindings(`
   SELECT DISTINCT * WHERE {
-      <https://www.rubensworks.net/#me> <http://xmlns.com/foaf/0.1/knows> ?p.
-      <https://ruben.verborgh.org/profile/#me> <http://xmlns.com/foaf/0.1/knows> ?p.
-      ?p <http://xmlns.com/foaf/0.1/name> ?name.
+    <https://www.rubensworks.net/#me> foaf:knows ?person.
+    <https://ruben.verborgh.org/profile/#me> foaf:knows ?person.
+    ?person foaf:name ?name.
   }`, {
+    // Sources field is optional. Will be derived from query if not provided.
     sources: ['https://www.rubensworks.net/'],
     lenient: true,
 });
@@ -106,7 +105,13 @@ _[**Read more** about querying an application](https://comunica.dev/docs/query/g
 
 ### Usage as a SPARQL endpoint
 
-Start a webservice exposing https://www.rubensworks.net/ via the SPARQL protocol, i.e., a _SPARQL endpoint_.
+Start a webservice exposing traversal via the SPARQL protocol, i.e., a _SPARQL endpoint_.
+
+```bash
+$ comunica-sparql-link-traversal-http --lenient
+```
+
+Start a webservice exposing traversal from https://www.rubensworks.net/ via the SPARQL protocol, i.e., a _SPARQL endpoint_.
 
 ```bash
 $ comunica-sparql-link-traversal-http https://www.rubensworks.net/ --lenient

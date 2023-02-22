@@ -1,0 +1,11 @@
+# [SolidBench] Discover 3.5
+# Datasources: /
+PREFIX snvoc: <https://solidbench.linkeddatafragments.org/www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+SELECT ?tagName (COUNT(?message) AS ?messages) WHERE {
+  ?message snvoc:hasCreator <https://solidbench.linkeddatafragments.org/pods/00000006597069767117/profile/card#me>;
+    snvoc:hasTag ?tag.
+  ?tag foaf:name ?tagName.
+}
+GROUP BY ?tagName
+ORDER BY DESC (?messages)

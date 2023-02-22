@@ -1,6 +1,6 @@
 {
   "name": "@comunica/actor-rdf-resolve-hypermedia-links-queue-wrapper-limit-count",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "A wrapper-limit-count rdf-resolve-hypermedia-links-queue actor",
   "lsd:module": true,
   "main": "lib/index.js",
@@ -28,11 +28,12 @@
   "files": [
     "components",
     "lib/**/*.d.ts",
-    "lib/**/*.js"
+    "lib/**/*.js",
+    "lib/**/*.js.map"
   ],
   "dependencies": {
-    "@comunica/core": "^2.0.1",
-    "@comunica/bus-rdf-resolve-hypermedia-links-queue": "^2.0.1"
+    "@comunica/bus-rdf-resolve-hypermedia-links-queue": "^2.6.7",
+    "@comunica/core": "^2.6.7"
   },
   "scripts": {
     "build": "npm run build:ts && npm run build:components",

@@ -3,6 +3,7 @@
     "sparql": true,
     "graphql": true
   },
+  "allowNoSources": true,
   "context": {
     "lenient": true,
     "@comunica/actor-rdf-resolve-hypermedia-links-traverse:traverse": true,
@@ -84,6 +85,38 @@
     {
       "name": "Harvard Library",
       "url": "//data.linkeddatafragments.org/harvard"
+    },
+    {
+      "name": "Cultural Heritage Thesaurus",
+      "url": "https://treecg.github.io/demo_data/cht.ttl"
+    },
+    {
+      "name": "Flanders street registry",
+      "url": "https://tree.linkeddatafragments.org/data/addressregister/streetnames/"
+    },
+    {
+      "name": "SNCB connections LDES",
+      "url": "https://graph.irail.be/sncb/connections/feed"
+    },
+    {
+      "name": "SolidBench User 933",
+      "url": "https://solidbench.linkeddatafragments.org/pods/00000000000000000933/profile/card#me"
+    },
+    {
+      "name": "SolidBench User 1129",
+      "url": "https://solidbench.linkeddatafragments.org/pods/00000000000000001129/profile/card#me"
+    },
+    {
+      "name": "SolidBench User 2199023256684",
+      "url": "https://solidbench.linkeddatafragments.org/pods/00000002199023256684/profile/card#me"
+    },
+    {
+      "name": "SolidBench User 4398046512167",
+      "url": "https://solidbench.linkeddatafragments.org/pods/00000004398046512167/profile/card#me"
+    },
+    {
+      "name": "SolidBench User 6597069767117",
+      "url": "https://solidbench.linkeddatafragments.org/pods/00000006597069767117/profile/card#me"
     }
   ],
   "prefixes": {
@@ -103,7 +136,9 @@
     "schema":      "http://schema.org/",
     "bow":         "https://betweenourworlds.org/ontology/",
     "lc":          "http://semweb.mmlab.be/ns/linkedconnections#",
-    "mf":          "http://www.w3.org/2001/sw/DataAccess/tests/test-manifest#"
+    "mf":          "http://www.w3.org/2001/sw/DataAccess/tests/test-manifest#",
+    "tree":        "https://w3id.org/tree#",
+    "ldes":        "https://w3id.org/ldes#"
   },
   "queries": "(Will be generated from the 'queries' folder by running the './queries-to-json' script.)"
 }
