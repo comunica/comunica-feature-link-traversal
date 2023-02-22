@@ -1637,6 +1637,52 @@ describe('solver function', () => {
         expect(isRelationFilterExpressionDomainEmpty({ relation, filterExpression, variable })).toBe(true);
       });
 
+    it('edge-case 1',
+      () => {
+        const relation: ITreeRelation = {
+          type: SparqlRelationOperator.EqualThanRelation,
+          remainingItems: 10,
+          path: 'ex:path',
+          value: {
+            value: '5',
+            term: DF.literal('5', DF.namedNode('http://www.w3.org/2001/XMLSchema#integer')),
+          },
+          node: 'https://www.example.be',
+        };
+
+        const filterExpression = translate(`
+            SELECT * WHERE { ?x ?y ?z 
+            FILTER(?x>5)
+            }`).input.expression;
+
+        const variable = 'x';
+
+        expect(isRelationFilterExpressionDomainEmpty({ relation, filterExpression, variable })).toBe(false);
+      });
+
+    it('edge-case 2',
+      () => {
+        const relation: ITreeRelation = {
+          type: SparqlRelationOperator.EqualThanRelation,
+          remainingItems: 10,
+          path: 'ex:path',
+          value: {
+            value: '4.999',
+            term: DF.literal('4.999', DF.namedNode('http://www.w3.org/2001/XMLSchema#integer')),
+          },
+          node: 'https://www.example.be',
+        };
+
+        const filterExpression = translate(`
+            SELECT * WHERE { ?x ?y ?z 
+            FILTER(?x>=5)
+            }`).input.expression;
+
+        const variable = 'x';
+
+        expect(isRelationFilterExpressionDomainEmpty({ relation, filterExpression, variable })).toBe(false);
+      });
+
     it('should return false when there is no solution for the filter expression with one expression and the relation',
       () => {
         const relation: ITreeRelation = {
@@ -1699,6 +1745,116 @@ describe('solver function', () => {
       const filterExpression = translate(`
             SELECT * WHERE { ?x ?y ?z 
             FILTER(?x>=5 && ?x>=-1)
+            }`).input.expression;
+
+      const variable = 'x';
+
+      expect(isRelationFilterExpressionDomainEmpty({ relation, filterExpression, variable })).toBe(true);
+    });
+
+    it(`edge-case 3`, () => {
+      const relation: ITreeRelation = {
+        type: SparqlRelationOperator.EqualThanRelation,
+        remainingItems: 10,
+        path: 'ex:path',
+        value: {
+          value: '5',
+          term: DF.literal('5', DF.namedNode('http://www.w3.org/2001/XMLSchema#integer')),
+        },
+        node: 'https://www.example.be',
+      };
+
+      const filterExpression = translate(`
+            SELECT * WHERE { ?x ?y ?z 
+            FILTER(!(?x<-1 || ?x<5) || true)
+            }`).input.expression;
+
+      const variable = 'x';
+
+      expect(isRelationFilterExpressionDomainEmpty({ relation, filterExpression, variable })).toBe(true);
+    });
+
+    it(`edge-case 4`, () => {
+      const relation: ITreeRelation = {
+        type: SparqlRelationOperator.EqualThanRelation,
+        remainingItems: 10,
+        path: 'ex:path',
+        value: {
+          value: '5',
+          term: DF.literal('5', DF.namedNode('http://www.w3.org/2001/XMLSchema#integer')),
+        },
+        node: 'https://www.example.be',
+      };
+
+      const filterExpression = translate(`
+            SELECT * WHERE { ?x ?y ?z 
+            FILTER(!(?x<-1 || ?x<5) || false)
+            }`).input.expression;
+
+      const variable = 'x';
+
+      expect(isRelationFilterExpressionDomainEmpty({ relation, filterExpression, variable })).toBe(true);
+    });
+
+    it(`edge-case 5`, () => {
+      const relation: ITreeRelation = {
+        type: SparqlRelationOperator.EqualThanRelation,
+        remainingItems: 10,
+        path: 'ex:path',
+        value: {
+          value: '5',
+          term: DF.literal('5', DF.namedNode('http://www.w3.org/2001/XMLSchema#integer')),
+        },
+        node: 'https://www.example.be',
+      };
+
+      const filterExpression = translate(`
+            SELECT * WHERE { ?x ?y ?z 
+            FILTER(?x = 5 || true)
+            }`).input.expression;
+
+      const variable = 'x';
+
+      expect(isRelationFilterExpressionDomainEmpty({ relation, filterExpression, variable })).toBe(true);
+    });
+
+    it(`edge-case 6`, () => {
+      const relation: ITreeRelation = {
+        type: SparqlRelationOperator.EqualThanRelation,
+        remainingItems: 10,
+        path: 'ex:path',
+        value: {
+          value: '5',
+          term: DF.literal('5', DF.namedNode('http://www.w3.org/2001/XMLSchema#integer')),
+        },
+        node: 'https://www.example.be',
+      };
+
+      const filterExpression = translate(`
+            SELECT * WHERE { ?x ?y ?z 
+            FILTER((?x = 5 && NOW() = true && false) || (?x = 5 && NOW() = true))
+            }`).input.expression;
+
+      const variable = 'x';
+
+      expect(isRelationFilterExpressionDomainEmpty({ relation, filterExpression, variable })).toBe(true);
+    });
+
+    it(`edge-case 7`, () => {
+      const relation: ITreeRelation = {
+        type: SparqlRelationOperator.EqualThanRelation,
+        remainingItems: 10,
+        path: 'ex:path',
+        value: {
+          value: '5',
+          term: DF.literal('5', DF.namedNode('http://www.w3.org/2001/XMLSchema#integer')),
+        },
+        node: 'https://www.example.be',
+      };
+
+      const filterExpression = translate(`
+            SELECT * WHERE { ?x ?y ?z 
+            FILTER((?x = 5 && NOW() = true && false) || (?x = 5 && (NOW() = true || ?x >= 5)))
             }`).input.expression;
 
       const variable = 'x';
