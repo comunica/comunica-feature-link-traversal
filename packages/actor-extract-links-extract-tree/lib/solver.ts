@@ -2,6 +2,11 @@ import { SparqlRelationOperator } from '@comunica/types-link-traversal';
 import type { ITreeRelation } from '@comunica/types-link-traversal';
 import type * as RDF from 'rdf-js';
 import { Algebra } from 'sparqlalgebrajs';
+import {
+  MissMatchVariableError,
+  MisformatedFilterTermError,
+  UnsupportedDataTypeError,
+} from './error';
 import { LinkOperator } from './LinkOperator';
 import { SolutionDomain } from './SolutionDomain';
 import { SolutionRange } from './SolutionRange';
@@ -10,10 +15,14 @@ import {
   LogicOperatorReversed, LogicOperator, SparqlOperandDataTypesReversed,
 } from './solverInterfaces';
 import type {
-  LastLogicalOperator, SolverEquationSystem, ISolverExpression,
-  Variable, ISolverExpressionRange,
+  ISolverExpression,
+  Variable,
 } from './solverInterfaces';
 
+const nextUp = require('ulp').nextUp;
+const nextDown = require('ulp').nextDown;
+
+const A_TRUE_EXPRESSION: SolutionRange = new SolutionRange([ Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY ]);
 /**
  * Check if the solution domain of a system of equation compose of the expressions of the filter
  * expression and the relation is not empty.
@@ -34,11 +43,6 @@ export function isRelationFilterExpressionDomainEmpty({ relation, filterExpressi
   if (!relationsolverExpressions) {
     return true;
   }
-  const filtersolverExpressions = recursifFilterExpressionToSolverExpression(filterExpression, [], [], variable);
-  // The type are not compatible no evaluation is possible SPARQLEE will later return an error
-  if (!areTypesCompatible(filtersolverExpressions.concat(relationsolverExpressions))) {
-    return true;
-  }
 
   const relationSolutionRange = getSolutionRange(
     relationsolverExpressions.valueAsNumber,
@@ -48,29 +52,30 @@ export function isRelationFilterExpressionDomainEmpty({ relation, filterExpressi
   if (!relationSolutionRange) {
     return true;
   }
-  const equationSystemFirstEquation = createEquationSystem(filtersolverExpressions);
-
-  // Cannot create the equation system we don't filter the relation in case the error is internal to not
-  // lose results
-  if (!equationSystemFirstEquation) {
-    return true;
-  }
-
-  let solutionDomain: SolutionDomain;
-
-  // If the filter has multiple expression
-  if (Array.isArray(equationSystemFirstEquation)) {
-    const [ equationSystem, firstEquationToResolved ] = equationSystemFirstEquation;
-
-    // We check if the filter expression itself has a solution
-    solutionDomain = resolveSolutionDomainEquationSystem(equationSystem, firstEquationToResolved);
-
-    // Don't pass the relation if the filter cannot be resolved
-    if (solutionDomain.isDomainEmpty()) {
-      return false;
+  let solutionDomain: SolutionDomain = new SolutionDomain();
+  try {
+    solutionDomain = recursifResolve(
+      filterExpression,
+      solutionDomain,
+      undefined,
+      variable,
+      false,
+    );
+  } catch (error: unknown) {
+    // A filter term was missformed we let the query engine return an error to the user and by precaution
+    // we accept the link in case the error is from the solver and not the filter expression
+    if (error instanceof MisformatedFilterTermError) {
+      return true;
     }
-  } else {
-    solutionDomain = SolutionDomain.newWithInitialValue(equationSystemFirstEquation.solutionDomain);
+
+    // We don't support the data type so let need to explore that link to not diminush the completness of the result
+    if (error instanceof UnsupportedDataTypeError) {
+      return true;
+    }
+
+    /* istanbul ignore next */
+    // If it's unexpected error we throw it
+    throw error;
   }
 
   // Evaluate the solution domain when adding the relation
@@ -80,48 +85,6 @@ export function isRelationFilterExpressionDomainEmpty({ relation, filterExpressi
   return !solutionDomain.isDomainEmpty();
 }
 
-/**
- * A recursif function that traverse the Algebra expression to capture each boolean expression and there associated
- * chain of logical expression. On the first call the filterExpressionList and linksOperator must be empty, they serve
- * as states to build the expressions.
- * @param {Algebra.Expression} filterExpression - The expression of the filter.
- * @param {ISolverExpression[]} filterExpressionList - The solver expression acquire until then.
- * Should be empty on the first call.
- * @param {LinkOperator[]} linksOperator - The logical operator acquire until then.
- * Should be empty on the first call.
- * @param {Variable} variable  - The variable the solver expression must posses.
- * @returns {ISolverExpression[]} Return the solver expression converted from the filter expression
- */
-export function recursifFilterExpressionToSolverExpression(filterExpression: Algebra.Expression,
-  filterExpressionList: ISolverExpression[],
-  linksOperator: LinkOperator[],
-  variable: Variable):
-  ISolverExpression[] {
-  // If it's an array of term then we should be able to create a solver expression
-  if (
-    filterExpression.args[0].expressionType === Algebra.expressionTypes.TERM
-  ) {
-    const rawOperator = filterExpression.operator;
-    const operator = filterOperatorToSparqlRelationOperator(rawOperator);
-    if (operator) {
-      const solverExpression = resolveAFilterTerm(filterExpression, operator, new Array(...linksOperator), variable);
-      if (solverExpression) {
-        filterExpressionList.push(solverExpression);
-        return filterExpressionList;
-      }
-    }
-    // Else we store the logical operator an go deeper into the Algebra graph
-  } else {
-    const logicOperator = LogicOperatorReversed.get(filterExpression.operator);
-    if (logicOperator) {
-      const operator = new LinkOperator(logicOperator);
-      for (const arg of filterExpression.args) {
-        recursifFilterExpressionToSolverExpression(arg, filterExpressionList, linksOperator.concat(operator), variable);
-      }
-    }
-  }
-  return filterExpressionList;
-}
 /**
  * From an Algebra expression return an solver expression if possible
  * @param {Algebra.Expression} expression - Algebra expression containing the a variable and a litteral.
@@ -134,7 +97,7 @@ export function resolveAFilterTerm(expression: Algebra.Expression,
   operator: SparqlRelationOperator,
   linksOperator: LinkOperator[],
   variable: Variable):
-  ISolverExpression | undefined {
+  ISolverExpression | Error {
   let rawValue: string | undefined;
   let valueType: SparqlOperandDataTypes | undefined;
   let valueAsNumber: number | undefined;
@@ -145,7 +108,7 @@ export function resolveAFilterTerm(expression: Algebra.Expression,
     if ('term' in arg && arg.term.termType === 'Variable') {
       // Check if the expression has the same variable as the one the solver try to resolved
       if (arg.term.value !== variable) {
-        return undefined;
+        return new MissMatchVariableError(`the variable ${arg.term.value} is in the filter whereas we are looking for the varibale ${variable}`);
       }
       hasVariable = true;
     } else if ('term' in arg && arg.term.termType === 'Literal') {
@@ -153,6 +116,11 @@ export function resolveAFilterTerm(expression: Algebra.Expression,
       valueType = SparqlOperandDataTypesReversed.get(arg.term.datatype.value);
       if (valueType) {
         valueAsNumber = castSparqlRdfTermIntoNumber(rawValue!, valueType);
+        if (!valueAsNumber) {
+          return new UnsupportedDataTypeError(`we do not support the datatype "${valueType}" in the solver for the moment`);
+        }
+      } else {
+        return new UnsupportedDataTypeError(`The datatype "${valueType}" is not supported by the SPARQL 1.1 Query Language W3C recommandation`);
       }
     }
   }
@@ -167,143 +135,82 @@ export function resolveAFilterTerm(expression: Algebra.Expression,
       chainOperator: linksOperator,
     };
   }
+  const missingTerm = [];
+  if (!hasVariable) {
+    missingTerm.push('Variable');
+  }
+  if (!rawValue) {
+    missingTerm.push('Litteral');
+  }
+
+  return new MisformatedFilterTermError(`the filter expressions doesn't have the term ${missingTerm.toString()}`);
 }
+
 /**
- * Find the domain of the possible solutions of a system of equations.
- * Will thrown an error if an equation cannot be resolved.
- * @param {SolverEquationSystem} equationSystem
- * @param {[ISolverExpressionRange, ISolverExpressionRange]} firstExpression - The first expression to evaluate.
- * @returns {SolutionDomain}
+ * Recursively traverse the filter expression and calculate the domain until it get to the current expression.
+ * It will thrown an error if the expression is badly formated or if it's impossible to get the solution range.
+ * @param {Algebra.Expression} filterExpression - The current filter expression that we are traversing
+ * @param {SolutionDomain} domain - The current resultant solution domain
+ * @param {LogicOperator} logicOperator - The current logic operator that we have to apply to the boolean expression
+ * @param {Variable} variable - The variable targeted inside the filter expression
+ * @param {boolean} notExpression
+ * @returns {SolutionDomain} The solution domain of the whole expression
  */
-export function resolveSolutionDomainEquationSystem(equationSystem: SolverEquationSystem,
-  firstExpression: [ISolverExpressionRange,
-    ISolverExpressionRange]):
-  SolutionDomain {
-  let domain: SolutionDomain = SolutionDomain.newWithInitialValue(firstExpression[0].solutionDomain);
-  let idx = '';
-  // Safety to avoid infinite loop
-  let i = 0;
-  let currentEquation: ISolverExpressionRange | undefined = firstExpression[1];
-
-  do {
-    const resp = resolveSolutionDomainWithAnExpression(currentEquation, domain);
-    if (!resp) {
-      throw new Error(`unable to resolve the equation ${currentEquation.chainOperator}`);
+export function recursifResolve(
+  filterExpression: Algebra.Expression,
+  domain: SolutionDomain,
+  logicOperator: LogicOperator | undefined,
+  variable: Variable,
+  notExpression: boolean,
+): SolutionDomain {
+  // We apply an or operator by default or if the domain is empty
+  if (!logicOperator || domain.isDomainEmpty()) {
+    logicOperator = LogicOperator.Or;
+  }
+  // If it's an array of term then we should be able to create a solver expression
+  // hence get a subdomain appendable to the current global domain with consideration
+  // to the logic operator
+  if (
+    filterExpression.args[0].expressionType === Algebra.expressionTypes.TERM
+  ) {
+    const rawOperator = filterExpression.operator;
+    const operator = filterOperatorToSparqlRelationOperator(rawOperator);
+    if (operator) {
+      const solverExpression = resolveAFilterTerm(filterExpression, operator, [], variable);
+      let solverRange: SolutionRange | undefined;
+      if (solverExpression instanceof MissMatchVariableError) {
+        solverRange = A_TRUE_EXPRESSION;
+      } else if (solverExpression instanceof Error) {
+        throw solverExpression;
+      } else {
+        solverRange = getSolutionRange(solverExpression.valueAsNumber, solverExpression.operator)!;
+      }
+      // We can distribute a not expression, so we inverse each statement
+      if (notExpression) {
+        const invertedRanges = solverRange.inverse();
+        // We first solve the new inverted expression of the form
+        // (E1 AND E2) after that we apply the original operator
+        for (const range of invertedRanges) {
+          domain = domain.add({ range, operator: logicOperator });
+        }
+      } else {
+        domain = domain.add({ range: solverRange, operator: logicOperator });
+      }
     }
-    [ domain, idx ] = resp;
-
-    currentEquation = equationSystem.get(idx);
-    i++;
-  } while (currentEquation && i !== equationSystem.size + 1);
-
+    // Else we store the logical operator an go deeper into the Algebra graph
+  } else {
+    let newLogicOperator = LogicOperatorReversed.get(filterExpression.operator);
+    notExpression = newLogicOperator === LogicOperator.Not || notExpression;
+    if (newLogicOperator) {
+      newLogicOperator = newLogicOperator === LogicOperator.Not ? logicOperator : newLogicOperator;
+      for (const arg of filterExpression.args) {
+        domain = recursifResolve(arg, domain, newLogicOperator, variable, notExpression);
+      }
+    }
+  }
   return domain;
 }
-/**
- * Create a system of equation from the provided expression and return separatly the first expression to evaluate.
- * @param {ISolverExpression[]} expressions - the expression composing the equation system
- * @returns {[SolverEquationSystem, [ISolverExpressionRange, ISolverExpressionRange]]
- * | undefined} if the expression form a possible system of equation return
- * the system of equation and the first expression to evaluate.
- */
-export function createEquationSystem(expressions: ISolverExpression[]):
-[SolverEquationSystem, [ISolverExpressionRange, ISolverExpressionRange]] | ISolverExpressionRange | undefined {
-  if (expressions.length === 1) {
-    const solutionRange = getSolutionRange(expressions[0].valueAsNumber, expressions[0].operator);
-    if (!solutionRange) {
-      return undefined;
-    }
-    return {
-      chainOperator: [],
-      solutionDomain: solutionRange,
-    };
-  }
 
-  const system: SolverEquationSystem = new Map();
-  // The first expression that has to be evaluated
-  let firstEquationToEvaluate: [ISolverExpressionRange, ISolverExpressionRange] | undefined;
-  // The last logical operator apply to the first expression to be evaluated
-  // it is the one at the end of the chain of operation
-  let firstEquationLastOperator = '';
-
-  for (const expression of expressions) {
-    const lastOperator = expression.chainOperator.slice(-1).toString();
-    const solutionRange = getSolutionRange(expression.valueAsNumber, expression.operator);
-    if (!solutionRange) {
-      return undefined;
-    }
-    const equation: ISolverExpressionRange = {
-      chainOperator: expression.chainOperator,
-      solutionDomain: solutionRange,
-    };
-    const lastEquation = system.get(lastOperator);
-    if (lastEquation) {
-      // There cannot be two first equation to be evaluated
-      if (firstEquationLastOperator !== '') {
-        return undefined;
-      }
-      firstEquationToEvaluate = [ lastEquation, equation ];
-      firstEquationLastOperator = lastOperator;
-    } else {
-      system.set(lastOperator, equation);
-    }
-  }
-  // There should be a first expression to be evaluated
-  if (!firstEquationToEvaluate) {
-    return undefined;
-  }
-  // We delete the fist equation to be evaluated from the system of equation because it is a value returned
-  system.delete(firstEquationLastOperator);
-
-  return [ system, firstEquationToEvaluate ];
-}
-/**
- * Resolve the solution domain when we add a new expression and
- * returned the new domain with the next expression that has to be evaluated.
- * @param {ISolverExpressionRange} equation - Current solver expression.
- * @param {SolutionDomain} domain - Current solution domain of the system of equation.
- * @returns {[SolutionDomain, LastLogicalOperator] |
- *  undefined} If the equation can be solved returned the new domain and the next
- * indexed logical operator that has to be resolved.
- * The system of equation is indexed by their last logical operator hence
- * the next expression can be found using the returned operator.
- * An empty string is returned if it was the last expression instead of
- * undefined to simply implementation,
- * because the system of equation will retuned an undefined value with an empty string.
- */
-export function resolveSolutionDomainWithAnExpression(equation: ISolverExpressionRange,
-  domain: SolutionDomain):
-  [SolutionDomain, LastLogicalOperator] | undefined {
-  let localDomain = domain.clone();
-  // To keep track of the last expression because we resolved all the not operator
-  // next to the current last logical operator
-  let i = equation.chainOperator.length - 1;
-  // We find the last logical expression that has to be resolved
-  let currentLastOperator = equation.chainOperator[i];
-  if (!currentLastOperator) {
-    return undefined;
-  }
-  i--;
-  // Resolve the new domain
-  localDomain = localDomain.add({ range: equation.solutionDomain, operator: currentLastOperator?.operator });
-
-  currentLastOperator = equation.chainOperator[i];
-  // If it was the last expression
-  if (!currentLastOperator) {
-    return [ localDomain, '' ];
-  }
-  // We solved all the NOT operator next to the last logical operator
-  while (currentLastOperator?.operator === LogicOperator.Not) {
-    localDomain = localDomain.add({ operator: currentLastOperator?.operator });
-    i--;
-    currentLastOperator = equation.chainOperator[i];
-    // It the last operator was a NOT
-    if (!currentLastOperator?.operator) {
-      return [ localDomain, '' ];
-    }
-  }
-
-  return [ localDomain, currentLastOperator.toString() ];
-}
 /**
  * Convert a TREE relation into a solver expression.
  * @param {ITreeRelation} relation - TREE relation.
@@ -363,13 +270,13 @@ export function areTypesCompatible(expressions: ISolverExpression[]): boolean {
 export function getSolutionRange(value: number, operator: SparqlRelationOperator): SolutionRange | undefined {
   switch (operator) {
     case SparqlRelationOperator.GreaterThanRelation:
-      return new SolutionRange([ value + Number.EPSILON, Number.POSITIVE_INFINITY ]);
+      return new SolutionRange([ nextUp(value), Number.POSITIVE_INFINITY ]);
     case SparqlRelationOperator.GreaterThanOrEqualToRelation:
       return new SolutionRange([ value, Number.POSITIVE_INFINITY ]);
     case SparqlRelationOperator.EqualThanRelation:
       return new SolutionRange([ value, value ]);
     case SparqlRelationOperator.LessThanRelation:
-      return new SolutionRange([ Number.NEGATIVE_INFINITY, value - Number.EPSILON ]);
+      return new SolutionRange([ Number.NEGATIVE_INFINITY, nextDown(value) ]);
     case SparqlRelationOperator.LessThanOrEqualToRelation:
       return new SolutionRange([ Number.NEGATIVE_INFINITY, value ]);
     default:

@@ -1,3 +1,5 @@
+const nextUp = require('ulp').nextUp;
+const nextDown = require('ulp').nextDown;
 /**
  * A class representing the range of a solution it contain method to
  * facilitate operation between subdomain.
@@ -84,15 +86,15 @@ export class SolutionRange {
     }
 
     if (this.lower === Number.NEGATIVE_INFINITY) {
-      return [ new SolutionRange([ this.upper + Number.EPSILON, Number.POSITIVE_INFINITY ]) ];
+      return [ new SolutionRange([ nextUp(this.upper), Number.POSITIVE_INFINITY ]) ];
     }
 
     if (this.upper === Number.POSITIVE_INFINITY) {
-      return [ new SolutionRange([ Number.NEGATIVE_INFINITY, this.lower - Number.EPSILON ]) ];
+      return [ new SolutionRange([ Number.NEGATIVE_INFINITY, nextDown(this.lower) ]) ];
     }
     return [
-      new SolutionRange([ Number.NEGATIVE_INFINITY, this.lower - Number.EPSILON ]),
-      new SolutionRange([ this.upper + Number.EPSILON, Number.POSITIVE_INFINITY ]),
+      new SolutionRange([ Number.NEGATIVE_INFINITY, nextDown(this.lower) ]),
+      new SolutionRange([ nextUp(this.upper), Number.POSITIVE_INFINITY ]),
     ];
   }
 

@@ -1,5 +1,8 @@
 import { SolutionRange } from '../lib//SolutionRange';
 
+const nextUp = require('ulp').nextUp;
+const nextDown = require('ulp').nextDown;
+
 describe('SolutionRange', () => {
   describe('constructor', () => {
     it('should have the right parameters when building', () => {
@@ -251,7 +254,7 @@ describe('SolutionRange', () => {
         Number.POSITIVE_INFINITY,
       ]);
 
-      const expectedRange = new SolutionRange([ Number.NEGATIVE_INFINITY, 21 - Number.EPSILON ]);
+      const expectedRange = new SolutionRange([ Number.NEGATIVE_INFINITY, nextDown(21) ]);
 
       const resp = aSolutionRange.inverse();
 
@@ -265,7 +268,7 @@ describe('SolutionRange', () => {
         -21,
       ]);
 
-      const expectedRange = new SolutionRange([ -21 + Number.EPSILON, Number.POSITIVE_INFINITY ]);
+      const expectedRange = new SolutionRange([ nextUp(-21), Number.POSITIVE_INFINITY ]);
 
       const resp = aSolutionRange.inverse();
 
@@ -280,8 +283,8 @@ describe('SolutionRange', () => {
       ]);
 
       const expectedRange = [
-        new SolutionRange([ Number.NEGATIVE_INFINITY, -33 - Number.EPSILON ]),
-        new SolutionRange([ 21 + Number.EPSILON, Number.POSITIVE_INFINITY ]),
+        new SolutionRange([ Number.NEGATIVE_INFINITY, nextDown(-33) ]),
+        new SolutionRange([ nextUp(21), Number.POSITIVE_INFINITY ]),
       ];
 
       const resp = aSolutionRange.inverse();
