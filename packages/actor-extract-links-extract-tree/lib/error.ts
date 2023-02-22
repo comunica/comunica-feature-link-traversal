@@ -18,10 +18,3 @@ export class UnsupportedDataTypeError extends Error {
     this.name = 'UnsupportedDataTypeError';
   }
 }
-
-export class UnsupportedOperatorError extends Error {
-  public constructor(message: string) {
-    super(message);
-    this.name = 'UnsupportedOperatorError';
-  }
-}

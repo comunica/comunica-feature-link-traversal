@@ -6,7 +6,6 @@ import {
   MissMatchVariableError,
   MisformatedFilterTermError,
   UnsupportedDataTypeError,
-  UnsupportedOperatorError,
 } from './error';
 import { LinkOperator } from './LinkOperator';
 import { SolutionDomain } from './SolutionDomain';
@@ -74,11 +73,7 @@ export function isRelationFilterExpressionDomainEmpty({ relation, filterExpressi
       return true;
     }
 
-    // We don't support the operator so let need to explore that link to not diminush the completness of the result
-    if (error instanceof UnsupportedOperatorError) {
-      return true;
-    }
-
+    /* istanbul ignore next */
     // If it's unexpected error we throw it
     throw error;
   }
@@ -188,10 +183,7 @@ export function recursifResolve(
       } else if (solverExpression instanceof Error) {
         throw solverExpression;
       } else {
-        solverRange = getSolutionRange(solverExpression.valueAsNumber, solverExpression.operator);
-        if (!solverRange) {
-          throw new UnsupportedOperatorError(`the operator "${solverExpression.operator}" of the ISolverExpression is not supported yet`);
-        }
+        solverRange = getSolutionRange(solverExpression.valueAsNumber, solverExpression.operator)!;
       }
       // We can distribute a not expression, so we inverse each statement
       if (notExpression) {
