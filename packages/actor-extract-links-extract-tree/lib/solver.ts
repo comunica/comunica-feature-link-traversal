@@ -23,6 +23,8 @@ const nextUp = require('ulp').nextUp;
 const nextDown = require('ulp').nextDown;
 
 const A_TRUE_EXPRESSION: SolutionRange = new SolutionRange([ Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY ]);
+const A_FALSE_EXPRESSION: SolutionRange = new SolutionRange(undefined);
+
 /**
  * Check if the solution domain of a system of equation compose of the expressions of the filter
  * expression and the relation is not empty.
@@ -171,7 +173,8 @@ export function recursifResolve(
   // hence get a subdomain appendable to the current global domain with consideration
   // to the logic operator
   if (
-    filterExpression.args[0].expressionType === Algebra.expressionTypes.TERM
+    filterExpression.args[0].expressionType === Algebra.expressionTypes.TERM && 
+    filterExpression.args.length == 2
   ) {
     const rawOperator = filterExpression.operator;
     const operator = filterOperatorToSparqlRelationOperator(rawOperator);
@@ -197,8 +200,17 @@ export function recursifResolve(
         domain = domain.add({ range: solverRange, operator: logicOperator });
       }
     }
-    // Else we store the logical operator an go deeper into the Algebra graph
-  } else {
+  } else if (filterExpression.args[0].expressionType === Algebra.expressionTypes.TERM && 
+    filterExpression.args.length == 1
+    ) {
+      if (filterExpression.args[0].term.value === 'false') {
+        domain = domain.add({ range: A_FALSE_EXPRESSION, operator: logicOperator });
+      }
+      if (filterExpression.args[0].term.value === 'true') {
+        domain = domain.add({ range: A_TRUE_EXPRESSION, operator: logicOperator });
+      }
+      // Else we store the logical operator an go deeper into the Algebra graph
+    } else {
     let newLogicOperator = LogicOperatorReversed.get(filterExpression.operator);
     notExpression = newLogicOperator === LogicOperator.Not || notExpression;
     if (newLogicOperator) {
@@ -315,7 +327,7 @@ export function castSparqlRdfTermIntoNumber(rdfTermValue: string,
   }
 
   if (
-    isSparqlOperandNumberType(rdfTermType) && !rdfTermValue.includes('.')
+    isSparqlOperandNumberType(rdfTermType)
   ) {
     const val = Number.parseInt(rdfTermValue, 10);
     return Number.isNaN(val) ? undefined : val;
