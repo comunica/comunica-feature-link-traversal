@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>IVariable | Comunica Link Traversal</title>
+	<title>IActionRdfResolveQuadPattern | Comunica Link Traversal</title>
 	<meta name="description" content="Documentation for Comunica Link Traversal">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -55,13 +55,13 @@
 					<a href="../modules.html">Comunica Link Traversal</a>
 				</li>
 				<li>
-					<a href="../modules/actor_extract_links_content_policies.html">actor-extract-links-content-policies</a>
+					<a href="../modules/actor_rdf_join_entries_sort_traversal_zero_knowledge.html">actor-rdf-join-entries-sort-traversal-zero-knowledge</a>
 				</li>
 				<li>
-					<a href="actor_extract_links_content_policies.IVariable.html">IVariable</a>
+					<a href="actor_rdf_join_entries_sort_traversal_zero_knowledge.IActionRdfResolveQuadPattern.html">IActionRdfResolveQuadPattern</a>
 				</li>
 			</ul>
-			<h1>Interface IVariable</h1>
+			<h1>Interface IActionRdfResolveQuadPattern</h1>
 		</div>
 	</div>
 </header>
@@ -72,7 +72,12 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">IVariable</span>
+						<span class="tsd-signature-type">IAction</span>
+						<ul class="tsd-hierarchy">
+							<li>
+								<span class="target">IActionRdfResolveQuadPattern</span>
+							</li>
+						</ul>
 					</li>
 				</ul>
 			</section>
@@ -80,46 +85,46 @@
 				<h2>Index</h2>
 				<section class="tsd-panel tsd-index-panel">
 					<div class="tsd-index-content">
-						<section class="tsd-index-section ">
+						<section class="tsd-index-section tsd-is-external">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="actor_extract_links_content_policies.IVariable.html#name" class="tsd-kind-icon">name</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="actor_extract_links_content_policies.IVariable.html#withPolicies" class="tsd-kind-icon">with<wbr>Policies</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="actor_rdf_join_entries_sort_traversal_zero_knowledge.IActionRdfResolveQuadPattern.html#context" class="tsd-kind-icon">context</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-external"><a href="actor_rdf_join_entries_sort_traversal_zero_knowledge.IActionRdfResolveQuadPattern.html#pattern" class="tsd-kind-icon">pattern</a></li>
 							</ul>
 						</section>
 					</div>
 				</section>
 			</section>
-			<section class="tsd-panel-group tsd-member-group ">
+			<section class="tsd-panel-group tsd-member-group tsd-is-external">
 				<h2>Properties</h2>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="name" class="tsd-anchor"></a>
-					<h3>name</h3>
-					<div class="tsd-signature tsd-kind-icon">name<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
+					<a name="context" class="tsd-anchor"></a>
+					<h3>context</h3>
+					<div class="tsd-signature tsd-kind-icon">context<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">IActionContext</span></div>
 					<aside class="tsd-sources">
+						<p>Inherited from IAction.context</p>
 						<ul>
-							<li>Defined in <a href="https://github.com/comunica/comunica-feature-link-traversal/blob/8392b1e/packages/actor-extract-links-content-policies/lib/ContentPolicy.ts#L27">packages/actor-extract-links-content-policies/lib/ContentPolicy.ts:27</a></li>
+							<li>Defined in node_modules/@comunica/core/lib/Actor.d.ts:113</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>A variable name, without &#39;?&#39;.</p>
+							<p>The input context that is passed through by actors.</p>
 						</div>
 					</div>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="withPolicies" class="tsd-anchor"></a>
-					<h3>with<wbr>Policies</h3>
-					<div class="tsd-signature tsd-kind-icon">with<wbr>Policies<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-external">
+					<a name="pattern" class="tsd-anchor"></a>
+					<h3>pattern</h3>
+					<div class="tsd-signature tsd-kind-icon">pattern<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Pattern</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/comunica/comunica-feature-link-traversal/blob/8392b1e/packages/actor-extract-links-content-policies/lib/ContentPolicy.ts#L32">packages/actor-extract-links-content-policies/lib/ContentPolicy.ts:32</a></li>
+							<li>Defined in packages/actor-rdf-join-entries-sort-traversal-zero-knowledge/node_modules/@comunica/bus-rdf-resolve-quad-pattern/lib/ActorRdfResolveQuadPattern.d.ts:27</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>A boolean indicating if the content policies that are defined
-							in the range of followed documents should be considered.</p>
+							<p>The quad pattern to resolve.</p>
 						</div>
 					</div>
 				</section>
@@ -132,7 +137,7 @@
 						<a href="../modules.html">Modules</a>
 					</li>
 					<li class="current tsd-kind-module">
-						<a href="../modules/actor_extract_links_content_policies.html">actor-<wbr>extract-<wbr>links-<wbr>content-<wbr>policies</a>
+						<a href="../modules/actor_rdf_join_entries_sort_traversal_zero_knowledge.html">actor-<wbr>rdf-<wbr>join-<wbr>entries-<wbr>sort-<wbr>traversal-<wbr>zero-<wbr>knowledge</a>
 					</li>
 				</ul>
 			</nav>
@@ -141,44 +146,9 @@
 					<li class=" tsd-kind-module">
 						<a href="../modules/actor_extract_links_all.html" class="tsd-kind-icon">actor-<wbr>extract-<wbr>links-<wbr>all</a>
 					</li>
-				</ul>
-				<ul class="current">
-					<li class="current tsd-kind-module">
+					<li class=" tsd-kind-module">
 						<a href="../modules/actor_extract_links_content_policies.html" class="tsd-kind-icon">actor-<wbr>extract-<wbr>links-<wbr>content-<wbr>policies</a>
-						<ul>
-							<li class=" tsd-kind-class tsd-parent-kind-module">
-								<a href="../classes/actor_extract_links_content_policies.ActorExtractLinksContentPolicies.html" class="tsd-kind-icon">Actor<wbr>Extract<wbr>Links<wbr>Content<wbr>Policies</a>
-							</li>
-							<li class=" tsd-kind-class tsd-parent-kind-module">
-								<a href="../classes/actor_extract_links_content_policies.ContentPolicy.html" class="tsd-kind-icon">Content<wbr>Policy</a>
-							</li>
-							<li class=" tsd-kind-class tsd-parent-kind-module">
-								<a href="../classes/actor_extract_links_content_policies.SimpleSclParser.html" class="tsd-kind-icon">Simple<wbr>Scl<wbr>Parser</a>
-							</li>
-							<li class=" tsd-kind-interface tsd-parent-kind-module">
-								<a href="actor_extract_links_content_policies.IActorExtractLinksContentPoliciesArgs.html" class="tsd-kind-icon">IActor<wbr>Extract<wbr>Links<wbr>Content<wbr>Policies<wbr>Args</a>
-							</li>
-							<li class="current tsd-kind-interface tsd-parent-kind-module">
-								<a href="actor_extract_links_content_policies.IVariable.html" class="tsd-kind-icon">IVariable</a>
-								<ul>
-									<li class=" tsd-kind-property tsd-parent-kind-interface">
-										<a href="actor_extract_links_content_policies.IVariable.html#name" class="tsd-kind-icon">name</a>
-									</li>
-									<li class=" tsd-kind-property tsd-parent-kind-interface">
-										<a href="actor_extract_links_content_policies.IVariable.html#withPolicies" class="tsd-kind-icon">with<wbr>Policies</a>
-									</li>
-								</ul>
-							</li>
-							<li class=" tsd-kind-variable tsd-parent-kind-module">
-								<a href="../modules/actor_extract_links_content_policies.html#KEY_CONTEXT_POLICIES" class="tsd-kind-icon">KEY_<wbr>CONTEXT_<wbr>POLICIES</a>
-							</li>
-							<li class=" tsd-kind-variable tsd-parent-kind-module">
-								<a href="../modules/actor_extract_links_content_policies.html#KEY_CONTEXT_WITHPOLICIES" class="tsd-kind-icon">KEY_<wbr>CONTEXT_<wbr>WITHPOLICIES</a>
-							</li>
-						</ul>
 					</li>
-				</ul>
-				<ul class="after-current">
 					<li class=" tsd-kind-module">
 						<a href="../modules/actor_extract_links_extract_tree.html" class="tsd-kind-icon">actor-<wbr>extract-<wbr>links-<wbr>extract-<wbr>tree</a>
 					</li>
@@ -197,9 +167,92 @@
 					<li class=" tsd-kind-module">
 						<a href="../modules/actor_optimize_query_operation_set_seed_sources_quadpattern_iris.html" class="tsd-kind-icon">actor-<wbr>optimize-<wbr>query-<wbr>operation-<wbr>set-<wbr>seed-<wbr>sources-<wbr>quadpattern-<wbr>iris</a>
 					</li>
-					<li class=" tsd-kind-module">
+				</ul>
+				<ul class="current">
+					<li class="current tsd-kind-module">
 						<a href="../modules/actor_rdf_join_entries_sort_traversal_zero_knowledge.html" class="tsd-kind-icon">actor-<wbr>rdf-<wbr>join-<wbr>entries-<wbr>sort-<wbr>traversal-<wbr>zero-<wbr>knowledge</a>
+						<ul>
+							<li class=" tsd-kind-reference tsd-parent-kind-module tsd-is-external">
+								<a href="../modules/actor_rdf_join_entries_sort_traversal_zero_knowledge.html#getContextSource" class="tsd-kind-icon">get<wbr>Context<wbr>Source</a>
+							</li>
+							<li class=" tsd-kind-reference tsd-parent-kind-module tsd-is-external">
+								<a href="../modules/actor_rdf_join_entries_sort_traversal_zero_knowledge.html#getContextSourceFirst" class="tsd-kind-icon">get<wbr>Context<wbr>Source<wbr>First</a>
+							</li>
+							<li class=" tsd-kind-reference tsd-parent-kind-module tsd-is-external">
+								<a href="../modules/actor_rdf_join_entries_sort_traversal_zero_knowledge.html#getContextSourceUrl" class="tsd-kind-icon">get<wbr>Context<wbr>Source<wbr>Url</a>
+							</li>
+							<li class=" tsd-kind-reference tsd-parent-kind-module tsd-is-external">
+								<a href="../modules/actor_rdf_join_entries_sort_traversal_zero_knowledge.html#getContextSources" class="tsd-kind-icon">get<wbr>Context<wbr>Sources</a>
+							</li>
+							<li class=" tsd-kind-reference tsd-parent-kind-module tsd-is-external">
+								<a href="../modules/actor_rdf_join_entries_sort_traversal_zero_knowledge.html#getDataSourceContext" class="tsd-kind-icon">get<wbr>Data<wbr>Source<wbr>Context</a>
+							</li>
+							<li class=" tsd-kind-reference tsd-parent-kind-module tsd-is-external">
+								<a href="../modules/actor_rdf_join_entries_sort_traversal_zero_knowledge.html#getDataSourceType" class="tsd-kind-icon">get<wbr>Data<wbr>Source<wbr>Type</a>
+							</li>
+							<li class=" tsd-kind-reference tsd-parent-kind-module tsd-is-external">
+								<a href="../modules/actor_rdf_join_entries_sort_traversal_zero_knowledge.html#getDataSourceValue" class="tsd-kind-icon">get<wbr>Data<wbr>Source<wbr>Value</a>
+							</li>
+							<li class=" tsd-kind-reference tsd-parent-kind-module tsd-is-external">
+								<a href="../modules/actor_rdf_join_entries_sort_traversal_zero_knowledge.html#hasContextSingleSource" class="tsd-kind-icon">has<wbr>Context<wbr>Single<wbr>Source</a>
+							</li>
+							<li class=" tsd-kind-reference tsd-parent-kind-module tsd-is-external">
+								<a href="../modules/actor_rdf_join_entries_sort_traversal_zero_knowledge.html#hasContextSingleSourceOfType" class="tsd-kind-icon">has<wbr>Context<wbr>Single<wbr>Source<wbr>OfType</a>
+							</li>
+							<li class=" tsd-kind-reference tsd-parent-kind-module tsd-is-external">
+								<a href="../modules/actor_rdf_join_entries_sort_traversal_zero_knowledge.html#isDataSourceRawType" class="tsd-kind-icon">is<wbr>Data<wbr>Source<wbr>Raw<wbr>Type</a>
+							</li>
+							<li class=" tsd-kind-class tsd-parent-kind-module tsd-is-external">
+								<a href="../classes/actor_rdf_join_entries_sort_traversal_zero_knowledge.ActorRdfJoinEntriesSort.html" class="tsd-kind-icon">Actor<wbr>Rdf<wbr>Join<wbr>Entries<wbr>Sort</a>
+							</li>
+							<li class=" tsd-kind-class tsd-parent-kind-module">
+								<a href="../classes/actor_rdf_join_entries_sort_traversal_zero_knowledge.ActorRdfJoinEntriesSortTraversalZeroKnowledge.html" class="tsd-kind-icon">Actor<wbr>Rdf<wbr>Join<wbr>Entries<wbr>Sort<wbr>Traversal<wbr>Zero<wbr>Knowledge</a>
+							</li>
+							<li class=" tsd-kind-class tsd-parent-kind-module tsd-is-external">
+								<a href="../classes/actor_rdf_join_entries_sort_traversal_zero_knowledge.ActorRdfResolveQuadPattern.html" class="tsd-kind-icon">Actor<wbr>Rdf<wbr>Resolve<wbr>Quad<wbr>Pattern</a>
+							</li>
+							<li class=" tsd-kind-class tsd-parent-kind-module tsd-is-external">
+								<a href="../classes/actor_rdf_join_entries_sort_traversal_zero_knowledge.ActorRdfResolveQuadPatternSource.html" class="tsd-kind-icon">Actor<wbr>Rdf<wbr>Resolve<wbr>Quad<wbr>Pattern<wbr>Source</a>
+							</li>
+							<li class=" tsd-kind-interface tsd-parent-kind-module tsd-is-external">
+								<a href="actor_rdf_join_entries_sort_traversal_zero_knowledge.IActionRdfJoinEntriesSort.html" class="tsd-kind-icon">IAction<wbr>Rdf<wbr>Join<wbr>Entries<wbr>Sort</a>
+							</li>
+							<li class="current tsd-kind-interface tsd-parent-kind-module tsd-is-external">
+								<a href="actor_rdf_join_entries_sort_traversal_zero_knowledge.IActionRdfResolveQuadPattern.html" class="tsd-kind-icon">IAction<wbr>Rdf<wbr>Resolve<wbr>Quad<wbr>Pattern</a>
+								<ul>
+									<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
+										<a href="actor_rdf_join_entries_sort_traversal_zero_knowledge.IActionRdfResolveQuadPattern.html#context" class="tsd-kind-icon">context</a>
+									</li>
+									<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-external">
+										<a href="actor_rdf_join_entries_sort_traversal_zero_knowledge.IActionRdfResolveQuadPattern.html#pattern" class="tsd-kind-icon">pattern</a>
+									</li>
+								</ul>
+							</li>
+							<li class=" tsd-kind-interface tsd-parent-kind-module tsd-is-external">
+								<a href="actor_rdf_join_entries_sort_traversal_zero_knowledge.IActorRdfJoinEntriesSortOutput.html" class="tsd-kind-icon">IActor<wbr>Rdf<wbr>Join<wbr>Entries<wbr>Sort<wbr>Output</a>
+							</li>
+							<li class=" tsd-kind-interface tsd-parent-kind-module tsd-is-external">
+								<a href="actor_rdf_join_entries_sort_traversal_zero_knowledge.IActorRdfResolveQuadPatternOutput.html" class="tsd-kind-icon">IActor<wbr>Rdf<wbr>Resolve<wbr>Quad<wbr>Pattern<wbr>Output</a>
+							</li>
+							<li class=" tsd-kind-interface tsd-parent-kind-module tsd-is-external">
+								<a href="actor_rdf_join_entries_sort_traversal_zero_knowledge.IQuadSource.html" class="tsd-kind-icon">IQuad<wbr>Source</a>
+							</li>
+							<li class=" tsd-kind-type-alias tsd-parent-kind-module tsd-is-external">
+								<a href="../modules/actor_rdf_join_entries_sort_traversal_zero_knowledge.html#IActorRdfJoinEntriesSortArgs" class="tsd-kind-icon">IActor<wbr>Rdf<wbr>Join<wbr>Entries<wbr>Sort<wbr>Args</a>
+							</li>
+							<li class=" tsd-kind-type-alias tsd-parent-kind-module tsd-is-external">
+								<a href="../modules/actor_rdf_join_entries_sort_traversal_zero_knowledge.html#IActorRdfResolveQuadPatternArgs" class="tsd-kind-icon">IActor<wbr>Rdf<wbr>Resolve<wbr>Quad<wbr>Pattern<wbr>Args</a>
+							</li>
+							<li class=" tsd-kind-type-alias tsd-parent-kind-module tsd-is-external">
+								<a href="../modules/actor_rdf_join_entries_sort_traversal_zero_knowledge.html#MediatorRdfJoinEntriesSort" class="tsd-kind-icon">Mediator<wbr>Rdf<wbr>Join<wbr>Entries<wbr>Sort</a>
+							</li>
+							<li class=" tsd-kind-type-alias tsd-parent-kind-module tsd-is-external">
+								<a href="../modules/actor_rdf_join_entries_sort_traversal_zero_knowledge.html#MediatorRdfResolveQuadPattern" class="tsd-kind-icon">Mediator<wbr>Rdf<wbr>Resolve<wbr>Quad<wbr>Pattern</a>
+							</li>
+						</ul>
 					</li>
+				</ul>
+				<ul class="after-current">
 					<li class=" tsd-kind-module">
 						<a href="../modules/actor_rdf_metadata_extract_shapetrees.html" class="tsd-kind-icon">actor-<wbr>rdf-<wbr>metadata-<wbr>extract-<wbr>shapetrees</a>
 					</li>
@@ -273,13 +326,12 @@
 		<h2>Legend</h2>
 		<div class="tsd-legend-group">
 			<ul class="tsd-legend">
-				<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
-				<li class="tsd-kind-interface tsd-has-type-parameter"><span class="tsd-kind-icon">Interface with type parameter</span></li>
-				<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
-			</ul>
-			<ul class="tsd-legend">
 				<li class="tsd-kind-variable"><span class="tsd-kind-icon">Variable</span></li>
 				<li class="tsd-kind-type-alias"><span class="tsd-kind-icon">Type alias</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
+				<li class="tsd-kind-interface tsd-has-type-parameter"><span class="tsd-kind-icon">Interface with type parameter</span></li>
 			</ul>
 			<ul class="tsd-legend">
 				<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
