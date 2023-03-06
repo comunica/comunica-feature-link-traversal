@@ -4,7 +4,7 @@ import type {
 } from '@comunica/bus-extract-links';
 import { ActorExtractLinks } from '@comunica/bus-extract-links';
 
-import type { IActorTest } from '@comunica/core';
+import type {IActorArgs, IActorTest } from '@comunica/core';
 import type { IActionContext } from '@comunica/types';
 import type { ITreeRelationRaw, ITreeRelation, ITreeNode } from '@comunica/types-link-traversal';
 import { TreeNodes } from '@comunica/types-link-traversal';
@@ -17,8 +17,11 @@ import { buildRelationElement, materializeTreeRelation, addRelationDescription }
  * A comunica Extract Links Tree Extract Links Actor.
  */
 export class ActorExtractLinksTree extends ActorExtractLinks {
-  public constructor(args: IActorExtractLinksArgs) {
+
+  private readonly reachabilityCriterionUseSPARQLFilter: boolean = true;
+  public constructor(args: IActorExtractLinksTree) {
     super(args);
+    this.reachabilityCriterionUseSPARQLFilter = args.reachabilityCriterionUseSPARQLFilter || true;
   }
 
   public async test(action: IActionExtractLinks): Promise<IActorTest> {
@@ -66,10 +69,11 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
         // Create a ITreeNode object
         const node: ITreeNode = { relation: relations, identifier: currentPageUrl };
         let acceptedRelation = relations;
-
-        // Filter the relation based on the query
-        const filters = await this.applyFilter(node, action.context);
-        acceptedRelation = this.handleFilter(filters, acceptedRelation);
+        if (this.reachabilityCriterionUseSPARQLFilter) {
+          // Filter the relation based on the query
+          const filters = await this.applyFilter(node, action.context);
+          acceptedRelation = this.handleFilter(filters, acceptedRelation);
+        }
         resolve({ links: acceptedRelation.map(el => ({ url: el.node })) });
       });
     });
@@ -127,4 +131,14 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
       addRelationDescription(relationDescriptions, quad, value, key);
     }
   }
+}
+
+export interface IActorExtractLinksTree
+  extends IActorArgs<IActionExtractLinks, IActorTest, IActorExtractLinksOutput>{
+  /**
+   * If true (default), then we use a reachability criterion that prune links that don't respect the
+   * SPARQL filter
+   * @default {true}
+   */
+  reachabilityCriterionUseSPARQLFilter: boolean;
 }

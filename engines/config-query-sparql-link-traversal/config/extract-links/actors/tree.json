@@ -9,7 +9,8 @@
     "actors": [
       {
         "@id": "urn:comunica:default:extract-links/actors#extract-links-tree",
-        "@type": "ActorExtractLinksTree"
+        "@type": "ActorExtractLinksTree",
+        "reachabilityCriterionUseSPARQLFilter": true
       }
     ]
   }
