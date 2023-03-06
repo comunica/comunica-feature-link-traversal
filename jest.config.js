@@ -1,6 +1,8 @@
 module.exports = {
   transform: {
-    '^.+\\.ts$': 'ts-jest'
+    '^.+\\.ts$': ['ts-jest', {
+      isolatedModules: true
+    }]
   },
   testRegex: '/test/.*-test.ts$',
   moduleFileExtensions: [
@@ -8,9 +10,6 @@ module.exports = {
     'js'
   ],
   globals: {
-    'ts-jest': {
-      isolatedModules: true
-    },
     window: {
       location: new URL("http://localhost")
     }
