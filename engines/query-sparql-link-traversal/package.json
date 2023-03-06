@@ -50,7 +50,7 @@
     "@comunica/actor-extract-links-quad-pattern": "^0.1.0",
     "@comunica/actor-extract-links-quad-pattern-query": "^0.1.0",
     "@comunica/actor-extract-links-tree": "^0.1.0",
-    "@comunica/actor-init-query": "^2.6.7",
+    "@comunica/actor-init-query": "^2.6.8",
     "@comunica/actor-optimize-query-operation-set-seed-sources-quadpattern-iris": "^0.1.0",
     "@comunica/actor-rdf-join-entries-sort-traversal-zero-knowledge": "^0.1.0",
     "@comunica/actor-rdf-metadata-extract-traverse": "^0.1.0",
@@ -60,8 +60,8 @@
     "@comunica/actor-rdf-resolve-hypermedia-links-traverse-replace-conditional": "^0.1.0",
     "@comunica/config-query-sparql-link-traversal": "^0.1.0",
     "@comunica/mediator-combine-array": "^0.1.0",
-    "@comunica/query-sparql": "^2.6.7",
-    "@comunica/runner-cli": "^2.6.7"
+    "@comunica/query-sparql": "^2.6.8",
+    "@comunica/runner-cli": "^2.6.8"
   },
   "scripts": {
     "build": "npm run build:ts",

@@ -30,7 +30,7 @@
     "lib/**/*.js.map"
   ],
   "dependencies": {
-    "@comunica/core": "^2.6.7"
+    "@comunica/core": "^2.6.8"
   },
   "scripts": {
     "build": "npm run build:ts && npm run build:components",
