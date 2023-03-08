@@ -1,6 +1,6 @@
 {
   "name": "@comunica/actor-extract-links-content-policies",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A traverse-content-policies extract-links actor",
   "lsd:module": true,
   "main": "lib/index.js",
@@ -33,7 +33,7 @@
   ],
   "dependencies": {
     "@comunica/actor-init-query": "^2.6.8",
-    "@comunica/bus-extract-links": "^0.1.0",
+    "@comunica/bus-extract-links": "^0.1.1",
     "@comunica/bus-query-operation": "^2.6.8",
     "@comunica/context-entries": "^2.6.8",
     "@comunica/core": "^2.6.8",

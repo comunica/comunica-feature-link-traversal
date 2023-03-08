@@ -1,6 +1,6 @@
 {
   "name": "@comunica/actor-extract-links-tree",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A extract-links-tree extract-links actor",
   "lsd:module": true,
   "main": "lib/index.js",
@@ -31,7 +31,7 @@
     "lib/**/*.js"
   ],
   "dependencies": {
-    "@comunica/bus-extract-links": "^0.1.0",
+    "@comunica/bus-extract-links": "^0.1.1",
     "@comunica/context-entries": "^2.6.8",
     "@comunica/core": "^2.6.8",
     "rdf-data-factory": "^1.1.1",

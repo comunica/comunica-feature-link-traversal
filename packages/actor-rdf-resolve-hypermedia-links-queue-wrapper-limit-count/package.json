@@ -1,6 +1,6 @@
 {
   "name": "@comunica/actor-rdf-resolve-hypermedia-links-queue-wrapper-limit-count",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A wrapper-limit-count rdf-resolve-hypermedia-links-queue actor",
   "lsd:module": true,
   "main": "lib/index.js",
