@@ -1,6 +1,6 @@
 {
   "name": "@comunica/actor-extract-links-tree",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A extract-links-tree extract-links actor",
   "lsd:module": true,
   "main": "lib/index.js",
@@ -31,11 +31,11 @@
     "lib/**/*.js"
   ],
   "dependencies": {
+    "@comunica/bus-extract-links": "^0.1.1",
+    "@comunica/context-entries": "^2.6.8",
+    "@comunica/core": "^2.6.8",
     "@comunica/bindings-factory": "^2.2.0",
-    "@comunica/bus-extract-links": "^0.0.1",
-    "@comunica/context-entries": "^2.4.0",
     "@comunica/context-entries-link-traversal": "^0.0.1",
-    "@comunica/core": "^2.4.0",
     "@comunica/types-link-traversal": "^0.0.1",
     "rdf-data-factory": "^1.1.1",
     "rdf-string": "^1.6.1",

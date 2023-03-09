@@ -1,6 +1,6 @@
 {
   "name": "@comunica/bus-extract-links",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A comunica bus for extract-links events.",
   "lsd:module": true,
   "main": "lib/index.js",
@@ -31,9 +31,9 @@
     "lib/**/*.js.map"
   ],
   "dependencies": {
-    "@comunica/bus-rdf-metadata-extract": "^2.6.7",
-    "@comunica/bus-rdf-resolve-hypermedia-links": "^2.6.7",
-    "@comunica/core": "^2.6.7"
+    "@comunica/bus-rdf-metadata-extract": "^2.6.8",
+    "@comunica/bus-rdf-resolve-hypermedia-links": "^2.6.8",
+    "@comunica/core": "^2.6.8"
   },
   "scripts": {
     "build": "npm run build:ts && npm run build:components",
