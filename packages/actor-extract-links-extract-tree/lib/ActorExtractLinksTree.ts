@@ -19,7 +19,7 @@ import { buildRelationElement, materializeTreeRelation, addRelationDescription }
 export class ActorExtractLinksTree extends ActorExtractLinks {
 
   private readonly reachabilityCriterionUseSPARQLFilter: boolean = true;
-  public constructor(args: IActorExtractLinksTree) {
+  public constructor(args: IActorExtractLinksTreeArgs) {
     super(args);
     this.reachabilityCriterionUseSPARQLFilter = args.reachabilityCriterionUseSPARQLFilter || true;
   }
@@ -133,8 +133,8 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
   }
 }
 
-export interface IActorExtractLinksTree
-  extends IActorArgs<IActionExtractLinks, IActorTest, IActorExtractLinksOutput>{
+export interface IActorExtractLinksTreeArgs
+extends IActorArgs<IActionExtractLinks, IActorTest, IActorExtractLinksOutput> {
   /**
    * If true (default), then we use a reachability criterion that prune links that don't respect the
    * SPARQL filter

@@ -2592,6 +2592,12 @@
   resolved "https://registry.yarnpkg.com/@comunica/config-query-sparql/-/config-query-sparql-2.6.0.tgz#a52af16bf592e91db2bc148c1b20bfe98a4c76d2"
   integrity sha512-Ih02KeThu1RWdiV7JfpD8u0lc3hu547EG5pDhe9igGPjU+ijNbahfJJzKrR7LcJrMTGtydEN+z2allIlBKSftA==
 
+"@comunica/context-entries-link-traversal@^0.0.1":
+  version "0.1.1"
+  dependencies:
+    "@comunica/core" "^2.6.8"
+    "@comunica/types-link-traversal" "^0.1.0"
+
 "@comunica/context-entries@^2.4.0", "@comunica/context-entries@^2.5.1", "@comunica/context-entries@^2.6.7", "@comunica/context-entries@^2.6.8":
   version "2.6.8"
   resolved "https://registry.yarnpkg.com/@comunica/context-entries/-/context-entries-2.6.8.tgz#deb86cc01d0b1ebb6c1f2abdbcb91dc0c25bd8f3"
@@ -2991,6 +2997,9 @@
     "@comunica/bus-init" "^2.6.8"
     "@comunica/core" "^2.6.8"
     componentsjs "^5.3.2"
+
+"@comunica/types-link-traversal@^0.0.1":
+  version "0.1.0"
 
 "@comunica/types@^2.6.7", "@comunica/types@^2.6.8":
   version "2.6.8"
@@ -10567,27 +10576,7 @@ sparqlalgebrajs@^4.0.0, sparqlalgebrajs@^4.0.2, sparqlalgebrajs@^4.0.3, sparqlal
     rdf-string "^1.6.0"
     sparqljs "^3.6.1"
 
-sparqlee@^2.1.0:
-  version "2.2.1"
-  resolved "https://registry.yarnpkg.com/sparqlee/-/sparqlee-2.2.1.tgz#56a7b237fdebb42053e6be608fc5265cebbd4440"
-  integrity sha512-nRBiqNpqUzI4F3/EMyTy+mKc7ijxnw+BpbTuRuc5e25TmYdyzPQzAwGeLFIfWPNd8biJ2fqK4ZxIjHdWdRbhfQ==
-  dependencies:
-    "@comunica/bindings-factory" "^2.0.1"
-    "@rdfjs/types" "^1.1.0"
-    "@types/lru-cache" "^5.1.1"
-    "@types/spark-md5" "^3.0.2"
-    "@types/uuid" "^8.0.0"
-    bignumber.js "^9.0.1"
-    hash.js "^1.1.7"
-    lru-cache "^6.0.0"
-    rdf-data-factory "^1.1.0"
-    rdf-string "^1.6.0"
-    relative-to-absolute-iri "^1.0.6"
-    spark-md5 "^3.0.1"
-    sparqlalgebrajs "^4.0.3"
-    uuid "^8.0.0"
-
-sparqlee@^2.2.0:
+sparqlee@^2.1.0, sparqlee@^2.2.0:
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/sparqlee/-/sparqlee-2.2.1.tgz#56a7b237fdebb42053e6be608fc5265cebbd4440"
   integrity sha512-nRBiqNpqUzI4F3/EMyTy+mKc7ijxnw+BpbTuRuc5e25TmYdyzPQzAwGeLFIfWPNd8biJ2fqK4ZxIjHdWdRbhfQ==
