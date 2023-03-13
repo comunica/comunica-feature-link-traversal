@@ -21,7 +21,8 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
   private readonly reachabilityCriterionUseSPARQLFilter: boolean = true;
   public constructor(args: IActorExtractLinksTreeArgs) {
     super(args);
-    this.reachabilityCriterionUseSPARQLFilter = args.reachabilityCriterionUseSPARQLFilter || true;
+    this.reachabilityCriterionUseSPARQLFilter = args.reachabilityCriterionUseSPARQLFilter === undefined?
+    true: args.reachabilityCriterionUseSPARQLFilter ;
   }
 
   public async test(action: IActionExtractLinks): Promise<IActorTest> {
