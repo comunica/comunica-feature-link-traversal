@@ -20,10 +20,11 @@ for config in ../config-query-sparql-link-traversal/config/*.json; do
 
   # Build web client
   echo -e "\033[1m\033[34mBuilding config $id\033[0m"
-  npx -p @comunica/web-client-generator@1.7.1 comunica-web-client-generator $config \
+  npx -p @comunica/web-client-generator@1.8.0 comunica-web-client-generator $config \
     -d $cwd/web-clients/builds/$id \
     -s $cwd/web-clients/settings.custom.json \
-    -q $cwd/web-clients/queries
+    -q $cwd/web-clients/queries \
+    -b https://comunica.github.io/comunica-feature-link-traversal-web-clients/builds/$id/
 
   rm $cwd/web-clients/settings.custom.json
 done
