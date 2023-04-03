@@ -1,5 +1,4 @@
 import { SparqlRelationOperator } from '@comunica/types-link-traversal';
-import type { ITreeRelation } from '@comunica/types-link-traversal';
 import type * as RDF from 'rdf-js';
 import { Algebra } from 'sparqlalgebrajs';
 import {
@@ -18,6 +17,7 @@ import type {
   ISolverExpression,
   Variable,
 } from './solverInterfaces';
+import type { ITreeRelation } from './TreeMetadata';
 
 const nextUp = require('ulp').nextUp;
 const nextDown = require('ulp').nextDown;

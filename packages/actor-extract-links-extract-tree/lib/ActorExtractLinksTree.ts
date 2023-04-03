@@ -6,11 +6,11 @@ import { ActorExtractLinks } from '@comunica/bus-extract-links';
 
 import type { IActorArgs, IActorTest } from '@comunica/core';
 import type { IActionContext } from '@comunica/types';
-import type { ITreeRelationRaw, ITreeRelation, ITreeNode } from '@comunica/types-link-traversal';
 import { TreeNodes } from '@comunica/types-link-traversal';
 import type * as RDF from 'rdf-js';
 import { termToString } from 'rdf-string';
 import { FilterNode } from './FilterNode';
+import type { ITreeRelationRaw, ITreeRelation, ITreeNode } from './TreeMetadata';
 import { buildRelationElement, materializeTreeRelation, addRelationDescription } from './treeMetadataExtraction';
 
 /**

@@ -1,11 +1,11 @@
 import { BindingsFactory } from '@comunica/bindings-factory';
 import { KeysInitQuery } from '@comunica/context-entries';
 import type { IActionContext } from '@comunica/types';
-import type { ITreeRelation, ITreeNode } from '@comunica/types-link-traversal';
 import type * as RDF from 'rdf-js';
 import { Algebra, Factory as AlgebraFactory } from 'sparqlalgebrajs';
 import { isBooleanExpressionRelationFilterExpressionSolvable } from './solver';
 import type { Variable } from './solverInterfaces';
+import type { ITreeRelation, ITreeNode } from './TreeMetadata';
 
 const AF = new AlgebraFactory();
 const BF = new BindingsFactory();

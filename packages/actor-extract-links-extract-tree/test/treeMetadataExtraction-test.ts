@@ -1,7 +1,7 @@
-import type { ITreeRelationRaw, ITreeRelation } from '@comunica/types-link-traversal';
-import { TreeNodes, SparqlRelationOperator } from '@comunica/types-link-traversal';
 import { DataFactory } from 'rdf-data-factory';
 import type * as RDF from 'rdf-js';
+import type { ITreeRelationRaw, ITreeRelation } from '../lib/TreeMetadata';
+import { TreeNodes, SparqlRelationOperator } from '../lib/TreeMetadata';
 import { buildRelationElement, addRelationDescription, materializeTreeRelation } from '../lib/treeMetadataExtraction';
 
 const DF = new DataFactory<RDF.Quad>();

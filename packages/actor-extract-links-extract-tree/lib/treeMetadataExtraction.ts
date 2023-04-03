@@ -1,7 +1,7 @@
-import type { ITreeRelation, ITreeRelationRaw, SparqlRelationOperator } from '@comunica/types-link-traversal';
 import { TreeNodes, RelationOperatorReversed } from '@comunica/types-link-traversal';
 import type * as RDF from 'rdf-js';
 import { termToString } from 'rdf-string';
+import type { ITreeRelation, ITreeRelationRaw, SparqlRelationOperator } from './TreeMetadata';
 
 /**
  * Materialize a raw tree relation using the captured values.

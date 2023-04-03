@@ -1,12 +1,12 @@
 import { KeysInitQuery } from '@comunica/context-entries';
 import { ActionContext } from '@comunica/core';
-import type { ITreeNode } from '@comunica/types-link-traversal';
-import { SparqlRelationOperator } from '@comunica/types-link-traversal';
 
 import { DataFactory } from 'rdf-data-factory';
 import type * as RDF from 'rdf-js';
 import { Algebra, translate } from 'sparqlalgebrajs';
 import { FilterNode } from '../lib/FilterNode';
+import { SparqlRelationOperator } from '../lib/TreeMetadata';
+import type { ITreeNode } from '../lib/TreeMetadata';
 
 const DF = new DataFactory<RDF.BaseQuad>();
 

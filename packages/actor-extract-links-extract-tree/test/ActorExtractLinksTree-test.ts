@@ -1,11 +1,11 @@
 import { KeysRdfResolveQuadPattern, KeysInitQuery } from '@comunica/context-entries';
 import { ActionContext, Bus } from '@comunica/core';
-import type { ITreeRelation } from '@comunica/types-link-traversal';
-import { SparqlRelationOperator, TreeNodes } from '@comunica/types-link-traversal';
 import { DataFactory } from 'rdf-data-factory';
 import type * as RDF from 'rdf-js';
 import { Algebra, translate } from 'sparqlalgebrajs';
 import { ActorExtractLinksTree } from '../lib/ActorExtractLinksTree';
+import { SparqlRelationOperator, TreeNodes } from '../lib/TreeMetadata';
+import type { ITreeRelation } from '../lib/TreeMetadata';
 
 const stream = require('streamify-array');
 
