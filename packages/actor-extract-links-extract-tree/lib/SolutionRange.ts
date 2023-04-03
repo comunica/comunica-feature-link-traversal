@@ -116,7 +116,7 @@ export class SolutionRange {
     if (this.isEmpty) {
       return [new SolutionRange([Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY])]
     }
-    if ((this.lower === Number.NEGATIVE_INFINITY && this.upper === Number.POSITIVE_INFINITY) || this.isEmpty) {
+    if ((this.lower === Number.NEGATIVE_INFINITY && this.upper === Number.POSITIVE_INFINITY)) {
       return [];
     }
 
