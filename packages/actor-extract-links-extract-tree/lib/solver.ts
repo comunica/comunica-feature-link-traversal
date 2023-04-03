@@ -34,7 +34,7 @@ const A_FALSE_EXPRESSION: SolutionRange = new SolutionRange(undefined);
  * @param {variable} variable - The variable to be resolved.
  * @returns {boolean} Return true if the domain
  */
-export function isRelationFilterExpressionDomainEmpty({ relation, filterExpression, variable }: {
+export function isBooleanExpressionRelationFilterExpressionSolvable({ relation, filterExpression, variable }: {
   relation: ITreeRelation;
   filterExpression: Algebra.Expression;
   variable: Variable;

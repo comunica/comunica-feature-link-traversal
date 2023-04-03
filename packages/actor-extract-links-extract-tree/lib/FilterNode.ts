@@ -4,7 +4,7 @@ import type { IActionContext } from '@comunica/types';
 import type { ITreeRelation, ITreeNode } from '@comunica/types-link-traversal';
 import type * as RDF from 'rdf-js';
 import { Algebra, Factory as AlgebraFactory } from 'sparqlalgebrajs';
-import { isRelationFilterExpressionDomainEmpty } from './solver';
+import { isBooleanExpressionRelationFilterExpressionSolvable } from './solver';
 import type { Variable } from './solverInterfaces';
 
 const AF = new AlgebraFactory();
@@ -72,7 +72,7 @@ export class FilterNode {
       let filtered = false;
       // For all the variable check if one is has a possible solutions.
       for (const variable of variables) {
-        filtered = filtered || isRelationFilterExpressionDomainEmpty(
+        filtered = filtered || isBooleanExpressionRelationFilterExpressionSolvable(
           { relation, filterExpression: filterOperation, variable },
         );
       }

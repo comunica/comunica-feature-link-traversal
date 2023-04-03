@@ -18,7 +18,7 @@ import {
   areTypesCompatible,
   convertTreeRelationToSolverExpression,
   resolveAFilterTerm,
-  isRelationFilterExpressionDomainEmpty,
+  isBooleanExpressionRelationFilterExpressionSolvable,
   recursifResolve,
 } from '../lib/solver';
 import { SparqlOperandDataTypes, LogicOperator } from '../lib/solverInterfaces';
@@ -692,7 +692,7 @@ describe('solver function', () => {
 
       const variable = 'x';
 
-      expect(isRelationFilterExpressionDomainEmpty({ relation, filterExpression, variable })).toBe(true);
+      expect(isBooleanExpressionRelationFilterExpressionSolvable({ relation, filterExpression, variable })).toBe(true);
     });
 
     it('should return true given a relation and a filter operation where types are not compatible', () => {
@@ -714,7 +714,7 @@ describe('solver function', () => {
 
       const variable = 'x';
 
-      expect(isRelationFilterExpressionDomainEmpty({ relation, filterExpression, variable })).toBe(true);
+      expect(isBooleanExpressionRelationFilterExpressionSolvable({ relation, filterExpression, variable })).toBe(true);
     });
 
     it('should return false given a relation and a filter operation where types are not compatible', () => {
@@ -736,7 +736,7 @@ describe('solver function', () => {
 
       const variable = 'x';
 
-      expect(isRelationFilterExpressionDomainEmpty({ relation, filterExpression, variable })).toBe(true);
+      expect(isBooleanExpressionRelationFilterExpressionSolvable({ relation, filterExpression, variable })).toBe(true);
     });
 
     it('should return true when the solution range is not valid of the relation', () => {
@@ -758,7 +758,7 @@ describe('solver function', () => {
 
       const variable = 'x';
 
-      expect(isRelationFilterExpressionDomainEmpty({ relation, filterExpression, variable })).toBe(true);
+      expect(isBooleanExpressionRelationFilterExpressionSolvable({ relation, filterExpression, variable })).toBe(true);
     });
 
     it('should return true when the equation system is not valid', () => {
@@ -800,7 +800,7 @@ describe('solver function', () => {
 
       const variable = 'x';
 
-      expect(isRelationFilterExpressionDomainEmpty({ relation, filterExpression, variable })).toBe(true);
+      expect(isBooleanExpressionRelationFilterExpressionSolvable({ relation, filterExpression, variable })).toBe(true);
     });
 
     it('should return true when there is a solution for the filter expression and the relation', () => {
@@ -822,7 +822,7 @@ describe('solver function', () => {
 
       const variable = 'x';
 
-      expect(isRelationFilterExpressionDomainEmpty({ relation, filterExpression, variable })).toBe(true);
+      expect(isBooleanExpressionRelationFilterExpressionSolvable({ relation, filterExpression, variable })).toBe(true);
     });
 
     it('should return false when the filter expression has no solution ', () => {
@@ -844,7 +844,7 @@ describe('solver function', () => {
 
       const variable = 'x';
 
-      expect(isRelationFilterExpressionDomainEmpty({ relation, filterExpression, variable })).toBe(false);
+      expect(isBooleanExpressionRelationFilterExpressionSolvable({ relation, filterExpression, variable })).toBe(false);
     });
 
     it(`should return false when the filter has a possible 
@@ -867,7 +867,7 @@ describe('solver function', () => {
 
       const variable = 'x';
 
-      expect(isRelationFilterExpressionDomainEmpty({ relation, filterExpression, variable })).toBe(false);
+      expect(isBooleanExpressionRelationFilterExpressionSolvable({ relation, filterExpression, variable })).toBe(false);
     });
 
     it('should return true when there is a solution for the filter expression with one expression and the relation',
@@ -890,7 +890,10 @@ describe('solver function', () => {
 
         const variable = 'x';
 
-        expect(isRelationFilterExpressionDomainEmpty({ relation, filterExpression, variable })).toBe(true);
+        expect(isBooleanExpressionRelationFilterExpressionSolvable(
+          { relation, filterExpression, variable },
+        ))
+          .toBe(true);
       });
 
     it('should return false when there is no solution for the filter expression with one expression and the relation',
@@ -913,7 +916,10 @@ describe('solver function', () => {
 
         const variable = 'x';
 
-        expect(isRelationFilterExpressionDomainEmpty({ relation, filterExpression, variable })).toBe(false);
+        expect(isBooleanExpressionRelationFilterExpressionSolvable(
+          { relation, filterExpression, variable },
+        ))
+          .toBe(false);
       });
 
     it(`should return false when there is no solution for the filter
@@ -936,7 +942,7 @@ describe('solver function', () => {
 
       const variable = 'x';
 
-      expect(isRelationFilterExpressionDomainEmpty({ relation, filterExpression, variable })).toBe(false);
+      expect(isBooleanExpressionRelationFilterExpressionSolvable({ relation, filterExpression, variable })).toBe(false);
     });
 
     it(`should return true when there is a solution for 
@@ -959,7 +965,7 @@ describe('solver function', () => {
 
       const variable = 'x';
 
-      expect(isRelationFilterExpressionDomainEmpty({ relation, filterExpression, variable })).toBe(true);
+      expect(isBooleanExpressionRelationFilterExpressionSolvable({ relation, filterExpression, variable })).toBe(true);
     });
 
     it('should accept the link given that recursifResolve return a SyntaxError', () => {
@@ -981,7 +987,7 @@ describe('solver function', () => {
 
       const variable = 'x';
 
-      expect(isRelationFilterExpressionDomainEmpty({ relation, filterExpression, variable })).toBe(false);
+      expect(isBooleanExpressionRelationFilterExpressionSolvable({ relation, filterExpression, variable })).toBe(false);
     });
 
     it('should accept the link if the data type of the filter is unsupported', () => {
@@ -1003,7 +1009,7 @@ describe('solver function', () => {
 
       const variable = 'x';
 
-      expect(isRelationFilterExpressionDomainEmpty({ relation, filterExpression, variable })).toBe(true);
+      expect(isBooleanExpressionRelationFilterExpressionSolvable({ relation, filterExpression, variable })).toBe(true);
     });
 
     it('should accept the link if a filter term is malformated', () => {
@@ -1033,7 +1039,7 @@ describe('solver function', () => {
 
       const variable = 'x';
 
-      expect(isRelationFilterExpressionDomainEmpty({ relation, filterExpression, variable })).toBe(true);
+      expect(isBooleanExpressionRelationFilterExpressionSolvable({ relation, filterExpression, variable })).toBe(true);
     });
 
     it('should accept the link with a solvable simple filter',
@@ -1056,7 +1062,10 @@ describe('solver function', () => {
 
         const variable = 'x';
 
-        expect(isRelationFilterExpressionDomainEmpty({ relation, filterExpression, variable })).toBe(false);
+        expect(isBooleanExpressionRelationFilterExpressionSolvable(
+          { relation, filterExpression, variable },
+        ))
+          .toBe(false);
       });
 
     it('should refuse the link with an unsolvable simple filter',
@@ -1078,7 +1087,10 @@ describe('solver function', () => {
           }`).input.expression;
 
         const variable = 'x';
-        expect(isRelationFilterExpressionDomainEmpty({ relation, filterExpression, variable })).toBe(false);
+        expect(isBooleanExpressionRelationFilterExpressionSolvable(
+          { relation, filterExpression, variable },
+        ))
+          .toBe(false);
       });
 
     it(`should accept the link with a solvable boolean expression with a true boolean statement`, () => {
@@ -1100,7 +1112,7 @@ describe('solver function', () => {
 
       const variable = 'x';
 
-      expect(isRelationFilterExpressionDomainEmpty({ relation, filterExpression, variable })).toBe(true);
+      expect(isBooleanExpressionRelationFilterExpressionSolvable({ relation, filterExpression, variable })).toBe(true);
     });
 
     it(`should accept the link with a solvable boolean expression with a false boolean statement`, () => {
@@ -1122,7 +1134,7 @@ describe('solver function', () => {
 
       const variable = 'x';
 
-      expect(isRelationFilterExpressionDomainEmpty({ relation, filterExpression, variable })).toBe(true);
+      expect(isBooleanExpressionRelationFilterExpressionSolvable({ relation, filterExpression, variable })).toBe(true);
     });
 
     it(`should accept the link with a solvable simple boolean expression with a true boolean statement`, () => {
@@ -1144,7 +1156,7 @@ describe('solver function', () => {
 
       const variable = 'x';
 
-      expect(isRelationFilterExpressionDomainEmpty({ relation, filterExpression, variable })).toBe(true);
+      expect(isBooleanExpressionRelationFilterExpressionSolvable({ relation, filterExpression, variable })).toBe(true);
     });
 
     it(`Should ignore the SPARQL function when prunning links`, () => {
@@ -1166,7 +1178,7 @@ describe('solver function', () => {
 
       const variable = 'x';
 
-      expect(isRelationFilterExpressionDomainEmpty({ relation, filterExpression, variable })).toBe(false);
+      expect(isBooleanExpressionRelationFilterExpressionSolvable({ relation, filterExpression, variable })).toBe(false);
     });
 
     it(`Should ignore the SPARQL function when prunning links with complex filter expression`, () => {
@@ -1188,7 +1200,7 @@ describe('solver function', () => {
 
       const variable = 'x';
 
-      expect(isRelationFilterExpressionDomainEmpty({ relation, filterExpression, variable })).toBe(true);
+      expect(isBooleanExpressionRelationFilterExpressionSolvable({ relation, filterExpression, variable })).toBe(true);
     });
   });
 });
