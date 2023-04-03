@@ -17,6 +17,12 @@ const BF = new BindingsFactory();
  * the binding are remplace by the [value of TREE relation](https://treecg.github.io/specification/#traversing).
  */
 export class FilterNode {
+  /**
+   * Return the filter expression if the TREE node has relations
+   * @param {ITreeNode} node - The current TREE node
+   * @param {IActionContext} context - The context
+   * @returns {Algebra.Expression | undefined} The filter expression or undefined if the TREE node has no relations
+   */
   public getFilterExpressionIfTreeNodeHasConstraint(node: ITreeNode,
     context: IActionContext): Algebra.Expression | undefined {
     if (!node.relation) {
@@ -36,11 +42,19 @@ export class FilterNode {
     return filterExpression.expression;
   }
 
+  /**
+   * Analyze if the tree:relation(s) of a tree:Node should be followed and return a map
+   * where if the value of the key representing the URL to follow is true than the link must be followed
+   * if it is false then it should be ignored.
+   * @param {ITreeNode} node - The current TREE node
+   * @param {IActionContext} context - The context
+   * @returns {Promise<Map<string, boolean>>} A map of the indicating if a tree:relation should be follow
+   */
   public async run(node: ITreeNode, context: IActionContext): Promise<Map<string, boolean>> {
     const filterMap: Map<string, boolean> = new Map();
 
     const filterOperation: Algebra.Expression | undefined =
-    this.getFilterExpressionIfTreeNodeHasConstraint(node, context);
+      this.getFilterExpressionIfTreeNodeHasConstraint(node, context);
 
     if (!filterOperation) {
       return new Map();
