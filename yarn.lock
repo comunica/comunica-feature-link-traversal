@@ -1779,7 +1779,7 @@
     "@comunica/types" "^2.6.8"
     asyncjoin "^1.1.1"
 
-"@comunica/actor-rdf-join-inner-multi-bind@2.6.7", "@comunica/actor-rdf-join-inner-multi-bind@^2.5.1", "@comunica/actor-rdf-join-inner-multi-bind@^2.6.8":
+"@comunica/actor-rdf-join-inner-multi-bind@^2.5.1":
   version "2.6.7"
   resolved "https://registry.yarnpkg.com/@comunica/actor-rdf-join-inner-multi-bind/-/actor-rdf-join-inner-multi-bind-2.6.7.tgz#ea599f47e9809d8b4d38b10a64959fcf3f6295e9"
   integrity sha512-DzqMRO7s7uTwBxXiuQBvHximW9wNofqRrwJhn61LEboFdUMpW8Hfy3PhjT71yfWlB9zrRO3Sn/i1ScxLg5tMUA==
@@ -1790,6 +1790,20 @@
     "@comunica/context-entries" "^2.6.7"
     "@comunica/mediatortype-join-coefficients" "^2.6.7"
     "@comunica/types" "^2.6.7"
+    asynciterator "^3.8.0"
+    sparqlalgebrajs "^4.0.5"
+
+"@comunica/actor-rdf-join-inner-multi-bind@^2.6.8":
+  version "2.6.8"
+  resolved "https://registry.yarnpkg.com/@comunica/actor-rdf-join-inner-multi-bind/-/actor-rdf-join-inner-multi-bind-2.6.8.tgz#9659c11c4e533480a0ed18b13a62e547583ee764"
+  integrity sha512-J8ddecK4dgrpwi738q1dzVgjU9+6GkOWeN2XetklZwRMzF6llCfxae11560eYjN+KhORZ4Q4ptk1iPfGGz+tFg==
+  dependencies:
+    "@comunica/bus-query-operation" "^2.6.8"
+    "@comunica/bus-rdf-join" "^2.6.8"
+    "@comunica/bus-rdf-join-entries-sort" "^2.6.8"
+    "@comunica/context-entries" "^2.6.8"
+    "@comunica/mediatortype-join-coefficients" "^2.6.8"
+    "@comunica/types" "^2.6.8"
     asynciterator "^3.8.0"
     sparqlalgebrajs "^4.0.5"
 
@@ -2156,7 +2170,7 @@
     rdf-terms "^1.9.1"
     sparqlalgebrajs "^4.0.5"
 
-"@comunica/actor-rdf-resolve-quad-pattern-federated@2.6.7", "@comunica/actor-rdf-resolve-quad-pattern-federated@^2.5.1", "@comunica/actor-rdf-resolve-quad-pattern-federated@^2.6.8":
+"@comunica/actor-rdf-resolve-quad-pattern-federated@^2.5.1":
   version "2.6.7"
   resolved "https://registry.yarnpkg.com/@comunica/actor-rdf-resolve-quad-pattern-federated/-/actor-rdf-resolve-quad-pattern-federated-2.6.7.tgz#763a2180b11aefa9055cc712f395301c4391e455"
   integrity sha512-rldWtvuQpg1yEwaSqKA6SGgt5mNDS90lVL2TMSZVDg4Gk8DnQiqQwiZWGk09KkiJshCZVXnL8TeSlebtlJR2OQ==
@@ -2167,6 +2181,23 @@
     "@comunica/core" "^2.6.7"
     "@comunica/data-factory" "^2.5.1"
     "@comunica/types" "^2.6.7"
+    "@rdfjs/types" "*"
+    asynciterator "^3.8.0"
+    rdf-data-factory "^1.1.1"
+    rdf-terms "^1.9.1"
+    sparqlalgebrajs "^4.0.5"
+
+"@comunica/actor-rdf-resolve-quad-pattern-federated@^2.6.8":
+  version "2.6.8"
+  resolved "https://registry.yarnpkg.com/@comunica/actor-rdf-resolve-quad-pattern-federated/-/actor-rdf-resolve-quad-pattern-federated-2.6.8.tgz#00b6a711996872e0702358e21cdedd079af5ed06"
+  integrity sha512-4ZnJ4WY+DCf7S20U8P4m3w6rwdOgbhziF6bI9njSoAJYRgxQVvNSvYNi2pAARjlwBNp4VvvaCsEbizwyxJGwqw==
+  dependencies:
+    "@comunica/bus-query-operation" "^2.6.8"
+    "@comunica/bus-rdf-resolve-quad-pattern" "^2.6.8"
+    "@comunica/context-entries" "^2.6.8"
+    "@comunica/core" "^2.6.8"
+    "@comunica/data-factory" "^2.5.1"
+    "@comunica/types" "^2.6.8"
     "@rdfjs/types" "*"
     asynciterator "^3.8.0"
     rdf-data-factory "^1.1.1"
@@ -4128,10 +4159,15 @@
     "@types/node" "*"
     rdf-js "^4.0.2"
 
-"@types/node@*", "@types/node@^14.14.7", "@types/node@^18.0.0", "@types/node@^18.0.3":
+"@types/node@*", "@types/node@^18.0.0", "@types/node@^18.0.3":
   version "18.14.6"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-18.14.6.tgz#ae1973dd2b1eeb1825695bb11ebfb746d27e3e93"
   integrity sha512-93+VvleD3mXwlLI/xASjw0FzKcwzl3OdTCzm1LaRfqgS21gfFtK3zDXM5Op9TeeMsJVOaJ2VRDpT9q4Y3d0AvA==
+
+"@types/node@^14.14.7":
+  version "14.18.42"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-14.18.42.tgz#fa39b2dc8e0eba61bdf51c66502f84e23b66e114"
+  integrity sha512-xefu+RBie4xWlK8hwAzGh3npDz/4VhF6icY/shU+zv/1fNn+ZVG7T7CRwe9LId9sAYRPxI+59QBPuKL3WpyGRg==
 
 "@types/normalize-package-data@^2.4.0":
   version "2.4.1"
@@ -4208,7 +4244,7 @@
   resolved "https://registry.yarnpkg.com/@types/yargs-parser/-/yargs-parser-21.0.0.tgz#0c60e537fa790f5f9472ed2776c2b71ec117351b"
   integrity sha512-iO9ZQHkZxHn4mSakYV0vFHAVDyEOIJQrV2uZ06HxEPcx+mt8swXoZHIbaaJ2crJYFfErySgktuTZ3BeLz+XmFA==
 
-"@types/yargs@17.0.13", "@types/yargs@^17.0.13", "@types/yargs@^17.0.8":
+"@types/yargs@^17.0.13", "@types/yargs@^17.0.8":
   version "17.0.13"
   resolved "https://registry.yarnpkg.com/@types/yargs/-/yargs-17.0.13.tgz#34cced675ca1b1d51fcf4d34c3c6f0fa142a5c76"
   integrity sha512-9sWaruZk2JGxIQU+IhI1fhPYRcQ0UuTNuKuCW9bR5fp7qi2Llf7WDzNa17Cy7TKnh3cdxDOiyTu6gaLS0eDatg==

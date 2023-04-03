@@ -7,7 +7,7 @@ import {
   MisformatedFilterTermError,
   UnsupportedDataTypeError,
 } from './error';
-import { LinkOperator } from './LinkOperator';
+import type { LinkOperator } from './LinkOperator';
 import { SolutionDomain } from './SolutionDomain';
 import { SolutionRange } from './SolutionRange';
 import {
@@ -39,7 +39,6 @@ export function isRelationFilterExpressionDomainEmpty({ relation, filterExpressi
   filterExpression: Algebra.Expression;
   variable: Variable;
 }): boolean {
-  LinkOperator.resetIdCount();
   const relationsolverExpressions = convertTreeRelationToSolverExpression(relation, variable);
   // The relation doesn't have a value or a type, so we accept it
   if (!relationsolverExpressions) {

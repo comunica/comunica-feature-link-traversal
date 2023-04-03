@@ -31,17 +31,18 @@
     "lib/**/*.js"
   ],
   "dependencies": {
+    "@comunica/bindings-factory": "^2.2.0",
     "@comunica/bus-extract-links": "^0.1.1",
     "@comunica/context-entries": "^2.6.8",
-    "@comunica/core": "^2.6.8",
-    "@comunica/bindings-factory": "^2.2.0",
     "@comunica/context-entries-link-traversal": "^0.0.1",
+    "@comunica/core": "^2.6.8",
     "@comunica/types-link-traversal": "^0.0.1",
     "rdf-data-factory": "^1.1.1",
     "rdf-string": "^1.6.1",
     "sparqlalgebrajs": "^4.0.0",
     "sparqlee": "^2.1.0",
-    "ulp": "^1.0.1"
+    "ulp": "^1.0.1",
+    "uuid": "^9.0.0"
   },
   "scripts": {
     "build": "npm run build:ts && npm run build:components",
