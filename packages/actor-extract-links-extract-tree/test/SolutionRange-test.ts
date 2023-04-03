@@ -109,6 +109,32 @@ describe('SolutionRange', () => {
 
       expect(aSolutionRange.isOverlapping(aSecondSolutionRange)).toBe(false);
     });
+
+    it('should return false when the subject range is empty', () => {
+      const aSolutionRange = new SolutionRange(undefined);
+
+      const aSecondRange: [number, number] = [ 101, 200 ];
+      const aSecondSolutionRange = new SolutionRange(aSecondRange);
+
+      expect(aSolutionRange.isOverlapping(aSecondSolutionRange)).toBe(false);
+    });
+
+    it('should return false when the other range is empty and the subject range is not', () => {
+      const aRange: [number, number] = [ 0, 100 ];
+      const aSolutionRange = new SolutionRange(aRange);
+
+      const aSecondSolutionRange = new SolutionRange(undefined);
+
+      expect(aSolutionRange.isOverlapping(aSecondSolutionRange)).toBe(false);
+    });
+
+    it('should return false when the other range and the subject range are empty', () => {
+      const aSolutionRange = new SolutionRange(undefined);
+
+      const aSecondSolutionRange = new SolutionRange(undefined);
+
+      expect(aSolutionRange.isOverlapping(aSecondSolutionRange)).toBe(false);
+    });
   });
   describe('isInside', () => {
     it('should return true when the other range is inside the subject range', () => {
@@ -127,6 +153,32 @@ describe('SolutionRange', () => {
 
       const aSecondRange: [number, number] = [ -1, 50 ];
       const aSecondSolutionRange = new SolutionRange(aSecondRange);
+
+      expect(aSolutionRange.isInside(aSecondSolutionRange)).toBe(false);
+    });
+
+    it('should return false when the other range is empty and not the subject range', () => {
+      const aRange: [number, number] = [ 0, 100 ];
+      const aSolutionRange = new SolutionRange(aRange);
+
+      const aSecondSolutionRange = new SolutionRange(undefined);
+
+      expect(aSolutionRange.isInside(aSecondSolutionRange)).toBe(false);
+    });
+
+    it('should return false when the subject range is empty and not the other range', () => {
+      const aSolutionRange = new SolutionRange(undefined);
+
+      const aSecondRange: [number, number] = [ -1, 50 ];
+      const aSecondSolutionRange = new SolutionRange(aSecondRange);
+
+      expect(aSolutionRange.isInside(aSecondSolutionRange)).toBe(false);
+    });
+
+    it('should return false when the subject range and the other range are empty', () => {
+      const aSolutionRange = new SolutionRange(undefined);
+
+      const aSecondSolutionRange = new SolutionRange(undefined);
 
       expect(aSolutionRange.isInside(aSecondSolutionRange)).toBe(false);
     });
@@ -236,16 +288,54 @@ describe('SolutionRange', () => {
       expect(resp.length).toBe(1);
       expect(resp[0]).toStrictEqual(expectedRange);
     });
+
+    it('given two empty ranges should return an empty range', () => {
+      const aSolutionRange = new SolutionRange(undefined);
+
+      const aSecondSolutionRange = new SolutionRange(undefined);
+
+      const resp = SolutionRange.fuseRange(aSolutionRange, aSecondSolutionRange);
+
+      expect(resp.length).toBe(1);
+      expect(resp[0]).toStrictEqual(new SolutionRange(undefined));
+    });
+
+    it('given an empty subject range and an non empty other range should return the second range', () => {
+      const aSolutionRange = new SolutionRange(undefined);
+
+      const aSecondRange: [number, number] = [ 101, 200 ];
+      const aSecondSolutionRange = new SolutionRange(aSecondRange);
+
+      const resp = SolutionRange.fuseRange(aSolutionRange, aSecondSolutionRange);
+
+      expect(resp.length).toBe(1);
+      expect(resp[0]).toStrictEqual(aSecondSolutionRange);
+    });
+
+    it('given an empty other range and an non empty subject range should return the subject range', () => {
+      const aRange: [number, number] = [ 0, 100 ];
+      const aSolutionRange = new SolutionRange(aRange);
+
+      const aSecondSolutionRange = new SolutionRange(undefined);
+
+      const resp = SolutionRange.fuseRange(aSolutionRange, aSecondSolutionRange);
+
+      expect(resp.length).toBe(1);
+      expect(resp[0]).toStrictEqual(aSolutionRange);
+    });
   });
 
   describe('inverse', () => {
-    it('given an real solution range it should return no range', () => {
+    it('given an infinite solution range it should return an empty range', () => {
       const aSolutionRange = new SolutionRange([
         Number.NEGATIVE_INFINITY,
         Number.POSITIVE_INFINITY,
       ]);
 
-      expect(aSolutionRange.inverse().length).toBe(0);
+      const resp = aSolutionRange.inverse();
+
+      expect(resp.length).toBe(1);
+      expect(resp[0]).toStrictEqual(new SolutionRange(undefined));
     });
 
     it('given a range with an infinite upper bound should return a new range', () => {
@@ -291,6 +381,18 @@ describe('SolutionRange', () => {
 
       expect(resp.length).toBe(2);
       expect(resp).toStrictEqual(expectedRange);
+    });
+
+    it('given an empty solution range it should return an infinite range', () => {
+      const aSolutionRange = new SolutionRange(undefined);
+
+      const resp = aSolutionRange.inverse();
+
+      expect(resp.length).toBe(1);
+      expect(resp[0]).toStrictEqual(new SolutionRange([
+        Number.NEGATIVE_INFINITY,
+        Number.POSITIVE_INFINITY,
+      ]));
     });
   });
 

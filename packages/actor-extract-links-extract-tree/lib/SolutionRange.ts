@@ -31,7 +31,7 @@ export class SolutionRange {
       this.lower = range[0];
       this.upper = range[1];
       this.isEmpty = false;
-    }else{
+    } else {
       this.isEmpty = true;
       this.lower = Number.NaN;
       this.upper = Number.NaN;
@@ -44,7 +44,7 @@ export class SolutionRange {
      * @returns {boolean} Return true if the two range overlap.
      */
   public isOverlapping(otherRange: SolutionRange): boolean {
-    if (this.isEmpty) {
+    if (this.isEmpty || otherRange.isEmpty) {
       return false;
     }
 
@@ -72,7 +72,7 @@ export class SolutionRange {
      * @returns {boolean} Return true if the other range is inside this range.
      */
   public isInside(otherRange: SolutionRange): boolean {
-    if (this.isEmpty) {
+    if (this.isEmpty || otherRange.isEmpty) {
       return false;
     }
     return otherRange.lower >= this.lower && otherRange.upper <= this.upper;
@@ -117,7 +117,7 @@ export class SolutionRange {
       return [new SolutionRange([Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY])]
     }
     if ((this.lower === Number.NEGATIVE_INFINITY && this.upper === Number.POSITIVE_INFINITY)) {
-      return [];
+      return [new SolutionRange(undefined)];
     }
 
     if (this.lower === Number.NEGATIVE_INFINITY) {

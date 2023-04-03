@@ -29,6 +29,10 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
     return true;
   }
 
+  public isUsingReachabilitySPARQLFilter(): boolean {
+    return this.reachabilityCriterionUseSPARQLFilter
+  }
+
   public async run(action: IActionExtractLinks): Promise<IActorExtractLinksOutput> {
     return new Promise((resolve, reject) => {
       const metadata = action.metadata;

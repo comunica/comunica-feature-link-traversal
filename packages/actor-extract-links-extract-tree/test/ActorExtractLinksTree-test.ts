@@ -33,6 +33,22 @@ describe('ActorExtractLinksExtractLinksTree', () => {
     it('should not be able to create new ActorExtractLinksExtractLinksTree objects without \'new\'', () => {
       expect(() => { (<any>ActorExtractLinksTree)(); }).toThrow();
     });
+
+    it('should apply the activate the reachability criterion based on the constructor parameter', ()=>{
+      let reachabilityCriterionUseSPARQLFilter = true;
+      let actor = new ActorExtractLinksTree({ name: 'actor', bus, reachabilityCriterionUseSPARQLFilter });
+      expect(actor.isUsingReachabilitySPARQLFilter()).toBe(true);
+
+      reachabilityCriterionUseSPARQLFilter = false;
+      actor = new ActorExtractLinksTree({ name: 'actor', bus, reachabilityCriterionUseSPARQLFilter });
+      expect(actor.isUsingReachabilitySPARQLFilter()).toBe(false);
+  
+    });
+
+    it('should apply the activate the reachability when it is not defined in the config', ()=>{
+      const actor = new ActorExtractLinksTree({ name: 'actor', bus});
+      expect(actor.isUsingReachabilitySPARQLFilter()).toBe(true);
+    }); 
   });
 
   describe('The ActorExtractLinksExtractLinksTree run method', () => {
