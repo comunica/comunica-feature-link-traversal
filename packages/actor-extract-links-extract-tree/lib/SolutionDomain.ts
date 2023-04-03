@@ -106,15 +106,14 @@ export class SolutionDomain {
       // of the SolutionRange
       const resp = SolutionRange.fuseRange(el, currentRange);
       if (resp.length === 1) {
-        // If we can we consider the current the fused range the current range
-        // and we delete the range from the domain has the fused range will be added
-        // at the end
+        // If we fuse the range and consider this new range as our current range
+        // and we delete the old range from the domain as we now have a new range that contained the old
         currentRange = resp[0];
         return false;
       }
       return true;
     });
-    // We had the potentialy fused range.
+    // We add the potentialy fused range.
     newDomain.domain.push(currentRange);
     // We keep the domain sorted
     newDomain.domain.sort(SolutionDomain.sortDomainRangeByLowerBound);
