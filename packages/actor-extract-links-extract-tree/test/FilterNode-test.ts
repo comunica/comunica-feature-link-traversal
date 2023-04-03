@@ -21,7 +21,10 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
       const treeSubject = 'tree';
       it('should test when there are relations and a filter operation in the query', () => {
         const context = new ActionContext({
-          [KeysInitQuery.query.name]: { type: Algebra.types.FILTER },
+          [KeysInitQuery.query.name]: translate(`
+          SELECT * WHERE { ?x ?y ?z 
+          FILTER(?x = 5 || true)
+          }`),
         });
         const node: ITreeNode = {
           identifier: treeSubject,
@@ -33,7 +36,7 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
         };
 
         const response = filterNode.getFilterExpressionIfTreeNodeHasConstraint(node, context);
-        expect(response).toBeDefined;
+        expect(response).toBeDefined();
       });
 
       it('should no test when the TREE relation are undefined', async() => {
@@ -45,7 +48,7 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
         };
 
         const response = filterNode.getFilterExpressionIfTreeNodeHasConstraint(node, context);
-        expect(response).toBeUndefined;
+        expect(response).toBeUndefined();
       });
 
       it('should not test when there is a filter operation in the query but no TREE relations', async() => {
@@ -57,7 +60,7 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
           relation: [],
         };
         const response = filterNode.getFilterExpressionIfTreeNodeHasConstraint(node, context);
-        expect(response).toBeUndefined;
+        expect(response).toBeUndefined();
       });
 
       it('should no test when there are no filter operation in the query but a TREE relation', async() => {
@@ -73,7 +76,7 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
           ],
         };
         const response = filterNode.getFilterExpressionIfTreeNodeHasConstraint(node, context);
-        expect(response).toBeUndefined;
+        expect(response).toBeUndefined();
       });
     });
 

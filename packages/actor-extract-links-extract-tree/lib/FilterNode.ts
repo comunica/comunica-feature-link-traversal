@@ -17,7 +17,8 @@ const BF = new BindingsFactory();
  * the binding are remplace by the [value of TREE relation](https://treecg.github.io/specification/#traversing).
  */
 export class FilterNode {
-  public getFilterExpressionIfTreeNodeHasConstraint(node: ITreeNode, context: IActionContext): Algebra.Expression|undefined {
+  public getFilterExpressionIfTreeNodeHasConstraint(node: ITreeNode,
+    context: IActionContext): Algebra.Expression | undefined {
     if (!node.relation) {
       return undefined;
     }
@@ -38,7 +39,8 @@ export class FilterNode {
   public async run(node: ITreeNode, context: IActionContext): Promise<Map<string, boolean>> {
     const filterMap: Map<string, boolean> = new Map();
 
-    const filterOperation: Algebra.Expression|undefined = this.getFilterExpressionIfTreeNodeHasConstraint(node, context);
+    const filterOperation: Algebra.Expression | undefined =
+    this.getFilterExpressionIfTreeNodeHasConstraint(node, context);
 
     if (!filterOperation) {
       return new Map();
@@ -55,7 +57,7 @@ export class FilterNode {
 
     for (const relation of relations) {
       // Accept the relation if the relation does't specify a condition.
-      if (typeof relation.path === 'undefined' || typeof relation.value === 'undefined') {
+      if (!relation.path || !relation.value) {
         filterMap.set(relation.node, true);
         continue;
       }
