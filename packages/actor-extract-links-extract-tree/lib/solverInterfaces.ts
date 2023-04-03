@@ -1,4 +1,4 @@
-import type { SparqlRelationOperator } from '@comunica/types-link-traversal';
+import type { SparqlRelationOperator } from './TreeMetadata';
 import type { LinkOperator } from './LinkOperator';
 /**
  * Valid SPARQL data type for operation.

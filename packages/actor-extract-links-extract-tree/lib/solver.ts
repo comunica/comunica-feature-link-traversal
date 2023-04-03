@@ -1,4 +1,4 @@
-import { SparqlRelationOperator } from '@comunica/types-link-traversal';
+import { SparqlRelationOperator } from './TreeMetadata';
 import type * as RDF from 'rdf-js';
 import { Algebra } from 'sparqlalgebrajs';
 import {

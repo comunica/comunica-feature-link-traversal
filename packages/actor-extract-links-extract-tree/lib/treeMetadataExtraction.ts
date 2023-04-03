@@ -1,4 +1,4 @@
-import { TreeNodes, RelationOperatorReversed } from '@comunica/types-link-traversal';
+import { TreeNodes, RelationOperatorReversed } from './TreeMetadata';
 import type * as RDF from 'rdf-js';
 import { termToString } from 'rdf-string';
 import type { ITreeRelation, ITreeRelationRaw, SparqlRelationOperator } from './TreeMetadata';
