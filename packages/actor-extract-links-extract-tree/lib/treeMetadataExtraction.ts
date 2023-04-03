@@ -1,6 +1,6 @@
-import { TreeNodes, RelationOperatorReversed } from './TreeMetadata';
 import type * as RDF from 'rdf-js';
 import { termToString } from 'rdf-string';
+import { TreeNodes, RelationOperatorReversed } from './TreeMetadata';
 import type { ITreeRelation, ITreeRelationRaw, SparqlRelationOperator } from './TreeMetadata';
 
 /**

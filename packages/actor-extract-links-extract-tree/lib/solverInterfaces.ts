@@ -1,5 +1,5 @@
-import type { SparqlRelationOperator } from './TreeMetadata';
 import type { LinkOperator } from './LinkOperator';
+import type { SparqlRelationOperator } from './TreeMetadata';
 /**
  * Valid SPARQL data type for operation.
  * reference: https://www.w3.org/TR/sparql11-query/#operandDataTypes

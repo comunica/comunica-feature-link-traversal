@@ -1,4 +1,3 @@
-import { SparqlRelationOperator } from './TreeMetadata';
 import type * as RDF from 'rdf-js';
 import { Algebra } from 'sparqlalgebrajs';
 import {
@@ -17,6 +16,7 @@ import type {
   ISolverExpression,
   Variable,
 } from './solverInterfaces';
+import { SparqlRelationOperator } from './TreeMetadata';
 import type { ITreeRelation } from './TreeMetadata';
 
 const nextUp = require('ulp').nextUp;
