@@ -1,6 +1,7 @@
 import { SolutionRange } from './SolutionRange';
 import { LogicOperator } from './solverInterfaces';
 
+const AN_EMPTY_SOLUTION_RANGE = new SolutionRange(undefined);
 /**
  * A class representing the domain of a solution of system of boolean equation.
  * Every operation return a new object.
@@ -31,7 +32,7 @@ export class SolutionDomain {
      * @returns {boolean} Return true if the domain is empty
      */
   public isDomainEmpty(): boolean {
-    return this.domain.length === 0;
+    return this.domain.filter(el => el !== AN_EMPTY_SOLUTION_RANGE).length === 0;
   }
 
   /**

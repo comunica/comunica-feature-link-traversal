@@ -1202,5 +1202,49 @@ describe('solver function', () => {
 
       expect(isBooleanExpressionRelationFilterExpressionSolvable({ relation, filterExpression, variable })).toBe(true);
     });
+
+    it(`should prune a false filter expression`, () => {
+      const relation: ITreeRelation = {
+        type: SparqlRelationOperator.EqualThanRelation,
+        remainingItems: 10,
+        path: 'ex:path',
+        value: {
+          value: '5',
+          term: DF.literal('5', DF.namedNode('http://www.w3.org/2001/XMLSchema#integer')),
+        },
+        node: 'https://www.example.be',
+      };
+
+      const filterExpression = translate(`
+            SELECT * WHERE { ?x ?y ?z 
+            FILTER(false)
+            }`).input.expression;
+
+      const variable = 'x';
+
+      expect(isBooleanExpressionRelationFilterExpressionSolvable({ relation, filterExpression, variable })).toBe(false);
+    });
+
+    it(`should keep a true filter expression`, () => {
+      const relation: ITreeRelation = {
+        type: SparqlRelationOperator.EqualThanRelation,
+        remainingItems: 10,
+        path: 'ex:path',
+        value: {
+          value: '5',
+          term: DF.literal('5', DF.namedNode('http://www.w3.org/2001/XMLSchema#integer')),
+        },
+        node: 'https://www.example.be',
+      };
+
+      const filterExpression = translate(`
+            SELECT * WHERE { ?x ?y ?z 
+            FILTER(true)
+            }`).input.expression;
+
+      const variable = 'x';
+
+      expect(isBooleanExpressionRelationFilterExpressionSolvable({ relation, filterExpression, variable })).toBe(true);
+    });
   });
 });
