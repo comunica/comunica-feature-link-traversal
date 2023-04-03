@@ -4,10 +4,10 @@
 
 A comunica [Extract Links Actor](https://github.com/comunica/comunica-feature-link-traversal/tree/master/packages/bus-extract-links) for the [TREE](https://treecg.github.io/specification/).
 
-There is also a [Guided Linked Traversal Query Processing](https://arxiv.org/abs/2005.02239)
-option that can be enabled using the `reachabilityCriterionUseSPARQLFilte` flag based on the solvability of the query filter expression
-and the [`tree:relation`](https://treecg.github.io/specification/#Relation) as explained in
-the poster article
+The [Guided Linked Traversal Query Processing](https://arxiv.org/abs/2005.02239)
+option that can be enabled using the `reachabilityCriterionUseSPARQLFilte` flag. The traversal algorithm will consider the solvability of the query filter expression
+combined with the [`tree:relation`](https://treecg.github.io/specification/#Relation) of each data source encountered. 
+A more thorough explanation is available in the poster article
 ["How TREE hypermedia can speed up Link Traversal-based Query Processing for SPARQL queries with filters"](https://constraintautomaton.github.io/How-TREE-hypermedia-can-speed-up-Link-Traversal-based-Query-Processing-queries/) 
 
 This module is part of the [Comunica framework](https://github.com/comunica/comunica),
