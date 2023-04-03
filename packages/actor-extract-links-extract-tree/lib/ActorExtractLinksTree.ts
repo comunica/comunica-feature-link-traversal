@@ -6,7 +6,7 @@ import { ActorExtractLinks } from '@comunica/bus-extract-links';
 
 import type { IActorArgs, IActorTest } from '@comunica/core';
 import type { IActionContext } from '@comunica/types';
-import { TreeNodes } from '@comunica/types-link-traversal';
+import { TreeNodes } from './TreeMetadata';
 import type * as RDF from 'rdf-js';
 import { termToString } from 'rdf-string';
 import { FilterNode } from './FilterNode';
