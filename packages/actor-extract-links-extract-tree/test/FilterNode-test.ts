@@ -17,7 +17,7 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
     beforeEach(() => {
       filterNode = new FilterNode();
     });
-    describe('test method', () => {
+    describe('getFilterExpressionIfTreeNodeHasConstraint method', () => {
       const treeSubject = 'tree';
       it('should test when there are relations and a filter operation in the query', () => {
         const context = new ActionContext({
@@ -32,8 +32,8 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
           ],
         };
 
-        const response = filterNode.test(node, context);
-        expect(response).toBe(true);
+        const response = filterNode.getFilterExpressionIfTreeNodeHasConstraint(node, context);
+        expect(response).toBeDefined;
       });
 
       it('should no test when the TREE relation are undefined', async() => {
@@ -44,8 +44,8 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
           identifier: treeSubject,
         };
 
-        const response = filterNode.test(node, context);
-        expect(response).toBe(false);
+        const response = filterNode.getFilterExpressionIfTreeNodeHasConstraint(node, context);
+        expect(response).toBeUndefined;
       });
 
       it('should not test when there is a filter operation in the query but no TREE relations', async() => {
@@ -56,8 +56,8 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
           identifier: treeSubject,
           relation: [],
         };
-        const response = filterNode.test(node, context);
-        expect(response).toBe(false);
+        const response = filterNode.getFilterExpressionIfTreeNodeHasConstraint(node, context);
+        expect(response).toBeUndefined;
       });
 
       it('should no test when there are no filter operation in the query but a TREE relation', async() => {
@@ -72,8 +72,8 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
             },
           ],
         };
-        const response = filterNode.test(node, context);
-        expect(response).toBe(false);
+        const response = filterNode.getFilterExpressionIfTreeNodeHasConstraint(node, context);
+        expect(response).toBeUndefined;
       });
     });
 

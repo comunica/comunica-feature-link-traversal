@@ -17,35 +17,32 @@ const BF = new BindingsFactory();
  * the binding are remplace by the [value of TREE relation](https://treecg.github.io/specification/#traversing).
  */
 export class FilterNode {
-  public test(node: ITreeNode, context: IActionContext): boolean {
+  public getFilterExpressionIfTreeNodeHasConstraint(node: ITreeNode, context: IActionContext): Algebra.Expression|undefined {
     if (!node.relation) {
-      return false;
+      return undefined;
     }
 
     if (node.relation.length === 0) {
-      return false;
+      return undefined;
     }
 
     const query: Algebra.Operation = context.get(KeysInitQuery.query)!;
-    if (!FilterNode.findNode(query, Algebra.types.FILTER)) {
-      return false;
+    const filterExpression = FilterNode.findNode(query, Algebra.types.FILTER);
+    if (!filterExpression) {
+      return undefined;
     }
 
-    return true;
+    return filterExpression.expression;
   }
 
   public async run(node: ITreeNode, context: IActionContext): Promise<Map<string, boolean>> {
     const filterMap: Map<string, boolean> = new Map();
 
-    if (!this.test(node, context)) {
+    const filterOperation: Algebra.Expression|undefined = this.getFilterExpressionIfTreeNodeHasConstraint(node, context);
+
+    if (!filterOperation) {
       return new Map();
     }
-
-    // Extract the filter expression.
-    const filterOperation: Algebra.Expression = (() => {
-      const query: Algebra.Operation = context.get(KeysInitQuery.query)!;
-      return FilterNode.findNode(query, Algebra.types.FILTER).expression;
-    })();
 
     // Extract the bgp of the query.
     const queryBody: RDF.Quad[] = FilterNode.findBgp(context.get(KeysInitQuery.query)!);
@@ -174,7 +171,7 @@ export class FilterNode {
    * Find the first node of type `nodeType`, if it doesn't exist
    * it return undefined.
    * @param {Algebra.Operation} query - the original query
-   * @param {string} nodeType - the tyoe of node requested
+   * @param {string} nodeType - the type of node requested
    * @returns {any}
    */
   private static findNode(query: Algebra.Operation, nodeType: string): any {
