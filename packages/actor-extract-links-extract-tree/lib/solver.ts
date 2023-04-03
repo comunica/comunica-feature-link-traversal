@@ -22,7 +22,7 @@ import type {
 const nextUp = require('ulp').nextUp;
 const nextDown = require('ulp').nextDown;
 
-const A_TRUE_EXPRESSION: SolutionRange = new SolutionRange([Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY]);
+const A_TRUE_EXPRESSION: SolutionRange = new SolutionRange([ Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY ]);
 const A_FALSE_EXPRESSION: SolutionRange = new SolutionRange(undefined);
 
 /**
@@ -178,13 +178,12 @@ export function recursifResolve(
     if (filterExpression.term.value === 'true') {
       domain = domain.add({ range: A_TRUE_EXPRESSION, operator: logicOperator });
     }
-  }
-  // If it's an array of term then we should be able to create a solver expression
-  // hence get a subdomain appendable to the current global domain with consideration
-  // to the logic operator
-  else if (
+  } else if (
+    // If it's an array of term then we should be able to create a solver expression
+    // hence get a subdomain appendable to the current global domain with consideration
+    // to the logic operator
     filterExpression.args[0].expressionType === Algebra.expressionTypes.TERM &&
-    filterExpression.args.length == 2
+    filterExpression.args.length === 2
   ) {
     const rawOperator = filterExpression.operator;
     const operator = filterOperatorToSparqlRelationOperator(rawOperator);
@@ -282,15 +281,15 @@ export function areTypesCompatible(expressions: ISolverExpression[]): boolean {
 export function getSolutionRange(value: number, operator: SparqlRelationOperator): SolutionRange | undefined {
   switch (operator) {
     case SparqlRelationOperator.GreaterThanRelation:
-      return new SolutionRange([nextUp(value), Number.POSITIVE_INFINITY]);
+      return new SolutionRange([ nextUp(value), Number.POSITIVE_INFINITY ]);
     case SparqlRelationOperator.GreaterThanOrEqualToRelation:
-      return new SolutionRange([value, Number.POSITIVE_INFINITY]);
+      return new SolutionRange([ value, Number.POSITIVE_INFINITY ]);
     case SparqlRelationOperator.EqualThanRelation:
-      return new SolutionRange([value, value]);
+      return new SolutionRange([ value, value ]);
     case SparqlRelationOperator.LessThanRelation:
-      return new SolutionRange([Number.NEGATIVE_INFINITY, nextDown(value)]);
+      return new SolutionRange([ Number.NEGATIVE_INFINITY, nextDown(value) ]);
     case SparqlRelationOperator.LessThanOrEqualToRelation:
-      return new SolutionRange([Number.NEGATIVE_INFINITY, value]);
+      return new SolutionRange([ Number.NEGATIVE_INFINITY, value ]);
     default:
       // Not an operator that is compatible with number.
       break;

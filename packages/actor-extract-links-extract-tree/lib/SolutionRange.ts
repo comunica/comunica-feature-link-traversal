@@ -87,23 +87,23 @@ export class SolutionRange {
      */
   public static fuseRange(subjectRange: SolutionRange, otherRange: SolutionRange): SolutionRange[] {
     if (subjectRange.isEmpty && otherRange.isEmpty) {
-      return [new SolutionRange(undefined)]
+      return [ new SolutionRange(undefined) ];
     }
 
     if (subjectRange.isEmpty && !otherRange.isEmpty) {
-      return [otherRange]
+      return [ otherRange ];
     }
 
     if (!subjectRange.isEmpty && otherRange.isEmpty) {
-      return [subjectRange]
+      return [ subjectRange ];
     }
 
     if (subjectRange.isOverlapping(otherRange)) {
       const lowest = subjectRange.lower < otherRange.lower ? subjectRange.lower : otherRange.lower;
       const uppest = subjectRange.upper > otherRange.upper ? subjectRange.upper : otherRange.upper;
-      return [new SolutionRange([lowest, uppest])];
+      return [ new SolutionRange([ lowest, uppest ]) ];
     }
-    return [subjectRange, otherRange];
+    return [ subjectRange, otherRange ];
   }
 
   /**
@@ -112,24 +112,23 @@ export class SolutionRange {
      * @returns {SolutionRange[]} The resulting ranges.
      */
   public inverse(): SolutionRange[] {
-
     if (this.isEmpty) {
-      return [new SolutionRange([Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY])]
+      return [ new SolutionRange([ Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY ]) ];
     }
-    if ((this.lower === Number.NEGATIVE_INFINITY && this.upper === Number.POSITIVE_INFINITY)) {
-      return [new SolutionRange(undefined)];
+    if (this.lower === Number.NEGATIVE_INFINITY && this.upper === Number.POSITIVE_INFINITY) {
+      return [ new SolutionRange(undefined) ];
     }
 
     if (this.lower === Number.NEGATIVE_INFINITY) {
-      return [new SolutionRange([nextUp(this.upper), Number.POSITIVE_INFINITY])];
+      return [ new SolutionRange([ nextUp(this.upper), Number.POSITIVE_INFINITY ]) ];
     }
 
     if (this.upper === Number.POSITIVE_INFINITY) {
-      return [new SolutionRange([Number.NEGATIVE_INFINITY, nextDown(this.lower)])];
+      return [ new SolutionRange([ Number.NEGATIVE_INFINITY, nextDown(this.lower) ]) ];
     }
     return [
-      new SolutionRange([Number.NEGATIVE_INFINITY, nextDown(this.lower)]),
-      new SolutionRange([nextUp(this.upper), Number.POSITIVE_INFINITY]),
+      new SolutionRange([ Number.NEGATIVE_INFINITY, nextDown(this.lower) ]),
+      new SolutionRange([ nextUp(this.upper), Number.POSITIVE_INFINITY ]),
     ];
   }
 
@@ -146,6 +145,6 @@ export class SolutionRange {
     const lower = subjectRange.lower > otherRange.lower ? subjectRange.lower : otherRange.lower;
     const upper = subjectRange.upper < otherRange.upper ? subjectRange.upper : otherRange.upper;
 
-    return new SolutionRange([lower, upper]);
+    return new SolutionRange([ lower, upper ]);
   }
 }

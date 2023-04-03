@@ -1,10 +1,10 @@
 import type {
   IActionExtractLinks,
-  IActorExtractLinksOutput, IActorExtractLinksArgs,
+  IActorExtractLinksOutput,
 } from '@comunica/bus-extract-links';
 import { ActorExtractLinks } from '@comunica/bus-extract-links';
 
-import type {IActorArgs, IActorTest } from '@comunica/core';
+import type { IActorArgs, IActorTest } from '@comunica/core';
 import type { IActionContext } from '@comunica/types';
 import type { ITreeRelationRaw, ITreeRelation, ITreeNode } from '@comunica/types-link-traversal';
 import { TreeNodes } from '@comunica/types-link-traversal';
@@ -17,12 +17,12 @@ import { buildRelationElement, materializeTreeRelation, addRelationDescription }
  * A comunica Extract Links Tree Extract Links Actor.
  */
 export class ActorExtractLinksTree extends ActorExtractLinks {
-
   private readonly reachabilityCriterionUseSPARQLFilter: boolean = true;
   public constructor(args: IActorExtractLinksTreeArgs) {
     super(args);
-    this.reachabilityCriterionUseSPARQLFilter = args.reachabilityCriterionUseSPARQLFilter === undefined?
-    true: args.reachabilityCriterionUseSPARQLFilter ;
+    this.reachabilityCriterionUseSPARQLFilter = args.reachabilityCriterionUseSPARQLFilter === undefined ?
+      true :
+      args.reachabilityCriterionUseSPARQLFilter;
   }
 
   public async test(action: IActionExtractLinks): Promise<IActorTest> {
@@ -30,7 +30,7 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
   }
 
   public isUsingReachabilitySPARQLFilter(): boolean {
-    return this.reachabilityCriterionUseSPARQLFilter
+    return this.reachabilityCriterionUseSPARQLFilter;
   }
 
   public async run(action: IActionExtractLinks): Promise<IActorExtractLinksOutput> {
@@ -139,7 +139,7 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
 }
 
 export interface IActorExtractLinksTreeArgs
-extends IActorArgs<IActionExtractLinks, IActorTest, IActorExtractLinksOutput> {
+  extends IActorArgs<IActionExtractLinks, IActorTest, IActorExtractLinksOutput> {
   /**
    * If true (default), then we use a reachability criterion that prune links that don't respect the
    * SPARQL filter
