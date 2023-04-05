@@ -80,7 +80,7 @@ export function isBooleanExpressionRelationFilterExpressionSolvable({ relation, 
   }
 
   // If the filter expression is false on it's own then it's impossible to find anything.
-  // POSSIBLE OPTIMIZATION: reused domain of the filter domain when appropriate.
+  // POSSIBLE OPTIMIZATION: reused solution domain of the filter when appropriate.
   if (solutionDomain.isDomainEmpty()) {
     return false;
   }
