@@ -32,7 +32,7 @@ export class SolutionDomain {
      * @returns {boolean} Return true if the domain is empty
      */
   public isDomainEmpty(): boolean {
-    return this.domain.filter(el => el !== AN_EMPTY_SOLUTION_RANGE).length === 0;
+    return this.domain.length === 0;
   }
 
   /**
@@ -42,7 +42,9 @@ export class SolutionDomain {
      */
   public static newWithInitialValue(initialRange: SolutionRange): SolutionDomain {
     const newSolutionDomain = new SolutionDomain();
-    newSolutionDomain.domain = [ initialRange ];
+    if (!initialRange.isEmpty) {
+      newSolutionDomain.domain = [ initialRange ];
+    }
     return newSolutionDomain;
   }
 
@@ -64,30 +66,40 @@ export class SolutionDomain {
      * @returns {SolutionDomain} - A new SolutionDomain with the operation applied.
      */
   public add({ range, operator }: { range?: SolutionRange; operator: LogicOperator }): SolutionDomain {
+    let newDomain: SolutionDomain = this.clone();
+
     switch (operator) {
       case LogicOperator.And: {
         if (typeof range === 'undefined') {
           throw new ReferenceError('range should be defined with "AND" operator');
         }
-        const newDomain = this.addWithAndOperator(range);
+        newDomain = this.addWithAndOperator(range);
         newDomain.lastOperation = LogicOperator.And;
-        return newDomain;
+        break;
       }
       case LogicOperator.Or: {
         if (typeof range === 'undefined') {
           throw new ReferenceError('range should be defined with "OR" operator');
         }
-        const newDomain = this.addWithOrOperator(range);
+        newDomain = this.addWithOrOperator(range);
         newDomain.lastOperation = LogicOperator.Or;
-        return newDomain;
+        break;
       }
 
       case LogicOperator.Not: {
-        const newDomain = this.notOperation();
+        newDomain = this.notOperation();
         newDomain.lastOperation = LogicOperator.Not;
-        return newDomain;
+        break;
       }
     }
+    // Since we rely on the size of the domain to determine if the domain is empty or not
+    // and that we have the concept of an empty solution range for the sake of simplicity
+    // we delete the empty solution range if it is the only element.
+    if (newDomain.domain.length === 1 && newDomain.domain[0].isEmpty) {
+      newDomain.domain = [];
+    }
+
+    return newDomain;
   }
 
   /**

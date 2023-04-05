@@ -1042,6 +1042,30 @@ describe('solver function', () => {
       expect(isBooleanExpressionRelationFilterExpressionSolvable({ relation, filterExpression, variable })).toBe(true);
     });
 
+    it('should accept the link if a filter term with no args is not a boolean', () => {
+      const relation: ITreeRelation = {
+        type: SparqlRelationOperator.EqualThanRelation,
+        remainingItems: 10,
+        path: 'ex:path',
+        value: {
+          value: '5',
+          term: DF.literal('5', DF.namedNode('http://www.w3.org/2001/XMLSchema#integer')),
+        },
+        node: 'https://www.example.be',
+      };
+
+      const filterExpression: Algebra.Expression =
+          {
+            type: Algebra.types.EXPRESSION,
+            expressionType: Algebra.expressionTypes.TERM,
+            term: DF.variable('x'),
+          };
+
+      const variable = 'x';
+
+      expect(isBooleanExpressionRelationFilterExpressionSolvable({ relation, filterExpression, variable })).toBe(true);
+    });
+
     it('should accept the link with a solvable simple filter',
       () => {
         const relation: ITreeRelation = {

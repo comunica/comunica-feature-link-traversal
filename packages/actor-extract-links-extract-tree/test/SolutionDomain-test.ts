@@ -271,6 +271,28 @@ describe('SolutionDomain', () => {
       aDomain.add({ operator: LogicOperator.Not });
       expect(spyAddWithOrOperator).toBeCalledTimes(1);
     });
+
+    it('should on any operator return an empty domain if the only solution range is empty', () => {
+      const an_empty_solution_range = new SolutionRange(undefined);
+      const operations: [LogicOperator, SolutionRange][] = [
+        [ LogicOperator.Or, an_empty_solution_range ],
+        [ LogicOperator.And, an_empty_solution_range ],
+        [ LogicOperator.Not, an_empty_solution_range.inverse()[0] ],
+      ];
+
+      for (const [ logicOperator, solutionRange ] of operations) {
+        if (logicOperator !== LogicOperator.Not) {
+          let domain = new SolutionDomain();
+          domain = domain.add({ range: solutionRange, operator: logicOperator });
+          expect(domain.get_domain().length).toBe(0);
+        } else {
+          let domain = new SolutionDomain();
+          domain = domain.addWithOrOperator(solutionRange);
+          domain = domain.add({ operator: logicOperator });
+          expect(domain.get_domain().length).toBe(0);
+        }
+      }
+    });
   });
 
   describe('isDomainEmpty', () => {

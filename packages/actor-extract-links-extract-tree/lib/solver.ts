@@ -79,6 +79,12 @@ export function isBooleanExpressionRelationFilterExpressionSolvable({ relation, 
     throw error;
   }
 
+  // If the filter expression is false on it's own then it's impossible to find anything.
+  // POSSIBLE OPTIMIZATION: reused domain of the filter domain when appropriate.
+  if (solutionDomain.isDomainEmpty()) {
+    return false;
+  }
+
   // Evaluate the solution domain when adding the relation
   solutionDomain = solutionDomain.add({ range: relationSolutionRange, operator: LogicOperator.And });
 
@@ -173,9 +179,10 @@ export function recursifResolve(
   ) {
     if (filterExpression.term.value === 'false') {
       domain = domain.add({ range: A_FALSE_EXPRESSION, operator: logicOperator });
-    }
-    if (filterExpression.term.value === 'true') {
+    } else if (filterExpression.term.value === 'true') {
       domain = domain.add({ range: A_TRUE_EXPRESSION, operator: logicOperator });
+    } else {
+      throw new MisformatedFilterTermError(`The term sent is not a boolean but is this value {${filterExpression.term.value}}`);
     }
   } else if (
     // If it's an array of term then we should be able to create a solver expression
@@ -208,6 +215,12 @@ export function recursifResolve(
         domain = domain.add({ range: solverRange, operator: logicOperator });
       }
     }
+  } else if (
+    // It is a malformed expression
+    filterExpression.args[0].expressionType === Algebra.expressionTypes.TERM &&
+    filterExpression.args.length === 1
+  ) {
+    throw new MisformatedFilterTermError(`The expression should have a variable and a value, but is {${filterExpression.args}}`);
   } else {
     let newLogicOperator = LogicOperatorReversed.get(filterExpression.operator);
     notExpression = newLogicOperator === LogicOperator.Not || notExpression;
