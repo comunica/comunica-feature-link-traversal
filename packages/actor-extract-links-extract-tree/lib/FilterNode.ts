@@ -3,7 +3,7 @@ import { KeysInitQuery } from '@comunica/context-entries';
 import type { IActionContext } from '@comunica/types';
 import type * as RDF from 'rdf-js';
 import { Algebra, Factory as AlgebraFactory } from 'sparqlalgebrajs';
-import { isBooleanExpressionRelationFilterExpressionSolvable } from './solver';
+import { isBooleanExpressionTreeRelationFilterSolvable } from './solver';
 import type { Variable } from './solverInterfaces';
 import type { ITreeRelation, ITreeNode } from './TreeMetadata';
 
@@ -86,7 +86,7 @@ export class FilterNode {
       let filtered = false;
       // For all the variable check if one is has a possible solutions.
       for (const variable of variables) {
-        filtered = filtered || isBooleanExpressionRelationFilterExpressionSolvable(
+        filtered = filtered || isBooleanExpressionTreeRelationFilterSolvable(
           { relation, filterExpression: filterOperation, variable },
         );
       }
