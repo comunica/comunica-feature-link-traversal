@@ -1,10 +1,10 @@
 import type {
   IActionExtractLinks,
-  IActorExtractLinksOutput, IActorExtractLinksArgs,
+  IActorExtractLinksOutput,
 } from '@comunica/bus-extract-links';
 import { ActorExtractLinks } from '@comunica/bus-extract-links';
 import type { ILink } from '@comunica/bus-rdf-resolve-hypermedia-links';
-import type { IActorTest } from '@comunica/core';
+import type { IActorTest, IActorArgs } from '@comunica/core';
 import { DataFactory } from 'rdf-data-factory';
 import type * as RDF from 'rdf-js';
 
@@ -17,9 +17,17 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
   public static readonly aNodeType = DF.namedNode('https://w3id.org/tree#node');
   public static readonly aRelation = DF.namedNode('https://w3id.org/tree#relation');
   private static readonly rdfTypeNode = DF.namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type');
+  public static readonly aView = DF.namedNode('https://w3id.org/tree#view');
+  public static readonly aSubset = DF.namedNode('http://rdfs.org/ns/void#subset');
+  public static readonly isPartOf = DF.namedNode('http://purl.org/dc/terms/isPartOf');
 
-  public constructor(args: IActorExtractLinksArgs) {
+  private readonly looseMode: boolean = false;
+
+  public constructor(args: IActorExtractLinksTreeArgs) {
     super(args);
+    if (args.loose !== undefined) {
+      this.looseMode = args.loose;
+    }
   }
 
   public async test(action: IActionExtractLinks): Promise<IActorTest> {
@@ -30,9 +38,10 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
     return new Promise((resolve, reject) => {
       const metadata = action.metadata;
       const currentNodeUrl = action.url;
-      const pageRelationNodes: Set<string> = new Set();
+      const pageRelationNodes: Map<string, string> = new Map();
       const nodeLinks: [string, string][] = [];
       const links: ILink[] = [];
+      const rootNodeType: Set<string> = new Set();
 
       // Forward errors
       metadata.on('error', reject);
@@ -42,13 +51,16 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
         this.getTreeQuadsRawRelations(quad,
           currentNodeUrl,
           pageRelationNodes,
-          nodeLinks));
+          nodeLinks,
+          rootNodeType));
 
       // Resolve to discovered links
       metadata.on('end', () => {
         // Validate if the node forward have the current node as implicit subject
         for (const [ nodeValue, link ] of nodeLinks) {
-          if (pageRelationNodes.has(nodeValue)) {
+          const relationNode = pageRelationNodes.get(nodeValue);
+          if (relationNode && (this.looseMode && rootNodeType.has(relationNode) || !this.looseMode)
+          ) {
             links.push({ url: link });
           }
         }
@@ -70,15 +82,40 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
   private getTreeQuadsRawRelations(
     quad: RDF.Quad,
     url: string,
-    pageRelationNodes: Set<string>,
+    pageRelationNodes: Map<string, string>,
     nodeLinks: [string, string][],
+    rootNodeType: Set<string>,
   ): void {
-    // If it's a relation of the current node
-    if (quad.subject.value === url && quad.predicate.equals(ActorExtractLinksTree.aRelation)) {
-      pageRelationNodes.add(quad.object.value);
-      // If it's a node forward
-    } else if (quad.predicate.equals(ActorExtractLinksTree.aNodeType)) {
+    if (
+      (quad.predicate.equals(ActorExtractLinksTree.aView) ||
+      quad.predicate.equals(ActorExtractLinksTree.aSubset) ||
+      quad.predicate.equals(ActorExtractLinksTree.isPartOf)) &&
+      this.looseMode
+    ) {
+      rootNodeType.add(quad.subject.value);
+    }
+
+    if ((quad.subject.value === url && quad.predicate.equals(ActorExtractLinksTree.aRelation)) ||
+     (this.looseMode && quad.predicate.equals(ActorExtractLinksTree.aRelation))) {
+      // If it's a relation of the current node
+      pageRelationNodes.set(quad.object.value, quad.subject.value);
+    }
+
+    // If it's a node forward
+    if (quad.predicate.equals(ActorExtractLinksTree.aNodeType)) {
       nodeLinks.push([ quad.subject.value, quad.object.value ]);
     }
   }
+}
+
+export interface IActorExtractLinksTreeArgs
+  extends IActorArgs<IActionExtractLinks, IActorTest, IActorExtractLinksOutput> {
+  /**
+   * If true, then during the traversal of TREE document
+   * regardless if the subject of the relation is the URL of the page
+   * we still consider the relations.
+   * This option exist because there are multiple TREE document that doesn't respect this rule.
+   * @default {false}
+   */
+  loose: boolean;
 }

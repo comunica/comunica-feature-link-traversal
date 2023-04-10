@@ -216,6 +216,74 @@ describe('ActorExtractLinksExtractLinksTree', () => {
 
       expect(result).toEqual({ links: expectedUrl.map(value => { return { url: value }; }) });
     });
+
+    it(`should return the links of a TREE with one relation when the loose mode 
+    is activated and the url match the subject of the TREE document`, async() => {
+      actor = new ActorExtractLinksTree({ name: 'actor', loose: true, bus });
+      const expectedUrl = 'http://foo.com';
+      const input = stream([
+        DF.quad(DF.namedNode(treeUrl), DF.namedNode('ex:p'), DF.namedNode('ex:o'), DF.namedNode('ex:gx')),
+        DF.quad(DF.namedNode(treeUrl),
+          DF.namedNode('https://w3id.org/tree#foo'),
+          DF.literal(expectedUrl),
+          DF.namedNode('ex:gx')),
+        DF.quad(DF.namedNode(treeUrl),
+          DF.namedNode('https://w3id.org/tree#foo'),
+          DF.literal(expectedUrl),
+          DF.namedNode('ex:gx')),
+        DF.quad(DF.namedNode(treeUrl),
+          DF.namedNode('https://w3id.org/tree#relation'),
+          DF.blankNode('_:_g1'),
+          DF.namedNode('ex:gx')),
+        DF.quad(DF.blankNode('_:_g1'),
+          DF.namedNode('https://w3id.org/tree#node'),
+          DF.literal(expectedUrl),
+          DF.namedNode('ex:gx')),
+        DF.quad(DF.namedNode(treeUrl),
+          ActorExtractLinksTree.aView,
+          DF.literal(treeUrl),
+          DF.namedNode('ex:gx')),
+      ]);
+      const action = { url: treeUrl, metadata: input, requestTime: 0, context };
+
+      const result = await actor.run(action);
+
+      expect(result).toEqual({ links: [{ url: expectedUrl }]});
+    });
+
+    it(`should return the links of a TREE with one relation when the loose mode 
+    is activated and the url dont't match the subject of the TREE document`, async() => {
+      actor = new ActorExtractLinksTree({ name: 'actor', loose: true, bus });
+      const expectedUrl = 'http://foo.com';
+      const input = stream([
+        DF.quad(DF.namedNode(treeUrl), DF.namedNode('ex:p'), DF.namedNode('ex:o'), DF.namedNode('ex:gx')),
+        DF.quad(DF.namedNode(treeUrl),
+          DF.namedNode('https://w3id.org/tree#foo'),
+          DF.literal(expectedUrl),
+          DF.namedNode('ex:gx')),
+        DF.quad(DF.namedNode(treeUrl),
+          DF.namedNode('https://w3id.org/tree#foo'),
+          DF.literal(expectedUrl),
+          DF.namedNode('ex:gx')),
+        DF.quad(DF.namedNode(treeUrl),
+          DF.namedNode('https://w3id.org/tree#relation'),
+          DF.blankNode('_:_g1'),
+          DF.namedNode('ex:gx')),
+        DF.quad(DF.blankNode('_:_g1'),
+          DF.namedNode('https://w3id.org/tree#node'),
+          DF.literal(expectedUrl),
+          DF.namedNode('ex:gx')),
+        DF.quad(DF.namedNode(treeUrl),
+          ActorExtractLinksTree.aView,
+          DF.literal(treeUrl),
+          DF.namedNode('ex:gx')),
+      ]);
+      const action = { url: 'bar', metadata: input, requestTime: 0, context };
+
+      const result = await actor.run(action);
+
+      expect(result).toEqual({ links: [{ url: expectedUrl }]});
+    });
   });
   describe('The ActorExtractLinksExtractLinksTree test method', () => {
     let actor: ActorExtractLinksTree;
