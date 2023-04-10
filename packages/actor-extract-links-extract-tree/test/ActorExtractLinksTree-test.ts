@@ -223,9 +223,14 @@ describe('ActorExtractLinksExtractLinksTree', () => {
       const expectedUrl = 'http://foo.com';
       for (const rootNode of [
         ActorExtractLinksTree.aSubset,
-        ActorExtractLinksTree.aSubset,
+        ActorExtractLinksTree.isPartOf,
         ActorExtractLinksTree.aView ]
       ) {
+        const descriptor = DF.quad(DF.namedNode(treeUrl),
+          rootNode,
+          DF.literal(treeUrl),
+          DF.namedNode('ex:gx'));
+
         const input = stream([
           DF.quad(DF.namedNode(treeUrl), DF.namedNode('ex:p'), DF.namedNode('ex:o'), DF.namedNode('ex:gx')),
           DF.quad(DF.namedNode(treeUrl),
@@ -244,10 +249,7 @@ describe('ActorExtractLinksExtractLinksTree', () => {
             DF.namedNode('https://w3id.org/tree#node'),
             DF.literal(expectedUrl),
             DF.namedNode('ex:gx')),
-          DF.quad(DF.namedNode(treeUrl),
-            ActorExtractLinksTree.aView,
-            DF.literal(treeUrl),
-            DF.namedNode('ex:gx')),
+          descriptor,
         ]);
         const action = { url: treeUrl, metadata: input, requestTime: 0, context };
 
@@ -263,10 +265,21 @@ describe('ActorExtractLinksExtractLinksTree', () => {
       const expectedUrl = 'http://foo.com';
       for (const rootNode of [
         ActorExtractLinksTree.aSubset,
-        ActorExtractLinksTree.aSubset,
+        ActorExtractLinksTree.isPartOf,
         ActorExtractLinksTree.aView,
       ]
       ) {
+        let descriptor = DF.quad(DF.namedNode(treeUrl),
+          rootNode,
+          DF.literal(treeUrl),
+          DF.namedNode('ex:gx'));
+
+        if (rootNode === ActorExtractLinksTree.isPartOf) {
+          descriptor = DF.quad(DF.namedNode(treeUrl),
+            rootNode,
+            DF.literal('foo'),
+            DF.namedNode('ex:gx'));
+        }
         const input = stream([
           DF.quad(DF.namedNode(treeUrl), DF.namedNode('ex:p'), DF.namedNode('ex:o'), DF.namedNode('ex:gx')),
           DF.quad(DF.namedNode(treeUrl),
@@ -285,10 +298,7 @@ describe('ActorExtractLinksExtractLinksTree', () => {
             DF.namedNode('https://w3id.org/tree#node'),
             DF.literal(expectedUrl),
             DF.namedNode('ex:gx')),
-          DF.quad(DF.namedNode(treeUrl),
-            rootNode,
-            DF.literal(treeUrl),
-            DF.namedNode('ex:gx')),
+          descriptor,
         ]);
         const action = { url: 'bar', metadata: input, requestTime: 0, context };
 
