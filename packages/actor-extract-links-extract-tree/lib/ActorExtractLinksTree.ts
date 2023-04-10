@@ -38,7 +38,8 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
     return new Promise((resolve, reject) => {
       const metadata = action.metadata;
       const currentNodeUrl = action.url;
-      const pageRelationNodes: Map<string, string> = new Map();
+      // The relation node value and the subject of the relation are the values of the map
+      const relationNodeSubject: Map<string, string> = new Map();
       const nodeLinks: [string, string][] = [];
       const links: ILink[] = [];
       const effectiveTreeDocumentSubject: Set<string> = new Set();
@@ -50,7 +51,7 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
       metadata.on('data', (quad: RDF.Quad) =>
         this.getTreeQuadsRawRelations(quad,
           currentNodeUrl,
-          pageRelationNodes,
+          relationNodeSubject,
           nodeLinks,
           effectiveTreeDocumentSubject));
 
@@ -65,7 +66,7 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
         if (effectiveTreeDocumentSubject.size === 1) {
           // Validate if the nodes forward have the current node has implicit subject
           for (const [ nodeValue, link ] of nodeLinks) {
-            const subjectOfRelation = pageRelationNodes.get(nodeValue);
+            const subjectOfRelation = relationNodeSubject.get(nodeValue);
             if (subjectOfRelation && effectiveTreeDocumentSubject.has(subjectOfRelation)
             ) {
               links.push({ url: link });
