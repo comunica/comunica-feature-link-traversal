@@ -60,8 +60,8 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
         if (rootNodeEffectiveSubject.size === 0) {
           rootNodeEffectiveSubject.add(currentNodeUrl);
         }
-        // If there is multiple subject for the node we consider that the page is inconsistent
-        // and reject all the relations. It has to be noted that we don't support owl reasoning.
+        // If there are multiple subjects for the node, we consider that the page is inconsistent
+        // and rejects all the relations. It has to be noted that we don't support owl reasoning.
         if (rootNodeEffectiveSubject.size === 1) {
           // Validate if the nodes forward have the current node has implicit subject
           for (const [ nodeValue, link ] of nodeLinks) {
