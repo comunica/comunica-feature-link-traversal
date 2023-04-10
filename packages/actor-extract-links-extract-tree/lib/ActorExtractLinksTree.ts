@@ -41,7 +41,7 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
       const pageRelationNodes: Map<string, string> = new Map();
       const nodeLinks: [string, string][] = [];
       const links: ILink[] = [];
-      const rootNodeEffectiveSubject: Set<string> = new Set();
+      const effectiveTreeDocumentSubject: Set<string> = new Set();
 
       // Forward errors
       metadata.on('error', reject);
@@ -52,21 +52,21 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
           currentNodeUrl,
           pageRelationNodes,
           nodeLinks,
-          rootNodeEffectiveSubject));
+          effectiveTreeDocumentSubject));
 
       // Resolve to discovered links
       metadata.on('end', () => {
         // If we are not in the loose mode then the subject of the page is the URL
-        if (rootNodeEffectiveSubject.size === 0) {
-          rootNodeEffectiveSubject.add(currentNodeUrl);
+        if (effectiveTreeDocumentSubject.size === 0) {
+          effectiveTreeDocumentSubject.add(currentNodeUrl);
         }
         // If there are multiple subjects for the node, we consider that the page is inconsistent
         // and rejects all the relations. It has to be noted that we don't support owl reasoning.
-        if (rootNodeEffectiveSubject.size === 1) {
+        if (effectiveTreeDocumentSubject.size === 1) {
           // Validate if the nodes forward have the current node has implicit subject
           for (const [ nodeValue, link ] of nodeLinks) {
             const subjectOfRelation = pageRelationNodes.get(nodeValue);
-            if (subjectOfRelation && rootNodeEffectiveSubject.has(subjectOfRelation)
+            if (subjectOfRelation && effectiveTreeDocumentSubject.has(subjectOfRelation)
             ) {
               links.push({ url: link });
             }
