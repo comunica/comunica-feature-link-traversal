@@ -28,7 +28,12 @@ After installing, this package can be added to your engine's configuration as fo
     ...
     {
       "@id": "urn:comunica:default:extract-links/actors#extract-links-tree",
-      "@type": "ActorExtractLinksTree"
+      "@type": "ActorExtractLinksTree",
+      // If true, then during the traversal of TREE document
+      // regardless if the subject of the relation is the URL of the page
+      // we still consider the relations.
+      // This option exist because there are multiple TREE document that doesn't respect this rule.
+      "loose": true
     }
   ]
 }

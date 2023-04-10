@@ -59,8 +59,8 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
         // Validate if the node forward have the current node has implicit subject
         for (const [ nodeValue, link ] of nodeLinks) {
           const relationNode = pageRelationNodes.get(nodeValue);
-          if (relationNode && (this.looseMode && rootNodeType.has(relationNode) || 
-          (!this.looseMode && currentNodeUrl === relationNode ))
+          if (relationNode && (this.looseMode && rootNodeType.has(relationNode) ||
+          (!this.looseMode && currentNodeUrl === relationNode))
           ) {
             links.push({ url: link });
           }
@@ -88,9 +88,9 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
     rootNodeType: Set<string>,
   ): void {
     if (
-      (quad.predicate.equals(ActorExtractLinksTree.aView) ||
+      quad.predicate.equals(ActorExtractLinksTree.aView) ||
       quad.predicate.equals(ActorExtractLinksTree.aSubset) ||
-      quad.predicate.equals(ActorExtractLinksTree.isPartOf))) {
+      quad.predicate.equals(ActorExtractLinksTree.isPartOf)) {
       if (quad.predicate.equals(ActorExtractLinksTree.isPartOf)) {
         rootNodeType.add(quad.subject.value);
       } else {
