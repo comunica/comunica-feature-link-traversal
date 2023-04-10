@@ -41,7 +41,7 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
       const pageRelationNodes: Map<string, string> = new Map();
       const nodeLinks: [string, string][] = [];
       const links: ILink[] = [];
-      const rootNodeType: Set<string> = new Set();
+      const rootNodeEffectiveSubject: Set<string> = new Set();
 
       // Forward errors
       metadata.on('error', reject);
@@ -52,18 +52,22 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
           currentNodeUrl,
           pageRelationNodes,
           nodeLinks,
-          rootNodeType));
+          rootNodeEffectiveSubject));
 
       // Resolve to discovered links
       metadata.on('end', () => {
+        // If we are not in the loose mode then the subject of the page is the URL
+        if (rootNodeEffectiveSubject.size === 0) {
+          rootNodeEffectiveSubject.add(currentNodeUrl);
+        }
         // Validate if the node forward have the current node has implicit subject
-        for (const [ nodeValue, link ] of nodeLinks) {
-          const relationNode = pageRelationNodes.get(nodeValue);
-          if (relationNode && (
-            (this.looseMode && (rootNodeType.has(relationNode) || currentNodeUrl === relationNode)) ||
-          (!this.looseMode && currentNodeUrl === relationNode))
-          ) {
-            links.push({ url: link });
+        if (rootNodeEffectiveSubject.size === 1) {
+          for (const [ nodeValue, link ] of nodeLinks) {
+            const subjectOfRelation = pageRelationNodes.get(nodeValue);
+            if (subjectOfRelation && rootNodeEffectiveSubject.has(subjectOfRelation)
+            ) {
+              links.push({ url: link });
+            }
           }
         }
         resolve({ links });
@@ -86,17 +90,19 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
     url: string,
     pageRelationNodes: Map<string, string>,
     nodeLinks: [string, string][],
-    rootNodeType: Set<string>,
+    rootNodeEffectiveSubject: Set<string>,
   ): void {
     if (
-      quad.predicate.equals(ActorExtractLinksTree.aView) ||
-      quad.predicate.equals(ActorExtractLinksTree.aSubset) ||
-      quad.predicate.equals(ActorExtractLinksTree.isPartOf)) {
-      if (quad.predicate.equals(ActorExtractLinksTree.isPartOf)) {
-        rootNodeType.add(quad.subject.value);
-      } else {
-        rootNodeType.add(quad.object.value);
-      }
+      (this.looseMode || !this.looseMode && quad.subject.value === url) &&
+      (quad.predicate.equals(ActorExtractLinksTree.aView) ||
+      quad.predicate.equals(ActorExtractLinksTree.aSubset))) {
+      rootNodeEffectiveSubject.add(quad.object.value);
+    }
+
+    if (
+      (this.looseMode || !this.looseMode && quad.object.value === url) &&
+    quad.predicate.equals(ActorExtractLinksTree.isPartOf)) {
+      rootNodeEffectiveSubject.add(quad.subject.value);
     }
 
     if (quad.predicate.equals(ActorExtractLinksTree.aRelation)) {

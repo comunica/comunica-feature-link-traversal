@@ -217,6 +217,54 @@ describe('ActorExtractLinksExtractLinksTree', () => {
       expect(result).toEqual({ links: expectedUrl.map(value => { return { url: value }; }) });
     });
 
+    it(`should return the links of a TREE with when there is a root type`, async() => {
+      const expectedUrl = 'http://foo.com';
+      const url = 'bar';
+      for (const rootNode of [
+        ActorExtractLinksTree.aSubset,
+        ActorExtractLinksTree.isPartOf,
+        ActorExtractLinksTree.aView,
+      ]
+      ) {
+        let descriptor = DF.quad(DF.namedNode(url),
+          rootNode,
+          DF.namedNode(treeUrl),
+          DF.namedNode('ex:gx'));
+
+        if (rootNode === ActorExtractLinksTree.isPartOf) {
+          descriptor = DF.quad(DF.namedNode(treeUrl),
+            rootNode,
+            DF.namedNode(url),
+            DF.namedNode('ex:gx'));
+        }
+        const input = stream([
+          DF.quad(DF.namedNode(treeUrl), DF.namedNode('ex:p'), DF.namedNode('ex:o'), DF.namedNode('ex:gx')),
+          DF.quad(DF.namedNode(treeUrl),
+            DF.namedNode('https://w3id.org/tree#foo'),
+            DF.literal(expectedUrl),
+            DF.namedNode('ex:gx')),
+          DF.quad(DF.namedNode(treeUrl),
+            DF.namedNode('https://w3id.org/tree#foo'),
+            DF.literal(expectedUrl),
+            DF.namedNode('ex:gx')),
+          DF.quad(DF.namedNode(treeUrl),
+            DF.namedNode('https://w3id.org/tree#relation'),
+            DF.blankNode('_:_g1'),
+            DF.namedNode('ex:gx')),
+          DF.quad(DF.blankNode('_:_g1'),
+            DF.namedNode('https://w3id.org/tree#node'),
+            DF.literal(expectedUrl),
+            DF.namedNode('ex:gx')),
+          descriptor,
+        ]);
+        const action = { url, metadata: input, requestTime: 0, context };
+
+        const result = await actor.run(action);
+
+        expect(result).toEqual({ links: [{ url: expectedUrl }]});
+      }
+    });
+
     it(`should return the links of a TREE with one relation when the loose mode 
     is activated and the url match the subject of the root node TREE document`, async() => {
       actor = new ActorExtractLinksTree({ name: 'actor', loose: true, bus });
@@ -228,7 +276,7 @@ describe('ActorExtractLinksExtractLinksTree', () => {
       ) {
         const descriptor = DF.quad(DF.namedNode(treeUrl),
           rootNode,
-          DF.literal(treeUrl),
+          DF.namedNode(treeUrl),
           DF.namedNode('ex:gx'));
 
         const input = stream([
@@ -260,6 +308,60 @@ describe('ActorExtractLinksExtractLinksTree', () => {
     });
 
     it(`should return the links of a TREE with one relation when the loose mode 
+    is activated and the url match the subject of the root node TREE document`, async() => {
+      actor = new ActorExtractLinksTree({ name: 'actor', loose: true, bus });
+      const expectedUrl = 'http://foo.com';
+      for (const rootNode of [
+        ActorExtractLinksTree.aSubset,
+        ActorExtractLinksTree.isPartOf,
+        ActorExtractLinksTree.aView ]
+      ) {
+        let descriptor1 = DF.quad(DF.namedNode(treeUrl),
+          rootNode,
+          DF.namedNode('foo'),
+          DF.namedNode('ex:gx'));
+
+        if (rootNode === ActorExtractLinksTree.isPartOf) {
+          descriptor1 = DF.quad(DF.namedNode(treeUrl),
+            rootNode,
+            DF.namedNode('foo'),
+            DF.namedNode('ex:gx'));
+        }
+
+        const descriptor2 = DF.quad(DF.namedNode('foo'),
+          rootNode,
+          DF.namedNode('bar'),
+          DF.namedNode('ex:gx'));
+
+        const input = stream([
+          DF.quad(DF.namedNode(treeUrl), DF.namedNode('ex:p'), DF.namedNode('ex:o'), DF.namedNode('ex:gx')),
+          DF.quad(DF.namedNode(treeUrl),
+            DF.namedNode('https://w3id.org/tree#foo'),
+            DF.literal(expectedUrl),
+            DF.namedNode('ex:gx')),
+          DF.quad(DF.namedNode(treeUrl),
+            DF.namedNode('https://w3id.org/tree#foo'),
+            DF.literal(expectedUrl),
+            DF.namedNode('ex:gx')),
+          DF.quad(DF.namedNode(treeUrl),
+            DF.namedNode('https://w3id.org/tree#relation'),
+            DF.blankNode('_:_g1'),
+            DF.namedNode('ex:gx')),
+          DF.quad(DF.blankNode('_:_g1'),
+            DF.namedNode('https://w3id.org/tree#node'),
+            DF.literal(expectedUrl),
+            DF.namedNode('ex:gx')),
+          descriptor1,
+          descriptor2,
+        ]);
+        const action = { url: treeUrl, metadata: input, requestTime: 0, context };
+
+        const result = await actor.run(action);
+
+        expect(result).toEqual({ links: []});
+      }
+    });
+    it(`should return the links of a TREE with one relation when the loose mode 
     is activated and the url dont't match the subject of the root node TREE document`, async() => {
       actor = new ActorExtractLinksTree({ name: 'actor', loose: true, bus });
       const expectedUrl = 'http://foo.com';
@@ -271,13 +373,13 @@ describe('ActorExtractLinksExtractLinksTree', () => {
       ) {
         let descriptor = DF.quad(DF.namedNode(treeUrl),
           rootNode,
-          DF.literal(treeUrl),
+          DF.namedNode(treeUrl),
           DF.namedNode('ex:gx'));
 
         if (rootNode === ActorExtractLinksTree.isPartOf) {
           descriptor = DF.quad(DF.namedNode(treeUrl),
             rootNode,
-            DF.literal('foo'),
+            DF.namedNode('foo'),
             DF.namedNode('ex:gx'));
         }
         const input = stream([
