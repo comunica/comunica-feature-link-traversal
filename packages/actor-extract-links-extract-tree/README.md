@@ -32,7 +32,7 @@ After installing, this package can be added to your engine's configuration as fo
       // If true, then during the traversal of TREE document
       // regardless if the subject of the relation is the URL of the page
       // we still consider the relations.
-      // This option exist because there are multiple TREE document that doesn't respect this rule.
+      // This option exist because there are multiple TREE documents that doesn't respect this rule.
       "loose": true
     }
   ]
