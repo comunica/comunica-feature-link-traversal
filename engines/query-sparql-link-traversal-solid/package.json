@@ -67,7 +67,7 @@
     "@comunica/core": "^2.6.8",
     "@comunica/query-sparql-link-traversal": "^0.1.1",
     "@comunica/query-sparql-solid": "^2.4.0",
-    "@comunica/runner-cli": "2.5.1-alpha.38.0"
+    "@comunica/runner-cli": "2.6.11-alpha.40.0"
   },
   "scripts": {
     "build": "npm run build:ts",

@@ -32,9 +32,11 @@
     "lib/**/*.js.map"
   ],
   "dependencies": {
-    "@comunica/core": "2.5.1-alpha.38.0",
-    "@comunica/bus-rdf-resolve-hypermedia-links": "2.5.1-alpha.38.0",
+    "@comunica/core": "2.6.11-alpha.40.0",
+    "@comunica/bus-rdf-resolve-hypermedia-links": "2.6.11-alpha.40.0",
     "@comunica/context-entries-link-traversal": "^0.0.1",
+    "@types/readable-stream": "^2.3.15",
+    "readable-stream": "^4.3.0",
     "rdf-data-factory": "^1.1.0"
   },
   "scripts": {
