@@ -21,7 +21,7 @@ export const KeysRdfResolveHypermediaLinks = {
   /**
    * A flag to indicate if relationships should strictly correspond to the current document's URL.
    * Default true.
-   * Note: This flag is only in the context of the traversal of TREE document following the TREE specification.
+   * Note: This flag is only effective in the context of the traversal of documents following the TREE specification.
    */
   treeSpecTraversalStrictMode:
   new ActionContextKey<boolean>('@comunica/actor-extract-links-extract-tree:TreeSpecTraversalStrictMode'),
