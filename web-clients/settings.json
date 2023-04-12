@@ -7,6 +7,7 @@
   "context": {
     "lenient": true,
     "@comunica/actor-rdf-resolve-hypermedia-links-traverse:traverse": true,
+    "@comunica/actor-extract-links-extract-tree:TreeSpecTraversalStrictMode": true,
 
     "unionDefaultGraph": true,
     "@comunica/bus-rdf-resolve-hypermedia-links:annotateSources": "graph"

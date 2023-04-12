@@ -1,10 +1,10 @@
-import type {
-  IActionExtractLinks,
+import type { IActionExtractLinks,
   IActorExtractLinksOutput,
-} from '@comunica/bus-extract-links';
+  IActorExtractLinksArgs } from '@comunica/bus-extract-links';
 import { ActorExtractLinks } from '@comunica/bus-extract-links';
 import type { ILink } from '@comunica/bus-rdf-resolve-hypermedia-links';
-import type { IActorTest, IActorArgs } from '@comunica/core';
+import { KeysRdfResolveHypermediaLinks } from '@comunica/context-entries-link-traversal';
+import type { IActorTest } from '@comunica/core';
 import { DataFactory } from 'rdf-data-factory';
 import type * as RDF from 'rdf-js';
 
@@ -20,14 +20,10 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
   public static readonly aView = DF.namedNode('https://w3id.org/tree#view');
   public static readonly aSubset = DF.namedNode('http://rdfs.org/ns/void#subset');
   public static readonly isPartOf = DF.namedNode('http://purl.org/dc/terms/isPartOf');
+  private strictMode = true;
 
-  private readonly looseMode: boolean = false;
-
-  public constructor(args: IActorExtractLinksTreeArgs) {
+  public constructor(args: IActorExtractLinksArgs) {
     super(args);
-    if (args.loose !== undefined) {
-      this.looseMode = args.loose;
-    }
   }
 
   public async test(action: IActionExtractLinks): Promise<IActorTest> {
@@ -36,6 +32,9 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
 
   public async run(action: IActionExtractLinks): Promise<IActorExtractLinksOutput> {
     return new Promise((resolve, reject) => {
+      const strictMode: boolean | undefined =
+       action.context.get(KeysRdfResolveHypermediaLinks.treeSpecTraversalStrictMode);
+      this.strictMode = strictMode === undefined ? true : strictMode;
       const metadata = action.metadata;
       const currentNodeUrl = action.url;
       // The relation node value and the subject of the relation are the values of the map
@@ -61,18 +60,16 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
         if (effectiveTreeDocumentSubject.size === 0) {
           effectiveTreeDocumentSubject.add(currentNodeUrl);
         }
-        // If there are multiple subjects for the node, we consider that the page is inconsistent
-        // and rejects all the relations. It has to be noted that we don't support owl reasoning.
-        if (effectiveTreeDocumentSubject.size === 1) {
-          // Validate if the nodes forward have the current node has implicit subject
-          for (const [ nodeValue, link ] of nodeLinks) {
-            const subjectOfRelation = relationNodeSubject.get(nodeValue);
-            if (subjectOfRelation && effectiveTreeDocumentSubject.has(subjectOfRelation)
-            ) {
-              links.push({ url: link });
-            }
+
+        // Validate if the nodes forward have the current node has implicit subject
+        for (const [ nodeValue, link ] of nodeLinks) {
+          const subjectOfRelation = relationNodeSubject.get(nodeValue);
+          if (subjectOfRelation && effectiveTreeDocumentSubject.has(subjectOfRelation)
+          ) {
+            links.push({ url: link });
           }
         }
+
         resolve({ links });
       });
     });
@@ -96,14 +93,14 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
     rootNodeEffectiveSubject: Set<string>,
   ): void {
     if (
-      (this.looseMode || !this.looseMode && quad.subject.value === url) &&
+      (!this.strictMode || quad.subject.value === url) &&
       (quad.predicate.equals(ActorExtractLinksTree.aView) ||
       quad.predicate.equals(ActorExtractLinksTree.aSubset))) {
       rootNodeEffectiveSubject.add(quad.object.value);
     }
 
     if (
-      (this.looseMode || !this.looseMode && quad.object.value === url) &&
+      (!this.strictMode || quad.object.value === url) &&
     quad.predicate.equals(ActorExtractLinksTree.isPartOf)) {
       rootNodeEffectiveSubject.add(quad.subject.value);
     }
@@ -118,16 +115,4 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
       nodeLinks.push([ quad.subject.value, quad.object.value ]);
     }
   }
-}
-
-export interface IActorExtractLinksTreeArgs
-  extends IActorArgs<IActionExtractLinks, IActorTest, IActorExtractLinksOutput> {
-  /**
-   * If true, then during the traversal of TREE document
-   * regardless if the subject of the relation is the URL of the page
-   * we still consider the relations.
-   * This option exist because there are multiple TREE document that doesn't respect this rule.
-   * @default {false}
-   */
-  loose: boolean;
 }

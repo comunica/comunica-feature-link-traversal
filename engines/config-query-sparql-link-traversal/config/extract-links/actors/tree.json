@@ -9,8 +9,7 @@
     "actors": [
       {
         "@id": "urn:comunica:default:extract-links/actors#extract-links-tree",
-        "@type": "ActorExtractLinksTree",
-        "loose": true
+        "@type": "ActorExtractLinksTree"
       }
     ]
   }

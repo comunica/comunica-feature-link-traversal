@@ -1,4 +1,5 @@
 import { KeysRdfResolveQuadPattern } from '@comunica/context-entries';
+import { KeysRdfResolveHypermediaLinks } from '@comunica/context-entries-link-traversal';
 import { ActionContext, Bus } from '@comunica/core';
 import { DataFactory } from 'rdf-data-factory';
 import type * as RDF from 'rdf-js';
@@ -265,9 +266,10 @@ describe('ActorExtractLinksExtractLinksTree', () => {
       }
     });
 
-    it(`should return the links of a TREE with one relation when the loose mode 
-    is activated and the url match the subject of the root node TREE document`, async() => {
-      actor = new ActorExtractLinksTree({ name: 'actor', loose: true, bus });
+    it(`should return the links of a TREE document with one relation when the strict mode 
+    is deactivated and the URL matches the subject of the root node TREE documents`, async() => {
+      const unStrictContext = context.set(KeysRdfResolveHypermediaLinks.treeSpecTraversalStrictMode, false);
+      actor = new ActorExtractLinksTree({ name: 'actor', bus });
       const expectedUrl = 'http://foo.com';
       for (const rootNode of [
         ActorExtractLinksTree.aSubset,
@@ -299,7 +301,7 @@ describe('ActorExtractLinksExtractLinksTree', () => {
             DF.namedNode('ex:gx')),
           descriptor,
         ]);
-        const action = { url: treeUrl, metadata: input, requestTime: 0, context };
+        const action = { url: treeUrl, metadata: input, requestTime: 0, context: unStrictContext };
 
         const result = await actor.run(action);
 
@@ -307,63 +309,10 @@ describe('ActorExtractLinksExtractLinksTree', () => {
       }
     });
 
-    it(`should return the links of a TREE with one relation when the loose mode 
-    is activated and the url match the subject of the root node TREE document`, async() => {
-      actor = new ActorExtractLinksTree({ name: 'actor', loose: true, bus });
-      const expectedUrl = 'http://foo.com';
-      for (const rootNode of [
-        ActorExtractLinksTree.aSubset,
-        ActorExtractLinksTree.isPartOf,
-        ActorExtractLinksTree.aView ]
-      ) {
-        let descriptor1 = DF.quad(DF.namedNode(treeUrl),
-          rootNode,
-          DF.namedNode('foo'),
-          DF.namedNode('ex:gx'));
-
-        if (rootNode === ActorExtractLinksTree.isPartOf) {
-          descriptor1 = DF.quad(DF.namedNode(treeUrl),
-            rootNode,
-            DF.namedNode('foo'),
-            DF.namedNode('ex:gx'));
-        }
-
-        const descriptor2 = DF.quad(DF.namedNode('foo'),
-          rootNode,
-          DF.namedNode('bar'),
-          DF.namedNode('ex:gx'));
-
-        const input = stream([
-          DF.quad(DF.namedNode(treeUrl), DF.namedNode('ex:p'), DF.namedNode('ex:o'), DF.namedNode('ex:gx')),
-          DF.quad(DF.namedNode(treeUrl),
-            DF.namedNode('https://w3id.org/tree#foo'),
-            DF.literal(expectedUrl),
-            DF.namedNode('ex:gx')),
-          DF.quad(DF.namedNode(treeUrl),
-            DF.namedNode('https://w3id.org/tree#foo'),
-            DF.literal(expectedUrl),
-            DF.namedNode('ex:gx')),
-          DF.quad(DF.namedNode(treeUrl),
-            DF.namedNode('https://w3id.org/tree#relation'),
-            DF.blankNode('_:_g1'),
-            DF.namedNode('ex:gx')),
-          DF.quad(DF.blankNode('_:_g1'),
-            DF.namedNode('https://w3id.org/tree#node'),
-            DF.literal(expectedUrl),
-            DF.namedNode('ex:gx')),
-          descriptor1,
-          descriptor2,
-        ]);
-        const action = { url: treeUrl, metadata: input, requestTime: 0, context };
-
-        const result = await actor.run(action);
-
-        expect(result).toEqual({ links: []});
-      }
-    });
-    it(`should return the links of a TREE with one relation when the loose mode 
-    is activated and the url dont't match the subject of the root node TREE document`, async() => {
-      actor = new ActorExtractLinksTree({ name: 'actor', loose: true, bus });
+    it(`should return the links of a TREE with one relation when the strict mode
+    is deactivated and the URL doesn't match the subject of the root node TREE documents`, async() => {
+      const unStrictContext = context.set(KeysRdfResolveHypermediaLinks.treeSpecTraversalStrictMode, false);
+      actor = new ActorExtractLinksTree({ name: 'actor', bus });
       const expectedUrl = 'http://foo.com';
       for (const rootNode of [
         ActorExtractLinksTree.aSubset,
@@ -402,7 +351,7 @@ describe('ActorExtractLinksExtractLinksTree', () => {
             DF.namedNode('ex:gx')),
           descriptor,
         ]);
-        const action = { url: 'bar', metadata: input, requestTime: 0, context };
+        const action = { url: 'bar', metadata: input, requestTime: 0, context: unStrictContext };
 
         const result = await actor.run(action);
 
@@ -410,9 +359,10 @@ describe('ActorExtractLinksExtractLinksTree', () => {
       }
     });
 
-    it(`should return the links of a TREE with one relation when the loose mode 
-    is activated and the url match the subject of the TREE document that is not a root node`, async() => {
-      actor = new ActorExtractLinksTree({ name: 'actor', loose: true, bus });
+    it(`should return the links of a TREE with one relation when the strict mode 
+    is deactivated and the URL matches the subject of the TREE document that is not a root node`, async() => {
+      const unStrictContext = context.set(KeysRdfResolveHypermediaLinks.treeSpecTraversalStrictMode, false);
+      actor = new ActorExtractLinksTree({ name: 'actor', bus });
 
       const expectedUrl = [ 'http://foo.com', 'http://bar.com', 'http://example.com', 'http://example.com' ];
       const input = stream([
@@ -458,7 +408,7 @@ describe('ActorExtractLinksExtractLinksTree', () => {
           DF.literal(expectedUrl[3]),
           DF.namedNode('ex:gx')),
       ]);
-      const action = { url: treeUrl, metadata: input, requestTime: 0, context };
+      const action = { url: treeUrl, metadata: input, requestTime: 0, context: unStrictContext };
 
       const result = await actor.run(action);
 
