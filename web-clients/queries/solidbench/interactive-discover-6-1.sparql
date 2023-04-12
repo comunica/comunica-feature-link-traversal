@@ -1,0 +1,9 @@
+# [SolidBench] Discover 6.1
+# Datasources: /
+PREFIX snvoc: <https://solidbench.linkeddatafragments.org/www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/>
+SELECT DISTINCT ?forumId ?forumTitle WHERE {
+  ?message snvoc:hasCreator <https://solidbench.linkeddatafragments.org/pods/00000000000000000933/profile/card#me>.
+  ?forum snvoc:containerOf ?message;
+    snvoc:id ?forumId;
+    snvoc:title ?forumTitle.
+}

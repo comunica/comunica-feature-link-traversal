@@ -1,0 +1,10 @@
+# [SolidBench] Discover 7.5
+# Datasources: /
+PREFIX snvoc: <https://solidbench.linkeddatafragments.org/www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/>
+SELECT DISTINCT ?firstName ?lastName WHERE {
+  ?message snvoc:hasCreator <https://solidbench.linkeddatafragments.org/pods/00000006597069767117/profile/card#me>.
+  ?forum snvoc:containerOf ?message;
+    snvoc:hasModerator ?moderator.
+  ?moderator snvoc:firstName ?firstName;
+    snvoc:lastName ?lastName.
+}

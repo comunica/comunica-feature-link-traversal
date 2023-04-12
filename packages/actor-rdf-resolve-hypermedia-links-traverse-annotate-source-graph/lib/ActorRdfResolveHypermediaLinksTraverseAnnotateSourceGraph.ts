@@ -1,5 +1,4 @@
 import type { Readable, TransformCallback } from 'stream';
-import { Transform } from 'stream';
 import {
   ActorRdfResolveHypermediaLinks,
 } from '@comunica/bus-rdf-resolve-hypermedia-links';
@@ -11,6 +10,7 @@ import { KeysRdfResolveHypermediaLinks } from '@comunica/context-entries-link-tr
 import type { IActorArgs, IActorTest } from '@comunica/core';
 import type * as RDF from '@rdfjs/types';
 import { DataFactory } from 'rdf-data-factory';
+import { Transform } from 'readable-stream';
 
 const DF = new DataFactory();
 

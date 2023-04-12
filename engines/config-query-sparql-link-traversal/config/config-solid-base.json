@@ -14,7 +14,7 @@
     "ccqs:config/http/mediators.json",
     "ccqs:config/http-invalidate/actors.json",
     "ccqs:config/http-invalidate/mediators.json",
-    "ccqs:config/init/actors.json",
+    "ccqslt:config/init/actors.json",
     "ccqslt:config/optimize-query-operation/actors.json",
     "ccqs:config/optimize-query-operation/mediators.json",
     "ccqs:config/query-operation/actors.json",

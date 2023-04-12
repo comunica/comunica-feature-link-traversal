@@ -3,6 +3,7 @@
     "sparql": true,
     "graphql": true
   },
+  "allowNoSources": true,
   "context": {
     "lenient": true,
     "@comunica/actor-rdf-resolve-hypermedia-links-traverse:traverse": true,
@@ -96,6 +97,26 @@
     {
       "name": "SNCB connections LDES",
       "url": "https://graph.irail.be/sncb/connections/feed"
+    },
+    {
+      "name": "SolidBench User 933",
+      "url": "https://solidbench.linkeddatafragments.org/pods/00000000000000000933/profile/card#me"
+    },
+    {
+      "name": "SolidBench User 1129",
+      "url": "https://solidbench.linkeddatafragments.org/pods/00000000000000001129/profile/card#me"
+    },
+    {
+      "name": "SolidBench User 2199023256684",
+      "url": "https://solidbench.linkeddatafragments.org/pods/00000002199023256684/profile/card#me"
+    },
+    {
+      "name": "SolidBench User 4398046512167",
+      "url": "https://solidbench.linkeddatafragments.org/pods/00000004398046512167/profile/card#me"
+    },
+    {
+      "name": "SolidBench User 6597069767117",
+      "url": "https://solidbench.linkeddatafragments.org/pods/00000006597069767117/profile/card#me"
     }
   ],
   "prefixes": {

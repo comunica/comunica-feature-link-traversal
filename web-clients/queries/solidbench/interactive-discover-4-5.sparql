@@ -1,0 +1,13 @@
+# [SolidBench] Discover 4.5
+# Datasources: /
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX snvoc: <https://solidbench.linkeddatafragments.org/www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+SELECT ?locationName (COUNT(?message) AS ?messages) WHERE {
+  ?message snvoc:hasCreator <https://solidbench.linkeddatafragments.org/pods/00000006597069767117/profile/card#me>;
+    rdf:type snvoc:Comment;
+    snvoc:isLocatedIn ?location.
+  ?location foaf:name ?locationName.
+}
+GROUP BY ?locationName
+ORDER BY DESC (?messages)

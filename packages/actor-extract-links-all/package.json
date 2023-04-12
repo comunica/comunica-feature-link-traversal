@@ -1,6 +1,6 @@
 {
   "name": "@comunica/actor-extract-links-all",
-  "version": "0.0.1",
+  "version": "0.1.1",
   "description": "A traverse-all extract-links actor",
   "lsd:module": true,
   "main": "lib/index.js",
