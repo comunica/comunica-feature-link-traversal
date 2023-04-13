@@ -185,6 +185,7 @@ export class ActorExtractLinksSolidTypeIndex extends ActorExtractLinks {
         }`, {
       sources: [ predicateValue ],
       [KeysRdfResolveHypermediaLinks.traverse.name]: false,
+      [KeysRdfJoin.skipAdaptiveJoin.name]: true,
       lenient: true,
     });
 

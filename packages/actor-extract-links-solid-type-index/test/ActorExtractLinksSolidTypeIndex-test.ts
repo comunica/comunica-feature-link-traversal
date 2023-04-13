@@ -62,6 +62,7 @@ describe('ActorExtractLinksSolidTypeIndex', () => {
         onlyMatchingTypes: false,
         mediatorDereferenceRdf,
         actorInitQuery,
+        inference: false,
       });
       (<any> actor).queryEngine = {
         queryBindings: jest.fn(async() => ({
