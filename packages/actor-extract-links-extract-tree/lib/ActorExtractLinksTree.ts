@@ -3,7 +3,7 @@ import type { IActionExtractLinks,
   IActorExtractLinksArgs } from '@comunica/bus-extract-links';
 import { ActorExtractLinks } from '@comunica/bus-extract-links';
 import type { ILink } from '@comunica/bus-rdf-resolve-hypermedia-links';
-import { KeysRdfResolveHypermediaLinks } from '@comunica/context-entries-link-traversal';
+import { KeysExtractLinksExtractTree } from '@comunica/context-entries-link-traversal';
 import type { IActorTest } from '@comunica/core';
 import { DataFactory } from 'rdf-data-factory';
 import type * as RDF from 'rdf-js';
@@ -32,7 +32,7 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
   public async run(action: IActionExtractLinks): Promise<IActorExtractLinksOutput> {
     return new Promise((resolve, reject) => {
       const strictModeFlag: boolean | undefined =
-       action.context.get(KeysRdfResolveHypermediaLinks.treeSpecTraversalStrictMode);
+       action.context.get(KeysExtractLinksExtractTree.strictTraversal);
       const strictMode = strictModeFlag === undefined ? true : strictModeFlag;
       const metadata = action.metadata;
       const currentNodeUrl = action.url;
