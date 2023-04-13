@@ -1,6 +1,6 @@
 {
   "name": "@comunica/actor-rdf-resolve-hypermedia-links-traverse",
-  "version": "0.0.1",
+  "version": "0.1.1",
   "description": "A traverse rdf-resolve-hypermedia-links actor",
   "lsd:module": true,
   "main": "lib/index.js",
@@ -34,7 +34,7 @@
   "dependencies": {
     "@comunica/bus-rdf-resolve-hypermedia-links": "2.6.11-alpha.40.0",
     "@comunica/context-entries": "2.6.11-alpha.40.0",
-    "@comunica/context-entries-link-traversal": "^0.0.1",
+    "@comunica/context-entries-link-traversal": "^0.1.1",
     "@comunica/core": "2.6.11-alpha.40.0"
   },
   "scripts": {

@@ -1,6 +1,6 @@
 {
   "name": "@comunica/actor-rdf-resolve-hypermedia-links-traverse-replace-conditional",
-  "version": "0.0.1",
+  "version": "0.1.1",
   "description": "A traverse-replace-conditional rdf-resolve-hypermedia-links actor",
   "lsd:module": true,
   "main": "lib/index.js",

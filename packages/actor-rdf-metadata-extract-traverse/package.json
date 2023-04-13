@@ -1,6 +1,6 @@
 {
   "name": "@comunica/actor-rdf-metadata-extract-traverse",
-  "version": "0.0.1",
+  "version": "0.1.1",
   "description": "A traverse rdf-metadata-extract actor",
   "lsd:module": true,
   "main": "lib/index.js",
@@ -34,7 +34,7 @@
   "dependencies": {
     "@comunica/core": "2.6.11-alpha.40.0",
     "@comunica/bus-rdf-metadata-extract": "2.6.11-alpha.40.0",
-    "@comunica/bus-extract-links": "^0.0.1"
+    "@comunica/bus-extract-links": "^0.1.1"
   },
   "scripts": {
     "build": "npm run build:ts && npm run build:components",
