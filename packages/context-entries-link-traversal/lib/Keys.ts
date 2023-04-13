@@ -20,7 +20,7 @@ export const KeysRdfResolveHypermediaLinks = {
   ),
 };
 
-export const KeysExtractLinksExtractTree = {
+export const KeysExtractLinksTree = {
   /**
    * A flag to indicate if relationships should strictly correspond to the current document's URL.
    * Default true.

@@ -1,5 +1,5 @@
 import { KeysRdfResolveQuadPattern } from '@comunica/context-entries';
-import { KeysExtractLinksExtractTree } from '@comunica/context-entries-link-traversal';
+import { KeysExtractLinksTree } from '@comunica/context-entries-link-traversal';
 import { ActionContext, Bus } from '@comunica/core';
 import { DataFactory } from 'rdf-data-factory';
 import type * as RDF from 'rdf-js';
@@ -268,7 +268,7 @@ describe('ActorExtractLinksExtractLinksTree', () => {
 
     it(`should return the links of a TREE document with one relation when the strict mode 
     is deactivated and the URL matches the subject of the root node TREE documents`, async() => {
-      const unStrictContext = context.set(KeysExtractLinksExtractTree.strictTraversal, false);
+      const unStrictContext = context.set(KeysExtractLinksTree.strictTraversal, false);
       actor = new ActorExtractLinksTree({ name: 'actor', bus });
       const expectedUrl = 'http://foo.com';
       for (const rootNode of [
@@ -311,7 +311,7 @@ describe('ActorExtractLinksExtractLinksTree', () => {
 
     it(`should return the links of a TREE with one relation when the strict mode
     is deactivated and the URL doesn't match the subject of the root node TREE documents`, async() => {
-      const unStrictContext = context.set(KeysExtractLinksExtractTree.strictTraversal, false);
+      const unStrictContext = context.set(KeysExtractLinksTree.strictTraversal, false);
       actor = new ActorExtractLinksTree({ name: 'actor', bus });
       const expectedUrl = 'http://foo.com';
       for (const rootNode of [
@@ -361,7 +361,7 @@ describe('ActorExtractLinksExtractLinksTree', () => {
 
     it(`should return the links of a TREE with one relation when the strict mode 
     is deactivated and the URL matches the subject of the TREE document that is not a root node`, async() => {
-      const unStrictContext = context.set(KeysExtractLinksExtractTree.strictTraversal, false);
+      const unStrictContext = context.set(KeysExtractLinksTree.strictTraversal, false);
       actor = new ActorExtractLinksTree({ name: 'actor', bus });
 
       const expectedUrl = [ 'http://foo.com', 'http://bar.com', 'http://example.com', 'http://example.com' ];
