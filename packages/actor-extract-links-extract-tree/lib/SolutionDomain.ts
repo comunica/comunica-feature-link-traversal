@@ -46,6 +46,7 @@ export class SolutionDomain {
     }
     Object.freeze(newSolutionDomain);
     Object.freeze(newSolutionDomain.domain);
+    Object.freeze(newSolutionDomain.lastOperation);
     return newSolutionDomain;
   }
 
