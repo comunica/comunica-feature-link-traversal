@@ -1,6 +1,6 @@
 {
   "name": "@comunica/actor-extract-links-tree",
-  "version": "0.1.2",
+  "version": "0.1.1",
   "description": "A extract-links-tree extract-links actor",
   "lsd:module": true,
   "main": "lib/index.js",

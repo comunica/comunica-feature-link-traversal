@@ -49,7 +49,7 @@
     "@comunica/actor-extract-links-predicates": "^0.1.1",
     "@comunica/actor-extract-links-quad-pattern": "^0.1.1",
     "@comunica/actor-extract-links-quad-pattern-query": "^0.1.1",
-    "@comunica/actor-extract-links-tree": "^0.1.2",
+    "@comunica/actor-extract-links-tree": "^0.1.1",
     "@comunica/actor-init-query": "^2.6.8",
     "@comunica/actor-optimize-query-operation-set-seed-sources-quadpattern-iris": "^0.1.1",
     "@comunica/actor-rdf-join-entries-sort-traversal-zero-knowledge": "^0.1.1",
