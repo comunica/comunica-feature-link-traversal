@@ -19,3 +19,12 @@ export const KeysRdfResolveHypermediaLinks = {
     '@comunica/bus-rdf-resolve-hypermedia-links:annotateSources',
   ),
 };
+
+export const KeysExtractLinksTree = {
+  /**
+   * A flag to indicate if relationships should strictly correspond to the current document's URL.
+   * Default true.
+   */
+  strictTraversal:
+ new ActionContextKey<boolean>('@comunica/actor-extract-links-tree:strictTraversal'),
+};
