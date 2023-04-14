@@ -10,7 +10,7 @@ describe('SolutionDomain', () => {
     it('should return an empty solution domain', () => {
       const solutionDomain = new SolutionDomain();
 
-      expect(solutionDomain.get_domain().length).toBe(0);
+      expect(solutionDomain.getDomain().length).toBe(0);
     });
   });
 
@@ -19,8 +19,8 @@ describe('SolutionDomain', () => {
       const solutionRange = new SolutionInterval([ 0, 1 ]);
       const solutionDomain = SolutionDomain.newWithInitialValue(solutionRange);
 
-      expect(solutionDomain.get_domain().length).toBe(1);
-      expect(solutionDomain.get_domain()[0]).toStrictEqual(solutionRange);
+      expect(solutionDomain.getDomain().length).toBe(1);
+      expect(solutionDomain.getDomain()[0]).toStrictEqual(solutionRange);
     });
   });
 
@@ -45,8 +45,8 @@ describe('SolutionDomain', () => {
 
       const newDomain = solutionDomain.addWithOrOperator(range);
 
-      expect(newDomain.get_domain().length).toBe(1);
-      expect(newDomain.get_domain()[0]).toStrictEqual(range);
+      expect(newDomain.getDomain().length).toBe(1);
+      expect(newDomain.getDomain()[0]).toStrictEqual(range);
     });
 
     it('given an empty domain should be able to add multiple subject range that doesn\'t overlap', () => {
@@ -61,7 +61,7 @@ describe('SolutionDomain', () => {
 
       ranges.forEach((range, idx) => {
         solutionDomain = solutionDomain.addWithOrOperator(range);
-        expect(solutionDomain.get_domain().length).toBe(idx + 1);
+        expect(solutionDomain.getDomain().length).toBe(idx + 1);
       });
 
       const expectedDomain = [
@@ -71,23 +71,23 @@ describe('SolutionDomain', () => {
         new SolutionInterval([ 60, 70 ]),
       ];
 
-      expect(solutionDomain.get_domain()).toStrictEqual(expectedDomain);
+      expect(solutionDomain.getDomain()).toStrictEqual(expectedDomain);
     });
 
     it('given a domain should not add a range that is inside another', () => {
       const anOverlappingRange = new SolutionInterval([ 22, 23 ]);
       const newDomain = aDomain.addWithOrOperator(anOverlappingRange);
 
-      expect(newDomain.get_domain().length).toBe(aDomain.get_domain().length);
-      expect(newDomain.get_domain()).toStrictEqual(aRanges);
+      expect(newDomain.getDomain().length).toBe(aDomain.getDomain().length);
+      expect(newDomain.getDomain()).toStrictEqual(aRanges);
     });
 
     it('given a domain should create a single domain if all the domain segment are contain into the new range', () => {
       const anOverlappingRange = new SolutionInterval([ -100, 100 ]);
       const newDomain = aDomain.addWithOrOperator(anOverlappingRange);
 
-      expect(newDomain.get_domain().length).toBe(1);
-      expect(newDomain.get_domain()).toStrictEqual([ anOverlappingRange ]);
+      expect(newDomain.getDomain().length).toBe(1);
+      expect(newDomain.getDomain()).toStrictEqual([ anOverlappingRange ]);
     });
 
     it('given a domain should fuse multiple domain segment if the new range overlap with them', () => {
@@ -100,8 +100,8 @@ describe('SolutionDomain', () => {
         new SolutionInterval([ 60, 70 ]),
       ];
 
-      expect(newDomain.get_domain().length).toBe(3);
-      expect(newDomain.get_domain()).toStrictEqual(expectedResultingDomainRange);
+      expect(newDomain.getDomain().length).toBe(3);
+      expect(newDomain.getDomain()).toStrictEqual(expectedResultingDomainRange);
     });
   });
 
@@ -116,8 +116,8 @@ describe('SolutionDomain', () => {
       ];
       const newDomain = solutionDomain.notOperation();
 
-      expect(newDomain.get_domain().length).toBe(2);
-      expect(newDomain.get_domain()).toStrictEqual(expectedDomain);
+      expect(newDomain.getDomain().length).toBe(2);
+      expect(newDomain.getDomain()).toStrictEqual(expectedDomain);
     });
 
     it('given a domain with multiple range should return the inverted domain', () => {
@@ -136,7 +136,7 @@ describe('SolutionDomain', () => {
       }
       domain = domain.notOperation();
 
-      expect(domain.get_domain()).toStrictEqual(expectedDomain);
+      expect(domain.getDomain()).toStrictEqual(expectedDomain);
     });
   });
 
@@ -162,7 +162,7 @@ describe('SolutionDomain', () => {
 
       const newDomain = domain.addWithAndOperator(aRange);
 
-      expect(newDomain.get_domain()).toStrictEqual([ aRange ]);
+      expect(newDomain.getDomain()).toStrictEqual([ aRange ]);
     });
 
     it('should return an empty domain if there is no intersection with the new range', () => {
@@ -170,7 +170,7 @@ describe('SolutionDomain', () => {
 
       const newDomain = aDomain.addWithAndOperator(aRange);
 
-      expect(newDomain.get_domain().length).toBe(0);
+      expect(newDomain.getDomain().length).toBe(0);
     });
 
     it('given a new range that is inside a part of the domain should only return the intersection', () => {
@@ -178,7 +178,7 @@ describe('SolutionDomain', () => {
 
       const newDomain = aDomain.addWithAndOperator(aRange);
 
-      expect(newDomain.get_domain()).toStrictEqual([ aRange ]);
+      expect(newDomain.getDomain()).toStrictEqual([ aRange ]);
     });
 
     it('given a new range that intersect a part of the domain should only return the intersection', () => {
@@ -190,7 +190,7 @@ describe('SolutionDomain', () => {
 
       const newDomain = aDomain.addWithAndOperator(aRange);
 
-      expect(newDomain.get_domain()).toStrictEqual(expectedDomain);
+      expect(newDomain.getDomain()).toStrictEqual(expectedDomain);
     });
 
     it('given a new range that intersect multiple part of the domain should only return the intersections', () => {
@@ -205,7 +205,7 @@ describe('SolutionDomain', () => {
 
       const newDomain = aDomain.addWithAndOperator(aRange);
 
-      expect(newDomain.get_domain()).toStrictEqual(expectedDomain);
+      expect(newDomain.getDomain()).toStrictEqual(expectedDomain);
     });
 
     it('given an empty domain and a last operator and should return an empty domain', () => {
@@ -284,12 +284,12 @@ describe('SolutionDomain', () => {
         if (logicOperator !== LogicOperator.Not) {
           let domain = new SolutionDomain();
           domain = domain.add({ range: solutionRange, operator: logicOperator });
-          expect(domain.get_domain().length).toBe(0);
+          expect(domain.getDomain().length).toBe(0);
         } else {
           let domain = new SolutionDomain();
           domain = domain.addWithOrOperator(solutionRange);
           domain = domain.add({ operator: logicOperator });
-          expect(domain.get_domain().length).toBe(0);
+          expect(domain.getDomain().length).toBe(0);
         }
       }
     });
@@ -314,7 +314,7 @@ describe('SolutionDomain', () => {
       let domain = SolutionDomain.newWithInitialValue(new SolutionInterval([ 0, 1 ]));
       const clonedDomain = domain.clone();
       domain = domain.addWithOrOperator(new SolutionInterval([ 100, 200 ]));
-      expect(clonedDomain.get_domain()).not.toStrictEqual(domain.get_domain());
+      expect(clonedDomain.getDomain()).not.toStrictEqual(domain.getDomain());
     });
   });
 });

@@ -609,7 +609,7 @@ describe('solver function', () => {
 
       const expectedDomain = SolutionDomain.newWithInitialValue(new SolutionInterval([ 2, 2 ]));
 
-      expect(resp.get_domain()).toStrictEqual(expectedDomain.get_domain());
+      expect(resp.getDomain()).toStrictEqual(expectedDomain.getDomain());
     });
 
     it(`given an algebra expression with two logicals operators 
@@ -629,7 +629,7 @@ describe('solver function', () => {
 
       const expectedDomain = new SolutionDomain();
 
-      expect(resp.get_domain()).toStrictEqual(expectedDomain.get_domain());
+      expect(resp.getDomain()).toStrictEqual(expectedDomain.getDomain());
     });
 
     it(`given an algebra expression with two logicals operators that are negated
@@ -649,7 +649,7 @@ describe('solver function', () => {
 
       const expectedDomain = SolutionDomain.newWithInitialValue(new SolutionInterval([ 5, Number.POSITIVE_INFINITY ]));
 
-      expect(resp.get_domain()).toStrictEqual(expectedDomain.get_domain());
+      expect(resp.getDomain()).toStrictEqual(expectedDomain.getDomain());
     });
 
     it(`given an algebra expression with three logicals operators where the priority of operation should start with the not operator than 
@@ -671,7 +671,7 @@ describe('solver function', () => {
         [ Number.NEGATIVE_INFINITY, nextDown(3) ],
       ));
       expectedDomain = expectedDomain.addWithOrOperator(new SolutionInterval([ nextUp(3), Number.POSITIVE_INFINITY ]));
-      expect(resp.get_domain()).toStrictEqual(expectedDomain.get_domain());
+      expect(resp.getDomain()).toStrictEqual(expectedDomain.getDomain());
     });
   });
 

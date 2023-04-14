@@ -22,8 +22,8 @@ export class SolutionDomain {
      * Get the multiple segment of the domain.
      * @returns {SolutionInterval[]}
      */
-  public get_domain(): SolutionInterval[] {
-    return new Array(...this.domain);
+  public getDomain(): SolutionInterval[] {
+    return this.domain;
   }
 
   /**
@@ -44,6 +44,8 @@ export class SolutionDomain {
     if (!initialRange.isEmpty) {
       newSolutionDomain.domain = [ initialRange ];
     }
+    Object.freeze(newSolutionDomain);
+    Object.freeze(newSolutionDomain.domain);
     return newSolutionDomain;
   }
 
@@ -97,7 +99,10 @@ export class SolutionDomain {
     if (newDomain.domain.length === 1 && newDomain.domain[0].isEmpty) {
       newDomain.domain = [];
     }
-
+    // When we operate on a domain we don't want it to be mutable in any way.
+    Object.freeze(newDomain);
+    Object.freeze(newDomain.domain);
+    Object.freeze(newDomain.lastOperation);
     return newDomain;
   }
 
