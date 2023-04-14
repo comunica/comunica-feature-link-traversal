@@ -89,7 +89,7 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
           relation: [
             {
               node: 'http://bar.com',
-               path: 'http://example.com#path',
+              path: 'http://example.com#path',
               value: {
                 value: '5',
                 term: DF.literal('5', DF.namedNode('http://www.w3.org/2001/XMLSchema#integer')),
@@ -135,7 +135,7 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
             },
           ],
         };
-       
+
         const query = translate(`
         SELECT ?o WHERE {
           ex:foo ex:path ?o.
@@ -161,7 +161,7 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
           relation: [
             {
               node: 'http://bar.com',
-               path: 'http://example.com#path',
+              path: 'http://example.com#path',
               value: {
                 value: '5',
                 term: DF.literal('5', DF.namedNode('http://www.w3.org/2001/XMLSchema#integer')),
@@ -214,7 +214,7 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
             relation: [
               {
                 node: 'http://bar.com',
-                 path: 'http://example.com#path',
+                path: 'http://example.com#path',
                 value: {
                   value: '5',
                   term: DF.literal('5', DF.namedNode('http://www.w3.org/2001/XMLSchema#integer')),
@@ -233,7 +233,7 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
           FILTER(?o=5 && ?o<=5 )
         }
         `, { prefixes: { ex: 'http://example.com#' }});
-          
+
           const context = new ActionContext({
             [KeysInitQuery.query.name]: query,
           });
@@ -254,7 +254,7 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
             relation: [
               {
                 node: 'http://bar.com',
-                 path: 'http://example.com#path',
+                path: 'http://example.com#path',
                 value: {
                   value: '5',
                   term: DF.literal('5', DF.namedNode('http://www.w3.org/2001/XMLSchema#integer')),
@@ -293,7 +293,7 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
           relation: [
             {
               node: 'http://bar.com',
-               path: 'http://example.com#path',
+              path: 'http://example.com#path',
               value: {
                 value: '5',
                 term: DF.literal('5', DF.namedNode('http://www.w3.org/2001/XMLSchema#integer')),
@@ -327,7 +327,7 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
           relation: [
             {
               node: 'http://bar.com',
-               path: 'http://example.com#path',
+              path: 'http://example.com#path',
               value: {
                 value: '5',
                 term: DF.literal('5', DF.namedNode('http://www.w3.org/2001/XMLSchema#integer')),
@@ -361,7 +361,7 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
           relation: [
             {
               node: 'http://bar.com',
-               path: 'http://example.com#path',
+              path: 'http://example.com#path',
               value: {
                 value: '5',
                 term: DF.literal('5', DF.namedNode('http://www.w3.org/2001/XMLSchema#integer')),
@@ -387,7 +387,6 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
         );
       });
 
-
       it('should accept the relation when the filter respect the relation with a construct query', async() => {
         const treeSubject = 'tree';
 
@@ -396,7 +395,7 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
           relation: [
             {
               node: 'http://bar.com',
-               path: 'http://example.com#path',
+              path: 'http://example.com#path',
               value: {
                 value: '5',
                 term: DF.literal('5', DF.namedNode('http://www.w3.org/2001/XMLSchema#integer')),
@@ -434,7 +433,7 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
           relation: [
             {
               node: 'http://bar.com',
-               path: 'http://example.com#path',
+              path: 'http://example.com#path',
               value: {
                 value: '5',
                 term: DF.literal('5', DF.namedNode('http://www.w3.org/2001/XMLSchema#integer')),
@@ -475,7 +474,7 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
           relation: [
             {
               node: 'http://bar.com',
-               path: 'http://example.com#path',
+              path: 'http://example.com#path',
               value: {
                 value: '5',
                 term: DF.literal('5', DF.namedNode('http://www.w3.org/2001/XMLSchema#integer')),
@@ -490,7 +489,7 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
           ex:foo ex:path ?o.
           ex:foo ex:p ex:o.
           ex:foo ex:p2 ?x.
-          FILTER(?o>2 || ?x=4 || (?x<3 && ?o<3) )
+          FILTER(?o>2 || ?x=4 || (?o<3 && ?o<3) )
         }
         `, { prefixes: { ex: 'http://example.com#' }});
 

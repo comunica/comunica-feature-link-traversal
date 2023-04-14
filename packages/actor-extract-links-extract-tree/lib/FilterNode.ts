@@ -1,7 +1,6 @@
 import { BindingsFactory } from '@comunica/bindings-factory';
 import { KeysInitQuery } from '@comunica/context-entries';
 import type { IActionContext } from '@comunica/types';
-import type * as RDF from 'rdf-js';
 import { Algebra, Factory as AlgebraFactory, Util } from 'sparqlalgebrajs';
 import { isBooleanExpressionTreeRelationFilterSolvable } from './solver';
 import type { Variable } from './solverInterfaces';
@@ -93,8 +92,6 @@ export class FilterNode {
     return filterMap;
   }
 
-
-
   /**
    * Find the variables from the BGP that match the predicate defined by the TREE:path from a TREE relation.
    *  The subject can be anyting.
@@ -102,18 +99,18 @@ export class FilterNode {
    * @param {string} path - TREE path
    * @returns {Variable[]} the variables of the Quad objects that contain the TREE path as predicate
    */
-   private static findRelevantVariableFromBgp(queryBody: Algebra.Operation, path: string): Variable[] {
+  private static findRelevantVariableFromBgp(queryBody: Algebra.Operation, path: string): Variable[] {
     const resp: Variable[] = [];
-    const addVariable = (quad:any) =>{
+    const addVariable = (quad: any): boolean => {
       if (quad.predicate.value === path && quad.object.termType === 'Variable') {
         resp.push(quad.object.value);
       }
       return true;
     };
-    
-    Util.recurseOperation(queryBody,{
+
+    Util.recurseOperation(queryBody, {
       [Algebra.types.PATH]: addVariable,
-      [Algebra.types.PATTERN]: addVariable
+      [Algebra.types.PATTERN]: addVariable,
 
     });
     return resp;
