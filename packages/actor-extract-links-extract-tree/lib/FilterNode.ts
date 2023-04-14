@@ -2,7 +2,7 @@ import { BindingsFactory } from '@comunica/bindings-factory';
 import { KeysInitQuery } from '@comunica/context-entries';
 import type { IActionContext } from '@comunica/types';
 import type * as RDF from 'rdf-js';
-import { Algebra, Factory as AlgebraFactory } from 'sparqlalgebrajs';
+import { Algebra, Factory as AlgebraFactory, Util } from 'sparqlalgebrajs';
 import { isBooleanExpressionTreeRelationFilterSolvable } from './solver';
 import type { Variable } from './solverInterfaces';
 import type { ITreeRelation, ITreeNode } from './TreeMetadata';
@@ -61,10 +61,7 @@ export class FilterNode {
     }
 
     // Extract the bgp of the query.
-    const queryBody: RDF.Quad[] = FilterNode.findBgp(context.get(KeysInitQuery.query)!);
-    if (queryBody.length === 0) {
-      return new Map();
-    }
+    const queryBody: Algebra.Operation = context.get(KeysInitQuery.query)!;
 
     // Capture the relation from the function argument.
     const relations: ITreeRelation[] = node.relation!;
@@ -96,91 +93,30 @@ export class FilterNode {
     return filterMap;
   }
 
+
+
   /**
    * Find the variables from the BGP that match the predicate defined by the TREE:path from a TREE relation.
    *  The subject can be anyting.
-   * @param {RDF.Quad[]} queryBody - the body of the query
+   * @param {Algebra.Operation} queryBody - the body of the query
    * @param {string} path - TREE path
    * @returns {Variable[]} the variables of the Quad objects that contain the TREE path as predicate
    */
-  private static findRelevantVariableFromBgp(queryBody: RDF.Quad[], path: string): Variable[] {
+   private static findRelevantVariableFromBgp(queryBody: Algebra.Operation, path: string): Variable[] {
     const resp: Variable[] = [];
-    for (const quad of queryBody) {
+    const addVariable = (quad:any) =>{
       if (quad.predicate.value === path && quad.object.termType === 'Variable') {
         resp.push(quad.object.value);
       }
-    }
+      return true;
+    };
+    
+    Util.recurseOperation(queryBody,{
+      [Algebra.types.PATH]: addVariable,
+      [Algebra.types.PATTERN]: addVariable
+
+    });
     return resp;
-  }
-
-  /**
- * Find the bgp of the original query of the user.
- * @param {Algebra.Operation} query - the original query
- * @returns { RDF.Quad[]} the bgp of the query
- */
-  private static findBgp(query: Algebra.Operation): RDF.Quad[] {
-    let currentNode: any = query;
-    let bgp: RDF.Quad[] = [];
-    do {
-      if (currentNode.type === Algebra.types.JOIN) {
-        const currentBgp = this.formatBgp(currentNode.input);
-        bgp = this.appendBgp(bgp, currentBgp);
-      } else if (currentNode.type === Algebra.types.CONSTRUCT &&
-        'template' in currentNode) {
-        // When it's a contruct query the where state
-        const currentBgp = this.formatBgp(currentNode.template);
-        bgp = this.appendBgp(bgp, currentBgp);
-      }
-
-      if ('input' in currentNode) {
-        currentNode = currentNode.input;
-      }
-
-      if (currentNode.patterns) {
-        return currentNode.patterns;
-      }
-      // If the node is an array
-      if (Array.isArray(currentNode)) {
-        for (const node of currentNode) {
-          if ('input' in node) {
-            currentNode = node.input;
-            break;
-          }
-        }
-      }
-    } while ('input' in currentNode);
-    return bgp;
-  }
-
-  /**
-   * Format the section of the algebra graph contain a part of the bgp into an array of quad.
-   * @param {any} joins - the join operation containing a part of the bgp
-   * @returns {RDF.Quad[]} the bgp in the form of an array of quad
-   */
-  private static formatBgp(joins: any): RDF.Quad[] {
-    const bgp = [];
-    if (joins.length === 0) {
-      return [];
-    }
-    for (const join of joins) {
-      if (!('input' in join)) {
-        bgp.push(join);
-      }
-    }
-    return bgp;
-  }
-
-  /**
-   * Append the bgp of the query.
-   * @param {RDF.Quad[]} bgp - the whole bgp
-   * @param {RDF.Quad[]} currentBgp - the bgp collected in the current node
-   * @returns {RDF.Quad[]} the bgp updated
-   */
-  private static appendBgp(bgp: RDF.Quad[], currentBgp: RDF.Quad[]): RDF.Quad[] {
-    if (Array.isArray(currentBgp)) {
-      bgp = bgp.concat(currentBgp);
-    }
-    return bgp;
   }
 
   /**

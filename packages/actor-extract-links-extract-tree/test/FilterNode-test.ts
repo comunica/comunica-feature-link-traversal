@@ -89,7 +89,7 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
           relation: [
             {
               node: 'http://bar.com',
-              path: 'ex:path',
+               path: 'http://example.com#path',
               value: {
                 value: '5',
                 term: DF.literal('5', DF.namedNode('http://www.w3.org/2001/XMLSchema#integer')),
@@ -126,7 +126,7 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
           relation: [
             {
               node: 'http://bar.com',
-              path: 'ex:path',
+              path: 'http://example.com#path',
               value: {
                 value: '5',
                 term: DF.literal('5', DF.namedNode('http://www.w3.org/2001/XMLSchema#integer')),
@@ -135,50 +135,13 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
             },
           ],
         };
-        const bgp: RDF.Quad[] = <RDF.Quad[]>[
-          DF.quad(DF.namedNode('ex:foo'), DF.namedNode('ex:path'), DF.variable('o')),
-        ];
-        const filterExpression = {
-          expressionType: Algebra.expressionTypes.OPERATOR,
-          operator: '=',
-          type: Algebra.types.EXPRESSION,
-          args: [
-            {
-              expressionType: Algebra.expressionTypes.TERM,
-              type: Algebra.types.EXPRESSION,
-              term: {
-                termType: 'Variable',
-                value: 'o',
-              },
-            },
-            {
-              expressionType: Algebra.expressionTypes.TERM,
-              type: Algebra.types.EXPRESSION,
-              term: {
-                termType: 'Literal',
-                langugage: '',
-                value: '88',
-                datatype: {
-                  termType: 'namedNode',
-                  value: 'http://www.w3.org/2001/XMLSchema#integer',
-                },
-              },
-            },
-          ],
-        };
-        const query = {
-          type: Algebra.types.PROJECT,
-          input: {
-            type: Algebra.types.FILTER,
-            expression: filterExpression,
-            input: {
-              input: {
-                type: Algebra.types.JOIN,
-                input: bgp,
-              },
-            },
-          },
-        };
+       
+        const query = translate(`
+        SELECT ?o WHERE {
+          ex:foo ex:path ?o.
+          FILTER(?o=88)
+        }
+        `, { prefixes: { ex: 'http://example.com#' }});
         const context = new ActionContext({
           [KeysInitQuery.query.name]: query,
         });
@@ -198,7 +161,7 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
           relation: [
             {
               node: 'http://bar.com',
-              path: 'ex:path',
+               path: 'http://example.com#path',
               value: {
                 value: '5',
                 term: DF.literal('5', DF.namedNode('http://www.w3.org/2001/XMLSchema#integer')),
@@ -207,50 +170,12 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
             },
           ],
         };
-        const bgp: RDF.Quad[] = <RDF.Quad[]>[
-          DF.quad(DF.namedNode('ex:foo'), DF.namedNode('ex:superPath'), DF.variable('o')),
-        ];
-        const filterExpression = {
-          expressionType: Algebra.expressionTypes.OPERATOR,
-          operator: '=',
-          type: Algebra.types.EXPRESSION,
-          args: [
-            {
-              expressionType: Algebra.expressionTypes.TERM,
-              type: Algebra.types.EXPRESSION,
-              term: {
-                termType: 'Variable',
-                value: 'o',
-              },
-            },
-            {
-              expressionType: Algebra.expressionTypes.TERM,
-              type: Algebra.types.EXPRESSION,
-              term: {
-                termType: 'Literal',
-                langugage: '',
-                value: '88',
-                datatype: {
-                  termType: 'namedNode',
-                  value: 'http://www.w3.org/2001/XMLSchema#integer',
-                },
-              },
-            },
-          ],
-        };
-        const query = {
-          type: Algebra.types.PROJECT,
-          input: {
-            type: Algebra.types.FILTER,
-            expression: filterExpression,
-            input: {
-              input: {
-                type: Algebra.types.JOIN,
-                input: bgp,
-              },
-            },
-          },
-        };
+        const query = translate(`
+        SELECT ?o WHERE {
+          ex:foo ex:superPath ?o.
+          FILTER(?o=5)
+        }
+        `, { prefixes: { ex: 'http://example.com#' }});
         const context = new ActionContext({
           [KeysInitQuery.query.name]: query,
         });
@@ -263,50 +188,12 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
       });
 
       it('should return an empty map when there is no relation', async() => {
-        const bgp: RDF.Quad[] = <RDF.Quad[]>[
-          DF.quad(DF.namedNode('ex:foo'), DF.namedNode('ex:superPath'), DF.variable('o')),
-        ];
-        const filterExpression = {
-          expressionType: Algebra.expressionTypes.OPERATOR,
-          operator: '=',
-          type: Algebra.types.EXPRESSION,
-          args: [
-            {
-              expressionType: Algebra.expressionTypes.TERM,
-              type: Algebra.types.EXPRESSION,
-              term: {
-                termType: 'Variable',
-                value: 'o',
-              },
-            },
-            {
-              expressionType: Algebra.expressionTypes.TERM,
-              type: Algebra.types.EXPRESSION,
-              term: {
-                termType: 'Literal',
-                langugage: '',
-                value: '88',
-                datatype: {
-                  termType: 'namedNode',
-                  value: 'http://www.w3.org/2001/XMLSchema#integer',
-                },
-              },
-            },
-          ],
-        };
-        const query = {
-          type: Algebra.types.PROJECT,
-          input: {
-            type: Algebra.types.FILTER,
-            expression: filterExpression,
-            input: {
-              input: {
-                type: Algebra.types.JOIN,
-                input: bgp,
-              },
-            },
-          },
-        };
+        const query = translate(`
+        SELECT ?o WHERE {
+          ex:foo ex:path ?o.
+          FILTER(?o=88)
+        }
+        `, { prefixes: { ex: 'http://example.com#' }});
         const context = new ActionContext({
           [KeysInitQuery.query.name]: query,
         });
@@ -327,7 +214,7 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
             relation: [
               {
                 node: 'http://bar.com',
-                path: 'ex:path',
+                 path: 'http://example.com#path',
                 value: {
                   value: '5',
                   term: DF.literal('5', DF.namedNode('http://www.w3.org/2001/XMLSchema#integer')),
@@ -339,83 +226,14 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
           const bgp: RDF.Quad[] = <RDF.Quad[]>[
             DF.quad(DF.namedNode('ex:foo'), DF.namedNode('ex:superPath'), DF.variable('o')),
           ];
-          const filterExpression = {
-            expressionType: 'operator',
-            operator: '&&',
-            type: 'expression',
-            args: [
-              {
-                expressionType: Algebra.expressionTypes.OPERATOR,
-                operator: '=',
-                type: Algebra.types.EXPRESSION,
-                args: [
-                  {
-                    expressionType: Algebra.expressionTypes.TERM,
-                    type: Algebra.types.EXPRESSION,
-                    term: {
-                      termType: 'Variable',
-                      value: 'o',
-                    },
-                  },
-                  {
-                    expressionType: Algebra.expressionTypes.TERM,
-                    type: Algebra.types.EXPRESSION,
-                    term: {
-                      termType: 'Literal',
-                      langugage: '',
-                      value: '88',
-                      datatype: {
-                        termType: 'namedNode',
-                        value: 'http://www.w3.org/2001/XMLSchema#integer',
-                      },
-                    },
-                  },
-                ],
-              },
-              {
-                expressionType: Algebra.expressionTypes.OPERATOR,
-                operator: '=',
-                type: Algebra.types.EXPRESSION,
-                args: [
-                  {
-                    expressionType: Algebra.expressionTypes.TERM,
-                    type: Algebra.types.EXPRESSION,
-                    term: {
-                      termType: 'Variable',
-                      value: 'o',
-                    },
-                  },
-                  {
-                    expressionType: Algebra.expressionTypes.TERM,
-                    type: Algebra.types.EXPRESSION,
-                    term: {
-                      termType: 'Literal',
-                      langugage: '',
-                      value: '5',
-                      datatype: {
-                        termType: 'namedNode',
-                        value: 'http://www.w3.org/2001/XMLSchema#integer',
-                      },
-                    },
-                  },
-                ],
-              },
-            ],
-          };
 
-          const query = {
-            type: Algebra.types.PROJECT,
-            input: {
-              type: Algebra.types.FILTER,
-              expression: filterExpression,
-              input: {
-                input: {
-                  type: Algebra.types.JOIN,
-                  input: bgp,
-                },
-              },
-            },
-          };
+          const query = translate(`
+        SELECT ?o WHERE {
+          ex:foo ex:path ?o.
+          FILTER(?o=5 && ?o<=5 )
+        }
+        `, { prefixes: { ex: 'http://example.com#' }});
+          
           const context = new ActionContext({
             [KeysInitQuery.query.name]: query,
           });
@@ -436,7 +254,7 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
             relation: [
               {
                 node: 'http://bar.com',
-                path: 'ex:path',
+                 path: 'http://example.com#path',
                 value: {
                   value: '5',
                   term: DF.literal('5', DF.namedNode('http://www.w3.org/2001/XMLSchema#integer')),
@@ -450,50 +268,12 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
               },
             ],
           };
-          const bgp: RDF.Quad[] = <RDF.Quad[]>[
-            DF.quad(DF.namedNode('ex:foo'), DF.namedNode('ex:path'), DF.variable('o')),
-          ];
-          const filterExpression = {
-            expressionType: Algebra.expressionTypes.OPERATOR,
-            operator: '=',
-            type: Algebra.types.EXPRESSION,
-            args: [
-              {
-                expressionType: Algebra.expressionTypes.TERM,
-                type: Algebra.types.EXPRESSION,
-                term: {
-                  termType: 'Variable',
-                  value: 'o',
-                },
-              },
-              {
-                expressionType: Algebra.expressionTypes.TERM,
-                type: Algebra.types.EXPRESSION,
-                term: {
-                  termType: 'Literal',
-                  langugage: '',
-                  value: '5',
-                  datatype: {
-                    termType: 'namedNode',
-                    value: 'http://www.w3.org/2001/XMLSchema#integer',
-                  },
-                },
-              },
-            ],
-          };
-          const query = {
-            type: Algebra.types.PROJECT,
-            input: {
-              type: Algebra.types.FILTER,
-              expression: filterExpression,
-              input: {
-                input: {
-                  type: Algebra.types.JOIN,
-                  input: bgp,
-                },
-              },
-            },
-          };
+          const query = translate(`
+        SELECT ?o WHERE {
+          ex:foo ex:path ?o.
+          FILTER(?o=5)
+        }
+        `, { prefixes: { ex: 'http://example.com#' }});
           const context = new ActionContext({
             [KeysInitQuery.query.name]: query,
           });
@@ -513,7 +293,7 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
           relation: [
             {
               node: 'http://bar.com',
-              path: 'ex:path',
+               path: 'http://example.com#path',
               value: {
                 value: '5',
                 term: DF.literal('5', DF.namedNode('http://www.w3.org/2001/XMLSchema#integer')),
@@ -522,50 +302,12 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
             },
           ],
         };
-        const bgp: RDF.Quad[] = <RDF.Quad[]>[
-          DF.quad(DF.namedNode('ex:foo'), DF.namedNode('ex:path'), DF.variable('o')),
-        ];
-        const filterExpression = {
-          expressionType: Algebra.expressionTypes.OPERATOR,
-          operator: '=',
-          type: Algebra.types.EXPRESSION,
-          args: [
-            {
-              expressionType: Algebra.expressionTypes.TERM,
-              type: Algebra.types.EXPRESSION,
-              term: {
-                termType: 'Variable',
-                value: 'p',
-              },
-            },
-            {
-              expressionType: Algebra.expressionTypes.TERM,
-              type: Algebra.types.EXPRESSION,
-              term: {
-                termType: 'Literal',
-                langugage: '',
-                value: '5',
-                datatype: {
-                  termType: 'namedNode',
-                  value: 'http://www.w3.org/2001/XMLSchema#integer',
-                },
-              },
-            },
-          ],
-        };
-        const query = {
-          type: Algebra.types.PROJECT,
-          input: {
-            type: Algebra.types.FILTER,
-            expression: filterExpression,
-            input: {
-              input: {
-                type: Algebra.types.JOIN,
-                input: bgp,
-              },
-            },
-          },
-        };
+        const query = translate(`
+        SELECT ?o WHERE {
+          ex:foo ex:path ?o.
+          FILTER(?p=88)
+        }
+        `, { prefixes: { ex: 'http://example.com#' }});
         const context = new ActionContext({
           [KeysInitQuery.query.name]: query,
         });
@@ -585,7 +327,7 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
           relation: [
             {
               node: 'http://bar.com',
-              path: 'ex:path',
+               path: 'http://example.com#path',
               value: {
                 value: '5',
                 term: DF.literal('5', DF.namedNode('http://www.w3.org/2001/XMLSchema#integer')),
@@ -594,83 +336,12 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
             },
           ],
         };
-        const bgp: RDF.Quad[] = <RDF.Quad[]>[
-          DF.quad(DF.namedNode('ex:foo'), DF.namedNode('ex:path'), DF.variable('o')),
-        ];
-        const filterExpression = {
-          expressionType: Algebra.expressionTypes.OPERATOR,
-          operator: '&&',
-          type: Algebra.types.EXPRESSION,
-          args: [
-            {
-              expressionType: Algebra.expressionTypes.OPERATOR,
-              operator: '=',
-              type: Algebra.types.EXPRESSION,
-              args: [{
-                expressionType: Algebra.expressionTypes.TERM,
-                type: Algebra.types.EXPRESSION,
-                term: {
-                  termType: 'Variable',
-                  value: 'o',
-                },
-              },
-              {
-                expressionType: Algebra.expressionTypes.TERM,
-                type: Algebra.types.EXPRESSION,
-                term: {
-                  termType: 'Literal',
-                  langugage: '',
-                  value: '5',
-                  datatype: {
-                    termType: 'namedNode',
-                    value: 'http://www.w3.org/2001/XMLSchema#integer',
-                  },
-                },
-              },
-              ],
-            },
-            {
-              expressionType: Algebra.expressionTypes.OPERATOR,
-              operator: '=',
-              type: Algebra.types.EXPRESSION,
-              args: [{
-                expressionType: Algebra.expressionTypes.TERM,
-                type: Algebra.types.EXPRESSION,
-                term: {
-                  termType: 'Variable',
-                  value: 'p',
-                },
-              },
-              {
-                expressionType: Algebra.expressionTypes.TERM,
-                type: Algebra.types.EXPRESSION,
-                term: {
-                  termType: 'Literal',
-                  langugage: '',
-                  value: '5',
-                  datatype: {
-                    termType: 'namedNode',
-                    value: 'http://www.w3.org/2001/XMLSchema#integer',
-                  },
-                },
-              },
-              ],
-            },
-          ],
-        };
-        const query = {
-          type: Algebra.types.PROJECT,
-          input: {
-            type: Algebra.types.FILTER,
-            expression: filterExpression,
-            input: {
-              input: {
-                type: Algebra.types.JOIN,
-                input: bgp,
-              },
-            },
-          },
-        };
+        const query = translate(`
+        SELECT ?o WHERE {
+          ex:foo ex:path ?o.
+          FILTER((?p=88 && ?p>3) || true)
+        }
+        `, { prefixes: { ex: 'http://example.com#' }});
         const context = new ActionContext({
           [KeysInitQuery.query.name]: query,
         });
@@ -690,7 +361,7 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
           relation: [
             {
               node: 'http://bar.com',
-              path: 'ex:path',
+               path: 'http://example.com#path',
               value: {
                 value: '5',
                 term: DF.literal('5', DF.namedNode('http://www.w3.org/2001/XMLSchema#integer')),
@@ -699,93 +370,12 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
             },
           ],
         };
-        const bgp: RDF.Quad[] = <RDF.Quad[]>[
-          DF.quad(DF.namedNode('ex:foo'), DF.namedNode('ex:path'), DF.variable('o')),
-        ];
-        const filterExpression = {
-          expressionType: Algebra.expressionTypes.OPERATOR,
-          operator: '&&',
-          type: Algebra.types.EXPRESSION,
-          args: [
-            {
-              expressionType: Algebra.expressionTypes.OPERATOR,
-              operator: '=',
-              type: Algebra.types.EXPRESSION,
-              args: [{
-                expressionType: Algebra.expressionTypes.TERM,
-                type: Algebra.types.EXPRESSION,
-                term: {
-                  termType: 'Literal',
-                  langugage: '',
-                  value: '5',
-                  datatype: {
-                    termType: 'namedNode',
-                    value: 'http://www.w3.org/2001/XMLSchema#integer',
-                  },
-                },
-              },
-              {
-                expressionType: Algebra.expressionTypes.TERM,
-                type: Algebra.types.EXPRESSION,
-                term: {
-                  termType: 'Literal',
-                  langugage: '',
-                  value: '5',
-                  datatype: {
-                    termType: 'namedNode',
-                    value: 'http://www.w3.org/2001/XMLSchema#integer',
-                  },
-                },
-              },
-              ],
-            },
-            {
-              expressionType: Algebra.expressionTypes.OPERATOR,
-              operator: '=',
-              type: Algebra.types.EXPRESSION,
-              args: [{
-                expressionType: Algebra.expressionTypes.TERM,
-                type: Algebra.types.EXPRESSION,
-                term: {
-                  termType: 'Literal',
-                  langugage: '',
-                  value: '5',
-                  datatype: {
-                    termType: 'namedNode',
-                    value: 'http://www.w3.org/2001/XMLSchema#integer',
-                  },
-                },
-              },
-              {
-                expressionType: Algebra.expressionTypes.TERM,
-                type: Algebra.types.EXPRESSION,
-                term: {
-                  termType: 'Literal',
-                  langugage: '',
-                  value: '5',
-                  datatype: {
-                    termType: 'namedNode',
-                    value: 'http://www.w3.org/2001/XMLSchema#integer',
-                  },
-                },
-              },
-              ],
-            },
-          ],
-        };
-        const query = {
-          type: Algebra.types.PROJECT,
-          input: {
-            type: Algebra.types.FILTER,
-            expression: filterExpression,
-            input: {
-              input: {
-                type: Algebra.types.JOIN,
-                input: bgp,
-              },
-            },
-          },
-        };
+        const query = translate(`
+        SELECT ?o WHERE {
+          ex:foo ex:path ?o.
+          FILTER(5=5)
+        }
+        `, { prefixes: { ex: 'http://example.com#' }});
         const context = new ActionContext({
           [KeysInitQuery.query.name]: query,
         });
@@ -797,139 +387,6 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
         );
       });
 
-      it('should return an empty filter map if the bgp if empty', async() => {
-        const treeSubject = 'tree';
-
-        const node: ITreeNode = {
-          identifier: treeSubject,
-          relation: [
-            {
-              node: 'http://bar.com',
-              path: 'ex:path',
-              value: {
-                value: '5',
-                term: DF.literal('5', DF.namedNode('http://www.w3.org/2001/XMLSchema#integer')),
-              },
-              type: SparqlRelationOperator.EqualThanRelation,
-            },
-          ],
-        };
-        const bgp: RDF.Quad[] = <RDF.Quad[]>[];
-        const filterExpression = {
-          expressionType: Algebra.expressionTypes.OPERATOR,
-          operator: '=',
-          type: Algebra.types.EXPRESSION,
-          args: [
-            {
-              expressionType: Algebra.expressionTypes.TERM,
-              type: Algebra.types.EXPRESSION,
-              term: {
-                termType: 'Variable',
-                value: 'o',
-              },
-            },
-            {
-              expressionType: Algebra.expressionTypes.TERM,
-              type: Algebra.types.EXPRESSION,
-              term: {
-                termType: 'Literal',
-                langugage: '',
-                value: '5',
-                datatype: {
-                  termType: 'namedNode',
-                  value: 'http://www.w3.org/2001/XMLSchema#integer',
-                },
-              },
-            },
-          ],
-        };
-        const query = {
-          type: Algebra.types.PROJECT,
-          input: {
-            type: Algebra.types.FILTER,
-            expression: filterExpression,
-            input: {
-              input: {
-                type: Algebra.types.JOIN,
-                input: bgp,
-              },
-            },
-          },
-        };
-        const context = new ActionContext({
-          [KeysInitQuery.query.name]: query,
-        });
-
-        const result = await filterNode.run(node, context);
-
-        expect(result).toStrictEqual(
-          new Map(),
-        );
-      });
-
-      it('should return an empty filter map if there is no bgp', async() => {
-        const treeSubject = 'tree';
-
-        const node: ITreeNode = {
-          identifier: treeSubject,
-          relation: [
-            {
-              node: 'http://bar.com',
-              path: 'ex:path',
-              value: {
-                value: '5',
-                term: DF.literal('5', DF.namedNode('http://www.w3.org/2001/XMLSchema#integer')),
-              },
-              type: SparqlRelationOperator.EqualThanRelation,
-            },
-          ],
-        };
-        const filterExpression = {
-          expressionType: Algebra.expressionTypes.OPERATOR,
-          operator: '=',
-          type: Algebra.types.EXPRESSION,
-          args: [
-            {
-              expressionType: Algebra.expressionTypes.TERM,
-              type: Algebra.types.EXPRESSION,
-              term: {
-                termType: 'Variable',
-                value: 'o',
-              },
-            },
-            {
-              expressionType: Algebra.expressionTypes.TERM,
-              type: Algebra.types.EXPRESSION,
-              term: {
-                termType: 'Literal',
-                langugage: '',
-                value: '5',
-                datatype: {
-                  termType: 'namedNode',
-                  value: 'http://www.w3.org/2001/XMLSchema#integer',
-                },
-              },
-            },
-          ],
-        };
-        const query = {
-          type: Algebra.types.PROJECT,
-          input: {
-            type: Algebra.types.FILTER,
-            expression: filterExpression,
-            input: {},
-          },
-        };
-        const context = new ActionContext({
-          [KeysInitQuery.query.name]: query,
-        });
-
-        const result = await filterNode.run(node, context);
-
-        expect(result).toStrictEqual(
-          new Map(),
-        );
-      });
 
       it('should accept the relation when the filter respect the relation with a construct query', async() => {
         const treeSubject = 'tree';
@@ -939,7 +396,7 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
           relation: [
             {
               node: 'http://bar.com',
-              path: 'ex:path',
+               path: 'http://example.com#path',
               value: {
                 value: '5',
                 term: DF.literal('5', DF.namedNode('http://www.w3.org/2001/XMLSchema#integer')),
@@ -949,55 +406,14 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
           ],
         };
 
-        const bgp = <RDF.Quad[]>[
-          DF.quad(DF.namedNode('ex:foo'), DF.namedNode('ex:path'), DF.variable('o')),
-          DF.quad(DF.namedNode('ex:foo'), DF.namedNode('ex:p'), DF.namedNode('ex:o')),
-          DF.quad(DF.namedNode('ex:bar'), DF.namedNode('ex:p2'), DF.namedNode('ex:o2')),
-          DF.quad(DF.namedNode('ex:too'), DF.namedNode('ex:p3'), DF.namedNode('ex:o3')),
-        ];
-        const filterExpression = {
-          expressionType: Algebra.expressionTypes.OPERATOR,
-          operator: '=',
-          type: Algebra.types.EXPRESSION,
-          args: [
-            {
-              expressionType: Algebra.expressionTypes.TERM,
-              type: Algebra.types.EXPRESSION,
-              term: {
-                termType: 'Variable',
-                value: 'o',
-              },
-            },
-            {
-              expressionType: Algebra.expressionTypes.TERM,
-              type: Algebra.types.EXPRESSION,
-              term: {
-                termType: 'Literal',
-                langugage: '',
-                value: '5',
-                datatype: {
-                  termType: 'namedNode',
-                  value: 'http://www.w3.org/2001/XMLSchema#integer',
-                },
-              },
-            },
-          ],
-        };
-
-        const query = {
-          type: Algebra.types.CONSTRUCT,
-          input: {
-            type: Algebra.types.FILTER,
-            expression: filterExpression,
-            input: {
-              input: {
-                type: Algebra.types.JOIN,
-                input: bgp,
-              },
-            },
-          },
-          template: bgp,
-        };
+        const query = translate(`
+        CONSTRUCT {
+          
+        } WHERE{
+          ex:foo ex:path ?o.
+          FILTER(?o=5)
+        }
+        `, { prefixes: { ex: 'http://example.com#' }});
 
         const context = new ActionContext({
           [KeysInitQuery.query.name]: query,
@@ -1018,7 +434,7 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
           relation: [
             {
               node: 'http://bar.com',
-              path: 'ex:path',
+               path: 'http://example.com#path',
               value: {
                 value: '5',
                 term: DF.literal('5', DF.namedNode('http://www.w3.org/2001/XMLSchema#integer')),
@@ -1028,162 +444,17 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
           ],
         };
 
-        const query = {
-          type: 'project',
-          input: {
-            type: 'filter',
-            input: {
-              type: 'join',
-              input: [
-                {
-                  type: 'project',
-                  input: {
-                    type: 'project',
-                    input: {
-                      type: 'join',
-                      input: [
-                        {
-                          termType: 'Quad',
-                          value: '',
-                          identifier: {
-                            termType: 'Variable',
-                            value: 's',
-                          },
-                          predicate: {
-                            termType: 'NamedNode',
-                            value: 'http://semweb.mmlab.be/ns/linkedconnections#departureTime',
-                          },
-                          object: {
-                            termType: 'Variable',
-                            value: 'date',
-                          },
-                          graph: {
-                            termType: 'DefaultGraph',
-                            value: '',
-                          },
-                          type: 'pattern',
-                        },
-                      ],
-                    },
-                    variables: [
-                      {
-                        termType: 'Variable',
-                        value: 's',
-                      },
-                    ],
-                  },
-                  variables: [
-                    {
-                      termType: 'Variable',
-                      value: 's',
-                    },
-                  ],
-                },
-                {
-                  termType: 'Quad',
-                  value: '',
-                  identifier: {
-                    termType: 'Variable',
-                    value: 's',
-                  },
-                  predicate: {
-                    termType: 'NamedNode',
-                    value: 'http://semweb.mmlab.be/ns/linkedconnections#departureStop',
-                  },
-                  object: {
-                    termType: 'Variable',
-                    value: 'o',
-                  },
-                  graph: {
-                    termType: 'DefaultGraph',
-                    value: '',
-                  },
-                  type: 'pattern',
-                },
-              ],
-            },
-            expression: {
-              type: 'expression',
-              expressionType: 'operator',
-              operator: '&&',
-              args: [
-                {
-                  type: 'expression',
-                  expressionType: 'operator',
-                  operator: '>=',
-                  args: [
-                    {
-                      type: 'expression',
-                      expressionType: 'term',
-                      term: {
-                        termType: 'Variable',
-                        value: 'date',
-                      },
-                    },
-                    {
-                      type: 'expression',
-                      expressionType: 'term',
-                      term: {
-                        termType: 'Literal',
-                        value: '2022-11-08T08:00:00.000Z',
-                        language: '',
-                        datatype: {
-                          termType: 'NamedNode',
-                          value: 'http://www.w3.org/2001/XMLSchema#dateTime',
-                        },
-                      },
-                    },
-                  ],
-                },
-                {
-                  type: 'expression',
-                  expressionType: 'operator',
-                  operator: '=',
-                  args: [
-                    {
-                      type: 'expression',
-                      expressionType: 'operator',
-                      operator: 'str',
-                      args: [
-                        {
-                          type: 'expression',
-                          expressionType: 'term',
-                          term: {
-                            termType: 'Variable',
-                            value: 'o',
-                          },
-                        },
-                      ],
-                    },
-                    {
-                      type: 'expression',
-                      expressionType: 'term',
-                      term: {
-                        termType: 'Literal',
-                        value: 'http://irail.be/stations/NMBS/008812146',
-                        language: '',
-                        datatype: {
-                          termType: 'NamedNode',
-                          value: 'http://www.w3.org/2001/XMLSchema#string',
-                        },
-                      },
-                    },
-                  ],
-                },
-              ],
-            },
-          },
-          variables: [
-            {
-              termType: 'Variable',
-              value: 'o',
-            },
-            {
-              termType: 'Variable',
-              value: 's',
-            },
-          ],
-        };
+        const query = translate(`
+        SELECT * WHERE {
+          ?o ex:resp ?v .
+          {
+            SELECT ?o WHERE {
+            ex:foo ex:path ?o.
+          }
+        }
+         FILTER(?o=5)
+        }
+        `, { prefixes: { ex: 'http://example.com#' }});
 
         const context = new ActionContext({
           [KeysInitQuery.query.name]: query,
@@ -1204,7 +475,7 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
           relation: [
             {
               node: 'http://bar.com',
-              path: 'ex:path',
+               path: 'http://example.com#path',
               value: {
                 value: '5',
                 term: DF.literal('5', DF.namedNode('http://www.w3.org/2001/XMLSchema#integer')),
@@ -1219,7 +490,7 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
           ex:foo ex:path ?o.
           ex:foo ex:p ex:o.
           ex:foo ex:p2 ?x.
-          FILTER(?o>2|| ?x=4 || (?x<3 && ?o<3) )
+          FILTER(?o>2 || ?x=4 || (?x<3 && ?o<3) )
         }
         `, { prefixes: { ex: 'http://example.com#' }});
 

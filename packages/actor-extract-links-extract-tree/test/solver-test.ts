@@ -18,7 +18,7 @@ import {
   isBooleanExpressionTreeRelationFilterSolvable,
   recursifResolve,
 } from '../lib/solver';
-import { SparqlOperandDataTypes, LogicOperator } from '../lib/solverInterfaces';
+import { SparqlOperandDataTypes } from '../lib/solverInterfaces';
 import type {
   ISolverExpression,
 } from '../lib/solverInterfaces';
@@ -252,7 +252,7 @@ describe('solver function', () => {
           valueType: SparqlOperandDataTypes.Int,
           valueAsNumber: 1,
           operator: SparqlRelationOperator.EqualThanRelation,
-          
+
         },
         {
           variable: 'a',
@@ -260,7 +260,7 @@ describe('solver function', () => {
           valueType: SparqlOperandDataTypes.NonNegativeInteger,
           valueAsNumber: 0,
           operator: SparqlRelationOperator.EqualThanRelation,
-          
+
         },
         {
           variable: 'a',
@@ -268,7 +268,7 @@ describe('solver function', () => {
           valueType: SparqlOperandDataTypes.Decimal,
           valueAsNumber: 0,
           operator: SparqlRelationOperator.EqualThanRelation,
-          
+
         },
       ];
 
@@ -283,7 +283,7 @@ describe('solver function', () => {
           valueType: SparqlOperandDataTypes.Boolean,
           valueAsNumber: 1,
           operator: SparqlRelationOperator.EqualThanRelation,
-          
+
         },
         {
           variable: 'a',
@@ -291,7 +291,7 @@ describe('solver function', () => {
           valueType: SparqlOperandDataTypes.Boolean,
           valueAsNumber: 0,
           operator: SparqlRelationOperator.EqualThanRelation,
-          
+
         },
         {
           variable: 'a',
@@ -299,7 +299,7 @@ describe('solver function', () => {
           valueType: SparqlOperandDataTypes.Byte,
           valueAsNumber: 0,
           operator: SparqlRelationOperator.EqualThanRelation,
-          
+
         },
       ];
 
@@ -314,7 +314,7 @@ describe('solver function', () => {
           valueType: SparqlOperandDataTypes.UnsignedInt,
           valueAsNumber: 1,
           operator: SparqlRelationOperator.EqualThanRelation,
-          
+
         },
         {
           variable: 'a',
@@ -322,7 +322,7 @@ describe('solver function', () => {
           valueType: SparqlOperandDataTypes.Float,
           valueAsNumber: 0,
           operator: SparqlRelationOperator.EqualThanRelation,
-          
+
         },
         {
           variable: 'a',
@@ -330,7 +330,7 @@ describe('solver function', () => {
           valueType: SparqlOperandDataTypes.Byte,
           valueAsNumber: 0,
           operator: SparqlRelationOperator.EqualThanRelation,
-          
+
         },
       ];
 
@@ -357,7 +357,7 @@ describe('solver function', () => {
         rawValue: '5',
         valueType: SparqlOperandDataTypes.Integer,
         valueAsNumber: 5,
-        
+
         operator: SparqlRelationOperator.EqualThanRelation,
       };
 
