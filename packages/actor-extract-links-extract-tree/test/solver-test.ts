@@ -5,7 +5,6 @@ import {
   MisformatedFilterTermError,
   UnsupportedDataTypeError,
 } from '../lib/error';
-import { LinkOperator } from '../lib/LinkOperator';
 import { SolutionDomain } from '../lib/SolutionDomain';
 import { SolutionInterval } from '../lib/SolutionInterval';
 import {
@@ -225,7 +224,6 @@ describe('solver function', () => {
           valueType: SparqlOperandDataTypes.Boolean,
           valueAsNumber: 1,
           operator: SparqlRelationOperator.EqualThanRelation,
-          chainOperator: [],
         },
         {
           variable: 'a',
@@ -233,7 +231,6 @@ describe('solver function', () => {
           valueType: SparqlOperandDataTypes.Boolean,
           valueAsNumber: 0,
           operator: SparqlRelationOperator.EqualThanRelation,
-          chainOperator: [],
         },
         {
           variable: 'a',
@@ -241,7 +238,6 @@ describe('solver function', () => {
           valueType: SparqlOperandDataTypes.Boolean,
           valueAsNumber: 0,
           operator: SparqlRelationOperator.EqualThanRelation,
-          chainOperator: [],
         },
       ];
 
@@ -256,7 +252,7 @@ describe('solver function', () => {
           valueType: SparqlOperandDataTypes.Int,
           valueAsNumber: 1,
           operator: SparqlRelationOperator.EqualThanRelation,
-          chainOperator: [],
+          
         },
         {
           variable: 'a',
@@ -264,7 +260,7 @@ describe('solver function', () => {
           valueType: SparqlOperandDataTypes.NonNegativeInteger,
           valueAsNumber: 0,
           operator: SparqlRelationOperator.EqualThanRelation,
-          chainOperator: [],
+          
         },
         {
           variable: 'a',
@@ -272,7 +268,7 @@ describe('solver function', () => {
           valueType: SparqlOperandDataTypes.Decimal,
           valueAsNumber: 0,
           operator: SparqlRelationOperator.EqualThanRelation,
-          chainOperator: [],
+          
         },
       ];
 
@@ -287,7 +283,7 @@ describe('solver function', () => {
           valueType: SparqlOperandDataTypes.Boolean,
           valueAsNumber: 1,
           operator: SparqlRelationOperator.EqualThanRelation,
-          chainOperator: [],
+          
         },
         {
           variable: 'a',
@@ -295,7 +291,7 @@ describe('solver function', () => {
           valueType: SparqlOperandDataTypes.Boolean,
           valueAsNumber: 0,
           operator: SparqlRelationOperator.EqualThanRelation,
-          chainOperator: [],
+          
         },
         {
           variable: 'a',
@@ -303,7 +299,7 @@ describe('solver function', () => {
           valueType: SparqlOperandDataTypes.Byte,
           valueAsNumber: 0,
           operator: SparqlRelationOperator.EqualThanRelation,
-          chainOperator: [],
+          
         },
       ];
 
@@ -318,7 +314,7 @@ describe('solver function', () => {
           valueType: SparqlOperandDataTypes.UnsignedInt,
           valueAsNumber: 1,
           operator: SparqlRelationOperator.EqualThanRelation,
-          chainOperator: [],
+          
         },
         {
           variable: 'a',
@@ -326,7 +322,7 @@ describe('solver function', () => {
           valueType: SparqlOperandDataTypes.Float,
           valueAsNumber: 0,
           operator: SparqlRelationOperator.EqualThanRelation,
-          chainOperator: [],
+          
         },
         {
           variable: 'a',
@@ -334,7 +330,7 @@ describe('solver function', () => {
           valueType: SparqlOperandDataTypes.Byte,
           valueAsNumber: 0,
           operator: SparqlRelationOperator.EqualThanRelation,
-          chainOperator: [],
+          
         },
       ];
 
@@ -361,7 +357,7 @@ describe('solver function', () => {
         rawValue: '5',
         valueType: SparqlOperandDataTypes.Integer,
         valueAsNumber: 5,
-        chainOperator: [],
+        
         operator: SparqlRelationOperator.EqualThanRelation,
       };
 
@@ -460,7 +456,6 @@ describe('solver function', () => {
         ],
       };
       const operator = SparqlRelationOperator.EqualThanRelation;
-      const linksOperator: LinkOperator[] = [ new LinkOperator(LogicOperator.And), new LinkOperator(LogicOperator.Or) ];
       const variable = 'x';
       const expectedSolverExpression: ISolverExpression = {
         variable,
@@ -468,10 +463,9 @@ describe('solver function', () => {
         valueType: SparqlOperandDataTypes.Integer,
         valueAsNumber: 6,
         operator,
-        chainOperator: linksOperator,
       };
 
-      const resp = resolveAFilterTerm(expression, operator, linksOperator, variable);
+      const resp = resolveAFilterTerm(expression, operator, variable);
 
       if (resp) {
         expect(resp).toStrictEqual(expectedSolverExpression);
@@ -494,9 +488,8 @@ describe('solver function', () => {
         ],
       };
       const operator = SparqlRelationOperator.EqualThanRelation;
-      const linksOperator: LinkOperator[] = [ new LinkOperator(LogicOperator.And), new LinkOperator(LogicOperator.Or) ];
 
-      expect(resolveAFilterTerm(expression, operator, linksOperator, 'x')).toBeInstanceOf(MisformatedFilterTermError);
+      expect(resolveAFilterTerm(expression, operator, 'x')).toBeInstanceOf(MisformatedFilterTermError);
     });
 
     it('given an algebra expression without a litteral than should return an misformated error', () => {
@@ -514,9 +507,8 @@ describe('solver function', () => {
         ],
       };
       const operator = SparqlRelationOperator.EqualThanRelation;
-      const linksOperator: LinkOperator[] = [ new LinkOperator(LogicOperator.And), new LinkOperator(LogicOperator.Or) ];
 
-      expect(resolveAFilterTerm(expression, operator, linksOperator, variable))
+      expect(resolveAFilterTerm(expression, operator, variable))
         .toBeInstanceOf(MisformatedFilterTermError);
     });
 
@@ -528,9 +520,8 @@ describe('solver function', () => {
         args: [],
       };
       const operator = SparqlRelationOperator.EqualThanRelation;
-      const linksOperator: LinkOperator[] = [ new LinkOperator(LogicOperator.And), new LinkOperator(LogicOperator.Or) ];
 
-      expect(resolveAFilterTerm(expression, operator, linksOperator, 'x')).toBeInstanceOf(MisformatedFilterTermError);
+      expect(resolveAFilterTerm(expression, operator, 'x')).toBeInstanceOf(MisformatedFilterTermError);
     });
 
     it(`given an algebra expression with a litteral containing an invalid datatype than 
@@ -555,12 +546,8 @@ describe('solver function', () => {
         ],
       };
       const operator = SparqlRelationOperator.EqualThanRelation;
-      const linksOperator: LinkOperator[] = [
-        new LinkOperator(LogicOperator.And),
-        new LinkOperator(LogicOperator.Or),
-      ];
 
-      expect(resolveAFilterTerm(expression, operator, linksOperator, variable))
+      expect(resolveAFilterTerm(expression, operator, variable))
         .toBeInstanceOf(UnsupportedDataTypeError);
     });
 
@@ -585,9 +572,8 @@ describe('solver function', () => {
         ],
       };
       const operator = SparqlRelationOperator.EqualThanRelation;
-      const linksOperator: LinkOperator[] = [ new LinkOperator(LogicOperator.And), new LinkOperator(LogicOperator.Or) ];
 
-      expect(resolveAFilterTerm(expression, operator, linksOperator, variable))
+      expect(resolveAFilterTerm(expression, operator, variable))
         .toBeInstanceOf(UnsupportedDataTypeError);
     });
   });

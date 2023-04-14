@@ -5,7 +5,6 @@ import {
   MisformatedFilterTermError,
   UnsupportedDataTypeError,
 } from './error';
-import type { LinkOperator } from './LinkOperator';
 import { SolutionDomain } from './SolutionDomain';
 import { SolutionInterval } from './SolutionInterval';
 import {
@@ -98,13 +97,11 @@ export function isBooleanExpressionTreeRelationFilterSolvable({ relation, filter
  * From an Algebra expression return an solver expression if possible
  * @param {Algebra.Expression} expression - Algebra expression containing the a variable and a litteral.
  * @param {SparqlRelationOperator} operator - The SPARQL operator defining the expression.
- * @param {LinkOperator[]} linksOperator - The logical operator prior to this expression.
  * @param {Variable} variable - The variable the expression should have to be part of a system of equation.
  * @returns {ISolverExpression | undefined} Return a solver expression if possible
  */
 export function resolveAFilterTerm(expression: Algebra.Expression,
   operator: SparqlRelationOperator,
-  linksOperator: LinkOperator[],
   variable: Variable):
   ISolverExpression | Error {
   let rawValue: string | undefined;
@@ -141,7 +138,6 @@ export function resolveAFilterTerm(expression: Algebra.Expression,
       valueType,
       valueAsNumber,
       operator,
-      chainOperator: linksOperator,
     };
   }
   const missingTerm = [];
@@ -196,7 +192,7 @@ export function recursifResolve(
     const rawOperator = filterExpression.operator;
     const operator = filterOperatorToSparqlRelationOperator(rawOperator);
     if (operator) {
-      const solverExpression = resolveAFilterTerm(filterExpression, operator, [], variable);
+      const solverExpression = resolveAFilterTerm(filterExpression, operator, variable);
       let solverRange: SolutionInterval | undefined;
       if (solverExpression instanceof MissMatchVariableError) {
         solverRange = A_TRUE_EXPRESSION;
@@ -261,7 +257,6 @@ export function convertTreeRelationToSolverExpression(relation: ITreeRelation,
       rawValue: relation.value.value,
       valueType,
       valueAsNumber: valueNumber,
-      chainOperator: [],
 
       operator: relation.type,
     };

@@ -1,4 +1,3 @@
-import type { LinkOperator } from './LinkOperator';
 import type { SparqlRelationOperator } from './TreeMetadata';
 /**
  * Valid SPARQL data type for operation.
@@ -77,9 +76,5 @@ export interface ISolverExpression {
      * The operator binding the value and the variable.
      */
   operator: SparqlRelationOperator;
-  /**
-     * The chain of logical operator attached to the expression.
-     */
-  chainOperator: LinkOperator[];
 }
 
