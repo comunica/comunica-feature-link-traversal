@@ -1,7 +1,6 @@
-import { SolutionRange } from './SolutionRange';
+import { SolutionInterval } from './SolutionInterval';
 import { LogicOperator } from './solverInterfaces';
 
-const AN_EMPTY_SOLUTION_RANGE = new SolutionRange(undefined);
 /**
  * A class representing the domain of a solution of system of boolean equation.
  * Every operation return a new object.
@@ -11,7 +10,7 @@ export class SolutionDomain {
      * The multiple segment of the domain, it is always order by the lower bound
      * of the SolutionRange.
      */
-  private domain: SolutionRange[] = [];
+  private domain: SolutionInterval[] = [];
 
   /**
     * The last operation apply to the domain
@@ -21,9 +20,9 @@ export class SolutionDomain {
 
   /**
      * Get the multiple segment of the domain.
-     * @returns {SolutionRange[]}
+     * @returns {SolutionInterval[]}
      */
-  public get_domain(): SolutionRange[] {
+  public get_domain(): SolutionInterval[] {
     return new Array(...this.domain);
   }
 
@@ -37,10 +36,10 @@ export class SolutionDomain {
 
   /**
      * Create a new SolutionDomain with an inititial value.
-     * @param {SolutionRange} initialRange
+     * @param {SolutionInterval} initialRange
      * @returns {SolutionDomain}
      */
-  public static newWithInitialValue(initialRange: SolutionRange): SolutionDomain {
+  public static newWithInitialValue(initialRange: SolutionInterval): SolutionDomain {
     const newSolutionDomain = new SolutionDomain();
     if (!initialRange.isEmpty) {
       newSolutionDomain.domain = [ initialRange ];
@@ -61,11 +60,11 @@ export class SolutionDomain {
 
   /**
      * Modifify the current solution range by applying a logical operation.
-     * @param {SolutionRange} range - The range of the incoming operation to apply.
+     * @param {SolutionInterval} range - The range of the incoming operation to apply.
      * @param {LogicOperator} operator - The logical operation to apply.
      * @returns {SolutionDomain} - A new SolutionDomain with the operation applied.
      */
-  public add({ range, operator }: { range?: SolutionRange; operator: LogicOperator }): SolutionDomain {
+  public add({ range, operator }: { range?: SolutionInterval; operator: LogicOperator }): SolutionDomain {
     let newDomain: SolutionDomain = this.clone();
 
     switch (operator) {
@@ -106,10 +105,10 @@ export class SolutionDomain {
      * Apply an "OR" operator to the current solution domain with the input
      * solution range. It fuse the SolutionRange if needed to keep the simplest domain possible.
      * It also keep the domain order.
-     * @param {SolutionRange} range
+     * @param {SolutionInterval} range
      * @returns {SolutionDomain}
      */
-  public addWithOrOperator(range: SolutionRange): SolutionDomain {
+  public addWithOrOperator(range: SolutionInterval): SolutionDomain {
     const newDomain = this.clone();
     let currentRange = range;
     // We iterate over all the domain
@@ -117,7 +116,7 @@ export class SolutionDomain {
       // We check if we can fuse the new range with the current range
       // let's not forget that the domain is sorted by the lowest bound
       // of the SolutionRange
-      const resp = SolutionRange.fuseRange(el, currentRange);
+      const resp = SolutionInterval.fuseRange(el, currentRange);
       if (resp.length === 1) {
         // If we fuse the range and consider this new range as our current range
         // and we delete the old range from the domain as we now have a new range that contained the old
@@ -137,10 +136,10 @@ export class SolutionDomain {
      * Apply an "AND" operator to the current solution domain with the input
      * solution range. It will keep only the insection of the subdomain with the input
      * range. It keep the domain ordered.
-     * @param {SolutionRange} range
+     * @param {SolutionInterval} range
      * @returns {SolutionDomain}
      */
-  public addWithAndOperator(range: SolutionRange): SolutionDomain {
+  public addWithAndOperator(range: SolutionInterval): SolutionDomain {
     const newDomain = new SolutionDomain();
 
     // If the domain is empty and the last operation was an "AND"
@@ -155,7 +154,7 @@ export class SolutionDomain {
     // Considering the current domain if there is an intersection
     // add the intersection to the new domain
     this.domain.forEach(el => {
-      const intersection = SolutionRange.getIntersection(el, range);
+      const intersection = SolutionInterval.getIntersection(el, range);
       if (intersection) {
         newDomain.domain.push(intersection);
       }
@@ -185,11 +184,11 @@ export class SolutionDomain {
 
   /**
      * Simple sort function to order the domain by the lower bound of SolutionRange.
-     * @param {SolutionRange} firstRange
-     * @param {SolutionRange} secondRange
+     * @param {SolutionInterval} firstRange
+     * @param {SolutionInterval} secondRange
      * @returns {number} see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort
      */
-  private static sortDomainRangeByLowerBound(firstRange: SolutionRange, secondRange: SolutionRange): number {
+  private static sortDomainRangeByLowerBound(firstRange: SolutionInterval, secondRange: SolutionInterval): number {
     if (firstRange.lower < secondRange.lower) {
       return -1;
     }

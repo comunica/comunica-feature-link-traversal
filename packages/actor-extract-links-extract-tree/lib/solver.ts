@@ -7,7 +7,7 @@ import {
 } from './error';
 import type { LinkOperator } from './LinkOperator';
 import { SolutionDomain } from './SolutionDomain';
-import { SolutionRange } from './SolutionRange';
+import { SolutionInterval } from './SolutionInterval';
 import {
   SparqlOperandDataTypes,
   LogicOperatorReversed, LogicOperator, SparqlOperandDataTypesReversed,
@@ -22,8 +22,10 @@ import type { ITreeRelation } from './TreeMetadata';
 const nextUp = require('ulp').nextUp;
 const nextDown = require('ulp').nextDown;
 
-const A_TRUE_EXPRESSION: SolutionRange = new SolutionRange([ Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY ]);
-const A_FALSE_EXPRESSION: SolutionRange = new SolutionRange(undefined);
+const A_TRUE_EXPRESSION: SolutionInterval = new SolutionInterval(
+  [ Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY ],
+);
+const A_FALSE_EXPRESSION: SolutionInterval = new SolutionInterval([]);
 
 /**
  * Check if the solution domain of a system of equation compose of the expressions of the filter
@@ -45,7 +47,7 @@ export function isBooleanExpressionTreeRelationFilterSolvable({ relation, filter
     return true;
   }
 
-  const relationSolutionRange = getSolutionRange(
+  const relationSolutionRange = getSolutionInterval(
     relationsolverExpressions.valueAsNumber,
     relationsolverExpressions.operator,
   );
@@ -195,13 +197,13 @@ export function recursifResolve(
     const operator = filterOperatorToSparqlRelationOperator(rawOperator);
     if (operator) {
       const solverExpression = resolveAFilterTerm(filterExpression, operator, [], variable);
-      let solverRange: SolutionRange | undefined;
+      let solverRange: SolutionInterval | undefined;
       if (solverExpression instanceof MissMatchVariableError) {
         solverRange = A_TRUE_EXPRESSION;
       } else if (solverExpression instanceof Error) {
         throw solverExpression;
       } else {
-        solverRange = getSolutionRange(solverExpression.valueAsNumber, solverExpression.operator)!;
+        solverRange = getSolutionInterval(solverExpression.valueAsNumber, solverExpression.operator)!;
       }
       // We can distribute a not expression, so we inverse each statement
       if (notExpression) {
@@ -288,20 +290,20 @@ export function areTypesCompatible(expressions: ISolverExpression[]): boolean {
  * Find the solution range of a value and operator which is analogue to an expression.
  * @param {number} value
  * @param {SparqlRelationOperator} operator
- * @returns {SolutionRange | undefined} The solution range associated with the value and the operator.
+ * @returns {SolutionInterval | undefined} The solution range associated with the value and the operator.
  */
-export function getSolutionRange(value: number, operator: SparqlRelationOperator): SolutionRange | undefined {
+export function getSolutionInterval(value: number, operator: SparqlRelationOperator): SolutionInterval | undefined {
   switch (operator) {
     case SparqlRelationOperator.GreaterThanRelation:
-      return new SolutionRange([ nextUp(value), Number.POSITIVE_INFINITY ]);
+      return new SolutionInterval([ nextUp(value), Number.POSITIVE_INFINITY ]);
     case SparqlRelationOperator.GreaterThanOrEqualToRelation:
-      return new SolutionRange([ value, Number.POSITIVE_INFINITY ]);
+      return new SolutionInterval([ value, Number.POSITIVE_INFINITY ]);
     case SparqlRelationOperator.EqualThanRelation:
-      return new SolutionRange([ value, value ]);
+      return new SolutionInterval([ value, value ]);
     case SparqlRelationOperator.LessThanRelation:
-      return new SolutionRange([ Number.NEGATIVE_INFINITY, nextDown(value) ]);
+      return new SolutionInterval([ Number.NEGATIVE_INFINITY, nextDown(value) ]);
     case SparqlRelationOperator.LessThanOrEqualToRelation:
-      return new SolutionRange([ Number.NEGATIVE_INFINITY, value ]);
+      return new SolutionInterval([ Number.NEGATIVE_INFINITY, value ]);
     default:
       // Not an operator that is compatible with number.
       break;

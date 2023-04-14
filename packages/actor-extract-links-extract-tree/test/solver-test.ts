@@ -7,12 +7,12 @@ import {
 } from '../lib/error';
 import { LinkOperator } from '../lib/LinkOperator';
 import { SolutionDomain } from '../lib/SolutionDomain';
-import { SolutionRange } from '../lib/SolutionRange';
+import { SolutionInterval } from '../lib/SolutionInterval';
 import {
   filterOperatorToSparqlRelationOperator,
   isSparqlOperandNumberType,
   castSparqlRdfTermIntoNumber,
-  getSolutionRange,
+  getSolutionInterval,
   areTypesCompatible,
   convertTreeRelationToSolverExpression,
   resolveAFilterTerm,
@@ -180,31 +180,31 @@ describe('solver function', () => {
   describe('getSolutionRange', () => {
     it('given a boolean compatible RelationOperator and a value should return a valid SolutionRange', () => {
       const value = -1;
-      const testTable: [SparqlRelationOperator, SolutionRange][] = [
+      const testTable: [SparqlRelationOperator, SolutionInterval][] = [
         [
           SparqlRelationOperator.GreaterThanRelation,
-          new SolutionRange([ nextUp(value), Number.POSITIVE_INFINITY ]),
+          new SolutionInterval([ nextUp(value), Number.POSITIVE_INFINITY ]),
         ],
         [
           SparqlRelationOperator.GreaterThanOrEqualToRelation,
-          new SolutionRange([ value, Number.POSITIVE_INFINITY ]),
+          new SolutionInterval([ value, Number.POSITIVE_INFINITY ]),
         ],
         [
           SparqlRelationOperator.EqualThanRelation,
-          new SolutionRange([ value, value ]),
+          new SolutionInterval([ value, value ]),
         ],
         [
           SparqlRelationOperator.LessThanRelation,
-          new SolutionRange([ Number.NEGATIVE_INFINITY, nextDown(value) ]),
+          new SolutionInterval([ Number.NEGATIVE_INFINITY, nextDown(value) ]),
         ],
         [
           SparqlRelationOperator.LessThanOrEqualToRelation,
-          new SolutionRange([ Number.NEGATIVE_INFINITY, value ]),
+          new SolutionInterval([ Number.NEGATIVE_INFINITY, value ]),
         ],
       ];
 
       for (const [ operator, expectedRange ] of testTable) {
-        expect(getSolutionRange(value, operator)).toStrictEqual(expectedRange);
+        expect(getSolutionInterval(value, operator)).toStrictEqual(expectedRange);
       }
     });
 
@@ -212,7 +212,7 @@ describe('solver function', () => {
       const value = -1;
       const operator = SparqlRelationOperator.PrefixRelation;
 
-      expect(getSolutionRange(value, operator)).toBeUndefined();
+      expect(getSolutionInterval(value, operator)).toBeUndefined();
     });
   });
 
@@ -607,7 +607,7 @@ describe('solver function', () => {
         false,
       );
 
-      const expectedDomain = SolutionDomain.newWithInitialValue(new SolutionRange([ 2, 2 ]));
+      const expectedDomain = SolutionDomain.newWithInitialValue(new SolutionInterval([ 2, 2 ]));
 
       expect(resp.get_domain()).toStrictEqual(expectedDomain.get_domain());
     });
@@ -647,7 +647,7 @@ describe('solver function', () => {
         false,
       );
 
-      const expectedDomain = SolutionDomain.newWithInitialValue(new SolutionRange([ 5, Number.POSITIVE_INFINITY ]));
+      const expectedDomain = SolutionDomain.newWithInitialValue(new SolutionInterval([ 5, Number.POSITIVE_INFINITY ]));
 
       expect(resp.get_domain()).toStrictEqual(expectedDomain.get_domain());
     });
@@ -667,10 +667,10 @@ describe('solver function', () => {
         false,
       );
 
-      let expectedDomain = SolutionDomain.newWithInitialValue(new SolutionRange(
+      let expectedDomain = SolutionDomain.newWithInitialValue(new SolutionInterval(
         [ Number.NEGATIVE_INFINITY, nextDown(3) ],
       ));
-      expectedDomain = expectedDomain.addWithOrOperator(new SolutionRange([ nextUp(3), Number.POSITIVE_INFINITY ]));
+      expectedDomain = expectedDomain.addWithOrOperator(new SolutionInterval([ nextUp(3), Number.POSITIVE_INFINITY ]));
       expect(resp.get_domain()).toStrictEqual(expectedDomain.get_domain());
     });
   });

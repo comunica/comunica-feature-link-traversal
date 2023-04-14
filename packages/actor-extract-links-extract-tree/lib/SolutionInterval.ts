@@ -4,7 +4,7 @@ const nextDown = require('ulp').nextDown;
  * A class representing the range of a solution it contain method to
  * facilitate operation between subdomain.
  */
-export class SolutionRange {
+export class SolutionInterval {
   /**
      * The upper bound of the range.
      */
@@ -23,8 +23,8 @@ export class SolutionRange {
      * @param {[number, number]} range - An array where the first memeber is the lower bound of the range
      * and the second the upper bound
      */
-  public constructor(range: [number, number] | undefined) {
-    if (range) {
+  public constructor(range: [number, number] | []) {
+    if (range.length === 2) {
       if (range[0] > range[1]) {
         throw new RangeError('the first element of the range should lower or equal to the second');
       }
@@ -36,14 +36,18 @@ export class SolutionRange {
       this.lower = Number.NaN;
       this.upper = Number.NaN;
     }
+    Object.freeze(this);
+    Object.freeze(this.upper);
+    Object.freeze(this.lower);
+    Object.freeze(this.isEmpty);
   }
 
   /**
      * Check if the two ranges overlap.
-     * @param {SolutionRange} otherRange
+     * @param {SolutionInterval} otherRange
      * @returns {boolean} Return true if the two range overlap.
      */
-  public isOverlapping(otherRange: SolutionRange): boolean {
+  public isOverlapping(otherRange: SolutionInterval): boolean {
     if (this.isEmpty || otherRange.isEmpty) {
       return false;
     }
@@ -68,10 +72,10 @@ export class SolutionRange {
 
   /**
      * Check whether the other range is inside the subject range.
-     * @param {SolutionRange} otherRange
+     * @param {SolutionInterval} otherRange
      * @returns {boolean} Return true if the other range is inside this range.
      */
-  public isInside(otherRange: SolutionRange): boolean {
+  public isInside(otherRange: SolutionInterval): boolean {
     if (this.isEmpty || otherRange.isEmpty) {
       return false;
     }
@@ -80,14 +84,14 @@ export class SolutionRange {
 
   /**
      * Fuse two ranges if they overlap.
-     * @param {SolutionRange} subjectRange
-     * @param {SolutionRange} otherRange
-     * @returns {SolutionRange[]} Return the fused range if they overlap else return the input ranges.
+     * @param {SolutionInterval} subjectRange
+     * @param {SolutionInterval} otherRange
+     * @returns {SolutionInterval[]} Return the fused range if they overlap else return the input ranges.
      * It also take into consideration if the range is empty.
      */
-  public static fuseRange(subjectRange: SolutionRange, otherRange: SolutionRange): SolutionRange[] {
+  public static fuseRange(subjectRange: SolutionInterval, otherRange: SolutionInterval): SolutionInterval[] {
     if (subjectRange.isEmpty && otherRange.isEmpty) {
-      return [ new SolutionRange(undefined) ];
+      return [ new SolutionInterval([]) ];
     }
 
     if (subjectRange.isEmpty && !otherRange.isEmpty) {
@@ -101,7 +105,7 @@ export class SolutionRange {
     if (subjectRange.isOverlapping(otherRange)) {
       const lowest = subjectRange.lower < otherRange.lower ? subjectRange.lower : otherRange.lower;
       const uppest = subjectRange.upper > otherRange.upper ? subjectRange.upper : otherRange.upper;
-      return [ new SolutionRange([ lowest, uppest ]) ];
+      return [ new SolutionInterval([ lowest, uppest ]) ];
     }
     return [ subjectRange, otherRange ];
   }
@@ -109,42 +113,43 @@ export class SolutionRange {
   /**
      * Inverse the range, in a way that the range become everything that it excluded. Might
      * 0 or return multiple ranges.
-     * @returns {SolutionRange[]} The resulting ranges.
+     * @returns {SolutionInterval[]} The resulting ranges.
      */
-  public inverse(): SolutionRange[] {
+  public inverse(): SolutionInterval[] {
     if (this.isEmpty) {
-      return [ new SolutionRange([ Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY ]) ];
+      return [ new SolutionInterval([ Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY ]) ];
     }
     if (this.lower === Number.NEGATIVE_INFINITY && this.upper === Number.POSITIVE_INFINITY) {
-      return [ new SolutionRange(undefined) ];
+      return [ new SolutionInterval([]) ];
     }
 
     if (this.lower === Number.NEGATIVE_INFINITY) {
-      return [ new SolutionRange([ nextUp(this.upper), Number.POSITIVE_INFINITY ]) ];
+      return [ new SolutionInterval([ nextUp(this.upper), Number.POSITIVE_INFINITY ]) ];
     }
 
     if (this.upper === Number.POSITIVE_INFINITY) {
-      return [ new SolutionRange([ Number.NEGATIVE_INFINITY, nextDown(this.lower) ]) ];
+      return [ new SolutionInterval([ Number.NEGATIVE_INFINITY, nextDown(this.lower) ]) ];
     }
     return [
-      new SolutionRange([ Number.NEGATIVE_INFINITY, nextDown(this.lower) ]),
-      new SolutionRange([ nextUp(this.upper), Number.POSITIVE_INFINITY ]),
+      new SolutionInterval([ Number.NEGATIVE_INFINITY, nextDown(this.lower) ]),
+      new SolutionInterval([ nextUp(this.upper), Number.POSITIVE_INFINITY ]),
     ];
   }
 
   /**
      * Get the range that intersect the other range and the subject range.
-     * @param {SolutionRange} subjectRange
-     * @param {SolutionRange} otherRange
-     * @returns {SolutionRange | undefined} Return the intersection if the range overlap otherwise return undefined
+     * @param {SolutionInterval} subjectRange
+     * @param {SolutionInterval} otherRange
+     * @returns {SolutionInterval | undefined} Return the intersection if the range overlap otherwise return undefined
      */
-  public static getIntersection(subjectRange: SolutionRange, otherRange: SolutionRange): SolutionRange | undefined {
+  public static getIntersection(subjectRange: SolutionInterval,
+    otherRange: SolutionInterval): SolutionInterval | undefined {
     if (!subjectRange.isOverlapping(otherRange) || subjectRange.isEmpty || otherRange.isEmpty) {
       return undefined;
     }
     const lower = subjectRange.lower > otherRange.lower ? subjectRange.lower : otherRange.lower;
     const upper = subjectRange.upper < otherRange.upper ? subjectRange.upper : otherRange.upper;
 
-    return new SolutionRange([ lower, upper ]);
+    return new SolutionInterval([ lower, upper ]);
   }
 }
