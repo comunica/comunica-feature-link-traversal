@@ -20,7 +20,11 @@
       "@type": "ActorRdfJoinInnerMultiAdaptiveDestroy",
       "mediatorJoinSelectivity": { "@id": "urn:comunica:default:rdf-join-selectivity/mediators#main" },
       "mediatorJoin": { "@id": "urn:comunica:default:rdf-join/mediators#main" },
-      "timeout": 5000
+      "timeout": 100,
+      "beforeActors": [
+        { "@id": "urn:comunica:default:rdf-join/actors#inner-multi-bind" },
+        { "@id": "urn:comunica:default:rdf-join/actors#inner-multi-smallest" }
+      ]
     },
 
     {
