@@ -31,6 +31,8 @@ jobs:
         run: yarn run build
       - name: Run tests
         run: yarn run test-ci
+      - name: Run browser tests
+        run: yarn run test-browser
       - name: Submit coverage results
         uses: coverallsapp/github-action@master
         with:
