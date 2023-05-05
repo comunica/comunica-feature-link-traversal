@@ -143,9 +143,9 @@ export class SolutionInterval {
      * @returns {SolutionInterval | undefined} Return the intersection if the range overlap otherwise return undefined
      */
   public static getIntersection(subjectRange: SolutionInterval,
-    otherRange: SolutionInterval): SolutionInterval | undefined {
+    otherRange: SolutionInterval): SolutionInterval {
     if (!subjectRange.isOverlapping(otherRange) || subjectRange.isEmpty || otherRange.isEmpty) {
-      return undefined;
+      return new SolutionInterval([]);
     }
     const lower = subjectRange.lower > otherRange.lower ? subjectRange.lower : otherRange.lower;
     const upper = subjectRange.upper < otherRange.upper ? subjectRange.upper : otherRange.upper;

@@ -1,6 +1,6 @@
 import { SolutionInterval } from '../lib//SolutionInterval';
 import { SolutionDomain } from '../lib/SolutionDomain';
-import { LogicOperator } from '../lib/solverInterfaces';
+import { LogicOperatorSymbol } from '../lib/solverInterfaces';
 
 const nextUp = require('ulp').nextUp;
 const nextDown = require('ulp').nextDown;
@@ -14,14 +14,39 @@ describe('SolutionDomain', () => {
     });
   });
 
-  describe('newWithInitialValue', () => {
-    it('should create a solution domain with the initial value', () => {
+  describe('newWithInitialIntervals', () => {
+    it('should create a solution domain with an initial value', () => {
       const solutionRange = new SolutionInterval([ 0, 1 ]);
-      const solutionDomain = SolutionDomain.newWithInitialValue(solutionRange);
+      const solutionDomain = SolutionDomain.newWithInitialIntervals(solutionRange);
 
       expect(solutionDomain.getDomain().length).toBe(1);
       expect(solutionDomain.getDomain()[0]).toStrictEqual(solutionRange);
     });
+
+    it('should create a solution domain with multiple initial value', () => {
+      const solutionIntervals = [
+        new SolutionInterval([ 0, 1 ]),
+        new SolutionInterval([ 2, 3 ]),
+        new SolutionInterval([ -33, -3 ]),
+        new SolutionInterval([ 100, 3000 ])
+      ];
+      const solutionDomain = SolutionDomain.newWithInitialIntervals(solutionIntervals);
+
+      expect(solutionDomain.getDomain().length).toBe(solutionIntervals.length);
+      expect(solutionDomain.getDomain()).toStrictEqual(solutionIntervals);
+    });
+
+    it('should throw an error when creating a solution domain with multiple intervals overlaping', () => {
+      const solutionIntervals = [
+        new SolutionInterval([ 0, 1 ]),
+        new SolutionInterval([ 2, 3 ]),
+        new SolutionInterval([ 2, 10 ]),
+      ];
+      expect(()=>{
+        SolutionDomain.newWithInitialIntervals(solutionIntervals);
+      }).toThrow(RangeError);
+    });
+    
   });
 
   describe('addWithOrOperator', () => {
@@ -38,15 +63,6 @@ describe('SolutionDomain', () => {
       for (const r of aRanges) {
         aDomain = aDomain.addWithOrOperator(r);
       }
-    });
-    it('given an empty domain should be able to add the subject range', () => {
-      const range = new SolutionInterval([ 0, 1 ]);
-      const solutionDomain = new SolutionDomain();
-
-      const newDomain = solutionDomain.addWithOrOperator(range);
-
-      expect(newDomain.getDomain().length).toBe(1);
-      expect(newDomain.getDomain()[0]).toStrictEqual(range);
     });
 
     it('given an empty domain should be able to add multiple subject range that doesn\'t overlap', () => {
@@ -213,85 +229,12 @@ describe('SolutionDomain', () => {
       const anotherRangeNonOverlapping = new SolutionInterval([ 2_000, 3_000 ]);
 
       let newDomain = aDomain.addWithAndOperator(aRange);
-      newDomain = newDomain.add({ range: anotherRangeNonOverlapping, operator: LogicOperator.And });
+      newDomain = newDomain.add({ range: anotherRangeNonOverlapping, operator: LogicOperatorSymbol.And });
       expect(newDomain.isDomainEmpty()).toBe(true);
 
       newDomain = newDomain.addWithAndOperator(aRange);
 
       expect(newDomain.isDomainEmpty()).toBe(true);
-    });
-  });
-
-  describe('add', () => {
-    const aDomain = new SolutionDomain();
-    const aRange = new SolutionInterval([ 0, 1 ]);
-
-    let spyAddWithOrOperator;
-
-    let spyAddWithAndOperator;
-
-    let spyNotOperation;
-
-    beforeEach(() => {
-      spyAddWithOrOperator = jest.spyOn(aDomain, 'addWithOrOperator')
-        .mockImplementation((_range: SolutionInterval) => {
-          return new SolutionDomain();
-        });
-
-      spyAddWithAndOperator = jest.spyOn(aDomain, 'addWithAndOperator')
-        .mockImplementation((_range: SolutionInterval) => {
-          return new SolutionDomain();
-        });
-
-      spyNotOperation = jest.spyOn(aDomain, 'notOperation')
-        .mockImplementation(() => {
-          return new SolutionDomain();
-        });
-    });
-
-    it('should call "addWithOrOperator" method given the "OR" operator and a new range', () => {
-      aDomain.add({ range: aRange, operator: LogicOperator.Or });
-      expect(spyAddWithOrOperator).toBeCalledTimes(1);
-    });
-
-    it('should throw an error when adding range with a "OR" operator and no new range', () => {
-      expect(() => { aDomain.add({ operator: LogicOperator.Or }); }).toThrow();
-    });
-
-    it('should call "addWithAndOperator" method given the "AND" operator and a new range', () => {
-      aDomain.add({ range: aRange, operator: LogicOperator.And });
-      expect(spyAddWithOrOperator).toBeCalledTimes(1);
-    });
-
-    it('should throw an error when adding range with a "AND" operator and no new range', () => {
-      expect(() => { aDomain.add({ operator: LogicOperator.And }); }).toThrow();
-    });
-
-    it('should call "notOperation" method given the "NOT" operator', () => {
-      aDomain.add({ operator: LogicOperator.Not });
-      expect(spyAddWithOrOperator).toBeCalledTimes(1);
-    });
-
-    it('should on any operator return an empty domain if the only solution range is empty', () => {
-      const an_empty_solution_range = new SolutionInterval([]);
-      const operations: [LogicOperator, SolutionInterval][] = [
-        [ LogicOperator.Or, an_empty_solution_range ],
-        [ LogicOperator.And, an_empty_solution_range ],
-        [ LogicOperator.Not, an_empty_solution_range.inverse()[0] ],
-      ];
-
-      for (const [ logicOperator, solutionRange ] of operations) {
-        if (logicOperator !== LogicOperator.Not) {
-          let domain = new SolutionDomain();
-          domain = domain.add({ range: solutionRange, operator: logicOperator });
-          expect(domain.getDomain().length).toBe(0);
-        } else {
-          let domain = new SolutionDomain();
-          domain = domain.addWithOrOperator(solutionRange);
-          domain = domain.add({ operator: logicOperator });
-          expect(domain.getDomain().length).toBe(0);
-        }
-      }
     });
   });
 

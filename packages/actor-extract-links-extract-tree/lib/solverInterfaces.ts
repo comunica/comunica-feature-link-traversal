@@ -35,7 +35,7 @@ export const SparqlOperandDataTypesReversed: Map<string, SparqlOperandDataTypes>
 /**
  * Logical operator that linked logical expression together.
  */
-export enum LogicOperator {
+export enum LogicOperatorSymbol {
   And = '&&',
   Or = '||',
   Not = '!',
@@ -44,8 +44,8 @@ export enum LogicOperator {
 /**
  * A map to access the value of the enum LogicOperator by it's value in O(1) time complexity.
  */
-export const LogicOperatorReversed: Map<string, LogicOperator> =
-    new Map(Object.values(LogicOperator).map(value => [ value, value ]));
+export const LogicOperatorReversed: Map<string, LogicOperatorSymbol> =
+    new Map(Object.values(LogicOperatorSymbol).map(value => [ value, value ]));
 
 /**
  * A variable to be solved by the solver.

@@ -9,7 +9,7 @@ import { SolutionDomain } from './SolutionDomain';
 import { SolutionInterval } from './SolutionInterval';
 import {
   SparqlOperandDataTypes,
-  LogicOperatorReversed, LogicOperator, SparqlOperandDataTypesReversed,
+  LogicOperatorReversed, LogicOperatorSymbol, SparqlOperandDataTypesReversed,
 } from './solverInterfaces';
 import type {
   ISolverExpression,
@@ -17,12 +17,13 @@ import type {
 } from './solverInterfaces';
 import { SparqlRelationOperator } from './TreeMetadata';
 import type { ITreeRelation } from './TreeMetadata';
+import { And, LogicOperator, Not, Or, operatorFactory } from './LogicOperator';
 
 const nextUp = require('ulp').nextUp;
 const nextDown = require('ulp').nextDown;
 
 const A_TRUE_EXPRESSION: SolutionInterval = new SolutionInterval(
-  [ Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY ],
+  [Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY],
 );
 const A_FALSE_EXPRESSION: SolutionInterval = new SolutionInterval([]);
 
@@ -46,12 +47,12 @@ export function isBooleanExpressionTreeRelationFilterSolvable({ relation, filter
     return true;
   }
 
-  const relationSolutionRange = getSolutionInterval(
+  const relationSolutionInterval = getSolutionInterval(
     relationsolverExpressions.valueAsNumber,
     relationsolverExpressions.operator,
   );
   // We don't prune the relation because we do not implement yet the solution range for this expression
-  if (!relationSolutionRange) {
+  if (!relationSolutionInterval) {
     return true;
   }
   let solutionDomain: SolutionDomain = new SolutionDomain();
@@ -59,9 +60,8 @@ export function isBooleanExpressionTreeRelationFilterSolvable({ relation, filter
     solutionDomain = recursifResolve(
       filterExpression,
       solutionDomain,
-      undefined,
+      Or,
       variable,
-      false,
     );
   } catch (error: unknown) {
     // A filter term was missformed we let the query engine return an error to the user and by precaution
@@ -87,7 +87,7 @@ export function isBooleanExpressionTreeRelationFilterSolvable({ relation, filter
   }
 
   // Evaluate the solution domain when adding the relation
-  solutionDomain = solutionDomain.add({ range: relationSolutionRange, operator: LogicOperator.And });
+  solutionDomain = new And().apply({ interval: relationSolutionInterval, domain: solutionDomain })
 
   // If there is a possible solution we don't filter the link
   return !solutionDomain.isDomainEmpty();
@@ -156,7 +156,7 @@ export function resolveAFilterTerm(expression: Algebra.Expression,
  * It will thrown an error if the expression is badly formated or if it's impossible to get the solution range.
  * @param {Algebra.Expression} filterExpression - The current filter expression that we are traversing
  * @param {SolutionDomain} domain - The current resultant solution domain
- * @param {LogicOperator} logicOperator - The current logic operator that we have to apply to the boolean expression
+ * @param {LogicOperatorSymbol} logicOperator - The current logic operator that we have to apply to the boolean expression
  * @param {Variable} variable - The variable targeted inside the filter expression
  * @param {boolean} notExpression
  * @returns {SolutionDomain} The solution domain of the whole expression
@@ -164,28 +164,26 @@ export function resolveAFilterTerm(expression: Algebra.Expression,
 export function recursifResolve(
   filterExpression: Algebra.Expression,
   domain: SolutionDomain,
-  logicOperator: LogicOperator | undefined,
+  logicOperator: LogicOperator,
   variable: Variable,
-  notExpression: boolean,
 ): SolutionDomain {
-  // We apply an or operator by default or if the domain is empty
-  if (!logicOperator || domain.isDomainEmpty()) {
-    logicOperator = LogicOperator.Or;
-  }
 
   if (filterExpression.expressionType === Algebra.expressionTypes.TERM
   ) {
+    // In that case we are confronted with a boolean expression
+    // add the associated interval into the domain in relation to
+    // the logic operator.
     if (filterExpression.term.value === 'false') {
-      domain = domain.add({ range: A_FALSE_EXPRESSION, operator: logicOperator });
+      domain = logicOperator.apply({ interval: A_FALSE_EXPRESSION, domain });
     } else if (filterExpression.term.value === 'true') {
-      domain = domain.add({ range: A_TRUE_EXPRESSION, operator: logicOperator });
+      domain = logicOperator.apply({ interval: A_TRUE_EXPRESSION, domain });
     } else {
       throw new MisformatedFilterTermError(`The term sent is not a boolean but is this value {${filterExpression.term.value}}`);
     }
   } else if (
-    // If it's an array of term then we should be able to create a solver expression
-    // hence get a subdomain appendable to the current global domain with consideration
-    // to the logic operator
+    // If it's an array of terms then we should be able to create a solver expression.
+    // Given the resulting solver expression we can calculate a solution interval 
+    // that we will add to the domain with regards to the logic operator.
     filterExpression.args[0].expressionType === Algebra.expressionTypes.TERM &&
     filterExpression.args.length === 2
   ) {
@@ -193,45 +191,41 @@ export function recursifResolve(
     const operator = filterOperatorToSparqlRelationOperator(rawOperator);
     if (operator) {
       const solverExpression = resolveAFilterTerm(filterExpression, operator, variable);
-      let solverRange: SolutionInterval | undefined;
+      let solutionInterval: SolutionInterval | undefined;
       if (solverExpression instanceof MissMatchVariableError) {
-        solverRange = A_TRUE_EXPRESSION;
+        solutionInterval = A_TRUE_EXPRESSION;
       } else if (solverExpression instanceof Error) {
         throw solverExpression;
       } else {
-        solverRange = getSolutionInterval(solverExpression.valueAsNumber, solverExpression.operator)!;
+        solutionInterval = getSolutionInterval(solverExpression.valueAsNumber, solverExpression.operator)!;
       }
-      // We can distribute a not expression, so we inverse each statement
-      if (notExpression) {
-        const invertedRanges = solverRange.inverse();
-        // We first solve the new inverted expression of the form
-        // (E1 AND E2) after that we apply the original operator
-        for (const range of invertedRanges) {
-          domain = domain.add({ range, operator: logicOperator });
-        }
-      } else {
-        domain = domain.add({ range: solverRange, operator: logicOperator });
-      }
+      domain = logicOperator.apply({ interval: solutionInterval, domain });
     }
   } else if (
-    // It is a malformed expression
     filterExpression.args[0].expressionType === Algebra.expressionTypes.TERM &&
     filterExpression.args.length === 1
   ) {
+    // We consider that if we only have one term in an array then it is a malformed expression, because
+    // we don't support functions
     throw new MisformatedFilterTermError(`The expression should have a variable and a value, but is {${filterExpression.args}}`);
   } else {
-    let newLogicOperator = LogicOperatorReversed.get(filterExpression.operator);
-    notExpression = newLogicOperator === LogicOperator.Not || notExpression;
-    if (newLogicOperator) {
-      newLogicOperator = newLogicOperator === LogicOperator.Not ? logicOperator : newLogicOperator;
+    // In that case we are traversing the filter expression TREE.
+    // We prepare the next recursion and we compute the accumulation of results.
+    const logicOperatorSymbol = LogicOperatorReversed.get(filterExpression.operator);
+    if (logicOperatorSymbol) {
+      const logicOperator = operatorFactory(logicOperatorSymbol);
       for (const arg of filterExpression.args) {
-        domain = recursifResolve(arg, domain, newLogicOperator, variable, notExpression);
+        if (logicOperator.operatorName() !== LogicOperatorSymbol.Not) {
+          domain = recursifResolve(arg, domain, logicOperator, variable);
+        }
+      }
+      if (logicOperator.operatorName() === LogicOperatorSymbol.Not) {
+        domain = logicOperator.apply({ domain: domain });
       }
     }
   }
   return domain;
 }
-
 /**
  * Convert a TREE relation into a solver expression.
  * @param {ITreeRelation} relation - TREE relation.
@@ -290,15 +284,15 @@ export function areTypesCompatible(expressions: ISolverExpression[]): boolean {
 export function getSolutionInterval(value: number, operator: SparqlRelationOperator): SolutionInterval | undefined {
   switch (operator) {
     case SparqlRelationOperator.GreaterThanRelation:
-      return new SolutionInterval([ nextUp(value), Number.POSITIVE_INFINITY ]);
+      return new SolutionInterval([nextUp(value), Number.POSITIVE_INFINITY]);
     case SparqlRelationOperator.GreaterThanOrEqualToRelation:
-      return new SolutionInterval([ value, Number.POSITIVE_INFINITY ]);
+      return new SolutionInterval([value, Number.POSITIVE_INFINITY]);
     case SparqlRelationOperator.EqualThanRelation:
-      return new SolutionInterval([ value, value ]);
+      return new SolutionInterval([value, value]);
     case SparqlRelationOperator.LessThanRelation:
-      return new SolutionInterval([ Number.NEGATIVE_INFINITY, nextDown(value) ]);
+      return new SolutionInterval([Number.NEGATIVE_INFINITY, nextDown(value)]);
     case SparqlRelationOperator.LessThanOrEqualToRelation:
-      return new SolutionInterval([ Number.NEGATIVE_INFINITY, value ]);
+      return new SolutionInterval([Number.NEGATIVE_INFINITY, value]);
     default:
       // Not an operator that is compatible with number.
       break;
