@@ -5,8 +5,6 @@ if (!globalThis.window) {
   jest.unmock('follow-redirects');
 }
 
-import type { QueryBindings } from '@comunica/types';
-import arrayifyStream from 'arrayify-stream';
 import { QueryEngine } from '../lib';
 import { usePolly, loadQueries } from './util';
 
@@ -46,8 +44,8 @@ describe('System test: QuerySparqlLinkTraversalSolid', () => {
 
   ], (file, expectedCount) => () => {
     it('produces the expected results', async() => {
-      const result = <QueryBindings> await engine.query(queries[file], { lenient: true });
-      expect((await arrayifyStream(await result.execute())).length).toBe(expectedCount);
+      const bindings = await engine.queryBindings(queries[file], { lenient: true });
+      expect((await bindings.toArray()).length).toBe(expectedCount);
     });
   });
 });

@@ -1,14 +1,14 @@
 {
-  "name": "@comunica/actor-rdf-resolve-hypermedia-links-traverse",
+  "name": "@comunica/actor-rdf-join-inner-multi-adaptive-destroy",
   "version": "0.1.1",
-  "description": "A traverse rdf-resolve-hypermedia-links actor",
+  "description": "A inner-multi-adaptive-destroy rdf-join actor",
   "lsd:module": true,
   "main": "lib/index.js",
   "typings": "lib/index",
   "repository": {
     "type": "git",
-    "url": "https://github.com/comunica/comunica-feature-link-traversal.git",
-    "directory": "packages/actor-rdf-resolve-hypermedia-links-traverse"
+    "url": "https://github.com/comunica/comunica.git",
+    "directory": "packages/actor-rdf-join-inner-multi-adaptive-destroy"
   },
   "publishConfig": {
     "access": "public"
@@ -17,12 +17,12 @@
   "keywords": [
     "comunica",
     "actor",
-    "rdf-resolve-hypermedia-links",
-    "traverse"
+    "rdf-join",
+    "inner-multi-adaptive-destroy"
   ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/comunica/comunica-feature-link-traversal/issues"
+    "url": "https://github.com/comunica/comunica/issues"
   },
   "homepage": "https://comunica.dev/",
   "files": [
@@ -32,10 +32,12 @@
     "lib/**/*.js.map"
   ],
   "dependencies": {
-    "@comunica/bus-rdf-resolve-hypermedia-links": "2.6.11-alpha.42.0",
     "@comunica/context-entries": "2.6.11-alpha.42.0",
-    "@comunica/context-entries-link-traversal": "^0.1.1",
-    "@comunica/core": "2.6.11-alpha.42.0"
+    "@comunica/bus-query-operation": "2.6.11-alpha.42.0",
+    "@comunica/bus-rdf-join": "2.6.11-alpha.42.0",
+    "@comunica/mediatortype-join-coefficients": "2.6.11-alpha.42.0",
+    "@comunica/types": "2.6.11-alpha.42.0",
+    "asynciterator": "^3.8.0"
   },
   "scripts": {
     "build": "npm run build:ts && npm run build:components",
