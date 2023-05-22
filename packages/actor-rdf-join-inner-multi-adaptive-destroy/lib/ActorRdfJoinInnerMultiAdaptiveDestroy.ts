@@ -7,7 +7,7 @@ import type {
 import {
   ActorRdfJoin,
 } from '@comunica/bus-rdf-join';
-import { KeysRdfJoin } from '@comunica/context-entries';
+import { KeysRdfJoin } from '@comunica/context-entries-link-traversal';
 import type { IMediatorTypeJoinCoefficients } from '@comunica/mediatortype-join-coefficients';
 import type { IQueryOperationResultBindings, MetadataBindings, IJoinEntry } from '@comunica/types';
 import { BindingsStreamAdaptiveDestroy } from './BindingsStreamAdaptiveDestroy';
