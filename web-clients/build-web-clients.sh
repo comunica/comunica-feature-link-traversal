@@ -6,8 +6,15 @@ set -e
 
 cwd=$(pwd)
 mkdir -p $cwd/web-clients/builds
+
+# Install web-clients package
+pushd $cwd/web-clients
+npm install
+popd
+
 pushd engines/query-sparql-link-traversal >/dev/null
 for config in ../config-query-sparql-link-traversal/config/*.json; do
+  cwdengine=$(pwd)
   id=$(echo $config | sed "s/.*config\/config-\(.*\)\.json/\1/")
 
   if [ "$id" = "base" ] || [ "$id" = "solid-base" ] || [ "$id" = "solid-base-adaptive" ]; then
@@ -20,7 +27,7 @@ for config in ../config-query-sparql-link-traversal/config/*.json; do
 
   # Build web client
   echo -e "\033[1m\033[34mBuilding config $id\033[0m"
-  npx -p @comunica/web-client-generator@1.8.0 comunica-web-client-generator $config \
+  npm run --prefix $cwd/web-clients generate -- $cwdengine/$config \
     -d $cwd/web-clients/builds/$id \
     -s $cwd/web-clients/settings.custom.json \
     -q $cwd/web-clients/queries \
