@@ -8,7 +8,7 @@
   "@type": "Runner",
   "actors": [
     {
-      "@id": "urn:comunica:default:rdf-join-entries-sort/actors#traversal-zero-knowledge",
+      "@id": "urn:comunica:default:rdf-join-entries-sort/actors#cardinality",
       "@type": "ActorRdfJoinEntriesSortCardinality"
     }
   ]
