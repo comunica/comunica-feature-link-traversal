@@ -44,15 +44,15 @@ export class Or implements LogicOperator {
 export class Not implements LogicOperator {
     private readonly orOperator: Or = new Or()
     apply({ domain }: { interval?: SolutionInterval | undefined; domain: SolutionDomain; }): SolutionDomain {
-        let newDomain: SolutionInterval[] = [];
+        let newDomain = new SolutionDomain();
         for (const domainElement of domain.getDomain()) {
-            // Inverse the domain and had it with care for the overlap
+            // Inverse the domain and add it with care for the overlap
             // wich is similar to apply an or operator
             for (const el of domainElement.inverse()) {
-                newDomain = this.orOperator.apply({ interval: el, domain }).getDomain();
+                newDomain = this.orOperator.apply({ interval: el, domain:newDomain });
             }
         }
-        return SolutionDomain.newWithInitialIntervals(newDomain);
+        return newDomain;
     }
 
     public operatorName(): LogicOperatorSymbol {

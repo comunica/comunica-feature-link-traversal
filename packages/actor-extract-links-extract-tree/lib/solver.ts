@@ -60,7 +60,7 @@ export function isBooleanExpressionTreeRelationFilterSolvable({ relation, filter
     solutionDomain = recursifResolve(
       filterExpression,
       solutionDomain,
-      Or,
+      new Or(),
       variable,
     );
   } catch (error: unknown) {
