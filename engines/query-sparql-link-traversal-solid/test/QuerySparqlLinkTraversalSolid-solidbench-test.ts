@@ -20,6 +20,9 @@ describe('System test: QuerySparqlLinkTraversalSolid', () => {
   });
 
   describeEach([
+    [ 'interactive-short-4-1.sparql', 1 ],
+    [ 'interactive-short-5-1.sparql', 1 ],
+    [ 'interactive-short-6-1.sparql', 0 ],
     [ 'interactive-discover-1-1.sparql', 6 ],
     [ 'interactive-discover-1-5.sparql', 8 ],
     [ 'interactive-discover-2-1.sparql', 66 ],
@@ -33,9 +36,6 @@ describe('System test: QuerySparqlLinkTraversalSolid', () => {
     [ 'interactive-discover-6-5.sparql', 27 ],
     [ 'interactive-discover-7-5.sparql', 1 ],
     [ 'interactive-discover-8-1.sparql', 10 ],
-    [ 'interactive-short-4-1.sparql', 1 ],
-    [ 'interactive-short-5-1.sparql', 1 ],
-    [ 'interactive-short-6-1.sparql', 0 ],
 
     // The following tests are disabled, as they consume too much memory under default Node.js limits.
     // We may be able to enable these with future optimizations.

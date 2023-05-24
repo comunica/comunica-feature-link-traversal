@@ -9,7 +9,7 @@ import type { IActorArgs, IActorTest } from '@comunica/core';
 import { ActionContext } from '@comunica/core';
 import type { IActionContext } from '@comunica/types';
 import type * as RDF from '@rdfjs/types';
-import * as parseLink from 'parse-link-header';
+import parseLink from 'parse-link-header';
 import { storeStream } from 'rdf-store-stream';
 import { resolve } from 'relative-to-absolute-iri';
 import type * as ShEx from 'shexj';

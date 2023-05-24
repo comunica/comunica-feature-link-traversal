@@ -104,16 +104,6 @@
   },
   "resolutions": {
     "@types/yargs": "17.0.13",
-    "@types/node": "^18.0.0",
-    "@comunica/types": "2.6.11-alpha.42.0",
-    "@comunica/config-query-sparql": "2.6.11-alpha.42.0",
-    "@comunica/query-sparql": "2.6.11-alpha.42.0",
-    "@comunica/actor-rdf-resolve-quad-pattern-federated": "2.6.11-alpha.42.0",
-    "@comunica/actor-rdf-resolve-quad-pattern-hypermedia": "2.6.11-alpha.42.0",
-    "@comunica/actor-rdf-resolve-quad-pattern-rdfjs-source": "2.6.11-alpha.42.0",
-    "@comunica/actor-query-operation-union": "2.6.11-alpha.42.0",
-    "@comunica/actor-rdf-join-inner-multi-bind": "2.6.11-alpha.42.0",
-    "@comunica/actor-abstract-path": "2.6.11-alpha.42.0",
-    "@inrupt/solid-client-authn-node": "1.13.4"
+    "@types/node": "^18.0.0"
   }
 }

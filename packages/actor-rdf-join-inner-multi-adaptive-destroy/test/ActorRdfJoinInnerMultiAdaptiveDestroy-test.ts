@@ -3,8 +3,7 @@ import type { MediatorRdfJoin } from '@comunica/bus-rdf-join';
 import type {
   MediatorRdfJoinSelectivity,
 } from '@comunica/bus-rdf-join-selectivity';
-
-import { KeysRdfJoin } from '@comunica/context-entries';
+import { KeysRdfJoin } from '@comunica/context-entries-link-traversal';
 import { ActionContext, Bus } from '@comunica/core';
 import { MetadataValidationState } from '@comunica/metadata';
 import type { IActionContext, IJoinEntry } from '@comunica/types';

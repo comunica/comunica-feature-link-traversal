@@ -46,7 +46,7 @@ export function mockHttp() {
   });
 }
 
-const queries = {};
+const queries: Record<string, string> = {};
 for (const file of [
   'interactive-discover-1-1.sparql',
   'interactive-discover-1-5.sparql',
