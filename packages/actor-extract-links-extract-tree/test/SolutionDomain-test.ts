@@ -1,9 +1,5 @@
 import { SolutionInterval } from '../lib//SolutionInterval';
 import { SolutionDomain } from '../lib/SolutionDomain';
-import { LogicOperatorSymbol } from '../lib/solverInterfaces';
-
-const nextUp = require('ulp').nextUp;
-const nextDown = require('ulp').nextDown;
 
 describe('SolutionDomain', () => {
   describe('constructor', () => {
@@ -48,7 +44,7 @@ describe('SolutionDomain', () => {
     });
     
   });
-  
+
   describe('isDomainEmpty', () => {
     it('should return true when the domain is empty', () => {
       const domain = new SolutionDomain();
@@ -57,18 +53,10 @@ describe('SolutionDomain', () => {
     });
 
     it('should return false when the domain is not empty', () => {
-      const domain = SolutionDomain.newWithInitialValue(new SolutionInterval([ 0, 1 ]));
+      const domain = SolutionDomain.newWithInitialIntervals(new SolutionInterval([ 0, 1 ]));
 
       expect(domain.isDomainEmpty()).toBe(false);
     });
   });
 
-  describe('clone', () => {
-    it('should return a deep copy of an existing domain', () => {
-      let domain = SolutionDomain.newWithInitialValue(new SolutionInterval([ 0, 1 ]));
-      const clonedDomain = domain.clone();
-      domain = domain.addWithOrOperator(new SolutionInterval([ 100, 200 ]));
-      expect(clonedDomain.getDomain()).not.toStrictEqual(domain.getDomain());
-    });
-  });
 });
