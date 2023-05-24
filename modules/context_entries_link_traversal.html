@@ -100,6 +100,7 @@
 							<h3>Variables</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-variable tsd-parent-kind-module"><a href="context_entries_link_traversal.html#KeysExtractLinksTree" class="tsd-kind-icon">Keys<wbr>Extract<wbr>Links<wbr>Tree</a></li>
+								<li class="tsd-kind-variable tsd-parent-kind-module"><a href="context_entries_link_traversal.html#KeysRdfJoin" class="tsd-kind-icon">Keys<wbr>Rdf<wbr>Join</a></li>
 								<li class="tsd-kind-variable tsd-parent-kind-module"><a href="context_entries_link_traversal.html#KeysRdfResolveHypermediaLinks" class="tsd-kind-icon">Keys<wbr>Rdf<wbr>Resolve<wbr>Hypermedia<wbr>Links</a></li>
 							</ul>
 						</section>
@@ -114,7 +115,7 @@
 					<div class="tsd-signature tsd-kind-icon">Keys<wbr>Extract<wbr>Links<wbr>Tree<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{ </span>strictTraversal<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">ActionContextKey</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol"> = ...</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/comunica/comunica-feature-link-traversal/blob/bb07ddc/packages/context-entries-link-traversal/lib/Keys.ts#L23">packages/context-entries-link-traversal/lib/Keys.ts:23</a></li>
+							<li>Defined in <a href="https://github.com/comunica/comunica-feature-link-traversal/blob/9e31e5a/packages/context-entries-link-traversal/lib/Keys.ts#L24">packages/context-entries-link-traversal/lib/Keys.ts:24</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-type-declaration">
@@ -127,12 +128,30 @@
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-module">
+					<a name="KeysRdfJoin" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagConst">Const</span> Keys<wbr>Rdf<wbr>Join</h3>
+					<div class="tsd-signature tsd-kind-icon">Keys<wbr>Rdf<wbr>Join<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{ </span>skipAdaptiveJoin<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">ActionContextKey</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">IDataDestination</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol"> = ...</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/comunica/comunica-feature-link-traversal/blob/9e31e5a/packages/context-entries-link-traversal/lib/Keys.ts#L33">packages/context-entries-link-traversal/lib/Keys.ts:33</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-type-declaration">
+						<h4>Type declaration</h4>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter">
+								<h5>skip<wbr>Adaptive<wbr>Join<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">ActionContextKey</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">IDataDestination</span><span class="tsd-signature-symbol">&gt;</span></h5>
+							</li>
+						</ul>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-module">
 					<a name="KeysRdfResolveHypermediaLinks" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagConst">Const</span> Keys<wbr>Rdf<wbr>Resolve<wbr>Hypermedia<wbr>Links</h3>
 					<div class="tsd-signature tsd-kind-icon">Keys<wbr>Rdf<wbr>Resolve<wbr>Hypermedia<wbr>Links<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{ </span>annotateSources<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">ActionContextKey</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">&quot;graph&quot;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">; </span>traverse<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">ActionContextKey</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol"> = ...</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/comunica/comunica-feature-link-traversal/blob/bb07ddc/packages/context-entries-link-traversal/lib/Keys.ts#L10">packages/context-entries-link-traversal/lib/Keys.ts:10</a></li>
+							<li>Defined in <a href="https://github.com/comunica/comunica-feature-link-traversal/blob/9e31e5a/packages/context-entries-link-traversal/lib/Keys.ts#L11">packages/context-entries-link-traversal/lib/Keys.ts:11</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -197,6 +216,9 @@
 						<a href="actor_rdf_join_entries_sort_traversal_zero_knowledge.html" class="tsd-kind-icon">actor-<wbr>rdf-<wbr>join-<wbr>entries-<wbr>sort-<wbr>traversal-<wbr>zero-<wbr>knowledge</a>
 					</li>
 					<li class=" tsd-kind-module">
+						<a href="actor_rdf_join_inner_multi_adaptive_destroy.html" class="tsd-kind-icon">actor-<wbr>rdf-<wbr>join-<wbr>inner-<wbr>multi-<wbr>adaptive-<wbr>destroy</a>
+					</li>
+					<li class=" tsd-kind-module">
 						<a href="actor_rdf_metadata_extract_shapetrees.html" class="tsd-kind-icon">actor-<wbr>rdf-<wbr>metadata-<wbr>extract-<wbr>shapetrees</a>
 					</li>
 					<li class=" tsd-kind-module">
@@ -230,6 +252,9 @@
 						<ul>
 							<li class=" tsd-kind-variable tsd-parent-kind-module">
 								<a href="context_entries_link_traversal.html#KeysExtractLinksTree" class="tsd-kind-icon">Keys<wbr>Extract<wbr>Links<wbr>Tree</a>
+							</li>
+							<li class=" tsd-kind-variable tsd-parent-kind-module">
+								<a href="context_entries_link_traversal.html#KeysRdfJoin" class="tsd-kind-icon">Keys<wbr>Rdf<wbr>Join</a>
 							</li>
 							<li class=" tsd-kind-variable tsd-parent-kind-module">
 								<a href="context_entries_link_traversal.html#KeysRdfResolveHypermediaLinks" class="tsd-kind-icon">Keys<wbr>Rdf<wbr>Resolve<wbr>Hypermedia<wbr>Links</a>
