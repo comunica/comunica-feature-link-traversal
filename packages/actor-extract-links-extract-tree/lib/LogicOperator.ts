@@ -3,7 +3,6 @@ import { SolutionInterval } from "./SolutionInterval";
 import { LogicOperatorSymbol } from './solverInterfaces';
 export interface LogicOperator {
     apply({ interval, domain }: { interval?: SolutionInterval, domain: SolutionDomain }): SolutionDomain,
-    //merge(domain1: SolutionDomain, domain2: SolutionDomain): SolutionDomain,
     operatorName(): LogicOperatorSymbol
 }
 

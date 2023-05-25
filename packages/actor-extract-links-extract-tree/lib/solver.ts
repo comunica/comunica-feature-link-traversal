@@ -174,9 +174,9 @@ export function recursifResolve(
     // add the associated interval into the domain in relation to
     // the logic operator.
     if (filterExpression.term.value === 'false') {
-      domain = logicOperator.apply({ interval: A_FALSE_EXPRESSION, domain });
+      domain = logicOperator.apply({ subject: A_FALSE_EXPRESSION, domain });
     } else if (filterExpression.term.value === 'true') {
-      domain = logicOperator.apply({ interval: A_TRUE_EXPRESSION, domain });
+      domain = logicOperator.apply({ subject: A_TRUE_EXPRESSION, domain });
     } else {
       throw new MisformatedFilterTermError(`The term sent is not a boolean but is this value {${filterExpression.term.value}}`);
     }
@@ -199,7 +199,7 @@ export function recursifResolve(
       } else {
         solutionInterval = getSolutionInterval(solverExpression.valueAsNumber, solverExpression.operator)!;
       }
-      domain = logicOperator.apply({ interval: solutionInterval, domain });
+      domain = logicOperator.apply({ subject: solutionInterval, domain });
     }
   } else if (
     filterExpression.args[0].expressionType === Algebra.expressionTypes.TERM &&
@@ -216,7 +216,7 @@ export function recursifResolve(
       const logicOperator = operatorFactory(logicOperatorSymbol);
       for (const arg of filterExpression.args) {
           domain = recursifResolve(arg, domain, logicOperator, variable);
-        
+         
       }
       if (logicOperator.operatorName() === LogicOperatorSymbol.Not) {
         domain = logicOperator.apply({ domain: domain });
