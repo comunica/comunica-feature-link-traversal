@@ -17,7 +17,7 @@ import type {
 } from './solverInterfaces';
 import { SparqlRelationOperator } from './TreeMetadata';
 import type { ITreeRelation } from './TreeMetadata';
-import { And, LogicOperator, Not, Or, operatorFactory } from './LogicOperator';
+import { And, LogicOperator, Or, operatorFactory } from './LogicOperator';
 
 const nextUp = require('ulp').nextUp;
 const nextDown = require('ulp').nextDown;
@@ -102,7 +102,8 @@ export function isBooleanExpressionTreeRelationFilterSolvable({ relation, filter
  */
 export function resolveAFilterTerm(expression: Algebra.Expression,
   operator: SparqlRelationOperator,
-  variable: Variable):
+  variable: Variable,
+):
   ISolverExpression | Error {
   let rawValue: string | undefined;
   let valueType: SparqlOperandDataTypes | undefined;
@@ -164,8 +165,9 @@ export function resolveAFilterTerm(expression: Algebra.Expression,
 export function recursifResolve(
   filterExpression: Algebra.Expression,
   domain: SolutionDomain,
-  logicOperator: LogicOperator,
+  logicOperator: LogicOperator = new Or(),
   variable: Variable,
+  negativeExpression: boolean = false,
 ): SolutionDomain {
 
   if (filterExpression.expressionType === Algebra.expressionTypes.TERM
@@ -174,9 +176,9 @@ export function recursifResolve(
     // add the associated interval into the domain in relation to
     // the logic operator.
     if (filterExpression.term.value === 'false') {
-      domain = logicOperator.apply({ subject: A_FALSE_EXPRESSION, domain });
+      domain = logicOperator.apply({ interval: A_FALSE_EXPRESSION, domain });
     } else if (filterExpression.term.value === 'true') {
-      domain = logicOperator.apply({ subject: A_TRUE_EXPRESSION, domain });
+      domain = logicOperator.apply({ interval: A_TRUE_EXPRESSION, domain });
     } else {
       throw new MisformatedFilterTermError(`The term sent is not a boolean but is this value {${filterExpression.term.value}}`);
     }
@@ -188,18 +190,32 @@ export function recursifResolve(
     filterExpression.args.length === 2
   ) {
     const rawOperator = filterExpression.operator;
-    const operator = filterOperatorToSparqlRelationOperator(rawOperator);
-    if (operator) {
+    let operator = filterOperatorToSparqlRelationOperator(rawOperator);
+    if (operator && logicOperator.operatorName()!= LogicOperatorSymbol.Not) {
+      if (negativeExpression) {
+        operator = reverseOperator(operator)
+        if (operator=== undefined) {
+          throw TypeError('The operator cannot be reversed')
+        }
+        const newLogicOperator = reverseLogicOperator(logicOperator)
+        if (!newLogicOperator) {
+          throw TypeError('The logic operator cannot be reversed')
+        }
+        logicOperator = newLogicOperator;
+      }
       const solverExpression = resolveAFilterTerm(filterExpression, operator, variable);
-      let solutionInterval: SolutionInterval | undefined;
+      let solutionInterval: SolutionInterval | [SolutionInterval, SolutionInterval]|undefined;
       if (solverExpression instanceof MissMatchVariableError) {
         solutionInterval = A_TRUE_EXPRESSION;
       } else if (solverExpression instanceof Error) {
         throw solverExpression;
       } else {
-        solutionInterval = getSolutionInterval(solverExpression.valueAsNumber, solverExpression.operator)!;
+        solutionInterval = getSolutionInterval(solverExpression.valueAsNumber, solverExpression.operator);
+        if (!solutionInterval){
+          throw TypeError('The operator is not supported');
+        }
       }
-      domain = logicOperator.apply({ subject: solutionInterval, domain });
+      domain = logicOperator.apply({ interval: solutionInterval, domain });
     }
   } else if (
     filterExpression.args[0].expressionType === Algebra.expressionTypes.TERM &&
@@ -213,14 +229,15 @@ export function recursifResolve(
     // We prepare the next recursion and we compute the accumulation of results.
     const logicOperatorSymbol = LogicOperatorReversed.get(filterExpression.operator);
     if (logicOperatorSymbol) {
-      const logicOperator = operatorFactory(logicOperatorSymbol);
       for (const arg of filterExpression.args) {
-          domain = recursifResolve(arg, domain, logicOperator, variable);
-         
+        if (logicOperatorSymbol === LogicOperatorSymbol.Not) {
+          domain = recursifResolve(arg, domain, logicOperator, variable, !negativeExpression);
+        }else{
+          const logicOperator = operatorFactory(logicOperatorSymbol);
+          domain = recursifResolve(arg, domain, logicOperator, variable, negativeExpression);
+        }
       }
-      if (logicOperator.operatorName() === LogicOperatorSymbol.Not) {
-        domain = logicOperator.apply({ domain: domain });
-      }
+      
     }
   }
   return domain;
@@ -280,7 +297,7 @@ export function areTypesCompatible(expressions: ISolverExpression[]): boolean {
  * @param {SparqlRelationOperator} operator
  * @returns {SolutionInterval | undefined} The solution range associated with the value and the operator.
  */
-export function getSolutionInterval(value: number, operator: SparqlRelationOperator): SolutionInterval | undefined {
+export function getSolutionInterval(value: number, operator: SparqlRelationOperator): SolutionInterval | [SolutionInterval, SolutionInterval]| undefined {
   switch (operator) {
     case SparqlRelationOperator.GreaterThanRelation:
       return new SolutionInterval([nextUp(value), Number.POSITIVE_INFINITY]);
@@ -292,6 +309,11 @@ export function getSolutionInterval(value: number, operator: SparqlRelationOpera
       return new SolutionInterval([Number.NEGATIVE_INFINITY, nextDown(value)]);
     case SparqlRelationOperator.LessThanOrEqualToRelation:
       return new SolutionInterval([Number.NEGATIVE_INFINITY, value]);
+    case SparqlRelationOperator.NotEqualThanRelation:
+        return [
+          new SolutionInterval([Number.NEGATIVE_INFINITY, nextDown(value)]),
+          new SolutionInterval([nextUp(value),Number.POSITIVE_INFINITY])
+        ];
     default:
       // Not an operator that is compatible with number.
       break;
@@ -381,5 +403,37 @@ export function filterOperatorToSparqlRelationOperator(filterOperator: string): 
       return SparqlRelationOperator.GreaterThanOrEqualToRelation;
     default:
       return undefined;
+  }
+}
+
+export function reverseOperator(operator: SparqlRelationOperator): SparqlRelationOperator | undefined {
+  switch (operator) {
+    case SparqlRelationOperator.LessThanRelation:
+      return SparqlRelationOperator.GreaterThanOrEqualToRelation
+    case SparqlRelationOperator.LessThanOrEqualToRelation:
+      return SparqlRelationOperator.GreaterThanRelation
+    case SparqlRelationOperator.GreaterThanRelation:
+      return SparqlRelationOperator.LessThanOrEqualToRelation
+    case SparqlRelationOperator.GreaterThanOrEqualToRelation:
+      return SparqlRelationOperator.LessThanRelation
+    case SparqlRelationOperator.EqualThanRelation:
+      return SparqlRelationOperator.NotEqualThanRelation
+    case SparqlRelationOperator.NotEqualThanRelation:
+      return SparqlRelationOperator.EqualThanRelation
+
+    default:
+      return undefined
+  }
+}
+
+export function reverseLogicOperator(operator: LogicOperator): LogicOperator | undefined {
+  switch (operator.operatorName()) {
+    case LogicOperatorSymbol.And:
+      return new Or()
+    case LogicOperatorSymbol.Or:
+      return new And()
+    // the reverse is making an assetion and this operator is useless
+    case LogicOperatorSymbol.Not:
+      return undefined
   }
 }

@@ -2,13 +2,17 @@ import { SolutionDomain } from "./SolutionDomain";
 import { SolutionInterval } from "./SolutionInterval";
 import { LogicOperatorSymbol } from './solverInterfaces';
 export interface LogicOperator {
-    apply({ interval, domain }: { interval?: SolutionInterval, domain: SolutionDomain }): SolutionDomain,
+    apply({ interval, domain }: { interval?: SolutionInterval|[SolutionInterval, SolutionInterval], domain: SolutionDomain }): SolutionDomain,
     operatorName(): LogicOperatorSymbol
 }
 
 
 export class Or implements LogicOperator {
-    public apply({ interval, domain }: { interval?: SolutionInterval | undefined; domain: SolutionDomain; }): SolutionDomain {
+    public apply({ interval, domain }: { interval?: SolutionInterval | [SolutionInterval, SolutionInterval]; domain: SolutionDomain; }): SolutionDomain {
+        if(Array.isArray(interval)){
+            domain = this.apply({interval:interval[0],domain});
+            return this.apply({interval:interval[1],domain});
+        }
         let newDomain: SolutionInterval[] = [];
         if (!interval) {
             return domain;
@@ -40,27 +44,12 @@ export class Or implements LogicOperator {
     }
 }
 
-export class Not implements LogicOperator {
-    private readonly orOperator: Or = new Or()
-    apply({ domain }: { interval?: SolutionInterval | undefined; domain: SolutionDomain; }): SolutionDomain {
-        let newDomain = new SolutionDomain();
-        for (const domainElement of domain.getDomain()) {
-            // Inverse the domain and add it with care for the overlap
-            // wich is similar to apply an or operator
-            for (const el of domainElement.inverse()) {
-                newDomain = this.orOperator.apply({ interval: el, domain:newDomain });
-            }
-        }
-        return newDomain;
-    }
-
-    public operatorName(): LogicOperatorSymbol {
-        return LogicOperatorSymbol.Not;
-    }
-}
-
 export class And implements LogicOperator {
-    apply({ interval, domain }: { interval?: SolutionInterval | undefined; domain: SolutionDomain; }): SolutionDomain {
+    apply({ interval, domain }: { interval?: SolutionInterval | [SolutionInterval, SolutionInterval]; domain: SolutionDomain; }): SolutionDomain {
+        if(Array.isArray(interval)){
+            domain = this.apply({interval:interval[0],domain});
+            return this.apply({interval:interval[1],domain});
+        }
         let newDomain: SolutionInterval[] = [];
         if (!interval) {
             return domain;
@@ -94,9 +83,7 @@ export class And implements LogicOperator {
 const OPERATOR_MAP = new Map<LogicOperatorSymbol, LogicOperator>(
     [
         [new Or().operatorName(), new Or()],
-        [new And().operatorName(), new And()],
-        [new Not().operatorName(), new Not()],
-    
+        [new And().operatorName(), new And()],    
     ]
 );
 

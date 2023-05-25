@@ -39,6 +39,7 @@ export enum LogicOperatorSymbol {
   And = '&&',
   Or = '||',
   Not = '!',
+  Assert=''
 }
 
 /**

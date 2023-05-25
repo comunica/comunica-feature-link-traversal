@@ -847,7 +847,7 @@ describe('solver function', () => {
 
       const filterExpression = translate(`
             SELECT * WHERE { ?x ?y ?z 
-            FILTER( !(?x=2 && ?x>5) || ?x < 88.3)
+            FILTER( !(?x=100 && ?x>5) || ?x < 88.3)
             }`).input.expression;
 
       const variable = 'x';

@@ -1,4 +1,4 @@
-import { Or, Not, And } from '../lib/LogicOperator';
+import { Or, And } from '../lib/LogicOperator';
 import { SolutionInterval } from '../lib/SolutionInterval';
 import { LogicOperatorSymbol } from '../lib/solverInterfaces';
 import { SolutionDomain } from '../lib/SolutionDomain';
@@ -89,48 +89,6 @@ describe('LogicOperator', () => {
         });
     });
 
-    describe('Not', () => {
-        const not = new Not();
-        describe('operatorName', () => {
-            it('Should return the associated operator name', () => {
-                expect(not.operatorName()).toBe(LogicOperatorSymbol.Not);
-            });
-        });
-        describe('apply', () => {
-            it('given a domain with one range should return the inverse of the domain', () => {
-                const solutionInterval = new SolutionInterval([0, 1]);
-                const solutionDomain = SolutionDomain.newWithInitialIntervals(solutionInterval);
-
-                const expectedDomain = [
-                    new SolutionInterval([Number.NEGATIVE_INFINITY, nextDown(0)]),
-                    new SolutionInterval([nextUp(1), Number.POSITIVE_INFINITY]),
-                ];
-                const newDomain = not.apply({ domain: solutionDomain });
-
-                expect(newDomain.getDomain().length).toBe(2);
-                expect(newDomain.getDomain()).toStrictEqual(expectedDomain);
-            });
-
-            it('given a domain with multiple range should return the inverted domain', () => {
-                let domain = new SolutionDomain();
-                const intervals = [
-                    new SolutionInterval([0, 1]),
-                    new SolutionInterval([2, 2]),
-                    new SolutionInterval([44, 55]),
-                ];
-                const expectedDomain = [
-                    new SolutionInterval([Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY]),
-                ];
-
-                for (const interval of intervals) {
-                    domain = new Or().apply({ interval: interval, domain })
-                }
-                domain = not.apply({ domain });
-
-                expect(domain.getDomain()).toStrictEqual(expectedDomain);
-            });
-        });
-    });
 
     describe('And', () => {
         const and = new And();
