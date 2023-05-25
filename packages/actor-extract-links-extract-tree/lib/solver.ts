@@ -215,9 +215,8 @@ export function recursifResolve(
     if (logicOperatorSymbol) {
       const logicOperator = operatorFactory(logicOperatorSymbol);
       for (const arg of filterExpression.args) {
-        if (logicOperator.operatorName() !== LogicOperatorSymbol.Not) {
           domain = recursifResolve(arg, domain, logicOperator, variable);
-        }
+        
       }
       if (logicOperator.operatorName() === LogicOperatorSymbol.Not) {
         domain = logicOperator.apply({ domain: domain });

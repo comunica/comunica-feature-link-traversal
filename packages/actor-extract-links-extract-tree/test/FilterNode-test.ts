@@ -489,7 +489,7 @@ describe('ActorOptimizeLinkTraversalFilterTreeLinks', () => {
           ex:foo ex:path ?o.
           ex:foo ex:p ex:o.
           ex:foo ex:p2 ?x.
-          FILTER(?o>2 || ?x=4 || (?x<3 && ?o<3) )
+          FILTER(?o>2 || ?x=4 || (?x<3 && ?o<6) )
         }
         `, { prefixes: { ex: 'http://example.com#' }});
 
