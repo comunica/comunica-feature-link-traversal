@@ -167,7 +167,6 @@ export function recursifResolve(
   domain: SolutionDomain,
   logicOperator: LogicOperator = new Or(),
   variable: Variable,
-  negativeExpression: boolean = false,
 ): SolutionDomain {
 
   if (filterExpression.expressionType === Algebra.expressionTypes.TERM
@@ -192,17 +191,6 @@ export function recursifResolve(
     const rawOperator = filterExpression.operator;
     let operator = filterOperatorToSparqlRelationOperator(rawOperator);
     if (operator && logicOperator.operatorName()!= LogicOperatorSymbol.Not) {
-      if (negativeExpression) {
-        operator = reverseOperator(operator)
-        if (operator=== undefined) {
-          throw TypeError('The operator cannot be reversed')
-        }
-        const newLogicOperator = reverseLogicOperator(logicOperator)
-        if (!newLogicOperator) {
-          throw TypeError('The logic operator cannot be reversed')
-        }
-        logicOperator = newLogicOperator;
-      }
       const solverExpression = resolveAFilterTerm(filterExpression, operator, variable);
       let solutionInterval: SolutionInterval | [SolutionInterval, SolutionInterval]|undefined;
       if (solverExpression instanceof MissMatchVariableError) {
@@ -232,10 +220,11 @@ export function recursifResolve(
       for (const arg of filterExpression.args) {
         console.log(arg)
         if (logicOperatorSymbol === LogicOperatorSymbol.Not) {
-          domain = recursifResolve(arg, domain, logicOperator, variable, !negativeExpression);
+          inverseFilter(arg);
+          domain = recursifResolve(arg, domain, logicOperator, variable);
         }else{
           const logicOperator = operatorFactory(logicOperatorSymbol);
-          domain = recursifResolve(arg, domain, logicOperator, variable, negativeExpression);
+          domain = recursifResolve(arg, domain, logicOperator, variable);
         }
       }
       
@@ -402,6 +391,38 @@ export function filterOperatorToSparqlRelationOperator(filterOperator: string): 
       return SparqlRelationOperator.GreaterThanRelation;
     case '>=':
       return SparqlRelationOperator.GreaterThanOrEqualToRelation;
+    case '!=':
+        return SparqlRelationOperator.NotEqualThanRelation;
+    default:
+      return undefined;
+  }
+}
+
+export function reverseRawLogicOperator(logicOperator: string) :string|undefined{
+  switch(logicOperator){
+    case '&&':
+      return '||'
+    case '||':
+        return '&&'
+    case '!':
+        return undefined;
+    default:
+      return undefined
+  }
+}
+
+export function reverseRawOperator(filterOperator: string): string | undefined {
+  switch (filterOperator) {
+    case '=':
+      return '!='
+    case '<':
+      return '>='
+    case '<=':
+      return '>'
+    case '>':
+      return '<='
+    case '>=':
+      return '<'
     default:
       return undefined;
   }
@@ -437,4 +458,35 @@ export function reverseLogicOperator(operator: LogicOperator): LogicOperator | u
     case LogicOperatorSymbol.Not:
       return undefined
   }
+}
+
+export function inverseFilter(filterExpression: Algebra.Expression){
+  if (filterExpression.expressionType === Algebra.expressionTypes.TERM
+    ) {
+      if (filterExpression.term.value === 'false') {
+        filterExpression.term.value = 'true';
+      } else if (filterExpression.term.value === 'true') {
+        filterExpression.term.value = 'false';
+      } else {
+        throw new MisformatedFilterTermError(`The term sent is not a boolean but is this value {${filterExpression.term.value}}`);
+      }
+    }else if (
+      // If it's an array of terms then we should be able to create a solver expression.
+      // Given the resulting solver expression we can calculate a solution interval 
+      // that we will add to the domain with regards to the logic operator.
+      filterExpression.args[0].expressionType === Algebra.expressionTypes.TERM &&
+      filterExpression.args.length === 2
+    ) {
+      filterExpression.operator = reverseRawOperator(filterExpression.operator)
+
+    }else{
+      for (const arg of filterExpression.args) {
+        const reversedOperator = reverseRawLogicOperator(filterExpression.operator);
+        if(reversedOperator){
+          filterExpression.operator = reversedOperator;
+        }
+        inverseFilter(arg);
+      }
+    }
+  
 }
