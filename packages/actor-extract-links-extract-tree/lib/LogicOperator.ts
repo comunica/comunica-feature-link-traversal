@@ -47,8 +47,21 @@ export class Or implements LogicOperator {
 export class And implements LogicOperator {
     apply({ interval, domain }: { interval?: SolutionInterval | [SolutionInterval, SolutionInterval]; domain: SolutionDomain; }): SolutionDomain {
         if(Array.isArray(interval)){
-            domain = this.apply({interval:interval[0],domain});
-            return this.apply({interval:interval[1],domain});
+            const testDomain1 = this.apply({interval:interval[0],domain});
+            const testDomain2 = this.apply({interval:interval[1],domain});
+
+            const cannotAddDomain1 = domain.equal(testDomain1)
+            const cannotAddDomain2 = domain.equal(testDomain2)
+
+            if(cannotAddDomain1 && cannotAddDomain2){
+                return domain
+            }else if(!cannotAddDomain1 && cannotAddDomain2){
+                return testDomain1
+            } else if(cannotAddDomain1 && !cannotAddDomain2){
+                return testDomain2
+            } else {
+                return new Or().apply({interval:interval[1], domain:testDomain1})
+            }
         }
         let newDomain: SolutionInterval[] = [];
         if (!interval) {

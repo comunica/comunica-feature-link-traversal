@@ -18,6 +18,23 @@ export class SolutionDomain {
     return this.domain;
   }
 
+  public equal(other: SolutionDomain): boolean {
+    if (this.domain.length !== other.domain.length) {
+      return false
+    }
+
+    for (const i in this.domain) {
+      if (!(this.domain[i].lower === other.domain[i].lower
+        &&
+        this.domain[i].upper === other.domain[i].upper
+      )) {
+        return false;
+      }
+    }
+
+    return true
+  }
+
   /**
      * Check whether the domain is empty
      * @returns {boolean} Return true if the domain is empty
@@ -43,12 +60,12 @@ export class SolutionDomain {
       // We keep the domain sorted
       initialIntervals.sort(SolutionDomain.sortDomainRangeByLowerBound);
       newSolutionDomain.domain = initialIntervals;
-      if(newSolutionDomain.isThereOverlapInsideDomain()){
+      if (newSolutionDomain.isThereOverlapInsideDomain()) {
         throw new RangeError('There is overlap inside the domain.')
       }
     } else {
       if (!initialIntervals.isEmpty) {
-        newSolutionDomain.domain = [initialIntervals];  
+        newSolutionDomain.domain = [initialIntervals];
       }
     }
     Object.freeze(newSolutionDomain);
@@ -69,9 +86,9 @@ export class SolutionDomain {
     return 1;
   }
 
-  private isThereOverlapInsideDomain(): boolean{
-    for (let i=0;i<this.domain.length-1;i++){
-      if (this.domain[i].isOverlapping(this.domain[i+1])){
+  private isThereOverlapInsideDomain(): boolean {
+    for (let i = 0; i < this.domain.length - 1; i++) {
+      if (this.domain[i].isOverlapping(this.domain[i + 1])) {
         return true;
       }
     }

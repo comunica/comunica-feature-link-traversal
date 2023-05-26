@@ -45,7 +45,7 @@ export enum SparqlRelationOperator {
    * Similar to GreaterThanRelation.
    * But do not exist yet in the specification
    */
-    NotEqualThanRelation = '',
+    NotEqualThanRelation = '!=',
   /**
    * A contains b iff no points of b lie in the exterior of a, and at least one point
    * of the interior of b lies in the interior of a.
