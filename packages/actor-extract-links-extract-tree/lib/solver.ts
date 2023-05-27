@@ -480,6 +480,10 @@ export function inverseFilter(filterExpression: Algebra.Expression){
       filterExpression.operator = reverseRawOperator(filterExpression.operator)
 
     }else{
+      const reversedOperator = reverseRawLogicOperator(filterExpression.operator);
+      if(reversedOperator){
+        filterExpression.operator = reversedOperator;
+      }
       for (const arg of filterExpression.args) {
         const reversedOperator = reverseRawLogicOperator(filterExpression.operator);
         if(reversedOperator){

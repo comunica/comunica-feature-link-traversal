@@ -423,54 +423,16 @@ describe('ActorExtractLinksExtractLinksTree', () => {
 
         ]);
 
-        const bgp = <RDF.Quad[]>[
-          DF.quad(DF.namedNode('ex:foo'), DF.namedNode('ex:path'), DF.variable('o')),
-          DF.quad(DF.namedNode('ex:foo'), DF.namedNode('ex:p'), DF.namedNode('ex:o')),
-          DF.quad(DF.namedNode('ex:bar'), DF.namedNode('ex:p2'), DF.namedNode('ex:o2')),
-          DF.quad(DF.namedNode('ex:too'), DF.namedNode('ex:p3'), DF.namedNode('ex:o3')),
-        ];
-        const filterExpression = {
-          expressionType: Algebra.expressionTypes.OPERATOR,
-          operator: '=',
-          type: Algebra.types.EXPRESSION,
-          args: [
-            {
-              expressionType: Algebra.expressionTypes.TERM,
-              type: Algebra.types.EXPRESSION,
-              term: {
-                termType: 'Variable',
-                value: 'o',
-              },
-            },
-            {
-              expressionType: Algebra.expressionTypes.TERM,
-              type: Algebra.types.EXPRESSION,
-              term: {
-                termType: 'Literal',
-                langugage: '',
-                value: '5',
-                datatype: {
-                  termType: 'namedNode',
-                  value: 'http://www.w3.org/2001/XMLSchema#integer',
-                },
-              },
-            },
-          ],
-        };
+        const query = translate(`
+        SELECT ?o  WHERE {
+          ex:foo ex:path ?o .
+          ex:foo ex:p ex:o .
+          ex:bar ex:p2 ex:o2 .
+          ex:too ex:p3 ex:o3 .
+          FILTER(?o=5)
+        }
+        `, { prefixes: { ex: 'http://example.com#' }});
 
-        const query = {
-          type: Algebra.types.PROJECT,
-          input: {
-            type: Algebra.types.FILTER,
-            expression: filterExpression,
-            input: {
-              input: {
-                type: Algebra.types.JOIN,
-                input: bgp,
-              },
-            },
-          },
-        };
         const contextWithQuery = new ActionContext({
           [KeysRdfResolveQuadPattern.source.name]: treeUrl,
           [KeysInitQuery.query.name]: query,

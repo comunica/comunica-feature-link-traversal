@@ -835,7 +835,7 @@ describe('solver function', () => {
     it(`should return false when the filter has a possible 
     solution but the addition of the relation produce no possible solution`, () => {
       const relation: ITreeRelation = {
-        type: SparqlRelationOperator.GreaterThanOrEqualToRelation,
+        type: SparqlRelationOperator.EqualThanRelation,
         remainingItems: 10,
         path: 'ex:path',
         value: {
