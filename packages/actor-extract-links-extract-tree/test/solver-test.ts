@@ -598,6 +598,24 @@ describe('solver function', () => {
       expect(resp.getDomain()).toStrictEqual(expectedDomain.getDomain());
     });
 
+    it('given an algebra expression with a double negation it should cancel it', () => {
+      const expression = translate(`
+      SELECT * WHERE { ?x ?y ?z 
+      FILTER(!(!(?x=2 && ?x<5)))
+      }`).input.expression;
+
+      const resp = recursifResolve(
+        expression,
+        new SolutionDomain(),
+        new Or(),
+        'x',
+      );
+
+      const expectedDomain = SolutionDomain.newWithInitialIntervals(new SolutionInterval([2, 2]));
+
+      expect(resp.getDomain()).toStrictEqual(expectedDomain.getDomain());
+    });
+
     it(`given an algebra expression with two logicals operators 
     that cannot be satified should return an empty domain`, () => {
       const expression = translate(`

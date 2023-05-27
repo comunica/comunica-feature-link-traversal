@@ -218,10 +218,17 @@ export function recursifResolve(
     const logicOperatorSymbol = LogicOperatorReversed.get(filterExpression.operator);
     if (logicOperatorSymbol) {
       for (const arg of filterExpression.args) {
+        // To solve the not operation we rewrite the path of filter expression to reverse every operation
+        // e.g, = : != ; > : <=
         if (logicOperatorSymbol === LogicOperatorSymbol.Not) {
           inverseFilter(arg);
           domain = recursifResolve(arg, domain, logicOperator, variable);
-        }else{
+        }else if( logicOperatorSymbol === LogicOperatorSymbol.Assert){
+          domain = recursifResolve(arg, domain, logicOperator, variable);
+
+        }
+        
+        else{
           const logicOperator = operatorFactory(logicOperatorSymbol);
           domain = recursifResolve(arg, domain, logicOperator, variable);
         }
@@ -404,7 +411,9 @@ export function reverseRawLogicOperator(logicOperator: string) :string|undefined
     case '||':
         return '&&'
     case '!':
-        return undefined;
+        return 'E';
+    case 'E':
+        return '!';
     default:
       return undefined
   }
@@ -414,6 +423,8 @@ export function reverseRawOperator(filterOperator: string): string | undefined {
   switch (filterOperator) {
     case '=':
       return '!='
+    case '!=':
+        return '='
     case '<':
       return '>='
     case '<=':
