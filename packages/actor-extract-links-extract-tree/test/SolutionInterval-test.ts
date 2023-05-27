@@ -401,7 +401,11 @@ describe('SolutionRange', () => {
       const aSolutionInterval = new SolutionInterval([ 0, 20 ]);
       const aSecondSolutionInterval = new SolutionInterval([ 30, 40 ]);
 
-      expect(SolutionInterval.getIntersection(aSolutionInterval, aSecondSolutionInterval)).toBeUndefined();
+      const nonOverlappingInterval = SolutionInterval.getIntersection(aSolutionInterval, aSecondSolutionInterval);
+
+      expect(nonOverlappingInterval.isEmpty).toBe(true);
+      expect(nonOverlappingInterval.lower).toBe(Number.NaN);
+      expect(nonOverlappingInterval.upper).toBe(Number.NaN);
     });
 
     it('given two range when one is inside the other should return the range at the inside', () => {

@@ -218,7 +218,6 @@ export function recursifResolve(
     const logicOperatorSymbol = LogicOperatorReversed.get(filterExpression.operator);
     if (logicOperatorSymbol) {
       for (const arg of filterExpression.args) {
-        console.log(arg)
         if (logicOperatorSymbol === LogicOperatorSymbol.Not) {
           inverseFilter(arg);
           domain = recursifResolve(arg, domain, logicOperator, variable);
