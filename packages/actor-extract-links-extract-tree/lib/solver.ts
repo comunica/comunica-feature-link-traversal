@@ -164,7 +164,7 @@ export function resolveAFilterTerm(expression: Algebra.Expression,
  */
 export function recursifResolve(
   filterExpression: Algebra.Expression,
-  domain: SolutionDomain,
+  domain: SolutionDomain = new SolutionDomain(),
   logicOperator: LogicOperator = new Or(),
   variable: Variable,
 ): SolutionDomain {
