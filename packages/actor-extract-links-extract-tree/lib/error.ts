@@ -5,10 +5,10 @@ export class MissMatchVariableError extends Error {
   }
 }
 
-export class MisformatedFilterTermError extends Error {
+export class MisformatedExpressionError extends Error {
   public constructor(message: string) {
     super(message);
-    this.name = 'MisformatedFilterTermError';
+    this.name = 'MisformatedExpressionError';
   }
 }
 

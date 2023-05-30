@@ -1,4 +1,3 @@
-import type * as RDF from 'rdf-js';
 import { Algebra } from 'sparqlalgebrajs';
 
 import { SolutionInterval } from './SolutionInterval';
@@ -15,36 +14,7 @@ import type { ITreeRelation } from './TreeMetadata';
 const nextUp = require('ulp').nextUp;
 const nextDown = require('ulp').nextDown;
 
-/**
- * Convert a TREE relation into a solver expression.
- * @param {ITreeRelation} relation - TREE relation.
- * @param {Variable} variable - variable of the SPARQL query associated with the tree:path of the relation.
- * @returns {ISolverExpression | undefined} Resulting solver expression if the data type is supported by SPARQL
- * and the value can be cast into a number.
- */
-export function convertTreeRelationToSolverExpression(relation: ITreeRelation,
-  variable: Variable):
-  ISolverExpression | undefined {
-  if (relation.value && relation.type) {
-    const valueType = SparqlOperandDataTypesReversed.get((<RDF.Literal>relation.value.term).datatype.value);
-    if (!valueType) {
-      return undefined;
-    }
-    const valueNumber = castSparqlRdfTermIntoNumber(relation.value.value, valueType);
-    if (!valueNumber && valueNumber !== 0) {
-      return undefined;
-    }
 
-    return {
-      variable,
-      rawValue: relation.value.value,
-      valueType,
-      valueAsNumber: valueNumber,
-
-      operator: relation.type,
-    };
-  }
-}
 /**
    * Check if all the expression provided have a SparqlOperandDataTypes compatible type
    * it is considered that all number types are compatible between them.
