@@ -2,20 +2,18 @@ import { SolutionDomain } from './SolutionDomain';
 import { SolutionInterval } from './SolutionInterval';
 import { LogicOperatorSymbol } from './solverInterfaces';
 export interface LogicOperator {
-  apply: ({ interval, domain }: { interval?: SolutionInterval | [SolutionInterval, SolutionInterval]; domain: SolutionDomain }) => SolutionDomain;
+  apply: ({ interval, domain }: { interval: SolutionInterval | [SolutionInterval, SolutionInterval]; domain: SolutionDomain }) => SolutionDomain;
   operatorName: () => LogicOperatorSymbol;
 }
 
 export class Or implements LogicOperator {
-  public apply({ interval, domain }: { interval?: SolutionInterval | [SolutionInterval, SolutionInterval]; domain: SolutionDomain }): SolutionDomain {
+  public apply({ interval, domain }: { interval: SolutionInterval | [SolutionInterval, SolutionInterval]; domain: SolutionDomain }): SolutionDomain {
     if (Array.isArray(interval)) {
       domain = this.apply({ interval: interval[0], domain });
       return this.apply({ interval: interval[1], domain });
     }
     let newDomain: SolutionInterval[] = [];
-    if (!interval) {
-      return domain;
-    }
+
     let currentInterval = interval;
 
     // We iterate over all the domain
@@ -44,13 +42,18 @@ export class Or implements LogicOperator {
 }
 
 export class And implements LogicOperator {
-  apply({ interval, domain }: { interval?: SolutionInterval | [SolutionInterval, SolutionInterval]; domain: SolutionDomain }): SolutionDomain {
+  apply({ interval, domain }: { interval: SolutionInterval | [SolutionInterval, SolutionInterval]; domain: SolutionDomain }): SolutionDomain {
     if (Array.isArray(interval)) {
+
+      if (interval[0].isOverlapping(interval[1])) {
+        return domain;
+      }
+
       const testDomain1 = this.apply({ interval: interval[0], domain });
       const testDomain2 = this.apply({ interval: interval[1], domain });
 
-      const cannotAddDomain1 = domain.equal(testDomain1);
-      const cannotAddDomain2 = domain.equal(testDomain2);
+      const cannotAddDomain1 = testDomain1.isDomainEmpty();
+      const cannotAddDomain2 = testDomain2.isDomainEmpty();
 
       if (cannotAddDomain1 && cannotAddDomain2) {
         return domain;
@@ -59,12 +62,23 @@ export class And implements LogicOperator {
       } if (cannotAddDomain1 && !cannotAddDomain2) {
         return testDomain2;
       }
-      return new Or().apply({ interval: interval[1], domain: testDomain1 });
+
+      let intervalRes: SolutionInterval;
+      let newDomain: SolutionDomain;
+      if(testDomain1.getDomain().length > testDomain2.getDomain().length){
+        intervalRes = interval[1];
+        newDomain = testDomain1;
+      }else{
+        intervalRes = interval[0];
+        newDomain = testDomain2;
+      }
+
+      return new Or().apply({
+        interval: intervalRes, domain: newDomain
+      });
     }
     const newDomain: SolutionInterval[] = [];
-    if (!interval) {
-      return domain;
-    }
+
     // If the domain is empty then simply add the new range
     if (domain.getDomain().length === 0) {
       newDomain.push(interval);
@@ -93,8 +107,8 @@ export class And implements LogicOperator {
 
 const OPERATOR_MAP = new Map<LogicOperatorSymbol, LogicOperator>(
   [
-    [ new Or().operatorName(), new Or() ],
-    [ new And().operatorName(), new And() ],
+    [new Or().operatorName(), new Or()],
+    [new And().operatorName(), new And()],
   ],
 );
 
