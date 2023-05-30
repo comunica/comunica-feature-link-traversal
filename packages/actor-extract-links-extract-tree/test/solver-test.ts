@@ -12,14 +12,10 @@ import {
   isBooleanExpressionTreeRelationFilterSolvable,
   recursifResolve,
 } from '../lib/solver';
-import * as solverFunction from '../lib/solver';
 import { LogicOperatorSymbol, SparqlOperandDataTypes } from '../lib/solverInterfaces';
 import type {
   ISolverExpression,
 } from '../lib/solverInterfaces';
-import { SparqlRelationOperator } from '../lib/TreeMetadata';
-import type { ITreeRelation } from '../lib/TreeMetadata';
-
 import {
   convertTreeRelationToSolverExpression,
   areTypesCompatible,
@@ -30,10 +26,10 @@ import {
   reverseRawLogicOperator,
   reverseRawOperator,
   reverseSparqlOperator,
-  inverseFilter
-} from '../lib/util-solver';
-
-import * as UtilSolver from '../lib/util-solver';
+} from '../lib/solverUtil';
+import * as UtilSolver from '../lib/solverUtil';
+import { SparqlRelationOperator } from '../lib/TreeMetadata';
+import type { ITreeRelation } from '../lib/TreeMetadata';
 
 const nextUp = require('ulp').nextUp;
 const nextDown = require('ulp').nextDown;
@@ -44,14 +40,14 @@ describe('solver function', () => {
   describe('filterOperatorToSparqlRelationOperator', () => {
     it('should return the RelationOperator given a string representation', () => {
       const testTable: [string, SparqlRelationOperator][] = [
-        ['=', SparqlRelationOperator.EqualThanRelation],
-        ['<', SparqlRelationOperator.LessThanRelation],
-        ['<=', SparqlRelationOperator.LessThanOrEqualToRelation],
-        ['>', SparqlRelationOperator.GreaterThanRelation],
-        ['>=', SparqlRelationOperator.GreaterThanOrEqualToRelation],
+        [ '=', SparqlRelationOperator.EqualThanRelation ],
+        [ '<', SparqlRelationOperator.LessThanRelation ],
+        [ '<=', SparqlRelationOperator.LessThanOrEqualToRelation ],
+        [ '>', SparqlRelationOperator.GreaterThanRelation ],
+        [ '>=', SparqlRelationOperator.GreaterThanOrEqualToRelation ],
       ];
 
-      for (const [value, expectedAnswer] of testTable) {
+      for (const [ value, expectedAnswer ] of testTable) {
         expect(filterOperatorToSparqlRelationOperator(value)).toBe(expectedAnswer);
       }
     });
@@ -100,64 +96,64 @@ describe('solver function', () => {
   describe('castSparqlRdfTermIntoNumber', () => {
     it('should return the expected number when given an integer', () => {
       const testTable: [string, SparqlOperandDataTypes, number][] = [
-        ['19273', SparqlOperandDataTypes.Integer, 19_273],
-        ['0', SparqlOperandDataTypes.NonPositiveInteger, 0],
-        ['-12313459', SparqlOperandDataTypes.NegativeInteger, -12_313_459],
-        ['121312321321321', SparqlOperandDataTypes.Long, 121_312_321_321_321],
-        ['1213123213213213', SparqlOperandDataTypes.Short, 1_213_123_213_213_213],
-        ['283', SparqlOperandDataTypes.NonNegativeInteger, 283],
-        ['-12131293912831', SparqlOperandDataTypes.UnsignedLong, -12_131_293_912_831],
-        ['-1234', SparqlOperandDataTypes.UnsignedInt, -1_234],
-        ['-123341231231234', SparqlOperandDataTypes.UnsignedShort, -123_341_231_231_234],
-        ['1234', SparqlOperandDataTypes.PositiveInteger, 1_234],
+        [ '19273', SparqlOperandDataTypes.Integer, 19_273 ],
+        [ '0', SparqlOperandDataTypes.NonPositiveInteger, 0 ],
+        [ '-12313459', SparqlOperandDataTypes.NegativeInteger, -12_313_459 ],
+        [ '121312321321321', SparqlOperandDataTypes.Long, 121_312_321_321_321 ],
+        [ '1213123213213213', SparqlOperandDataTypes.Short, 1_213_123_213_213_213 ],
+        [ '283', SparqlOperandDataTypes.NonNegativeInteger, 283 ],
+        [ '-12131293912831', SparqlOperandDataTypes.UnsignedLong, -12_131_293_912_831 ],
+        [ '-1234', SparqlOperandDataTypes.UnsignedInt, -1_234 ],
+        [ '-123341231231234', SparqlOperandDataTypes.UnsignedShort, -123_341_231_231_234 ],
+        [ '1234', SparqlOperandDataTypes.PositiveInteger, 1_234 ],
       ];
 
-      for (const [value, valueType, expectedNumber] of testTable) {
+      for (const [ value, valueType, expectedNumber ] of testTable) {
         expect(castSparqlRdfTermIntoNumber(value, valueType)).toBe(expectedNumber);
       }
     });
 
     it('should return undefined if a non integer is pass with SparqlOperandDataTypes integer compatible type', () => {
       const testTable: [string, SparqlOperandDataTypes][] = [
-        ['asbd', SparqlOperandDataTypes.PositiveInteger],
-        ['', SparqlOperandDataTypes.NegativeInteger],
+        [ 'asbd', SparqlOperandDataTypes.PositiveInteger ],
+        [ '', SparqlOperandDataTypes.NegativeInteger ],
       ];
 
-      for (const [value, valueType] of testTable) {
+      for (const [ value, valueType ] of testTable) {
         expect(castSparqlRdfTermIntoNumber(value, valueType)).toBeUndefined();
       }
     });
 
     it('should return undefined if a non fraction is pass with SparqlOperandDataTypes fraction compatible type', () => {
       const testTable: [string, SparqlOperandDataTypes][] = [
-        ['asbd', SparqlOperandDataTypes.Double],
-        ['', SparqlOperandDataTypes.Float],
+        [ 'asbd', SparqlOperandDataTypes.Double ],
+        [ '', SparqlOperandDataTypes.Float ],
       ];
 
-      for (const [value, valueType] of testTable) {
+      for (const [ value, valueType ] of testTable) {
         expect(castSparqlRdfTermIntoNumber(value, valueType)).toBeUndefined();
       }
     });
 
     it('should return the expected number when given an decimal', () => {
       const testTable: [string, SparqlOperandDataTypes, number][] = [
-        ['1.1', SparqlOperandDataTypes.Decimal, 1.1],
-        ['2132131.121321321', SparqlOperandDataTypes.Float, 2_132_131.121_321_321],
-        ['1234.123', SparqlOperandDataTypes.Double, 1_234.123],
+        [ '1.1', SparqlOperandDataTypes.Decimal, 1.1 ],
+        [ '2132131.121321321', SparqlOperandDataTypes.Float, 2_132_131.121_321_321 ],
+        [ '1234.123', SparqlOperandDataTypes.Double, 1_234.123 ],
       ];
 
-      for (const [value, valueType, expectedNumber] of testTable) {
+      for (const [ value, valueType, expectedNumber ] of testTable) {
         expect(castSparqlRdfTermIntoNumber(value, valueType)).toBe(expectedNumber);
       }
     });
 
     it('should return the expected number given a boolean', () => {
       const testTable: [string, number][] = [
-        ['true', 1],
-        ['false', 0],
+        [ 'true', 1 ],
+        [ 'false', 0 ],
       ];
 
-      for (const [value, expectedNumber] of testTable) {
+      for (const [ value, expectedNumber ] of testTable) {
         expect(castSparqlRdfTermIntoNumber(value, SparqlOperandDataTypes.Boolean)).toBe(expectedNumber);
       }
     });
@@ -192,27 +188,27 @@ describe('solver function', () => {
       const testTable: [SparqlRelationOperator, SolutionInterval][] = [
         [
           SparqlRelationOperator.GreaterThanRelation,
-          new SolutionInterval([nextUp(value), Number.POSITIVE_INFINITY]),
+          new SolutionInterval([ nextUp(value), Number.POSITIVE_INFINITY ]),
         ],
         [
           SparqlRelationOperator.GreaterThanOrEqualToRelation,
-          new SolutionInterval([value, Number.POSITIVE_INFINITY]),
+          new SolutionInterval([ value, Number.POSITIVE_INFINITY ]),
         ],
         [
           SparqlRelationOperator.EqualThanRelation,
-          new SolutionInterval([value, value]),
+          new SolutionInterval([ value, value ]),
         ],
         [
           SparqlRelationOperator.LessThanRelation,
-          new SolutionInterval([Number.NEGATIVE_INFINITY, nextDown(value)]),
+          new SolutionInterval([ Number.NEGATIVE_INFINITY, nextDown(value) ]),
         ],
         [
           SparqlRelationOperator.LessThanOrEqualToRelation,
-          new SolutionInterval([Number.NEGATIVE_INFINITY, value]),
+          new SolutionInterval([ Number.NEGATIVE_INFINITY, value ]),
         ],
       ];
 
-      for (const [operator, expectedRange] of testTable) {
+      for (const [ operator, expectedRange ] of testTable) {
         expect(getSolutionInterval(value, operator)).toStrictEqual(expectedRange);
       }
     });
@@ -536,30 +532,30 @@ describe('solver function', () => {
 
     it(`given an algebra expression with a litteral containing an invalid datatype than 
     should return an unsupported datatype error`,
-      () => {
-        const variable = 'x';
-        const expression: Algebra.Expression = {
-          type: Algebra.types.EXPRESSION,
-          expressionType: Algebra.expressionTypes.OPERATOR,
-          operator: '=',
-          args: [
-            {
-              type: Algebra.types.EXPRESSION,
-              expressionType: Algebra.expressionTypes.TERM,
-              term: DF.variable(variable),
-            },
-            {
-              type: Algebra.types.EXPRESSION,
-              expressionType: Algebra.expressionTypes.TERM,
-              term: DF.literal('6', DF.namedNode('http://www.w3.org/2001/XMLSchema#foo')),
-            },
-          ],
-        };
-        const operator = SparqlRelationOperator.EqualThanRelation;
+    () => {
+      const variable = 'x';
+      const expression: Algebra.Expression = {
+        type: Algebra.types.EXPRESSION,
+        expressionType: Algebra.expressionTypes.OPERATOR,
+        operator: '=',
+        args: [
+          {
+            type: Algebra.types.EXPRESSION,
+            expressionType: Algebra.expressionTypes.TERM,
+            term: DF.variable(variable),
+          },
+          {
+            type: Algebra.types.EXPRESSION,
+            expressionType: Algebra.expressionTypes.TERM,
+            term: DF.literal('6', DF.namedNode('http://www.w3.org/2001/XMLSchema#foo')),
+          },
+        ],
+      };
+      const operator = SparqlRelationOperator.EqualThanRelation;
 
-        expect(resolveAFilterTerm(expression, operator, variable))
-          .toBeInstanceOf(UnsupportedDataTypeError);
-      });
+      expect(resolveAFilterTerm(expression, operator, variable))
+        .toBeInstanceOf(UnsupportedDataTypeError);
+    });
 
     it(`given an algebra expression with a litteral containing a 
     literal that cannot be converted into number should return an unsupported datatype error`, () => {
@@ -589,10 +585,9 @@ describe('solver function', () => {
   });
 
   describe('recursifResolve', () => {
-
     it('given an algebra expression with an unsupported logic operator should throw an error', () => {
       const mock = jest.spyOn(UtilSolver, 'getSolutionInterval');
-      mock.mockImplementation(() => undefined);
+      mock.mockImplementation((): undefined => { return undefined; });
 
       const expression = translate(`
       SELECT * WHERE { ?x ?y ?z 
@@ -616,7 +611,7 @@ describe('solver function', () => {
         'x',
       );
 
-      const expectedDomain = SolutionDomain.newWithInitialIntervals(new SolutionInterval([2, 2]));
+      const expectedDomain = SolutionDomain.newWithInitialIntervals(new SolutionInterval([ 2, 2 ]));
 
       expect(resp.getDomain()).toStrictEqual(expectedDomain.getDomain());
     });
@@ -632,7 +627,7 @@ describe('solver function', () => {
         'x',
       );
 
-      const expectedDomain = SolutionDomain.newWithInitialIntervals(new SolutionInterval([2, 2]));
+      const expectedDomain = SolutionDomain.newWithInitialIntervals(new SolutionInterval([ 2, 2 ]));
 
       expect(resp.getDomain()).toStrictEqual(expectedDomain.getDomain());
     });
@@ -648,7 +643,9 @@ describe('solver function', () => {
         'x',
       );
 
-      const expectedDomain = SolutionDomain.newWithInitialIntervals(new SolutionInterval([Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY]));
+      const expectedDomain = SolutionDomain.newWithInitialIntervals(
+        new SolutionInterval([ Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY ]),
+      );
 
       expect(resp.getDomain()).toStrictEqual(expectedDomain.getDomain());
     });
@@ -681,7 +678,6 @@ describe('solver function', () => {
       expect(resp.isDomainEmpty()).toBe(true);
     });
 
-
     it('given an algebra with a not false statement should return an infinite domain', () => {
       const expression = translate(`
       SELECT * WHERE { ?x ?y ?z 
@@ -693,32 +689,35 @@ describe('solver function', () => {
         'x',
       );
 
-      const expectedDomain = SolutionDomain.newWithInitialIntervals(new SolutionInterval([Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY]));
+      const expectedDomain = SolutionDomain.newWithInitialIntervals(
+        new SolutionInterval([ Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY ]),
+      );
 
       expect(resp.getDomain()).toStrictEqual(expectedDomain.getDomain());
     });
 
-    it('given an algebra expression with one not equal logical operators should return the valid solution domain', () => {
-      const expression = translate(`
+    it('given an algebra expression with one not equal logical operators should return the valid solution domain',
+      () => {
+        const expression = translate(`
       SELECT * WHERE { ?x ?y ?z 
       FILTER(?x!=2)
       }`).input.expression;
 
-      const resp = recursifResolve(
-        expression,
-        'x',
-      );
+        const resp = recursifResolve(
+          expression,
+          'x',
+        );
 
-      const expectedDomain = SolutionDomain.newWithInitialIntervals([
-        new SolutionInterval([Number.NEGATIVE_INFINITY, nextDown(2)]),
-        new SolutionInterval([nextUp(2), Number.POSITIVE_INFINITY])
-      ]);
+        const expectedDomain = SolutionDomain.newWithInitialIntervals([
+          new SolutionInterval([ Number.NEGATIVE_INFINITY, nextDown(2) ]),
+          new SolutionInterval([ nextUp(2), Number.POSITIVE_INFINITY ]),
+        ]);
 
-      expect(resp.getDomain()).toStrictEqual(expectedDomain.getDomain());
-    });
+        expect(resp.getDomain()).toStrictEqual(expectedDomain.getDomain());
+      });
 
-
-    it('given an algebra expression with two logicals operators with a double negation should return the valid solution domain', () => {
+    it(`given an algebra expression with two logicals operators with a double negation should 
+    return the valid solution domain`, () => {
       const expression = translate(`
         SELECT * WHERE { ?x ?y ?z 
         FILTER( !(!(?x=2)) && ?x<5)
@@ -730,7 +729,7 @@ describe('solver function', () => {
         'x',
       );
 
-      const expectedDomain = SolutionDomain.newWithInitialIntervals(new SolutionInterval([2, 2]));
+      const expectedDomain = SolutionDomain.newWithInitialIntervals(new SolutionInterval([ 2, 2 ]));
 
       expect(resp.getDomain()).toStrictEqual(expectedDomain.getDomain());
     });
@@ -747,7 +746,7 @@ describe('solver function', () => {
         'x',
       );
 
-      const expectedDomain = SolutionDomain.newWithInitialIntervals(new SolutionInterval([2, 2]));
+      const expectedDomain = SolutionDomain.newWithInitialIntervals(new SolutionInterval([ 2, 2 ]));
 
       expect(resp.getDomain()).toStrictEqual(expectedDomain.getDomain());
     });
@@ -782,8 +781,8 @@ describe('solver function', () => {
       );
 
       const expectedDomain = SolutionDomain.newWithInitialIntervals(
-        [new SolutionInterval([Number.NEGATIVE_INFINITY, nextDown(2)]),
-        new SolutionInterval([nextUp(2), Number.POSITIVE_INFINITY])],
+        [ new SolutionInterval([ Number.NEGATIVE_INFINITY, nextDown(2) ]),
+          new SolutionInterval([ nextUp(2), Number.POSITIVE_INFINITY ]) ],
       );
 
       expect(resp.getDomain()).toStrictEqual(expectedDomain.getDomain());
@@ -803,8 +802,8 @@ describe('solver function', () => {
       );
 
       const expectedDomain = SolutionDomain.newWithInitialIntervals(
-        [new SolutionInterval([Number.NEGATIVE_INFINITY, nextDown(2)]),
-        new SolutionInterval([nextUp(2), Number.POSITIVE_INFINITY])],
+        [ new SolutionInterval([ Number.NEGATIVE_INFINITY, nextDown(2) ]),
+          new SolutionInterval([ nextUp(2), Number.POSITIVE_INFINITY ]) ],
       );
 
       expect(resp.getDomain()).toStrictEqual(expectedDomain.getDomain());
@@ -823,8 +822,8 @@ describe('solver function', () => {
       );
 
       const expectedDomain = SolutionDomain.newWithInitialIntervals([
-        new SolutionInterval([Number.NEGATIVE_INFINITY, nextDown(3)]),
-        new SolutionInterval([nextUp(3), Number.POSITIVE_INFINITY]),
+        new SolutionInterval([ Number.NEGATIVE_INFINITY, nextDown(3) ]),
+        new SolutionInterval([ nextUp(3), Number.POSITIVE_INFINITY ]),
       ]);
       expect(resp.getDomain()).toStrictEqual(expectedDomain.getDomain());
     });
@@ -1402,7 +1401,7 @@ describe('solver function', () => {
       expect(reverseRawLogicOperator('foo')).toBeUndefined();
     });
 
-    it('given an non existing operator should return undefined', () => {
+    it('given an existing operator should return an operator', () => {
       for (const operator in LogicOperatorSymbol) {
         expect(reverseRawLogicOperator(LogicOperatorSymbol[operator])).toBeDefined();
       }
@@ -1415,35 +1414,34 @@ describe('solver function', () => {
     });
 
     it('given a valid operator should return an operator', () => {
-      for (const operator of ['=', '!=', '<', '<=', '>', '>=']) {
+      for (const operator of [ '=', '!=', '<', '<=', '>', '>=' ]) {
         expect(reverseRawOperator(operator)).toBeDefined();
       }
     });
   });
 
-  describe('reverseSparqlOperator',()=>{
-    it('given an unsupported operator should return undefined',()=>{
-      for(const operator of [
+  describe('reverseSparqlOperator', () => {
+    it('given an unsupported operator should return undefined', () => {
+      for (const operator of [
         SparqlRelationOperator.GeospatiallyContainsRelation,
         SparqlRelationOperator.SubstringRelation,
-        SparqlRelationOperator.PrefixRelation
-      ]){
+        SparqlRelationOperator.PrefixRelation,
+      ]) {
         expect(reverseSparqlOperator(operator)).toBeUndefined();
       }
     });
 
-    it('given a supported operator should return an operator',()=>{
-      for(const operator of [
+    it('given a supported operator should return an operator', () => {
+      for (const operator of [
         SparqlRelationOperator.LessThanRelation,
         SparqlRelationOperator.LessThanOrEqualToRelation,
         SparqlRelationOperator.GreaterThanRelation,
         SparqlRelationOperator.GreaterThanOrEqualToRelation,
         SparqlRelationOperator.EqualThanRelation,
-        SparqlRelationOperator.NotEqualThanRelation
-      ]){
+        SparqlRelationOperator.NotEqualThanRelation,
+      ]) {
         expect(reverseSparqlOperator(operator)).toBeDefined();
       }
     });
-
   });
 });

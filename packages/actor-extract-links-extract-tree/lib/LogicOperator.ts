@@ -1,13 +1,16 @@
 import { SolutionDomain } from './SolutionDomain';
 import { SolutionInterval } from './SolutionInterval';
 import { LogicOperatorSymbol } from './solverInterfaces';
-export interface LogicOperator {
-  apply: ({ interval, domain }: { interval: SolutionInterval | [SolutionInterval, SolutionInterval]; domain: SolutionDomain }) => SolutionDomain;
+
+export interface ILogicOperator {
+  apply: ({ interval, domain }:
+  { interval: SolutionInterval | [SolutionInterval, SolutionInterval]; domain: SolutionDomain }) => SolutionDomain;
   operatorName: () => LogicOperatorSymbol;
 }
 
-export class Or implements LogicOperator {
-  public apply({ interval, domain }: { interval: SolutionInterval | [SolutionInterval, SolutionInterval]; domain: SolutionDomain }): SolutionDomain {
+export class Or implements ILogicOperator {
+  public apply({ interval, domain }:
+  { interval: SolutionInterval | [SolutionInterval, SolutionInterval]; domain: SolutionDomain }): SolutionDomain {
     if (Array.isArray(interval)) {
       domain = this.apply({ interval: interval[0], domain });
       return this.apply({ interval: interval[1], domain });
@@ -41,10 +44,10 @@ export class Or implements LogicOperator {
   }
 }
 
-export class And implements LogicOperator {
-  apply({ interval, domain }: { interval: SolutionInterval | [SolutionInterval, SolutionInterval]; domain: SolutionDomain }): SolutionDomain {
+export class And implements ILogicOperator {
+  public apply({ interval, domain }:
+  { interval: SolutionInterval | [SolutionInterval, SolutionInterval]; domain: SolutionDomain }): SolutionDomain {
     if (Array.isArray(interval)) {
-
       if (interval[0].isOverlapping(interval[1])) {
         return domain;
       }
@@ -57,24 +60,28 @@ export class And implements LogicOperator {
 
       if (cannotAddDomain1 && cannotAddDomain2) {
         return domain;
-      } if (!cannotAddDomain1 && cannotAddDomain2) {
+      }
+
+      if (!cannotAddDomain1 && cannotAddDomain2) {
         return testDomain1;
-      } if (cannotAddDomain1 && !cannotAddDomain2) {
+      }
+
+      if (cannotAddDomain1 && !cannotAddDomain2) {
         return testDomain2;
       }
 
       let intervalRes: SolutionInterval;
       let newDomain: SolutionDomain;
-      if(testDomain1.getDomain().length > testDomain2.getDomain().length){
+      if (testDomain1.getDomain().length > testDomain2.getDomain().length) {
         intervalRes = interval[1];
         newDomain = testDomain1;
-      }else{
+      } else {
         intervalRes = interval[0];
         newDomain = testDomain2;
       }
 
       return new Or().apply({
-        interval: intervalRes, domain: newDomain
+        interval: intervalRes, domain: newDomain,
       });
     }
     const newDomain: SolutionInterval[] = [];
@@ -105,14 +112,14 @@ export class And implements LogicOperator {
   }
 }
 
-const OPERATOR_MAP = new Map<LogicOperatorSymbol, LogicOperator>(
+const OPERATOR_MAP = new Map<LogicOperatorSymbol, ILogicOperator>(
   [
-    [new Or().operatorName(), new Or()],
-    [new And().operatorName(), new And()],
+    [ new Or().operatorName(), new Or() ],
+    [ new And().operatorName(), new And() ],
   ],
 );
 
-export function operatorFactory(operatorSymbol: LogicOperatorSymbol): LogicOperator {
+export function operatorFactory(operatorSymbol: LogicOperatorSymbol): ILogicOperator {
   const operator = OPERATOR_MAP.get(operatorSymbol);
   if (!operator) {
     throw new RangeError('The operator doesn\'t exist or is not supported.');

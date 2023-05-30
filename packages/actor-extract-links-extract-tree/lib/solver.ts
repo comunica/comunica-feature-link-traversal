@@ -1,30 +1,26 @@
-import type * as RDF from 'rdf-js';
 import { Algebra } from 'sparqlalgebrajs';
 import {
   MissMatchVariableError,
   MisformatedFilterTermError,
   UnsupportedDataTypeError,
 } from './error';
-import type { LogicOperator } from './LogicOperator';
+import type { ILogicOperator } from './LogicOperator';
 import { And, Or, operatorFactory } from './LogicOperator';
 import { SolutionDomain } from './SolutionDomain';
 import { SolutionInterval } from './SolutionInterval';
 import {
-  SparqlOperandDataTypes,
   LogicOperatorReversed, LogicOperatorSymbol, SparqlOperandDataTypesReversed,
 } from './solverInterfaces';
-import type {
-  ISolverExpression,
+import type { ISolverExpression,
   Variable,
-} from './solverInterfaces';
-import { SparqlRelationOperator } from './TreeMetadata';
-import type { ITreeRelation } from './TreeMetadata';
-import {convertTreeRelationToSolverExpression,
-   castSparqlRdfTermIntoNumber,
-   filterOperatorToSparqlRelationOperator,
-   getSolutionInterval,
-   inverseFilter
-  } from './util-solver';
+
+  SparqlOperandDataTypes } from './solverInterfaces';
+import { convertTreeRelationToSolverExpression,
+  castSparqlRdfTermIntoNumber,
+  filterOperatorToSparqlRelationOperator,
+  getSolutionInterval,
+  inverseFilter } from './solverUtil';
+import type { SparqlRelationOperator, ITreeRelation } from './TreeMetadata';
 
 const nextUp = require('ulp').nextUp;
 const nextDown = require('ulp').nextDown;
@@ -159,9 +155,11 @@ export function resolveAFilterTerm(expression: Algebra.Expression,
 /**
  * Recursively traverse the filter expression and calculate the domain until it get to the current expression.
  * It will thrown an error if the expression is badly formated or if it's impossible to get the solution range.
- * @param {Algebra.Expression} filterExpression - The current filter expression that we are traversing
+ * @param {Algebra.Expression} filterExpression -
+ * The current filter expression that we are traversing
  * @param {SolutionDomain} domain - The current resultant solution domain
- * @param {LogicOperatorSymbol} logicOperator - The current logic operator that we have to apply to the boolean expression
+ * @param {LogicOperatorSymbol} logicOperator
+ * - The current logic operator that we have to apply to the boolean expression
  * @param {Variable} variable - The variable targeted inside the filter expression
  * @param {boolean} notExpression
  * @returns {SolutionDomain} The solution domain of the whole expression
@@ -170,7 +168,7 @@ export function recursifResolve(
   filterExpression: Algebra.Expression,
   variable: Variable,
   domain: SolutionDomain = new SolutionDomain(),
-  logicOperator: LogicOperator = new Or(),
+  logicOperator: ILogicOperator = new Or(),
 ): SolutionDomain {
   if (filterExpression.expressionType === Algebra.expressionTypes.TERM
   ) {
@@ -181,7 +179,7 @@ export function recursifResolve(
       domain = logicOperator.apply({ interval: A_FALSE_EXPRESSION, domain });
     } else {
       domain = logicOperator.apply({ interval: A_TRUE_EXPRESSION, domain });
-    } 
+    }
   } else if (
     // If it's an array of terms then we should be able to create a solver expression.
     // Given the resulting solver expression we can calculate a solution interval
@@ -191,7 +189,7 @@ export function recursifResolve(
   ) {
     const rawOperator = filterExpression.operator;
     const operator = filterOperatorToSparqlRelationOperator(rawOperator);
-    if (operator && logicOperator.operatorName() != LogicOperatorSymbol.Not) {
+    if (operator && logicOperator.operatorName() !== LogicOperatorSymbol.Not) {
       const solverExpression = resolveAFilterTerm(filterExpression, operator, variable);
       let solutionInterval: SolutionInterval | [SolutionInterval, SolutionInterval] | undefined;
       if (solverExpression instanceof MissMatchVariableError) {
@@ -218,8 +216,8 @@ export function recursifResolve(
           inverseFilter(arg);
           domain = recursifResolve(arg, variable, domain, logicOperator);
         } else {
-          const logicOperator = operatorFactory(logicOperatorSymbol);
-          domain = recursifResolve(arg, variable, domain, logicOperator);
+          const newLogicOperator = operatorFactory(logicOperatorSymbol);
+          domain = recursifResolve(arg, variable, domain, newLogicOperator);
         }
       }
     }

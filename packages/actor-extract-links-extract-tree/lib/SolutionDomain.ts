@@ -23,7 +23,7 @@ export class SolutionDomain {
       return false;
     }
 
-    for (const i in this.domain) {
+    for (let i = 0; i !== this.domain.length; i++) {
       if (!(this.domain[i].lower === other.domain[i].lower &&
         this.domain[i].upper === other.domain[i].upper
       )) {
@@ -41,7 +41,9 @@ export class SolutionDomain {
   public isDomainEmpty(): boolean {
     if (this.domain.length === 0) {
       return true;
-    } if (this.domain.length === 1 && this.domain[0].isEmpty) {
+    }
+
+    if (this.domain.length === 1 && this.domain[0].isEmpty) {
       return true;
     }
     return false;
