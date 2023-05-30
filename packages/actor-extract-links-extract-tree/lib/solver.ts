@@ -22,9 +22,6 @@ import { convertTreeRelationToSolverExpression,
   inverseFilter } from './solverUtil';
 import type { SparqlRelationOperator, ITreeRelation } from './TreeMetadata';
 
-const nextUp = require('ulp').nextUp;
-const nextDown = require('ulp').nextDown;
-
 const A_TRUE_EXPRESSION: SolutionInterval = new SolutionInterval(
   [ Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY ],
 );
