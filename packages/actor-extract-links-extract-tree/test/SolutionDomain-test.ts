@@ -11,14 +11,14 @@ describe('SolutionDomain', () => {
   });
   describe('equal', () => {
     it('should return equal when two domains have the same interval', () => {
-      const domain1 = SolutionDomain.newWithInitialIntervals(new SolutionInterval([0, 1]));
-      const domain2 = SolutionDomain.newWithInitialIntervals(new SolutionInterval([0, 1]));
+      const domain1 = SolutionDomain.newWithInitialIntervals(new SolutionInterval([ 0, 1 ]));
+      const domain2 = SolutionDomain.newWithInitialIntervals(new SolutionInterval([ 0, 1 ]));
       expect(domain1.equal(domain2)).toBe(true);
     });
 
     it('should return not equal when two domains have the a different interval', () => {
-      const domain1 = SolutionDomain.newWithInitialIntervals(new SolutionInterval([0, 1]));
-      const domain2 = SolutionDomain.newWithInitialIntervals(new SolutionInterval([0, 2]));
+      const domain1 = SolutionDomain.newWithInitialIntervals(new SolutionInterval([ 0, 1 ]));
+      const domain2 = SolutionDomain.newWithInitialIntervals(new SolutionInterval([ 0, 2 ]));
       expect(domain1.equal(domain2)).toBe(false);
     });
 
@@ -30,7 +30,7 @@ describe('SolutionDomain', () => {
 
     it('should return not equal when one domain is empty and the other have one interval', () => {
       const domain1 = new SolutionDomain();
-      const domain2 = SolutionDomain.newWithInitialIntervals(new SolutionInterval([0, 2]));
+      const domain2 = SolutionDomain.newWithInitialIntervals(new SolutionInterval([ 0, 2 ]));
       expect(domain1.equal(domain2)).toBe(false);
     });
 
@@ -38,10 +38,10 @@ describe('SolutionDomain', () => {
       const domain1 = new SolutionDomain();
       const domain2 = SolutionDomain.newWithInitialIntervals(
         [
-          new SolutionInterval([0, 1]),
-          new SolutionInterval([2, 3]),
-          new SolutionInterval([4, 5])
-        ]
+          new SolutionInterval([ 0, 1 ]),
+          new SolutionInterval([ 2, 3 ]),
+          new SolutionInterval([ 4, 5 ]),
+        ],
       );
       expect(domain1.equal(domain2)).toBe(false);
     });
@@ -49,17 +49,17 @@ describe('SolutionDomain', () => {
     it('should return equal when two domains have the same intervals', () => {
       const domain1 = SolutionDomain.newWithInitialIntervals(
         [
-          new SolutionInterval([0, 1]),
-          new SolutionInterval([2, 3]),
-          new SolutionInterval([4, 5])
-        ]
+          new SolutionInterval([ 0, 1 ]),
+          new SolutionInterval([ 2, 3 ]),
+          new SolutionInterval([ 4, 5 ]),
+        ],
       );
       const domain2 = SolutionDomain.newWithInitialIntervals(
         [
-          new SolutionInterval([0, 1]),
-          new SolutionInterval([2, 3]),
-          new SolutionInterval([4, 5])
-        ]
+          new SolutionInterval([ 0, 1 ]),
+          new SolutionInterval([ 2, 3 ]),
+          new SolutionInterval([ 4, 5 ]),
+        ],
       );
       expect(domain1.equal(domain2)).toBe(true);
     });
@@ -67,17 +67,17 @@ describe('SolutionDomain', () => {
     it('should return not equal when two domains have the different intervals', () => {
       const domain1 = SolutionDomain.newWithInitialIntervals(
         [
-          new SolutionInterval([0, 1]),
-          new SolutionInterval([2, 3]),
-          new SolutionInterval([4, 5])
-        ]
+          new SolutionInterval([ 0, 1 ]),
+          new SolutionInterval([ 2, 3 ]),
+          new SolutionInterval([ 4, 5 ]),
+        ],
       );
       const domain2 = SolutionDomain.newWithInitialIntervals(
         [
-          new SolutionInterval([0, 1]),
-          new SolutionInterval([6, 7]),
-          new SolutionInterval([4, 5])
-        ]
+          new SolutionInterval([ 0, 1 ]),
+          new SolutionInterval([ 6, 7 ]),
+          new SolutionInterval([ 4, 5 ]),
+        ],
       );
       expect(domain1.equal(domain2)).toBe(false);
     });
@@ -85,7 +85,7 @@ describe('SolutionDomain', () => {
 
   describe('newWithInitialIntervals', () => {
     it('should create a solution domain with an initial value', () => {
-      const solutionRange = new SolutionInterval([0, 1]);
+      const solutionRange = new SolutionInterval([ 0, 1 ]);
       const solutionDomain = SolutionDomain.newWithInitialIntervals(solutionRange);
 
       expect(solutionDomain.getDomain().length).toBe(1);
@@ -94,10 +94,10 @@ describe('SolutionDomain', () => {
 
     it('should create a solution domain with multiple initial value', () => {
       const solutionIntervals = [
-        new SolutionInterval([0, 1]),
-        new SolutionInterval([2, 3]),
-        new SolutionInterval([-33, -3]),
-        new SolutionInterval([100, 3000])
+        new SolutionInterval([ 0, 1 ]),
+        new SolutionInterval([ 2, 3 ]),
+        new SolutionInterval([ -33, -3 ]),
+        new SolutionInterval([ 100, 3_000 ]),
       ];
       const solutionDomain = SolutionDomain.newWithInitialIntervals(solutionIntervals);
 
@@ -107,15 +107,14 @@ describe('SolutionDomain', () => {
 
     it('should throw an error when creating a solution domain with multiple intervals overlaping', () => {
       const solutionIntervals = [
-        new SolutionInterval([0, 1]),
-        new SolutionInterval([2, 3]),
-        new SolutionInterval([2, 10]),
+        new SolutionInterval([ 0, 1 ]),
+        new SolutionInterval([ 2, 3 ]),
+        new SolutionInterval([ 2, 10 ]),
       ];
       expect(() => {
         SolutionDomain.newWithInitialIntervals(solutionIntervals);
       }).toThrow(RangeError);
     });
-
   });
 
   describe('isDomainEmpty', () => {
@@ -126,10 +125,9 @@ describe('SolutionDomain', () => {
     });
 
     it('should return false when the domain is not empty', () => {
-      const domain = SolutionDomain.newWithInitialIntervals(new SolutionInterval([0, 1]));
+      const domain = SolutionDomain.newWithInitialIntervals(new SolutionInterval([ 0, 1 ]));
 
       expect(domain.isDomainEmpty()).toBe(false);
     });
   });
-
 });

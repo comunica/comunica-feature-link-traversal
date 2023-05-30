@@ -1,4 +1,4 @@
-import { SolutionInterval } from './SolutionInterval';
+import type { SolutionInterval } from './SolutionInterval';
 
 /**
  * A class representing the domain of a solution of system of boolean equation.
@@ -20,19 +20,18 @@ export class SolutionDomain {
 
   public equal(other: SolutionDomain): boolean {
     if (this.domain.length !== other.domain.length) {
-      return false
+      return false;
     }
 
     for (const i in this.domain) {
-      if (!(this.domain[i].lower === other.domain[i].lower
-        &&
+      if (!(this.domain[i].lower === other.domain[i].lower &&
         this.domain[i].upper === other.domain[i].upper
       )) {
         return false;
       }
     }
 
-    return true
+    return true;
   }
 
   /**
@@ -41,12 +40,11 @@ export class SolutionDomain {
      */
   public isDomainEmpty(): boolean {
     if (this.domain.length === 0) {
-      return true
-    } else if (this.domain.length === 1 && this.domain[0].isEmpty) {
-      return true
-    } else {
-      return false
+      return true;
+    } if (this.domain.length === 1 && this.domain[0].isEmpty) {
+      return true;
     }
+    return false;
   }
 
   /**
@@ -61,12 +59,10 @@ export class SolutionDomain {
       initialIntervals.sort(SolutionDomain.sortDomainRangeByLowerBound);
       newSolutionDomain.domain = initialIntervals;
       if (newSolutionDomain.isThereOverlapInsideDomain()) {
-        throw new RangeError('There is overlap inside the domain.')
+        throw new RangeError('There is overlap inside the domain.');
       }
-    } else {
-      if (!initialIntervals.isEmpty) {
-        newSolutionDomain.domain = [initialIntervals];
-      }
+    } else if (!initialIntervals.isEmpty) {
+      newSolutionDomain.domain = [ initialIntervals ];
     }
     Object.freeze(newSolutionDomain);
     Object.freeze(newSolutionDomain.domain);

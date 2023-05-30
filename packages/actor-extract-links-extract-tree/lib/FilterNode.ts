@@ -83,7 +83,7 @@ export class FilterNode {
       // For all the variable check if one is has a possible solutions.
       for (const variable of variables) {
         filtered = filtered || isBooleanExpressionTreeRelationFilterSolvable(
-          { relation, filterExpression: filterOperation, variable },
+          { relation, filterExpression: structuredClone(filterOperation), variable },
         );
       }
 
