@@ -86,5 +86,6 @@ export interface ISolverExpression {
  */
 export interface ISolverInput {
    domain: SolutionInterval|[SolutionInterval, SolutionInterval]|SolutionDomain,
+   variable: Variable
 }
 

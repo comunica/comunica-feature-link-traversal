@@ -42,23 +42,24 @@ export class SparlFilterExpressionSolverInput implements ISolverInput {
     public constructor(filterExpression: Algebra.Expression, variable: Variable) {
         this.filterExpression = filterExpression;
         try {
-            this.domain = this.recursifResolve(this.filterExpression, variable);
+            this.domain = SparlFilterExpressionSolverInput.recursifResolve(this.filterExpression, variable);
 
         } catch (error: unknown) {
             // A filter term was missformed we let the query engine return an error to the user and by precaution
             // we accept the link in case the error is from the solver and not the filter expression
             if (error instanceof MisformatedExpressionError) {
                 this.domain = SolutionDomain.newWithInitialIntervals(A_TRUE_EXPRESSION);
-            }
+            } else if (error instanceof UnsupportedDataTypeError) {
+                // We don't support the data type so let need to explore that link to not diminush the completness of the result
 
-            // We don't support the data type so let need to explore that link to not diminush the completness of the result
-            if (error instanceof UnsupportedDataTypeError) {
                 this.domain = SolutionDomain.newWithInitialIntervals(A_TRUE_EXPRESSION);
+            } else {
+                /* istanbul ignore next */
+                // If it's unexpected error we throw it
+                throw error;
             }
 
-            /* istanbul ignore next */
-            // If it's unexpected error we throw it
-            throw error;
+
         } finally {
             Object.freeze(this);
             Object.freeze(this.domain);
@@ -78,7 +79,7 @@ export class SparlFilterExpressionSolverInput implements ISolverInput {
  * @param {boolean} notExpression
  * @returns {SolutionDomain} The solution domain of the whole expression
  */
-    public recursifResolve(
+    public static recursifResolve(
         filterExpression: Algebra.Expression,
         variable: Variable,
         domain: SolutionDomain = new SolutionDomain(),
@@ -104,7 +105,7 @@ export class SparlFilterExpressionSolverInput implements ISolverInput {
             const rawOperator = filterExpression.operator;
             const operator = filterOperatorToSparqlRelationOperator(rawOperator);
             if (operator && logicOperator.operatorName() !== LogicOperatorSymbol.Not) {
-                const solverExpression = this.resolveAFilterTerm(filterExpression, operator, variable);
+                const solverExpression = SparlFilterExpressionSolverInput.resolveAFilterTerm(filterExpression, operator, variable);
                 let solutionInterval: SolutionInterval | [SolutionInterval, SolutionInterval] | undefined;
                 if (solverExpression instanceof MissMatchVariableError) {
                     solutionInterval = A_TRUE_EXPRESSION;
@@ -146,7 +147,7 @@ export class SparlFilterExpressionSolverInput implements ISolverInput {
  * @param {Variable} variable - The variable the expression should have to be part of a system of equation.
  * @returns {ISolverExpression | undefined} Return a solver expression if possible
  */
-    public resolveAFilterTerm(expression: Algebra.Expression,
+    public static resolveAFilterTerm(expression: Algebra.Expression,
         operator: SparqlRelationOperator,
         variable: Variable):
         ISolverExpression | Error {
@@ -202,16 +203,19 @@ export class SparlFilterExpressionSolverInput implements ISolverInput {
 export class TreeRelationSolverInput implements ISolverInput {
     public readonly domain: SolutionInterval | [SolutionInterval, SolutionInterval];
     public readonly treeRelation: ITreeRelation;
+    public readonly variable: Variable;
 
     public constructor(relation: ITreeRelation, variable: Variable) {
         this.treeRelation = relation;
+        this.variable = variable;
 
-        const relationsolverExpressions = this.convertTreeRelationToSolverExpression(relation, variable);
+        const relationsolverExpressions = TreeRelationSolverInput.convertTreeRelationToSolverExpression(relation, variable);
         // The relation doesn't have a value or a type, so we accept it
         if (!relationsolverExpressions) {
             this.domain = A_TRUE_EXPRESSION;
             Object.freeze(this);
             Object.freeze(this.domain);
+            Object.freeze(this.variable);
             Object.freeze(this.treeRelation);
             return;
         }
@@ -225,6 +229,7 @@ export class TreeRelationSolverInput implements ISolverInput {
             this.domain = A_TRUE_EXPRESSION;
             Object.freeze(this);
             Object.freeze(this.domain);
+            Object.freeze(this.variable);
             Object.freeze(this.treeRelation);
             return;
         }
@@ -232,6 +237,7 @@ export class TreeRelationSolverInput implements ISolverInput {
 
         Object.freeze(this);
         Object.freeze(this.domain);
+        Object.freeze(this.variable);
         Object.freeze(this.treeRelation);
     }
 
@@ -244,7 +250,7 @@ export class TreeRelationSolverInput implements ISolverInput {
  * @returns {ISolverExpression | undefined} Resulting solver expression if the data type is supported by SPARQL
  * and the value can be cast into a number.
  */
-    public convertTreeRelationToSolverExpression(relation: ITreeRelation,
+    public static convertTreeRelationToSolverExpression(relation: ITreeRelation,
         variable: Variable):
         ISolverExpression | undefined {
         if (relation.value && relation.type) {

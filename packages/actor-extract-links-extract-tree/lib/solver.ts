@@ -1,6 +1,6 @@
 import { And,} from './LogicOperator';
 import { SolutionDomain } from './SolutionDomain';
-import { InvalidExpressionSystem } from './error';
+import { InvalidExpressionSystem, MissMatchVariableError } from './error';
 import type {ISolverInput} from './solverInterfaces';
 import { SolutionInterval } from './SolutionInterval';
 
@@ -16,12 +16,15 @@ export type SatisfactionChecker = (inputs: ISolverInput[]) => boolean;
 export function isBooleanExpressionTreeRelationFilterSolvable(inputs: ISolverInput[]): boolean {
   let domain: SolutionDomain|undefined = undefined;
   let intervals: Array<SolutionInterval|[SolutionInterval, SolutionInterval]> = [];
+  let variable = inputs[0].variable;
 
   for(const input of inputs){
     if ("getDomain" in input.domain && domain!== undefined){
       throw new InvalidExpressionSystem('there is more than one filter expression');
     } else if ("getDomain" in input.domain){
       domain = input.domain;
+    } else if (variable != input.variable){
+      throw new MissMatchVariableError('the variable are not matching')
     }else{
       intervals.push(input.domain);
     }
