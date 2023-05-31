@@ -86,13 +86,5 @@ export interface ISolverExpression {
  */
 export interface ISolverInput {
    domain: SolutionInterval|[SolutionInterval, SolutionInterval]|SolutionDomain,
-   resolvedType:()=>ResolvedType
 }
 
-/**
- * The type of resolution of a solver input
- */
-export enum ResolvedType{
-   Domain,
-   Interval
-}

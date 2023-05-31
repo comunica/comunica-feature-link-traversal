@@ -1,14 +1,14 @@
 import type * as RDF from 'rdf-js';
 import { Algebra } from "sparqlalgebrajs";
 import { SolutionDomain } from "./SolutionDomain";
-import { ISolverInput, ResolvedType } from "./solverInterfaces";
+import { ISolverInput } from "./solverInterfaces";
 import {
     MissMatchVariableError,
     MisformatedExpressionError,
     UnsupportedDataTypeError
 } from './error';
 import type { ILogicOperator } from './LogicOperator';
-import { And, Or, operatorFactory } from './LogicOperator';
+import { Or, operatorFactory } from './LogicOperator';
 import { SolutionInterval } from './SolutionInterval';
 import {
     LogicOperatorReversed,
@@ -197,10 +197,6 @@ export class SparlFilterExpressionSolverInput implements ISolverInput {
         return new MisformatedExpressionError(`the filter expressions doesn't have the term ${missingTerm.toString()}`);
     }
 
-
-    public resolvedType(): ResolvedType {
-        return ResolvedType.Domain
-    }
 }
 
 export class TreeRelationSolverInput implements ISolverInput {
@@ -271,7 +267,5 @@ export class TreeRelationSolverInput implements ISolverInput {
             };
         }
     }
-    public resolvedType(): ResolvedType {
-        return ResolvedType.Interval;
-    }
+
 }

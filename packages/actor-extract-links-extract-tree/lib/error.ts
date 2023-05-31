@@ -18,3 +18,10 @@ export class UnsupportedDataTypeError extends Error {
     this.name = 'UnsupportedDataTypeError';
   }
 }
+
+export class InvalidExpressionSystem extends Error {
+  public constructor(message: string) {
+    super(message);
+    this.name = 'InvalidExpressionSystem';
+  }
+}
