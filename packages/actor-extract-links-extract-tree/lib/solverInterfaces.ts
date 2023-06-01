@@ -1,5 +1,5 @@
-import { SolutionDomain } from './SolutionDomain';
-import { SolutionInterval } from './SolutionInterval';
+import type { SolutionDomain } from './SolutionDomain';
+import type { SolutionInterval } from './SolutionInterval';
 import type { SparqlRelationOperator } from './TreeMetadata';
 /**
  * Valid SPARQL data type for operation.
@@ -85,7 +85,7 @@ export interface ISolverExpression {
  * It must be able to be resolved into a domain or an interval
  */
 export interface ISolverInput {
-   domain: SolutionInterval|[SolutionInterval, SolutionInterval]|SolutionDomain,
-   variable: Variable
+  domain: SolutionInterval | [SolutionInterval, SolutionInterval] | SolutionDomain;
+  variable: Variable;
 }
 

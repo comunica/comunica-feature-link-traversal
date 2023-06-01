@@ -1,10 +1,15 @@
 import { DataFactory } from 'rdf-data-factory';
 import type * as RDF from 'rdf-js';
 import { Algebra, translate } from 'sparqlalgebrajs';
+import { InvalidExpressionSystem, MissMatchVariableError } from '../lib/error';
 import { SolutionInterval } from '../lib/SolutionInterval';
 import {
   isBooleanExpressionTreeRelationFilterSolvable,
 } from '../lib/solver';
+import {
+  TreeRelationSolverInput,
+  SparlFilterExpressionSolverInput,
+} from '../lib/SolverInput';
 import { LogicOperatorSymbol, SparqlOperandDataTypes } from '../lib/solverInterfaces';
 import type {
   ISolverExpression,
@@ -21,10 +26,6 @@ import {
 } from '../lib/solverUtil';
 import { SparqlRelationOperator } from '../lib/TreeMetadata';
 import type { ITreeRelation } from '../lib/TreeMetadata';
-import {
-  TreeRelationSolverInput,
-  SparlFilterExpressionSolverInput
-} from '../lib/SolverInput';
 const nextUp = require('ulp').nextUp;
 const nextDown = require('ulp').nextDown;
 
@@ -338,7 +339,6 @@ describe('solver function', () => {
     });
   });
 
-
   describe('isBooleanExpressionTreeRelationFilterSolvable', () => {
     it('given a relation that is not able to be converted into a solverExpression should return true', () => {
       const relation: ITreeRelation = {
@@ -357,7 +357,7 @@ describe('solver function', () => {
       const variable = 'x';
       const inputs = [
         new TreeRelationSolverInput(relation, variable),
-        new SparlFilterExpressionSolverInput(filterExpression, variable)
+        new SparlFilterExpressionSolverInput(filterExpression, variable),
       ];
       expect(isBooleanExpressionTreeRelationFilterSolvable(inputs)).toBe(true);
     });
@@ -383,7 +383,7 @@ describe('solver function', () => {
 
       const inputs = [
         new TreeRelationSolverInput(relation, variable),
-        new SparlFilterExpressionSolverInput(filterExpression, variable)
+        new SparlFilterExpressionSolverInput(filterExpression, variable),
       ];
 
       expect(isBooleanExpressionTreeRelationFilterSolvable(inputs)).toBe(true);
@@ -410,7 +410,7 @@ describe('solver function', () => {
 
       const inputs = [
         new TreeRelationSolverInput(relation, variable),
-        new SparlFilterExpressionSolverInput(filterExpression, variable)
+        new SparlFilterExpressionSolverInput(filterExpression, variable),
       ];
 
       expect(isBooleanExpressionTreeRelationFilterSolvable(inputs)).toBe(true);
@@ -437,7 +437,7 @@ describe('solver function', () => {
 
       const inputs = [
         new TreeRelationSolverInput(relation, variable),
-        new SparlFilterExpressionSolverInput(filterExpression, variable)
+        new SparlFilterExpressionSolverInput(filterExpression, variable),
       ];
 
       expect(isBooleanExpressionTreeRelationFilterSolvable(inputs)).toBe(true);
@@ -483,7 +483,7 @@ describe('solver function', () => {
       const variable = 'x';
       const inputs = [
         new TreeRelationSolverInput(relation, variable),
-        new SparlFilterExpressionSolverInput(filterExpression, variable)
+        new SparlFilterExpressionSolverInput(filterExpression, variable),
       ];
 
       expect(isBooleanExpressionTreeRelationFilterSolvable(inputs)).toBe(true);
@@ -509,7 +509,7 @@ describe('solver function', () => {
       const variable = 'x';
       const inputs = [
         new TreeRelationSolverInput(relation, variable),
-        new SparlFilterExpressionSolverInput(filterExpression, variable)
+        new SparlFilterExpressionSolverInput(filterExpression, variable),
       ];
 
       expect(isBooleanExpressionTreeRelationFilterSolvable(inputs)).toBe(true);
@@ -535,7 +535,7 @@ describe('solver function', () => {
       const variable = 'x';
       const inputs = [
         new TreeRelationSolverInput(relation, variable),
-        new SparlFilterExpressionSolverInput(filterExpression, variable)
+        new SparlFilterExpressionSolverInput(filterExpression, variable),
       ];
 
       expect(isBooleanExpressionTreeRelationFilterSolvable(inputs)).toBe(false);
@@ -562,7 +562,7 @@ describe('solver function', () => {
       const variable = 'x';
       const inputs = [
         new TreeRelationSolverInput(relation, variable),
-        new SparlFilterExpressionSolverInput(filterExpression, variable)
+        new SparlFilterExpressionSolverInput(filterExpression, variable),
       ];
 
       expect(isBooleanExpressionTreeRelationFilterSolvable(inputs)).toBe(false);
@@ -589,11 +589,11 @@ describe('solver function', () => {
         const variable = 'x';
         const inputs = [
           new TreeRelationSolverInput(relation, variable),
-          new SparlFilterExpressionSolverInput(filterExpression, variable)
+          new SparlFilterExpressionSolverInput(filterExpression, variable),
         ];
 
         expect(isBooleanExpressionTreeRelationFilterSolvable(
-         inputs,
+          inputs,
         ))
           .toBe(true);
       });
@@ -619,7 +619,7 @@ describe('solver function', () => {
         const variable = 'x';
         const inputs = [
           new TreeRelationSolverInput(relation, variable),
-          new SparlFilterExpressionSolverInput(filterExpression, variable)
+          new SparlFilterExpressionSolverInput(filterExpression, variable),
         ];
 
         expect(isBooleanExpressionTreeRelationFilterSolvable(
@@ -649,7 +649,7 @@ describe('solver function', () => {
       const variable = 'x';
       const inputs = [
         new TreeRelationSolverInput(relation, variable),
-        new SparlFilterExpressionSolverInput(filterExpression, variable)
+        new SparlFilterExpressionSolverInput(filterExpression, variable),
       ];
 
       expect(isBooleanExpressionTreeRelationFilterSolvable(inputs)).toBe(false);
@@ -676,7 +676,7 @@ describe('solver function', () => {
       const variable = 'x';
       const inputs = [
         new TreeRelationSolverInput(relation, variable),
-        new SparlFilterExpressionSolverInput(filterExpression, variable)
+        new SparlFilterExpressionSolverInput(filterExpression, variable),
       ];
 
       expect(isBooleanExpressionTreeRelationFilterSolvable(inputs)).toBe(true);
@@ -702,7 +702,7 @@ describe('solver function', () => {
       const variable = 'x';
       const inputs = [
         new TreeRelationSolverInput(relation, variable),
-        new SparlFilterExpressionSolverInput(filterExpression, variable)
+        new SparlFilterExpressionSolverInput(filterExpression, variable),
       ];
 
       expect(isBooleanExpressionTreeRelationFilterSolvable(inputs)).toBe(false);
@@ -728,7 +728,7 @@ describe('solver function', () => {
       const variable = 'x';
       const inputs = [
         new TreeRelationSolverInput(relation, variable),
-        new SparlFilterExpressionSolverInput(filterExpression, variable)
+        new SparlFilterExpressionSolverInput(filterExpression, variable),
       ];
 
       expect(isBooleanExpressionTreeRelationFilterSolvable(inputs)).toBe(true);
@@ -756,7 +756,7 @@ describe('solver function', () => {
       const variable = 'x';
       const inputs = [
         new TreeRelationSolverInput(relation, variable),
-        new SparlFilterExpressionSolverInput(filterExpression, variable)
+        new SparlFilterExpressionSolverInput(filterExpression, variable),
       ];
 
       expect(isBooleanExpressionTreeRelationFilterSolvable(inputs)).toBe(true);
@@ -783,7 +783,49 @@ describe('solver function', () => {
         const variable = 'x';
         const inputs = [
           new TreeRelationSolverInput(relation, variable),
-          new SparlFilterExpressionSolverInput(filterExpression, variable)
+          new SparlFilterExpressionSolverInput(filterExpression, variable),
+        ];
+
+        expect(isBooleanExpressionTreeRelationFilterSolvable(
+          inputs,
+        ))
+          .toBe(false);
+      });
+
+    it('should refuse the link with a a bounded TREE node',
+      () => {
+        const relation: ITreeRelation = {
+          type: SparqlRelationOperator.GreaterThanRelation,
+          remainingItems: 10,
+          path: 'ex:path',
+          value: {
+            value: '10',
+            term: DF.literal('10', DF.namedNode('http://www.w3.org/2001/XMLSchema#integer')),
+          },
+          node: 'https://www.example.be',
+        };
+
+        const relationBound: ITreeRelation = {
+          type: SparqlRelationOperator.LessThanRelation,
+          remainingItems: 10,
+          path: 'ex:path',
+          value: {
+            value: '20',
+            term: DF.literal('20', DF.namedNode('http://www.w3.org/2001/XMLSchema#integer')),
+          },
+          node: 'https://www.example.be',
+        };
+
+        const filterExpression = translate(`
+          SELECT * WHERE { ?x ?y ?z 
+          FILTER(?x>30)
+          }`).input.expression;
+
+        const variable = 'x';
+        const inputs = [
+          new TreeRelationSolverInput(relation, variable),
+          new TreeRelationSolverInput(relationBound, variable),
+          new SparlFilterExpressionSolverInput(filterExpression, variable),
         ];
 
         expect(isBooleanExpressionTreeRelationFilterSolvable(
@@ -813,7 +855,7 @@ describe('solver function', () => {
         const variable = 'x';
         const inputs = [
           new TreeRelationSolverInput(relation, variable),
-          new SparlFilterExpressionSolverInput(filterExpression, variable)
+          new SparlFilterExpressionSolverInput(filterExpression, variable),
         ];
         expect(isBooleanExpressionTreeRelationFilterSolvable(
           inputs,
@@ -841,7 +883,7 @@ describe('solver function', () => {
       const variable = 'x';
       const inputs = [
         new TreeRelationSolverInput(relation, variable),
-        new SparlFilterExpressionSolverInput(filterExpression, variable)
+        new SparlFilterExpressionSolverInput(filterExpression, variable),
       ];
 
       expect(isBooleanExpressionTreeRelationFilterSolvable(inputs)).toBe(true);
@@ -867,7 +909,7 @@ describe('solver function', () => {
       const variable = 'x';
       const inputs = [
         new TreeRelationSolverInput(relation, variable),
-        new SparlFilterExpressionSolverInput(filterExpression, variable)
+        new SparlFilterExpressionSolverInput(filterExpression, variable),
       ];
 
       expect(isBooleanExpressionTreeRelationFilterSolvable(inputs)).toBe(true);
@@ -893,7 +935,7 @@ describe('solver function', () => {
       const variable = 'x';
       const inputs = [
         new TreeRelationSolverInput(relation, variable),
-        new SparlFilterExpressionSolverInput(filterExpression, variable)
+        new SparlFilterExpressionSolverInput(filterExpression, variable),
       ];
 
       expect(isBooleanExpressionTreeRelationFilterSolvable(inputs)).toBe(true);
@@ -919,7 +961,7 @@ describe('solver function', () => {
       const variable = 'x';
       const inputs = [
         new TreeRelationSolverInput(relation, variable),
-        new SparlFilterExpressionSolverInput(filterExpression, variable)
+        new SparlFilterExpressionSolverInput(filterExpression, variable),
       ];
 
       expect(isBooleanExpressionTreeRelationFilterSolvable(inputs)).toBe(false);
@@ -945,7 +987,7 @@ describe('solver function', () => {
       const variable = 'x';
       const inputs = [
         new TreeRelationSolverInput(relation, variable),
-        new SparlFilterExpressionSolverInput(filterExpression, variable)
+        new SparlFilterExpressionSolverInput(filterExpression, variable),
       ];
 
       expect(isBooleanExpressionTreeRelationFilterSolvable(inputs)).toBe(true);
@@ -971,7 +1013,7 @@ describe('solver function', () => {
       const variable = 'x';
       const inputs = [
         new TreeRelationSolverInput(relation, variable),
-        new SparlFilterExpressionSolverInput(filterExpression, variable)
+        new SparlFilterExpressionSolverInput(filterExpression, variable),
       ];
 
       expect(isBooleanExpressionTreeRelationFilterSolvable(inputs)).toBe(false);
@@ -997,12 +1039,105 @@ describe('solver function', () => {
       const variable = 'x';
       const inputs = [
         new TreeRelationSolverInput(relation, variable),
-        new SparlFilterExpressionSolverInput(filterExpression, variable)
+        new SparlFilterExpressionSolverInput(filterExpression, variable),
       ];
 
       expect(isBooleanExpressionTreeRelationFilterSolvable(inputs)).toBe(true);
     });
-})
+
+    it('should throw an error when there is two filter expressions', () => {
+      const relation: ITreeRelation = {
+        type: SparqlRelationOperator.EqualThanRelation,
+        remainingItems: 10,
+        path: 'ex:path',
+        value: {
+          value: '5',
+          term: DF.literal('5', DF.namedNode('http://www.w3.org/2001/XMLSchema#integer')),
+        },
+        node: 'https://www.example.be',
+      };
+
+      const filterExpression = translate(`
+            SELECT * WHERE { ?x ?y ?z 
+            FILTER(true)
+            }`).input.expression;
+
+      const variable = 'x';
+      const inputs = [
+        new TreeRelationSolverInput(relation, variable),
+        new SparlFilterExpressionSolverInput(filterExpression, variable),
+        new SparlFilterExpressionSolverInput(filterExpression, variable),
+      ];
+
+      expect(() => isBooleanExpressionTreeRelationFilterSolvable(inputs)).toThrow(InvalidExpressionSystem);
+    });
+
+    it('should throw an error if there is no filter expression', () => {
+      const relation: ITreeRelation = {
+        type: SparqlRelationOperator.EqualThanRelation,
+        remainingItems: 10,
+        path: 'ex:path',
+        value: {
+          value: '5',
+          term: DF.literal('5', DF.namedNode('http://www.w3.org/2001/XMLSchema#integer')),
+        },
+        node: 'https://www.example.be',
+      };
+
+      const variable = 'x';
+      const inputs = [
+        new TreeRelationSolverInput(relation, variable),
+      ];
+
+      expect(() => isBooleanExpressionTreeRelationFilterSolvable(inputs)).toThrow(InvalidExpressionSystem);
+    });
+
+    it('should throw an error if there is no tree relation', () => {
+      const filterExpression = translate(`
+            SELECT * WHERE { ?x ?y ?z 
+            FILTER(true)
+            }`).input.expression;
+
+      const variable = 'x';
+      const inputs = [
+        new SparlFilterExpressionSolverInput(filterExpression, variable),
+      ];
+
+      expect(() => isBooleanExpressionTreeRelationFilterSolvable(inputs)).toThrow(InvalidExpressionSystem);
+    });
+
+    it('should return true if there is no inputs', () => {
+      const inputs = [];
+
+      expect(isBooleanExpressionTreeRelationFilterSolvable(inputs)).toBe(true);
+    });
+
+    it('should throw an error when there are multiple variables', () => {
+      const relation: ITreeRelation = {
+        type: SparqlRelationOperator.EqualThanRelation,
+        remainingItems: 10,
+        path: 'ex:path',
+        value: {
+          value: '5',
+          term: DF.literal('5', DF.namedNode('http://www.w3.org/2001/XMLSchema#integer')),
+        },
+        node: 'https://www.example.be',
+      };
+
+      const filterExpression = translate(`
+            SELECT * WHERE { ?x ?y ?z 
+            FILTER(true)
+            }`).input.expression;
+
+      const variable = 'x';
+      const inputs = [
+        new TreeRelationSolverInput(relation, variable),
+        new SparlFilterExpressionSolverInput(filterExpression, 'y'),
+      ];
+
+      expect(() => isBooleanExpressionTreeRelationFilterSolvable(inputs)).toThrow(MissMatchVariableError);
+    });
+  });
 
   describe('reverseRawLogicOperator', () => {
     it('given an non existing operator should return undefined', () => {

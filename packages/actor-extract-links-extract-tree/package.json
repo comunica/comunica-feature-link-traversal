@@ -37,6 +37,7 @@
     "@comunica/context-entries-link-traversal": "^0.1.1",
     "@comunica/core": "^2.6.8",
     "@comunica/types-link-traversal": "^0.1.0",
+    "@types/node": "17.0.29",
     "rdf-data-factory": "^1.1.1",
     "rdf-string": "^1.6.1",
     "sparqlalgebrajs": "^4.0.0",

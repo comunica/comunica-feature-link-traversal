@@ -2,18 +2,15 @@ import { Algebra } from 'sparqlalgebrajs';
 
 import { SolutionInterval } from './SolutionInterval';
 import {
-  SparqlOperandDataTypes, LogicOperatorSymbol, SparqlOperandDataTypesReversed,
+  SparqlOperandDataTypes, LogicOperatorSymbol,
 } from './solverInterfaces';
 import type {
   ISolverExpression,
-  Variable,
 } from './solverInterfaces';
 import { SparqlRelationOperator } from './TreeMetadata';
-import type { ITreeRelation } from './TreeMetadata';
 
 const nextUp = require('ulp').nextUp;
 const nextDown = require('ulp').nextDown;
-
 
 /**
    * Check if all the expression provided have a SparqlOperandDataTypes compatible type

@@ -9,10 +9,10 @@ import type { IActionContext } from '@comunica/types';
 import type * as RDF from 'rdf-js';
 import { termToString } from 'rdf-string';
 import { filterNode } from './filterNode';
+import { isBooleanExpressionTreeRelationFilterSolvable } from './solver';
 import { TreeNodes } from './TreeMetadata';
 import type { ITreeRelationRaw, ITreeRelation, ITreeNode } from './TreeMetadata';
 import { buildRelationElement, materializeTreeRelation, addRelationDescription } from './treeMetadataExtraction';
-import { isBooleanExpressionTreeRelationFilterSolvable } from './solver';
 /**
  * A comunica Extract Links Tree Extract Links Actor.
  */
@@ -90,7 +90,7 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
    * @returns {Promise<Map<string, boolean>>} a map containing the filter
    */
   public async applyFilter(node: ITreeNode, context: IActionContext): Promise<Map<string, boolean>> {
-    return await  filterNode(node, context,isBooleanExpressionTreeRelationFilterSolvable);
+    return await filterNode(node, context, isBooleanExpressionTreeRelationFilterSolvable);
   }
 
   /**

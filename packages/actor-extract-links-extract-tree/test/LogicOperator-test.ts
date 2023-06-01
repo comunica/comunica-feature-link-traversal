@@ -3,9 +3,6 @@ import { SolutionDomain } from '../lib/SolutionDomain';
 import { SolutionInterval } from '../lib/SolutionInterval';
 import { LogicOperatorSymbol } from '../lib/solverInterfaces';
 
-const nextUp = require('ulp').nextUp;
-const nextDown = require('ulp').nextDown;
-
 describe('LogicOperator', () => {
   describe('Or', () => {
     const or = new Or();
