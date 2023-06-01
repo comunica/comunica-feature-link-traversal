@@ -94,15 +94,14 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
           }
         }
 
-        // Create a ITreeNode object
         const node: ITreeNode = { relation: relations, identifier: currentNodeUrl };
-        let acceptedRelation = relations;
+        let acceptedRelations = relations;
         if (this.filterPruning) {
           // Filter the relation based on the query
           const filters = await this.applyFilter(node, action.context);
-          acceptedRelation = this.handleFilter(filters, acceptedRelation);
+          acceptedRelations = this.handleFilter(filters, acceptedRelations);
         }
-        resolve({ links: acceptedRelation.map(el => ({ url: el.node })) });
+        resolve({ links: acceptedRelations.map(el => ({ url: el.node })) });
       });
     });
   }
