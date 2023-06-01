@@ -10,8 +10,7 @@
       {
         "@id": "urn:comunica:default:extract-links/actors#extract-links-tree",
         "@type": "ActorExtractLinksTree",
-        "reachabilityCriterionUseSPARQLFilter": false
+        "filterPruning": false
       }
     ]
   }
-  

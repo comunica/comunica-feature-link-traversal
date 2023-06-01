@@ -16,16 +16,7 @@ const BF = new BindingsFactory();
    * @param {IActionContext} context - The context
    * @returns {Algebra.Expression | undefined} The filter expression or undefined if the TREE node has no relations
    */
-export function getFilterExpressionIfTreeNodeHasConstraint(node: ITreeNode,
-  context: IActionContext): Algebra.Expression | undefined {
-  if (!node.relation) {
-    return undefined;
-  }
-
-  if (node.relation.length === 0) {
-    return undefined;
-  }
-
+export function getFilterExpression(context: IActionContext): Algebra.Expression | undefined {
   const query: Algebra.Operation = context.get(KeysInitQuery.query)!;
   const filterExpression = findNode(query, Algebra.types.FILTER);
   if (!filterExpression) {
@@ -48,20 +39,28 @@ export async function filterNode(
   context: IActionContext,
   satisfactionChecker: SatisfactionChecker,
 ): Promise<Map<string, boolean>> {
-  const filterMap: Map<string, boolean> = new Map();
+  if (!node.relation) {
+    return new Map();
+  }
+
+  if (node.relation.length === 0) {
+    return new Map();
+  }
 
   const filterOperation: Algebra.Expression | undefined =
-    getFilterExpressionIfTreeNodeHasConstraint(node, context);
+    getFilterExpression(context);
 
   if (!filterOperation) {
     return new Map();
   }
 
+  const filterMap: Map<string, boolean> = new Map();
+
   // Extract the bgp of the query.
   const queryBody: Algebra.Operation = context.get(KeysInitQuery.query)!;
 
   // Capture the relation from the function argument.
-  const groupedRelations = groupRelations(node.relation!);
+  const groupedRelations = groupRelations(node.relation);
 
   const calculatedFilterExpressions: Map<Variable, SparlFilterExpressionSolverInput> = new Map();
   for (const relations of groupedRelations) {

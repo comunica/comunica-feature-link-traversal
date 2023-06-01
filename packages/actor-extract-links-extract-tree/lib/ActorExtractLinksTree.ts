@@ -11,8 +11,8 @@ import type * as RDF from 'rdf-js';
 import { termToString } from 'rdf-string';
 import { filterNode } from './filterNode';
 import { isBooleanExpressionTreeRelationFilterSolvable } from './solver';
-import type { ITreeRelationRaw, ITreeRelation, ITreeNode } from './TreeMetadata';
-import { buildRelationElement, materializeTreeRelation, addRelationDescription } from './treeMetadataExtraction';
+import type { ITreeRelationRaw, ITreeRelation, SparqlRelationOperator, ITreeNode } from './TreeMetadata';
+import { TreeNodes, RelationOperatorReversed } from './TreeMetadata';
 
 const DF = new DataFactory<RDF.BaseQuad>();
 
@@ -20,19 +20,18 @@ const DF = new DataFactory<RDF.BaseQuad>();
  * A comunica Extract Links Tree Extract Links Actor.
  */
 export class ActorExtractLinksTree extends ActorExtractLinks {
-  private readonly reachabilityCriterionUseSPARQLFilter: boolean = true;
+  private readonly filterPruning: boolean = true;
   public static readonly aNodeType = DF.namedNode('https://w3id.org/tree#node');
   public static readonly aRelation = DF.namedNode('https://w3id.org/tree#relation');
-  private static readonly rdfTypeNode = DF.namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type');
   public static readonly aView = DF.namedNode('https://w3id.org/tree#view');
   public static readonly aSubset = DF.namedNode('http://rdfs.org/ns/void#subset');
   public static readonly isPartOf = DF.namedNode('http://purl.org/dc/terms/isPartOf');
 
   public constructor(args: IActorExtractLinksTreeArgs) {
     super(args);
-    this.reachabilityCriterionUseSPARQLFilter = args.reachabilityCriterionUseSPARQLFilter === undefined ?
+    this.filterPruning = args.filterPruning === undefined ?
       true :
-      args.reachabilityCriterionUseSPARQLFilter;
+      args.filterPruning;
   }
 
   public async test(action: IActionExtractLinks): Promise<IActorTest> {
@@ -40,7 +39,7 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
   }
 
   public isUsingReachabilitySPARQLFilter(): boolean {
-    return this.reachabilityCriterionUseSPARQLFilter;
+    return this.filterPruning;
   }
 
   public async run(action: IActionExtractLinks): Promise<IActorExtractLinksOutput> {
@@ -89,14 +88,16 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
           ) {
             const relationDescription = relationDescriptions.get(relationId);
             // Add the relation to the relation array
-            relations.push(materializeTreeRelation(relationDescription || {}, link));
+            relations.push(
+              ActorExtractLinksTree.materializeTreeRelation(relationDescription || {}, link),
+            );
           }
         }
 
         // Create a ITreeNode object
         const node: ITreeNode = { relation: relations, identifier: currentNodeUrl };
         let acceptedRelation = relations;
-        if (this.reachabilityCriterionUseSPARQLFilter) {
+        if (this.filterPruning) {
           // Filter the relation based on the query
           const filters = await this.applyFilter(node, action.context);
           acceptedRelation = this.handleFilter(filters, acceptedRelation);
@@ -169,11 +170,93 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
       nodeLinks.push([ termToString(quad.subject), quad.object.value ]);
     }
 
-    const descriptionElement = buildRelationElement(quad);
+    const descriptionElement = ActorExtractLinksTree.buildRelationElement(quad);
     if (descriptionElement) {
       const [ value, key ] = descriptionElement;
-      addRelationDescription(relationDescriptions, quad, value, key);
+      ActorExtractLinksTree.addRelationDescription(relationDescriptions, quad, value, key);
     }
+  }
+
+  /**
+ * Materialize a raw tree relation using the captured values.
+ * @param relationRaw Raw representation of a tree relation.
+ * @param nextLink Link to the next page.
+ * @returns ITreeRelation
+ */
+  public static materializeTreeRelation(
+    relationRaw: ITreeRelationRaw,
+    nextLink: string,
+  ): ITreeRelation {
+    const relation: ITreeRelation = { node: nextLink };
+    if (relationRaw?.operator) {
+      relation.type = relationRaw.operator[0];
+    }
+
+    if (relationRaw?.remainingItems) {
+      relation.remainingItems = relationRaw.remainingItems[0];
+    }
+
+    if (relationRaw?.subject) {
+      relation.path = relationRaw.subject[0];
+    }
+
+    if (relationRaw?.value) {
+      relation.value = {
+        value: relationRaw.value[0],
+        term: relationRaw.value[1].object,
+      };
+    }
+
+    return relation;
+  }
+
+  /**
+   * From a quad stream return a relation element if it exist
+   * @param {RDF.Quad} quad - Current quad of the stream.
+   * @returns {[SparqlRelationOperator | number | string, keyof ITreeRelationRaw] | undefined} The relation element
+   * and the key associated with it.
+   */
+  public static buildRelationElement(
+    quad: RDF.Quad,
+  ): [SparqlRelationOperator | number | string, keyof ITreeRelationRaw] | undefined {
+    if (quad.predicate.value === TreeNodes.RDFTypeNode) {
+      // Set the operator of the relation
+      const operator: SparqlRelationOperator | undefined = RelationOperatorReversed.get(quad.object.value);
+      if (typeof operator !== 'undefined') {
+        return [ operator, 'operator' ];
+      }
+    } else if (quad.predicate.value === TreeNodes.Path) {
+      // Set the subject of the relation condition
+      return [ quad.object.value, 'subject' ];
+    } else if (quad.predicate.value === TreeNodes.Value) {
+      // Set the value of the relation condition
+      return [ quad.object.value, 'value' ];
+    } else if (quad.predicate.value === TreeNodes.RemainingItems) {
+      const remainingItems = Number.parseInt(quad.object.value, 10);
+      if (!Number.isNaN(remainingItems)) {
+        return [ remainingItems, 'remainingItems' ];
+      }
+    }
+    return undefined;
+  }
+
+  /**
+   * Update the relationDescriptions with the new quad value
+   * @param {Map<string, ITreeRelationRaw>} relationDescriptions - Maps relationship identifiers to their description.
+   * @param {RDF.Quad} quad - Current quad of the steam.
+   * @param {SparqlRelationOperator | number | string} value - Current description value fetch
+   * @param {keyof ITreeRelationRaw} key - Key associated with the value.
+   */
+  public static addRelationDescription(
+    relationDescriptions: Map<string, ITreeRelationRaw>,
+    quad: RDF.Quad,
+    value: SparqlRelationOperator | number | string,
+    key: keyof ITreeRelationRaw,
+  ): void {
+    const rawRelation: ITreeRelationRaw = relationDescriptions?.get(termToString(quad.subject)) || {};
+    rawRelation[key] = [ value, quad ];
+
+    relationDescriptions.set(termToString(quad.subject), rawRelation);
   }
 }
 
@@ -184,5 +267,5 @@ export interface IActorExtractLinksTreeArgs
    * SPARQL filter
    * @default {true}
    */
-  reachabilityCriterionUseSPARQLFilter: boolean;
+  filterPruning: boolean;
 }

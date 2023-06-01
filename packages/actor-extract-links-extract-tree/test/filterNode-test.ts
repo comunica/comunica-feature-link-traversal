@@ -4,7 +4,7 @@ import { ActionContext } from '@comunica/core';
 import { DataFactory } from 'rdf-data-factory';
 import type * as RDF from 'rdf-js';
 import { Algebra, translate } from 'sparqlalgebrajs';
-import { filterNode, groupRelations, getFilterExpressionIfTreeNodeHasConstraint } from '../lib/filterNode';
+import { filterNode, groupRelations, getFilterExpression } from '../lib/filterNode';
 import { isBooleanExpressionTreeRelationFilterSolvable } from
   '../lib/solver';
 import { SparqlRelationOperator } from '../lib/TreeMetadata';
@@ -13,65 +13,26 @@ import type { ITreeNode, ITreeRelation } from '../lib/TreeMetadata';
 const DF = new DataFactory<RDF.BaseQuad>();
 
 describe('filterNode Module', () => {
-  describe('getFilterExpressionIfTreeNodeHasConstraint ', () => {
+  describe('getFilterExpression ', () => {
     const treeSubject = 'tree';
-    it('should test when there are relations and a filter operation in the query', () => {
+    it('should return the filter operation if the query has a filter expression', () => {
       const context = new ActionContext({
         [KeysInitQuery.query.name]: translate(`
           SELECT * WHERE { ?x ?y ?z 
           FILTER(?x = 5 || true)
           }`),
       });
-      const node: ITreeNode = {
-        identifier: treeSubject,
-        relation: [
-          {
-            node: 'http://bar.com',
-          },
-        ],
-      };
 
-      const response = getFilterExpressionIfTreeNodeHasConstraint(node, context);
+      const response = getFilterExpression(context);
       expect(response).toBeDefined();
     });
 
-    it('should no test when the TREE relation are undefined', async() => {
-      const context = new ActionContext({
-        [KeysInitQuery.query.name]: { type: Algebra.types.FILTER },
-      });
-      const node: ITreeNode = {
-        identifier: treeSubject,
-      };
-
-      const response = getFilterExpressionIfTreeNodeHasConstraint(node, context);
-      expect(response).toBeUndefined();
-    });
-
-    it('should not test when there is a filter operation in the query but no TREE relations', async() => {
-      const context = new ActionContext({
-        [KeysInitQuery.query.name]: { type: Algebra.types.FILTER },
-      });
-      const node: ITreeNode = {
-        identifier: treeSubject,
-        relation: [],
-      };
-      const response = getFilterExpressionIfTreeNodeHasConstraint(node, context);
-      expect(response).toBeUndefined();
-    });
-
-    it('should no test when there are no filter operation in the query but a TREE relation', async() => {
+    it('should return undefined if the query does not have a filter expression', async() => {
       const context = new ActionContext({
         [KeysInitQuery.query.name]: { type: Algebra.types.ASK },
       });
-      const node: ITreeNode = {
-        identifier: treeSubject,
-        relation: [
-          {
-            node: 'http://bar.com',
-          },
-        ],
-      };
-      const response = getFilterExpressionIfTreeNodeHasConstraint(node, context);
+
+      const response = getFilterExpression(context);
       expect(response).toBeUndefined();
     });
   });
@@ -116,6 +77,107 @@ describe('filterNode Module', () => {
 
         expect(result).toStrictEqual(
           new Map([[ 'http://bar.com', true ]]),
+        );
+      });
+
+      it('should return an empty filter if the query has not filter', async() => {
+        const treeSubject = 'tree';
+
+        const node: ITreeNode = {
+          identifier: treeSubject,
+          relation: [
+            {
+              node: 'http://bar.com',
+              path: 'http://example.com#path',
+              value: {
+                value: '5',
+                term: DF.literal('5', DF.namedNode('http://www.w3.org/2001/XMLSchema#integer')),
+              },
+              type: SparqlRelationOperator.EqualThanRelation,
+            },
+          ],
+        };
+
+        const query = translate(`
+          SELECT ?o WHERE {
+            ex:foo ex:path ?o.
+            ex:foo ex:p ex:o.
+          }
+          `, { prefixes: { ex: 'http://example.com#' }});
+
+        const context = new ActionContext({
+          [KeysInitQuery.query.name]: query,
+        });
+
+        const result = await filterNode(
+          node,
+          context,
+          isBooleanExpressionTreeRelationFilterSolvable,
+        );
+
+        expect(result).toStrictEqual(
+          new Map(),
+        );
+      });
+
+      it('should return an empty filter if the TREE Node has no relation', async() => {
+        const treeSubject = 'tree';
+
+        const node: ITreeNode = {
+          identifier: treeSubject,
+          relation: [],
+        };
+
+        const query = translate(`
+          SELECT ?o WHERE {
+            ex:foo ex:path ?o.
+            ex:foo ex:p ex:o.
+            FILTER(?o=5)
+          }
+          `, { prefixes: { ex: 'http://example.com#' }});
+
+        const context = new ActionContext({
+          [KeysInitQuery.query.name]: query,
+        });
+
+        const result = await filterNode(
+          node,
+          context,
+          isBooleanExpressionTreeRelationFilterSolvable,
+        );
+
+        expect(result).toStrictEqual(
+          new Map(),
+        );
+      });
+
+      it('should return an empty filter if the TREE Node has no relation field', async() => {
+        const treeSubject = 'tree';
+
+        const node: ITreeNode = {
+          identifier: treeSubject,
+        };
+
+        const query = translate(`
+          SELECT ?o WHERE {
+            ex:foo ex:path ?o.
+            ex:foo ex:p ex:o.
+            FILTER(?o=5)
+          }
+          `, { prefixes: { ex: 'http://example.com#' }});
+
+        const context = new ActionContext({
+          [KeysInitQuery.query.name]: query,
+        });
+
+        const result = await filterNode(
+          node,
+          context,
+          isBooleanExpressionTreeRelationFilterSolvable,
+        );
+
+        expect(result).toStrictEqual(
+          new Map(),
         );
       });
 
