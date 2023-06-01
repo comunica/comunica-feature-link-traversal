@@ -2,7 +2,7 @@
 
 [![npm version](https://badge.fury.io/js/%40comunica%2Factor-extract-links-tree.svg)](https://www.npmjs.com/package/@comunica/actor-extract-links-tree)
 
-A comunica [Extract Links Actor](https://github.com/comunica/comunica-feature-link-traversal/tree/master/packages/bus-extract-links) for the [TREE](https://treecg.github.io/specification/).
+A comunica [Extract Links Actor](https://github.com/comunica/comunica-feature-link-traversal/tree/master/packages/bus-extract-links) for the [TREE specification](https://treecg.github.io/specification/).
 
 The [Guided Linked Traversal Query Processing](https://arxiv.org/abs/2005.02239)
 option that can be enabled using the `reachabilityCriterionUseSPARQLFilte` flag. The traversal algorithm will consider the solvability of the query filter expression
