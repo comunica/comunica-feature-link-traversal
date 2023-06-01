@@ -172,7 +172,7 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
 
     const descriptionElement = ActorExtractLinksTree.buildRelationElement(quad);
     if (descriptionElement) {
-      const {value, key } = descriptionElement;
+      const { value, key } = descriptionElement;
       ActorExtractLinksTree.addRelationDescription(relationDescriptions, quad, value, key);
     }
   }
@@ -213,7 +213,7 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
   /**
    * From a quad stream return a relation element if it exist.
    * For example if the quad is the operator the function will return
-   * the value of the operator and 
+   * the value of the operator and
    * @param {RDF.Quad} quad - Current quad of the stream.
    * @returns {ITreeRelationElement | undefined} The relation element
    * and the key associated with it.
@@ -225,18 +225,18 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
       // Set the operator of the relation
       const operator: SparqlRelationOperator | undefined = RelationOperatorReversed.get(quad.object.value);
       if (typeof operator !== 'undefined') {
-        return  {value:operator, key:'operator'};
+        return { value: operator, key: 'operator' };
       }
     } else if (quad.predicate.value === TreeNodes.Path) {
       // Set the subject of the relation condition
-      return {value:quad.object.value,key: 'subject'};
+      return { value: quad.object.value, key: 'subject' };
     } else if (quad.predicate.value === TreeNodes.Value) {
       // Set the value of the relation condition
-      return {value:quad.object.value, key:'value' };
+      return { value: quad.object.value, key: 'value' };
     } else if (quad.predicate.value === TreeNodes.RemainingItems) {
       const remainingItems = Number.parseInt(quad.object.value, 10);
       if (!Number.isNaN(remainingItems)) {
-        return { value: remainingItems, key:'remainingItems' };
+        return { value: remainingItems, key: 'remainingItems' };
       }
     }
     return undefined;
@@ -275,6 +275,6 @@ export interface IActorExtractLinksTreeArgs
  * An element of a TREE relation
  */
 interface ITreeRelationElement{
-  key:keyof ITreeRelationRaw,
-  value: SparqlRelationOperator | number | string
+  key: keyof ITreeRelationRaw;
+  value: SparqlRelationOperator | number | string;
 }

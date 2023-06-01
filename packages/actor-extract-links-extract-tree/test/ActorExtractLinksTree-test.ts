@@ -897,7 +897,7 @@ describe('ActorExtractLinksExtractLinksTree', () => {
 
         const res = ActorExtractLinksTree.buildRelationElement(quad);
         expect(res).toBeDefined();
-        const {value, key } = <any> res;
+        const { value, key } = <any> res;
         expect(key).toBe(<keyof ITreeRelationRaw> 'operator');
         expect(value).toBe(SparqlRelationOperator.EqualThanRelation);
       });
