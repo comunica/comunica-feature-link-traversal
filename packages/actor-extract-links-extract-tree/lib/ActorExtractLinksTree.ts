@@ -172,7 +172,7 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
 
     const descriptionElement = ActorExtractLinksTree.buildRelationElement(quad);
     if (descriptionElement) {
-      const [ value, key ] = descriptionElement;
+      const {value, key } = descriptionElement;
       ActorExtractLinksTree.addRelationDescription(relationDescriptions, quad, value, key);
     }
   }
@@ -211,30 +211,32 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
   }
 
   /**
-   * From a quad stream return a relation element if it exist
+   * From a quad stream return a relation element if it exist.
+   * For example if the quad is the operator the function will return
+   * the value of the operator and 
    * @param {RDF.Quad} quad - Current quad of the stream.
-   * @returns {[SparqlRelationOperator | number | string, keyof ITreeRelationRaw] | undefined} The relation element
+   * @returns {ITreeRelationElement | undefined} The relation element
    * and the key associated with it.
    */
   public static buildRelationElement(
     quad: RDF.Quad,
-  ): [SparqlRelationOperator | number | string, keyof ITreeRelationRaw] | undefined {
+  ): ITreeRelationElement | undefined {
     if (quad.predicate.value === TreeNodes.RDFTypeNode) {
       // Set the operator of the relation
       const operator: SparqlRelationOperator | undefined = RelationOperatorReversed.get(quad.object.value);
       if (typeof operator !== 'undefined') {
-        return [ operator, 'operator' ];
+        return  {value:operator, key:'operator'};
       }
     } else if (quad.predicate.value === TreeNodes.Path) {
       // Set the subject of the relation condition
-      return [ quad.object.value, 'subject' ];
+      return {value:quad.object.value,key: 'subject'};
     } else if (quad.predicate.value === TreeNodes.Value) {
       // Set the value of the relation condition
-      return [ quad.object.value, 'value' ];
+      return {value:quad.object.value, key:'value' };
     } else if (quad.predicate.value === TreeNodes.RemainingItems) {
       const remainingItems = Number.parseInt(quad.object.value, 10);
       if (!Number.isNaN(remainingItems)) {
-        return [ remainingItems, 'remainingItems' ];
+        return { value: remainingItems, key:'remainingItems' };
       }
     }
     return undefined;
@@ -268,4 +270,11 @@ export interface IActorExtractLinksTreeArgs
    * @default {true}
    */
   filterPruning: boolean;
+}
+/**
+ * An element of a TREE relation
+ */
+interface ITreeRelationElement{
+  key:keyof ITreeRelationRaw,
+  value: SparqlRelationOperator | number | string
 }
