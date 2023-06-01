@@ -32,8 +32,8 @@
     "lib/**/*.js.map"
   ],
   "dependencies": {
+    "@comunica/core": "^2.7.0",
     "@comunica/bus-extract-links": "^0.1.1",
-    "@comunica/core": "^2.6.8",
     "rdf-terms": "^1.6.2"
   },
   "scripts": {

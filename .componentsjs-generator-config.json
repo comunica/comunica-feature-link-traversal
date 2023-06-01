@@ -8,7 +8,9 @@
     "Headers",
     "RDF.Stream",
     "ShapeTree",
-    "ContentPolicy"
+    "ContentPolicy",
+    "BindingsStreamAdaptiveDestroy",
+    "MetadataValidationState"
   ],
   "modulePrefix": {}
 }

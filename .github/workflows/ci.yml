@@ -8,8 +8,9 @@ jobs:
       matrix:
         os: [ubuntu-latest]
         node-version:
-          - 14.x
           - 16.x
+          - 18.x
+          - 20.x
     steps:
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
@@ -30,7 +31,9 @@ jobs:
       - name: Build project
         run: yarn run build
       - name: Run tests
-        run: yarn run test-ci
+        run: export NODE_OPTIONS="--max_old_space_size=4096" && yarn run test-ci
+      - name: Run browser tests
+        run: yarn run test-browser
       - name: Submit coverage results
         uses: coverallsapp/github-action@master
         with:

@@ -32,9 +32,9 @@
     "lib/**/*.js.map"
   ],
   "dependencies": {
-    "@comunica/bus-extract-links": "^0.1.1",
-    "@comunica/bus-rdf-metadata-extract": "^2.6.8",
-    "@comunica/core": "^2.6.8"
+    "@comunica/core": "^2.7.0",
+    "@comunica/bus-rdf-metadata-extract": "^2.7.0",
+    "@comunica/bus-extract-links": "^0.1.1"
   },
   "scripts": {
     "build": "npm run build:ts && npm run build:components",

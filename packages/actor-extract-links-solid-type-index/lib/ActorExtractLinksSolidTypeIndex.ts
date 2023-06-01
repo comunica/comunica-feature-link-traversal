@@ -5,7 +5,7 @@ import type { IActionExtractLinks, IActorExtractLinksOutput } from '@comunica/bu
 import { ActorExtractLinks } from '@comunica/bus-extract-links';
 import type { ILink } from '@comunica/bus-rdf-resolve-hypermedia-links';
 import { KeysInitQuery, KeysQueryOperation } from '@comunica/context-entries';
-import { KeysRdfResolveHypermediaLinks } from '@comunica/context-entries-link-traversal';
+import { KeysRdfJoin, KeysRdfResolveHypermediaLinks } from '@comunica/context-entries-link-traversal';
 import type { IActorArgs, IActorTest } from '@comunica/core';
 import type { IActionContext } from '@comunica/types';
 import type * as RDF from '@rdfjs/types';
@@ -131,6 +131,7 @@ export class ActorExtractLinksSolidTypeIndex extends ActorExtractLinks {
         }`, {
         sources: [ store ],
         [KeysRdfResolveHypermediaLinks.traverse.name]: false,
+        [KeysRdfJoin.skipAdaptiveJoin.name]: true,
         lenient: true,
       })).toArray();
 
@@ -184,6 +185,7 @@ export class ActorExtractLinksSolidTypeIndex extends ActorExtractLinks {
         }`, {
       sources: [ predicateValue ],
       [KeysRdfResolveHypermediaLinks.traverse.name]: false,
+      [KeysRdfJoin.skipAdaptiveJoin.name]: true,
       lenient: true,
     });
 
