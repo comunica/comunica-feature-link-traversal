@@ -87,7 +87,7 @@ describe('SolverInput', () => {
       });
 
       it(`should return the right solver expression given a 
-      well formated TREE relation with a supported type and operator`, () => {
+      well-formed TREE relation with a supported type and operator`, () => {
         const expectedSolutionDomain =
           new SolutionInterval([ 5, 5 ]);
 
@@ -154,7 +154,7 @@ describe('SolverInput', () => {
         expect(TreeRelationSolverInput.convertTreeRelationToSolverExpression(relation, variable)).toBeUndefined();
       });
 
-      it(`should return undefined given a relation with 
+      it(`should return undefined given a tree:Relation with 
               a term containing an incompatible value in relation to its value type`, () => {
         const relation: ITreeRelation = {
           type: SparqlRelationOperator.EqualThanRelation,
@@ -217,7 +217,7 @@ describe('SolverInput', () => {
         jest.spyOn(SparlFilterExpressionSolverInput, 'recursifResolve')
           .mockRestore();
       });
-      it('should return the solution domain if it is valid', () => {
+      it('should return the solution domain if the filter expression is valid', () => {
         const expectedSolutionDomain = SolutionDomain.newWithInitialIntervals(
           new SolutionInterval([ 0, 1 ]),
         );
@@ -340,7 +340,7 @@ describe('SolverInput', () => {
           }
         });
 
-      it('given an algebra expression without a variable than should return an misformated error', () => {
+      it('given an algebra expression without a variable then should return an misformated error', () => {
         const expression: Algebra.Expression = {
           type: Algebra.types.EXPRESSION,
           expressionType: Algebra.expressionTypes.OPERATOR,
@@ -394,7 +394,7 @@ describe('SolverInput', () => {
           .toBeInstanceOf(MisformatedExpressionError);
       });
 
-      it(`given an algebra expression with a litteral containing an invalid datatype than 
+      it(`given an algebra expression with a literal containing an invalid datatype than 
               should return an unsupported datatype error`,
       () => {
         const variable = 'x';
@@ -422,8 +422,8 @@ describe('SolverInput', () => {
           .toBeInstanceOf(UnsupportedDataTypeError);
       });
 
-      it(`given an algebra expression with a litteral containing a 
-              literal that cannot be converted into number should return an unsupported datatype error`, () => {
+      it(`given an algebra expression with a literal containing a 
+              literal that cannot be converted into a number should return an unsupported datatype error`, () => {
         const variable = 'x';
         const expression: Algebra.Expression = {
           type: Algebra.types.EXPRESSION,
@@ -467,7 +467,7 @@ describe('SolverInput', () => {
         mock.mockRestore();
       });
 
-      it('given an algebra expression with two logicals operators should return the valid solution domain', () => {
+      it('given an algebra expression with two logical operators should return the valid solution domain', () => {
         const expression = translate(`
                 SELECT * WHERE { ?x ?y ?z 
                 FILTER( ?x=2 && ?x<5)
@@ -583,7 +583,7 @@ describe('SolverInput', () => {
           expect(resp.getDomain()).toStrictEqual(expectedDomain.getDomain());
         });
 
-      it(`given an algebra expression with two logicals operators with a double negation should 
+      it(`given an algebra expression with two logical operators with a double negation should 
               return the valid solution domain`, () => {
         const expression = translate(`
                   SELECT * WHERE { ?x ?y ?z 
@@ -618,7 +618,7 @@ describe('SolverInput', () => {
         expect(resp.getDomain()).toStrictEqual(expectedDomain.getDomain());
       });
 
-      it(`given an algebra expression with two logicals operators 
+      it(`given an algebra expression with two logical operators 
               that cannot be satified should return an empty domain`, () => {
         const expression = translate(`
                 SELECT * WHERE { ?x ?y ?z 
@@ -655,8 +655,8 @@ describe('SolverInput', () => {
         expect(resp.getDomain()).toStrictEqual(expectedDomain.getDomain());
       });
 
-      it(`given an algebra expression with two logicals operators that are triple negated
-               should return the valid solution domain`, () => {
+      it(`given an algebra expression with two logical operators that are triple negated
+               should returns the valid solution domain`, () => {
         const expression = translate(`
                 SELECT * WHERE { ?x ?y ?z 
                 FILTER( !(!(!(?x=2 && ?x<5))))

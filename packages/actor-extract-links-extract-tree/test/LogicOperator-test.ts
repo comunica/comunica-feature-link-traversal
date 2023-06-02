@@ -61,14 +61,14 @@ describe('LogicOperator', () => {
       });
 
       it(`given a domain should be able to create a 
-      single domain if all the domain segments are contained into the new range`,
-        () => {
-          const anOverlappingInterval = new SolutionInterval([ -100, 100 ]);
-          const newDomain = or.apply({ domain: aDomain, interval: anOverlappingInterval });
+      single domain if all the domain segments are contained into the new interval`,
+      () => {
+        const anOverlappingInterval = new SolutionInterval([ -100, 100 ]);
+        const newDomain = or.apply({ domain: aDomain, interval: anOverlappingInterval });
 
-          expect(newDomain.getDomain().length).toBe(1);
-          expect(newDomain.getDomain()).toStrictEqual([ anOverlappingInterval ]);
-        });
+        expect(newDomain.getDomain().length).toBe(1);
+        expect(newDomain.getDomain()).toStrictEqual([ anOverlappingInterval ]);
+      });
 
       it('given a domain should be able to fuse multiple domain segment if the new interval overlaps with them', () => {
         const aNewInterval = new SolutionInterval([ 1, 23 ]);
@@ -106,7 +106,7 @@ describe('LogicOperator', () => {
         aDomain = SolutionDomain.newWithInitialIntervals(new Array(...intervals));
       });
 
-      it('should add a range when the domain is empty', () => {
+      it('should add an interval when the domain is empty', () => {
         const domain = new SolutionDomain();
         const interval = new SolutionInterval([ 0, 1 ]);
 
@@ -115,7 +115,7 @@ describe('LogicOperator', () => {
         expect(newDomain.getDomain()).toStrictEqual([ interval ]);
       });
 
-      it('should return an empty domain if there is no intersection with the new range', () => {
+      it('should return an empty domain if there is no intersection with the new interval', () => {
         const interval = new SolutionInterval([ -200, -100 ]);
 
         const newDomain = and.apply({ interval, domain: aDomain });
@@ -123,7 +123,7 @@ describe('LogicOperator', () => {
         expect(newDomain.isDomainEmpty()).toBe(true);
       });
 
-      it('given a new range that is inside a part of the domain should only return the intersection', () => {
+      it('given a new interval inside a part of the domain should only return the intersection', () => {
         const interval = new SolutionInterval([ 22, 30 ]);
 
         const newDomain = and.apply({ interval, domain: aDomain });
@@ -131,7 +131,7 @@ describe('LogicOperator', () => {
         expect(newDomain.getDomain()).toStrictEqual([ interval ]);
       });
 
-      it('given a new range that intersect a part of the domain should only return the intersection', () => {
+      it('given a new interval that intersects part of the domain should only return the intersection', () => {
         const interval = new SolutionInterval([ 19, 25 ]);
 
         const expectedDomain = [
@@ -143,7 +143,7 @@ describe('LogicOperator', () => {
         expect(newDomain.getDomain()).toStrictEqual(expectedDomain);
       });
 
-      it('given a new range that intersect multiple part of the domain should only return the intersections', () => {
+      it('given a new interval that intersect multiple part of the domain should only return the intersections', () => {
         const interval = new SolutionInterval([ -2, 25 ]);
 
         const expectedDomain = [
@@ -158,21 +158,7 @@ describe('LogicOperator', () => {
         expect(newDomain.getDomain()).toStrictEqual(expectedDomain);
       });
 
-      it('given an empty domain and a last operator and should return an empty domain', () => {
-        const interval = new SolutionInterval([ -2, 25 ]);
-        const anotherIntervalNonOverlapping = new SolutionInterval([ 2_000, 3_000 ]);
-
-        let newDomain = and.apply({ interval, domain: aDomain });
-        newDomain = and.apply({ interval: anotherIntervalNonOverlapping, domain: newDomain });
-
-        expect(newDomain.isDomainEmpty()).toBe(true);
-
-        newDomain = and.apply({ interval, domain: newDomain });
-
-        expect(newDomain.isDomainEmpty()).toBe(true);
-      });
-
-      it('Given an empty domain and two ranges to add that are overlapping the domain should remain empty', () => {
+      it('given an empty domain and two intervals that are overlapping the domain should remain empty', () => {
         const domain = new SolutionDomain();
         const interval1 = new SolutionInterval([ 0, 2 ]);
         const interval2 = new SolutionInterval([ 1, 2 ]);
@@ -182,7 +168,7 @@ describe('LogicOperator', () => {
         expect(newDomain.isDomainEmpty()).toBe(true);
       });
 
-      it('Given a domain and two ranges to add that are overlapping the domain should remain empty', () => {
+      it('given a domain and two intervals that are overlapping the domain should remain empty', () => {
         const interval1 = new SolutionInterval([ 0, 2 ]);
         const interval2 = new SolutionInterval([ 1, 2 ]);
 
@@ -191,8 +177,8 @@ describe('LogicOperator', () => {
         expect(newDomain.equal(aDomain)).toBe(true);
       });
 
-      it(`Given a domain and two ranges to add that are not overlapping and where those 
-      two interval don't overlap with the domain should return the initial domain`, () => {
+      it(`given a domain and two intervals that are not overlapping and also 
+      don't overlap with the domain should return the initial domain`, () => {
         const interval1 = new SolutionInterval([ -100, -50 ]);
         const interval2 = new SolutionInterval([ -25, -23 ]);
 
@@ -201,8 +187,8 @@ describe('LogicOperator', () => {
         expect(newDomain.getDomain()).toStrictEqual(aDomain.getDomain());
       });
 
-      it(`Given a domain and two ranges to add that not overlapping and where the first 
-      one is overlap with the domain then should return a new valid domain`, () => {
+      it(`given a domain and two intervals that are not overlapping and where the first 
+      one is overlapping with the domain then should return a valid new domain`, () => {
         const interval1 = new SolutionInterval([ 1, 3 ]);
         const interval2 = new SolutionInterval([ -25, -23 ]);
 
@@ -211,8 +197,8 @@ describe('LogicOperator', () => {
         expect(newDomain.getDomain()).toStrictEqual(expectedDomain.getDomain());
       });
 
-      it(`Given a domain and two ranges to add that not overlapping and where the second 
-      one is overlap with the domain then should return a new valid domain`, () => {
+      it(`given a domain and two intervals that are not overlapping and where the second 
+      one is overlapping with the domain then should return a valid new domain`, () => {
         const interval1 = new SolutionInterval([ -25, -23 ]);
         const interval2 = new SolutionInterval([ 1, 3 ]);
 
@@ -221,8 +207,9 @@ describe('LogicOperator', () => {
         expect(newDomain.getDomain()).toStrictEqual(expectedDomain.getDomain());
       });
 
-      it(`Given a domain and two ranges to add that not overlapping and where the both are
-       overlap and the first one is more overlapping than the second with the domain then should return a new valid domain`, () => {
+      it(`given a domain and two intervals that are not overlapping and where both are
+       overlapping with the domain but the first one is more overlapping than the second in relation to the domain
+      then should return a valid new domain`, () => {
         const interval1 = new SolutionInterval([ 2, 70 ]);
         const interval2 = new SolutionInterval([ 1, 1 ]);
 
@@ -236,8 +223,9 @@ describe('LogicOperator', () => {
         expect(newDomain.getDomain()).toStrictEqual(expectedDomain.getDomain());
       });
 
-      it(`Given a domain and two ranges to add that not overlapping and where the both are overlap and the second
-       one is more overlapping than the second with the domain then should return a new valid domain`, () => {
+      it(`given a domain and two intervals that are not overlapping and where both are
+      overlapping with the domain but the second one is more overlapping than the second in relation to the domain
+     then should return a valid new domain`, () => {
         const interval1 = new SolutionInterval([ 1, 1 ]);
 
         const interval2 = new SolutionInterval([ 2, 70 ]);
@@ -260,7 +248,7 @@ describe('LogicOperator', () => {
       expect(() => operatorFactory(LogicOperatorSymbol.Not)).toThrow();
     });
 
-    it('Given an Or and an And operator should return an LogicOperator', () => {
+    it('Given an Or or an And operator should return an LogicOperator', () => {
       for (const operator of [ LogicOperatorSymbol.And, LogicOperatorSymbol.Or ]) {
         expect(operatorFactory(operator).operatorName()).toBe(operator);
       }

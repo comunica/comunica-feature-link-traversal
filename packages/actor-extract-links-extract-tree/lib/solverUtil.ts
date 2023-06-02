@@ -35,7 +35,8 @@ export function areTypesCompatible(expressions: ISolverExpression[]): boolean {
    * Find the {@link SolutionInterval} of a value and operator which is analogue to an expression.
    * @param {number} value
    * @param {SparqlRelationOperator} operator
-   * @returns {SolutionInterval | undefined} the {@link SolutionInterval} range associated with the value and the operator.
+   * @returns {SolutionInterval | undefined} the {@link SolutionInterval} range
+   *    associated with the value and the operator.
    */
 export function getSolutionInterval(value: number, operator: SparqlRelationOperator):
 SolutionInterval | [SolutionInterval, SolutionInterval] | undefined {

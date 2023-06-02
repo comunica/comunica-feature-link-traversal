@@ -68,7 +68,8 @@ export class SparlFilterExpressionSolverInput implements ISolverInput {
 
   /**
  * Recursively traverse the filter expression and calculate the domain until it get to the current expression.
- * It will thrown an error if the expression is badly formated or if it's impossible to get the {@link SolutionInterval}.
+ * It will thrown an error if the expression is badly formated or
+ * if it's impossible to get the {@link SolutionInterval}.
  * @param {Algebra.Expression} filterExpression -
  * The current filter expression that we are traversing
  * @param {Variable} variable - The variable targeted inside the filter expression

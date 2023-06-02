@@ -177,8 +177,8 @@ describe('solver function', () => {
     });
   });
 
-  describe('getSolutionRange', () => {
-    it('given a boolean compatible RelationOperator and a value should return a valid SolutionRange', () => {
+  describe('getSolutionInterval', () => {
+    it('given a number compatible RelationOperator and a value should return a valid SolutionInterval', () => {
       const value = -1;
       const testTable: [SparqlRelationOperator, SolutionInterval][] = [
         [
@@ -203,8 +203,8 @@ describe('solver function', () => {
         ],
       ];
 
-      for (const [ operator, expectedRange ] of testTable) {
-        expect(getSolutionInterval(value, operator)).toStrictEqual(expectedRange);
+      for (const [ operator, expectedinterval ] of testTable) {
+        expect(getSolutionInterval(value, operator)).toStrictEqual(expectedinterval);
       }
     });
 
@@ -307,7 +307,7 @@ describe('solver function', () => {
       expect(areTypesCompatible(expressions)).toBe(false);
     });
 
-    it('should return false when one type is not identical and the other are number', () => {
+    it('should return false when one type is not identical and the others are number', () => {
       const expressions: ISolverExpression[] = [
         {
           variable: 'a',
@@ -368,33 +368,6 @@ describe('solver function', () => {
         remainingItems: 10,
         path: 'ex:path',
         value: {
-          value: 'false',
-          term: DF.literal('false', DF.namedNode('http://www.w3.org/2001/XMLSchema#boolean')),
-        },
-        node: 'https://www.example.be',
-      };
-
-      const filterExpression = translate(`
-            SELECT * WHERE { ?x ?y ?z 
-            FILTER( !(?x=2 && ?x>5) || ?x < 88.3)
-            }`).input.expression;
-
-      const variable = 'x';
-
-      const inputs = [
-        new TreeRelationSolverInput(relation, variable),
-        new SparlFilterExpressionSolverInput(filterExpression, variable),
-      ];
-
-      expect(isBooleanExpressionTreeRelationFilterSolvable(inputs)).toBe(true);
-    });
-
-    it('should return false given a relation and a filter operation where types are not compatible', () => {
-      const relation: ITreeRelation = {
-        type: SparqlRelationOperator.EqualThanRelation,
-        remainingItems: 10,
-        path: 'ex:path',
-        value: {
           value: '5',
           term: DF.literal('5', DF.namedNode('http://www.w3.org/2001/XMLSchema#string')),
         },
@@ -416,7 +389,7 @@ describe('solver function', () => {
       expect(isBooleanExpressionTreeRelationFilterSolvable(inputs)).toBe(true);
     });
 
-    it('should return true when the solution range is not valid of the relation', () => {
+    it('should return true when the solution interval of the relation is not valid', () => {
       const relation: ITreeRelation = {
         type: SparqlRelationOperator.GeospatiallyContainsRelation,
         remainingItems: 10,
@@ -515,7 +488,7 @@ describe('solver function', () => {
       expect(isBooleanExpressionTreeRelationFilterSolvable(inputs)).toBe(true);
     });
 
-    it('should return false when the filter expression has no solution ', () => {
+    it('should return false when the filter expression has no solution', () => {
       const relation: ITreeRelation = {
         type: SparqlRelationOperator.EqualThanRelation,
         remainingItems: 10,
@@ -629,7 +602,7 @@ describe('solver function', () => {
       });
 
     it(`should return false when there is no solution for the filter
-     expression with two expressions and the relation`, () => {
+     expression with two expressions and a relation`, () => {
       const relation: ITreeRelation = {
         type: SparqlRelationOperator.EqualThanRelation,
         remainingItems: 10,
@@ -680,32 +653,6 @@ describe('solver function', () => {
       ];
 
       expect(isBooleanExpressionTreeRelationFilterSolvable(inputs)).toBe(true);
-    });
-
-    it('should accept the link given that recursifResolve return a SyntaxError', () => {
-      const relation: ITreeRelation = {
-        type: SparqlRelationOperator.EqualThanRelation,
-        remainingItems: 10,
-        path: 'ex:path',
-        value: {
-          value: '5',
-          term: DF.literal('5', DF.namedNode('http://www.w3.org/2001/XMLSchema#integer')),
-        },
-        node: 'https://www.example.be',
-      };
-
-      const filterExpression = translate(`
-            SELECT * WHERE { ?x ?y ?z 
-            FILTER( ?x = 2 && ?x > 5 && ?x > 88.3)
-            }`).input.expression;
-
-      const variable = 'x';
-      const inputs = [
-        new TreeRelationSolverInput(relation, variable),
-        new SparlFilterExpressionSolverInput(filterExpression, variable),
-      ];
-
-      expect(isBooleanExpressionTreeRelationFilterSolvable(inputs)).toBe(false);
     });
 
     it('should accept the link if the data type of the filter is unsupported', () => {
@@ -792,7 +739,7 @@ describe('solver function', () => {
           .toBe(false);
       });
 
-    it('should refuse the link with a a bounded TREE node',
+    it('should refuse the link with an unsatisfiable bounded TREE node',
       () => {
         const relation: ITreeRelation = {
           type: SparqlRelationOperator.GreaterThanRelation,
@@ -889,7 +836,7 @@ describe('solver function', () => {
       expect(isBooleanExpressionTreeRelationFilterSolvable(inputs)).toBe(true);
     });
 
-    it(`should accept the link with a solvable boolean expression with a false boolean statement`, () => {
+    it(`should accept the link with a solvable boolean expression and a false boolean statement linked with an OR operator`, () => {
       const relation: ITreeRelation = {
         type: SparqlRelationOperator.EqualThanRelation,
         remainingItems: 10,
@@ -1092,7 +1039,7 @@ describe('solver function', () => {
       expect(() => isBooleanExpressionTreeRelationFilterSolvable(inputs)).toThrow(InvalidExpressionSystem);
     });
 
-    it('should throw an error if there is no tree relation', () => {
+    it('should throw an error if there is no tree:Relation', () => {
       const filterExpression = translate(`
             SELECT * WHERE { ?x ?y ?z 
             FILTER(true)

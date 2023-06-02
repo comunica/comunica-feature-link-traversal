@@ -407,43 +407,43 @@ describe('filterNode Module', () => {
       });
 
       it('should accept the relation when there is multiples filters and one is not relevant to the relation',
-       async() => {
-        const treeSubject = 'tree';
+        async() => {
+          const treeSubject = 'tree';
 
-        const node: ITreeNode = {
-          identifier: treeSubject,
-          relation: [
-            {
-              node: 'http://bar.com',
-              path: 'http://example.com#path',
-              value: {
-                value: '5',
-                term: DF.literal('5', DF.namedNode('http://www.w3.org/2001/XMLSchema#integer')),
+          const node: ITreeNode = {
+            identifier: treeSubject,
+            relation: [
+              {
+                node: 'http://bar.com',
+                path: 'http://example.com#path',
+                value: {
+                  value: '5',
+                  term: DF.literal('5', DF.namedNode('http://www.w3.org/2001/XMLSchema#integer')),
+                },
+                type: SparqlRelationOperator.EqualThanRelation,
               },
-              type: SparqlRelationOperator.EqualThanRelation,
-            },
-          ],
-        };
-        const query = translate(`
+            ],
+          };
+          const query = translate(`
           SELECT ?o WHERE {
             ex:foo ex:path ?o.
             FILTER((?p=88 && ?p>3) || true)
           }
           `, { prefixes: { ex: 'http://example.com#' }});
-        const context = new ActionContext({
-          [KeysInitQuery.query.name]: query,
+          const context = new ActionContext({
+            [KeysInitQuery.query.name]: query,
+          });
+
+          const result = await filterNode(
+            node,
+            context,
+            isBooleanExpressionTreeRelationFilterSolvable,
+          );
+
+          expect(result).toStrictEqual(
+            new Map([[ 'http://bar.com', true ]]),
+          );
         });
-
-        const result = await filterNode(
-          node,
-          context,
-          isBooleanExpressionTreeRelationFilterSolvable,
-        );
-
-        expect(result).toStrictEqual(
-          new Map([[ 'http://bar.com', true ]]),
-        );
-      });
 
       it('should accept the relation when the filter compare two constants', async() => {
         const treeSubject = 'tree';

@@ -17,6 +17,7 @@ export class SolutionDomain {
   public getDomain(): SolutionInterval[] {
     return this.domain;
   }
+
   /**
    * Check if two {@link SolutionDomain} are equals.
    * @param {SolutionDomain} other - the other domain
@@ -87,7 +88,7 @@ export class SolutionDomain {
     }
     return 1;
   }
-  
+
   /**
    * The invariant contract of the {@link SolutionDomain}.
    * There should be no overlapping domain segment.

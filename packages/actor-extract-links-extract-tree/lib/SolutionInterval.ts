@@ -139,7 +139,8 @@ export class SolutionInterval {
      * Get the interval that intersect the other interval and the subject interval.
      * @param {SolutionInterval} subjectinterval
      * @param {SolutionInterval} otherinterval
-     * @returns {SolutionInterval | undefined} Return the intersection if the interval overlap otherwise return undefined
+     * @returns {SolutionInterval | undefined} Return the intersection
+     *    if the interval overlap otherwise return undefined
      */
   public static getIntersection(subjectinterval: SolutionInterval,
     otherinterval: SolutionInterval): SolutionInterval {

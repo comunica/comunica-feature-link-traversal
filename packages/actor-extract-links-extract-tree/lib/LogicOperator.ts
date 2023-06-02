@@ -58,11 +58,11 @@ export class And implements ILogicOperator {
   public apply({ interval, domain }:
   { interval: SolutionInterval | [SolutionInterval, SolutionInterval]; domain: SolutionDomain }): SolutionDomain {
     if (Array.isArray(interval)) {
-      // we check if it is a step interval
+      // We check if it is a step interval
       if (interval[0].isOverlapping(interval[1])) {
         return domain;
       }
-      
+
       const testDomain1 = this.apply({ interval: interval[0], domain });
       const testDomain2 = this.apply({ interval: interval[1], domain });
       // We check which part of the interval can be added to domain.
@@ -81,7 +81,7 @@ export class And implements ILogicOperator {
         return testDomain2;
       }
 
-      // if both can be added we consider the larger domain and use an OR operation
+      // If both can be added we consider the larger domain and use an OR operation
       // to add the other part.
       let intervalRes: SolutionInterval;
       let newDomain: SolutionDomain;

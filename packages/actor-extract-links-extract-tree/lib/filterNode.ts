@@ -82,8 +82,8 @@ export async function filterNode(
       let inputFilterExpression = calculatedFilterExpressions.get(variable);
       if (!inputFilterExpression) {
         inputFilterExpression = new SparlFilterExpressionSolverInput(
-          // make a deep copy of the filter
-          Util.mapExpression(filterOperation, {}, undefined),
+          // Make a deep copy of the filter
+          Util.mapExpression(filterOperation, {}),
           variable,
         );
       }
