@@ -38,16 +38,16 @@ describe('ActorExtractLinksExtractLinksTree', () => {
     it('should apply the activate the reachability criterion based on the constructor parameter', () => {
       let filterPruning = true;
       let actor = new ActorExtractLinksTree({ name: 'actor', bus, filterPruning });
-      expect(actor.isUsingReachabilitySPARQLFilter()).toBe(true);
+      expect(actor.isUsingfilterPruning()).toBe(true);
 
       filterPruning = false;
       actor = new ActorExtractLinksTree({ name: 'actor', bus, filterPruning });
-      expect(actor.isUsingReachabilitySPARQLFilter()).toBe(false);
+      expect(actor.isUsingfilterPruning()).toBe(false);
     });
 
     it('should apply the activate the reachability when it is not defined in the config', () => {
       const actor = new ActorExtractLinksTree({ name: 'actor', bus });
-      expect(actor.isUsingReachabilitySPARQLFilter()).toBe(true);
+      expect(actor.isUsingfilterPruning()).toBe(true);
     });
   });
 
@@ -60,7 +60,7 @@ describe('ActorExtractLinksExtractLinksTree', () => {
 
     beforeEach(() => {
       actor = new ActorExtractLinksTree({ name: 'actor', bus });
-      jest.spyOn(actor, 'applyFilter').mockReturnValue(Promise.resolve(new Map()));
+      jest.spyOn(actor, 'createFilter').mockReturnValue(Promise.resolve(new Map()));
     });
 
     it('should return the link of a TREE with one relation', async() => {
@@ -302,7 +302,7 @@ describe('ActorExtractLinksExtractLinksTree', () => {
       const actorWithCustomFilter = new ActorExtractLinksTree(
         { name: 'actor', bus },
       );
-      jest.spyOn(actorWithCustomFilter, 'applyFilter').mockReturnValue(filterOutput);
+      jest.spyOn(actorWithCustomFilter, 'createFilter').mockReturnValue(filterOutput);
       const result = await actorWithCustomFilter.run(action);
       expect(result).toEqual({ links: [{ url: expectedUrl }]});
     });
@@ -448,7 +448,7 @@ describe('ActorExtractLinksExtractLinksTree', () => {
         expect(result).toEqual({ links: [{ url: expectedUrl }]});
       });
 
-    it('should return no link when the relation doesn\'t respect the filter when using the real FilterNode class',
+    it('should return no link when the relation doesn\'t respects the filter when using the real FilterNode class',
       async() => {
         const expectedUrl = 'http://foo.com';
         const input = stream([
@@ -535,7 +535,7 @@ describe('ActorExtractLinksExtractLinksTree', () => {
       expect(result).toEqual({ links: [{ url: expectedUrl }]});
     });
 
-    it(`should return the links of a TREE with when there is a root type`, async() => {
+    it('should return the links of a TREE with when there is a root type', async() => {
       const expectedUrl = 'http://foo.com';
       const url = 'bar';
       for (const rootNode of [
@@ -587,7 +587,7 @@ describe('ActorExtractLinksExtractLinksTree', () => {
       is deactivated and the URL matches the subject of the root node TREE documents`, async() => {
       const unStrictContext = context.set(KeysExtractLinksTree.strictTraversal, false);
       actor = new ActorExtractLinksTree({ name: 'actor', bus });
-      jest.spyOn(actor, 'applyFilter').mockReturnValue(Promise.resolve(new Map()));
+      jest.spyOn(actor, 'createFilter').mockReturnValue(Promise.resolve(new Map()));
 
       const expectedUrl = 'http://foo.com';
       for (const rootNode of [
@@ -632,7 +632,7 @@ describe('ActorExtractLinksExtractLinksTree', () => {
       is deactivated and the URL doesn't match the subject of the root node TREE documents`, async() => {
       const unStrictContext = context.set(KeysExtractLinksTree.strictTraversal, false);
       actor = new ActorExtractLinksTree({ name: 'actor', bus });
-      jest.spyOn(actor, 'applyFilter').mockReturnValue(Promise.resolve(new Map()));
+      jest.spyOn(actor, 'createFilter').mockReturnValue(Promise.resolve(new Map()));
 
       const expectedUrl = 'http://foo.com';
       for (const rootNode of [
@@ -684,7 +684,7 @@ describe('ActorExtractLinksExtractLinksTree', () => {
       is deactivated and the URL matches the subject of the TREE document that is not a root node`, async() => {
       const unStrictContext = context.set(KeysExtractLinksTree.strictTraversal, false);
       actor = new ActorExtractLinksTree({ name: 'actor', bus });
-      jest.spyOn(actor, 'applyFilter').mockReturnValue(Promise.resolve(new Map()));
+      jest.spyOn(actor, 'createFilter').mockReturnValue(Promise.resolve(new Map()));
 
       const expectedUrl = [ 'http://foo.com', 'http://bar.com', 'http://example.com', 'http://example.com' ];
       const input = stream([
@@ -914,7 +914,7 @@ describe('ActorExtractLinksExtractLinksTree', () => {
   });
 
   describe('materializeTreeRelation', () => {
-    it('should materialize a tree Relation when all the raw relation are provided', () => {
+    it('should materialize a tree:Relation when all the raw relation are provided', () => {
       const aSubject = 'foo';
       const aValue = '0';
       const anOperator = SparqlRelationOperator.PrefixRelation;
@@ -947,7 +947,7 @@ describe('ActorExtractLinksExtractLinksTree', () => {
       expect(res).toStrictEqual(expectedTreeRelation);
     });
 
-    it('should materialize a tree Relation when the remaining item is missing', () => {
+    it('should materialize a tree:sRelation when the remaining item is missing', () => {
       const aSubject = 'foo';
       const aValue = '0';
       const anOperator = SparqlRelationOperator.PrefixRelation;
@@ -977,7 +977,7 @@ describe('ActorExtractLinksExtractLinksTree', () => {
       expect(res).toStrictEqual(expectedTreeRelation);
     });
 
-    it('should materialize a tree Relation when the value is missing', () => {
+    it('should materialize a tree:Relation when the value is missing', () => {
       const aSubject = 'foo';
       const anOperator = SparqlRelationOperator.PrefixRelation;
       const aQuad = DF.quad(

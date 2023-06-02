@@ -184,7 +184,7 @@ describe('SolutionRange', () => {
     });
   });
 
-  describe('fuseRange', () => {
+  describe('fuseinterval', () => {
     it('given an non overlapping range return both range should return the correct range', () => {
       const aRange: [number, number] = [ 0, 100 ];
       const aSolutionInterval = new SolutionInterval(aRange);
@@ -192,7 +192,7 @@ describe('SolutionRange', () => {
       const aSecondRange: [number, number] = [ 101, 200 ];
       const aSecondSolutionInterval = new SolutionInterval(aSecondRange);
 
-      const resp = SolutionInterval.fuseRange(aSolutionInterval, aSecondSolutionInterval);
+      const resp = SolutionInterval.fuseinterval(aSolutionInterval, aSecondSolutionInterval);
 
       expect(resp.length).toBe(2);
       expect(resp[0]).toStrictEqual(aSolutionInterval);
@@ -207,7 +207,7 @@ describe('SolutionRange', () => {
         const aSecondRange: [number, number] = [ 0, 100 ];
         const aSecondSolutionInterval = new SolutionInterval(aSecondRange);
 
-        const resp = SolutionInterval.fuseRange(aSolutionInterval, aSecondSolutionInterval);
+        const resp = SolutionInterval.fuseinterval(aSolutionInterval, aSecondSolutionInterval);
 
         expect(resp.length).toBe(1);
         expect(resp[0]).toStrictEqual(aSolutionInterval);
@@ -222,7 +222,7 @@ describe('SolutionRange', () => {
       const aSecondRange: [number, number] = [ -1, 99 ];
       const aSecondSolutionInterval = new SolutionInterval(aSecondRange);
 
-      const resp = SolutionInterval.fuseRange(aSolutionInterval, aSecondSolutionInterval);
+      const resp = SolutionInterval.fuseinterval(aSolutionInterval, aSecondSolutionInterval);
 
       const expectedInterval = new SolutionInterval([ -1, 100 ]);
       expect(resp.length).toBe(1);
@@ -237,7 +237,7 @@ describe('SolutionRange', () => {
       const aSecondRange: [number, number] = [ -1, 101 ];
       const aSecondSolutionInterval = new SolutionInterval(aSecondRange);
 
-      const resp = SolutionInterval.fuseRange(aSolutionInterval, aSecondSolutionInterval);
+      const resp = SolutionInterval.fuseinterval(aSolutionInterval, aSecondSolutionInterval);
 
       const expectedInterval = new SolutionInterval([ -1, 101 ]);
       expect(resp.length).toBe(1);
@@ -252,7 +252,7 @@ describe('SolutionRange', () => {
       const aSecondRange: [number, number] = [ 0, 101 ];
       const aSecondSolutionInterval = new SolutionInterval(aSecondRange);
 
-      const resp = SolutionInterval.fuseRange(aSolutionInterval, aSecondSolutionInterval);
+      const resp = SolutionInterval.fuseinterval(aSolutionInterval, aSecondSolutionInterval);
 
       const expectedInterval = new SolutionInterval([ 0, 101 ]);
       expect(resp.length).toBe(1);
@@ -267,7 +267,7 @@ describe('SolutionRange', () => {
       const aSecondRange: [number, number] = [ 1, 50 ];
       const aSecondSolutionInterval = new SolutionInterval(aSecondRange);
 
-      const resp = SolutionInterval.fuseRange(aSolutionInterval, aSecondSolutionInterval);
+      const resp = SolutionInterval.fuseinterval(aSolutionInterval, aSecondSolutionInterval);
 
       const expectedInterval = new SolutionInterval([ 0, 100 ]);
       expect(resp.length).toBe(1);
@@ -282,7 +282,7 @@ describe('SolutionRange', () => {
       const aSecondRange: [number, number] = [ 100, 500 ];
       const aSecondSolutionInterval = new SolutionInterval(aSecondRange);
 
-      const resp = SolutionInterval.fuseRange(aSolutionInterval, aSecondSolutionInterval);
+      const resp = SolutionInterval.fuseinterval(aSolutionInterval, aSecondSolutionInterval);
 
       const expectedInterval = new SolutionInterval([ 0, 500 ]);
       expect(resp.length).toBe(1);
@@ -294,7 +294,7 @@ describe('SolutionRange', () => {
 
       const aSecondSolutionInterval = new SolutionInterval([]);
 
-      const resp = SolutionInterval.fuseRange(aSolutionInterval, aSecondSolutionInterval);
+      const resp = SolutionInterval.fuseinterval(aSolutionInterval, aSecondSolutionInterval);
 
       expect(resp.length).toBe(1);
       expect(resp[0]).toStrictEqual(new SolutionInterval([]));
@@ -306,7 +306,7 @@ describe('SolutionRange', () => {
       const aSecondRange: [number, number] = [ 101, 200 ];
       const aSecondSolutionInterval = new SolutionInterval(aSecondRange);
 
-      const resp = SolutionInterval.fuseRange(aSolutionInterval, aSecondSolutionInterval);
+      const resp = SolutionInterval.fuseinterval(aSolutionInterval, aSecondSolutionInterval);
 
       expect(resp.length).toBe(1);
       expect(resp[0]).toStrictEqual(aSecondSolutionInterval);
@@ -318,7 +318,7 @@ describe('SolutionRange', () => {
 
       const aSecondSolutionInterval = new SolutionInterval([]);
 
-      const resp = SolutionInterval.fuseRange(aSolutionInterval, aSecondSolutionInterval);
+      const resp = SolutionInterval.fuseinterval(aSolutionInterval, aSecondSolutionInterval);
 
       expect(resp.length).toBe(1);
       expect(resp[0]).toStrictEqual(aSolutionInterval);

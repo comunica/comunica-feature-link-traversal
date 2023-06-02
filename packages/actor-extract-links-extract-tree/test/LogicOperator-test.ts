@@ -27,7 +27,7 @@ describe('LogicOperator', () => {
         expect(or.apply({ domain: solutionDomain, interval })).toStrictEqual(expectedSolutionDomain);
       });
 
-      it('given an empty domain should be able to add multiple subject range that doesn\'t overlap', () => {
+      it('given an empty domain should be able to add multiple intervals that doesn\'t overlap', () => {
         const givenIntervals = [
           new SolutionInterval([ 10, 10 ]),
           new SolutionInterval([ 1, 2 ]),
@@ -52,7 +52,7 @@ describe('LogicOperator', () => {
         expect(solutionDomain.getDomain()).toStrictEqual(expectedDomain);
       });
 
-      it('given a domain should not add a range that is inside another', () => {
+      it('given a domain should not add an interval that is inside another', () => {
         const anOverlappingInterval = new SolutionInterval([ 22, 23 ]);
         const newDomain = or.apply({ domain: aDomain, interval: anOverlappingInterval });
 
@@ -60,7 +60,8 @@ describe('LogicOperator', () => {
         expect(newDomain.getDomain()).toStrictEqual(intervals);
       });
 
-      it('given a domain should create a single domain if all the domain segment are contain into the new range',
+      it(`given a domain should be able to create a 
+      single domain if all the domain segments are contained into the new range`,
         () => {
           const anOverlappingInterval = new SolutionInterval([ -100, 100 ]);
           const newDomain = or.apply({ domain: aDomain, interval: anOverlappingInterval });
@@ -69,7 +70,7 @@ describe('LogicOperator', () => {
           expect(newDomain.getDomain()).toStrictEqual([ anOverlappingInterval ]);
         });
 
-      it('given a domain should fuse multiple domain segment if the new range overlap with them', () => {
+      it('given a domain should be able to fuse multiple domain segment if the new interval overlaps with them', () => {
         const aNewInterval = new SolutionInterval([ 1, 23 ]);
         const newDomain = or.apply({ domain: aDomain, interval: aNewInterval });
 

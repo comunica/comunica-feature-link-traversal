@@ -5,12 +5,14 @@ import type { SolutionInterval } from './SolutionInterval';
 import type { ISolverInput } from './solverInterfaces';
 
 const AND = new And();
+/**
+ * A function that verifies the satisfiability of multiple ISolverInput combined with an AND operation.
+ */
 export type SatisfactionChecker = (inputs: ISolverInput[]) => boolean;
 /**
- * Check if it is possible to satify the combination of the boolean expression of the TREE relations
- * and the SPARQL filter. Will Throw if there is no or more than one SPARQL filter which is identify
- * with the ResolvedType Domain
- * @param {ISolverInput[]} inputs - The solver input, must countain one ResolvedType Domain
+ * Check if it is possible to satify the combination of the boolean expression of the tree:relation(s)
+ * and the SPARQL filter. Will Throw if there is no or more than one SPARQL filter.
+ * @param {ISolverInput[]} inputs - the solver input, must countain one SPARQL filter
  * @returns {boolean} Whether the expression can be satify
  */
 export function isBooleanExpressionTreeRelationFilterSolvable(inputs: ISolverInput[]): boolean {

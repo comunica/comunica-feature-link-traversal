@@ -13,7 +13,7 @@ import type { ITreeNode, ITreeRelation } from '../lib/TreeMetadata';
 const DF = new DataFactory<RDF.BaseQuad>();
 
 describe('filterNode Module', () => {
-  describe('getFilterExpression ', () => {
+  describe('getFilterExpression', () => {
     const treeSubject = 'tree';
     it('should return the filter operation if the query has a filter expression', () => {
       const context = new ActionContext({
@@ -120,7 +120,7 @@ describe('filterNode Module', () => {
         );
       });
 
-      it('should return an empty filter if the TREE Node has no relation', async() => {
+      it('should return an empty filter if the tree:Node has no relation', async() => {
         const treeSubject = 'tree';
 
         const node: ITreeNode = {
@@ -151,7 +151,7 @@ describe('filterNode Module', () => {
         );
       });
 
-      it('should return an empty filter if the TREE Node has no relation field', async() => {
+      it('should return an empty filter if the tree:Node has no relation field', async() => {
         const treeSubject = 'tree';
 
         const node: ITreeNode = {
@@ -181,7 +181,7 @@ describe('filterNode Module', () => {
         );
       });
 
-      it('should not accept the relation when the filter is not respected by the relation', async() => {
+      it('should not accept the relation when the equation cannot be satified', async() => {
         const treeSubject = 'tree';
 
         const node: ITreeNode = {
@@ -368,7 +368,7 @@ describe('filterNode Module', () => {
           );
         });
 
-      it('should accept the relation when the filter argument are not related to the query', async() => {
+      it('should accept the relation when the filter expression is not related to the relation', async() => {
         const treeSubject = 'tree';
 
         const node: ITreeNode = {
@@ -406,7 +406,8 @@ describe('filterNode Module', () => {
         );
       });
 
-      it('should accept the relation when there is multiples filters and one is not relevant', async() => {
+      it('should accept the relation when there is multiples filters and one is not relevant to the relation',
+       async() => {
         const treeSubject = 'tree';
 
         const node: ITreeNode = {
@@ -612,7 +613,7 @@ describe('filterNode Module', () => {
       });
 
       it(`should accept a relation if a first relation is not 
-      satisfiable and a second is because it does not have countraint`, async() => {
+      satisfiable and a second one is satisfiable because it does not have constraints`, async() => {
         const treeSubject = 'tree';
 
         const node: ITreeNode = {
@@ -657,7 +658,7 @@ describe('filterNode Module', () => {
       });
 
       it(`should accept a relation if a first relation is not satisfiable
-       and a second has a path no present into the filter expression`, async() => {
+       and a second has a path not present into the filter expression`, async() => {
         const treeSubject = 'tree';
 
         const node: ITreeNode = {
@@ -714,7 +715,7 @@ describe('filterNode Module', () => {
       expect(groupRelations([])).toStrictEqual([]);
     });
 
-    it('given relations with the same nodes and path should return one group', () => {
+    it('given relations with the same nodes and paths should return one group', () => {
       const relations: ITreeRelation[] = [
         {
           path: 'foo',
@@ -734,7 +735,7 @@ describe('filterNode Module', () => {
       expect(group).toStrictEqual([ relations ]);
     });
 
-    it('given relations with the same node and path execpt one without path should return two groups', () => {
+    it('given relations with the same nodes and paths except one without path should return two groups', () => {
       const relations: ITreeRelation[] = [
         {
           path: 'foo',
@@ -771,7 +772,7 @@ describe('filterNode Module', () => {
       expect(group).toStrictEqual(expectedGroup);
     });
 
-    it('given relations with no path should return one group', () => {
+    it('given relations with no path and the same node should return one group', () => {
       const relations: ITreeRelation[] = [
         {
           node: 'foo',
@@ -788,7 +789,7 @@ describe('filterNode Module', () => {
       expect(group).toStrictEqual([ relations ]);
     });
 
-    it('given relations with multiple node should return different group', () => {
+    it('given relations with multiple nodes should return different groups', () => {
       const relations: ITreeRelation[] = [
         {
           path: 'foo',
@@ -827,7 +828,7 @@ describe('filterNode Module', () => {
       expect(group.sort()).toStrictEqual(expectedGroup.sort());
     });
 
-    it('given relations with multiple path should different group', () => {
+    it('given relations with multiple paths should return different groups', () => {
       const relations: ITreeRelation[] = [
         {
           path: 'bar',
@@ -867,7 +868,7 @@ describe('filterNode Module', () => {
       expect(group.sort()).toStrictEqual(expectedGroup.sort());
     });
 
-    it('given relations with multiple path and group should return different group', () => {
+    it('given relations with multiple paths and nodes should return different groups', () => {
       const relations: ITreeRelation[] = [
         {
           path: 'bar',

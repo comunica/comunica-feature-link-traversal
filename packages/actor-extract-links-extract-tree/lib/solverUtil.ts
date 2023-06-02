@@ -13,7 +13,7 @@ const nextUp = require('ulp').nextUp;
 const nextDown = require('ulp').nextDown;
 
 /**
-   * Check if all the expression provided have a SparqlOperandDataTypes compatible type
+   * Check if all the expression provided have a {@link SparqlOperandDataTypes} compatible type
    * it is considered that all number types are compatible between them.
    * @param {ISolverExpression[]} expressions - The subject expression.
    * @returns {boolean} Return true if the type are compatible.
@@ -32,10 +32,10 @@ export function areTypesCompatible(expressions: ISolverExpression[]): boolean {
   return true;
 }
 /**
-   * Find the solution range of a value and operator which is analogue to an expression.
+   * Find the {@link SolutionInterval} of a value and operator which is analogue to an expression.
    * @param {number} value
    * @param {SparqlRelationOperator} operator
-   * @returns {SolutionInterval | undefined} The solution range associated with the value and the operator.
+   * @returns {SolutionInterval | undefined} the {@link SolutionInterval} range associated with the value and the operator.
    */
 export function getSolutionInterval(value: number, operator: SparqlRelationOperator):
 SolutionInterval | [SolutionInterval, SolutionInterval] | undefined {
@@ -56,15 +56,15 @@ SolutionInterval | [SolutionInterval, SolutionInterval] | undefined {
         new SolutionInterval([ nextUp(value), Number.POSITIVE_INFINITY ]),
       ];
     default:
-      // Not an operator that is compatible with number.
+      // Not an operator that is compatible with numbers.
       break;
   }
 }
 /**
-   * Convert a RDF value into a number.
+   * Convert a RDF value into a {@link number}.
    * @param {string} rdfTermValue - The raw value
    * @param {SparqlOperandDataTypes} rdfTermType - The type of the value
-   * @returns {number | undefined} The resulting number or undefined if the convertion is not possible.
+   * @returns {number | undefined} The resulting {@link number} or {@link undefined} if the convertion is not possible.
    */
 export function castSparqlRdfTermIntoNumber(rdfTermValue: string,
   rdfTermType: SparqlOperandDataTypes):
@@ -106,8 +106,8 @@ export function castSparqlRdfTermIntoNumber(rdfTermValue: string,
 }
 /**
    * Determine if the type is a number.
-   * @param {SparqlOperandDataTypes} rdfTermType - The subject type
-   * @returns {boolean} Return true if the type is a number.
+   * @param {SparqlOperandDataTypes} rdfTermType - the subject type
+   * @returns {boolean} return true if the type is a number.
    */
 export function isSparqlOperandNumberType(rdfTermType: SparqlOperandDataTypes): boolean {
   return rdfTermType === SparqlOperandDataTypes.Integer ||
@@ -126,9 +126,9 @@ export function isSparqlOperandNumberType(rdfTermType: SparqlOperandDataTypes): 
       rdfTermType === SparqlOperandDataTypes.Int;
 }
 /**
-   * Convert a filter operator to SparqlRelationOperator.
-   * @param {string} filterOperator - The filter operator.
-   * @returns {SparqlRelationOperator | undefined} The SparqlRelationOperator corresponding to the filter operator
+   * Convert a filter operator to {@link SparqlRelationOperator}.
+   * @param {string} filterOperator - the filter operator.
+   * @returns {SparqlRelationOperator | undefined} the SparqlRelationOperator corresponding to the filter operator
    */
 export function filterOperatorToSparqlRelationOperator(filterOperator: string): SparqlRelationOperator | undefined {
   switch (filterOperator) {
@@ -151,7 +151,7 @@ export function filterOperatorToSparqlRelationOperator(filterOperator: string): 
 /**
    * Reverse a logic operator.
    * @param {string} logicOperator - A string representation of a logic operator
-   * @returns {string | undefined} The reversed logic operator or undefined if the input is not a valid operator
+   * @returns {string | undefined} The reversed logic operator or {@link undefined} if the input is not a valid operator
    */
 export function reverseRawLogicOperator(logicOperator: string): string | undefined {
   switch (logicOperator) {
@@ -171,7 +171,7 @@ export function reverseRawLogicOperator(logicOperator: string): string | undefin
 /**
    * Reverse a string operator.
    * @param {string} filterOperator - A string representation of an operator
-   * @returns {string | undefined} The reverse operator or undefined if the input is not a valid operator
+   * @returns {string | undefined} The reverse operator or {@link undefined} if the input is not a valid operator
    */
 export function reverseRawOperator(filterOperator: string): string | undefined {
   switch (filterOperator) {
@@ -193,10 +193,10 @@ export function reverseRawOperator(filterOperator: string): string | undefined {
 }
 
 /**
-   * Reverse a sparqlOperator.
-   * @param {SparqlRelationOperator} operator - A Sparql operator
+   * Reverse a {@link SparqlRelationOperator}.
+   * @param {SparqlRelationOperator} operator - a Sparql operator
    * @returns {SparqlRelationOperator | undefined}
-   * The reverse operator or undefined if the input is not a supported operator
+   * The reverse operator or {@link undefined} if the input is not a supported operator.
    */
 export function reverseSparqlOperator(operator: SparqlRelationOperator): SparqlRelationOperator | undefined {
   switch (operator) {
@@ -231,9 +231,6 @@ export function inverseFilter(filterExpression: Algebra.Expression): void {
       filterExpression.term.value = 'false';
     }
   } else if (
-  // If it's an array of terms then we should be able to create a solver expression.
-  // Given the resulting solver expression we can calculate a solution interval
-  // that we will add to the domain with regards to the logic operator.
     filterExpression.args[0].expressionType === Algebra.expressionTypes.TERM &&
       filterExpression.args.length === 2
   ) {

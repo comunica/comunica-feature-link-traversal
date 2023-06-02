@@ -17,7 +17,7 @@ import { TreeNodes, RelationOperatorReversed } from './TreeMetadata';
 const DF = new DataFactory<RDF.BaseQuad>();
 
 /**
- * A comunica Extract Links Tree Extract Links Actor.
+ * A comunica Extract Links Tree Actor.
  */
 export class ActorExtractLinksTree extends ActorExtractLinks {
   private readonly filterPruning: boolean = true;
@@ -34,11 +34,11 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
       args.filterPruning;
   }
 
-  public async test(action: IActionExtractLinks): Promise<IActorTest> {
+  public async test(_: IActionExtractLinks): Promise<IActorTest> {
     return true;
   }
 
-  public isUsingReachabilitySPARQLFilter(): boolean {
+  public isUsingfilterPruning(): boolean {
     return this.filterPruning;
   }
 
@@ -49,20 +49,21 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
       const strictMode = strictModeFlag === undefined ? true : strictModeFlag;
       const metadata = action.metadata;
 
-      // Maps relationship identifiers to their description.
-      // At this point, there's no guarantee yet that these relationships are linked to the current TREE document.
+      // Maps tree:Relation id to their description.
       const relationDescriptions: Map<string, ITreeRelationRaw> = new Map();
       const relations: ITreeRelation[] = [];
       const currentNodeUrl = action.url;
-      // The relation node value and the subject of the relation are the values of the map
+      // The tree:Relation id and the subject of the node.
       const relationNodeSubject: Map<string, string> = new Map();
+      // The subject of the node and the next link.
       const nodeLinks: [string, string][] = [];
+      // The subjects of the node that is linked to tree:relation considering the type of node.
       const effectiveTreeDocumentSubject: Set<string> = new Set();
 
       // Forward errors
       metadata.on('error', reject);
 
-      // Collect information about relationships spread over quads, so that we can accumulate them afterwards.
+      // Collect information about relationships spread over quads, so that we can materialized them afterwards.
       metadata.on('data', (quad: RDF.Quad) =>
         this.interpretQuad(
           quad,
@@ -74,32 +75,31 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
           strictMode,
         ));
 
-      // Resolve to discovered links
+      // Materialized the tree:Relation, prune them if necessary and fill the link queue.
       metadata.on('end', async() => {
-        // If we are not in the loose mode then the subject of the page is the URL
+        // If we are not in the un-strict then the subject of the page is the URL.
         if (effectiveTreeDocumentSubject.size === 0) {
           effectiveTreeDocumentSubject.add(currentNodeUrl);
         }
 
-        // Validate if the nodes forward have the current node has implicit subject
+        // Materialize the tree:Relation by considering if they are attached to the subject(s) of the node
         for (const [ relationId, link ] of nodeLinks) {
           const subjectOfRelation = relationNodeSubject.get(relationId);
-          if (subjectOfRelation && effectiveTreeDocumentSubject.has(subjectOfRelation)
-          ) {
+          if (subjectOfRelation && effectiveTreeDocumentSubject.has(subjectOfRelation)) {
             const relationDescription = relationDescriptions.get(relationId);
-            // Add the relation to the relation array
             relations.push(
               ActorExtractLinksTree.materializeTreeRelation(relationDescription || {}, link),
             );
           }
         }
 
+        // Prune the link based on satisfiability of the combination of the SPARQL filter and the tree:Relation
+        // equation.
         const node: ITreeNode = { relation: relations, identifier: currentNodeUrl };
         let acceptedRelations = relations;
         if (this.filterPruning) {
-          // Filter the relation based on the query
-          const filters = await this.applyFilter(node, action.context);
-          acceptedRelations = this.handleFilter(filters, acceptedRelations);
+          const filters = await this.createFilter(node, action.context);
+          acceptedRelations = this.applyFilter(filters, acceptedRelations);
         }
         resolve({ links: acceptedRelations.map(el => ({ url: el.node })) });
       });
@@ -107,43 +107,45 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
   }
 
   /**
+   * Create the filter to prune links.
    * @param {ITreeNode} node - TREE metadata
    * @param {IActionContext} context - context of the action; containing the query
-   * @returns {Promise<Map<string, boolean>>} a map containing the filter
+   * @returns {Promise<Map<string, boolean>>} a map containing representing the filter
    */
-  public async applyFilter(node: ITreeNode, context: IActionContext): Promise<Map<string, boolean>> {
+  public async createFilter(node: ITreeNode, context: IActionContext): Promise<Map<string, boolean>> {
     return await filterNode(node, context, isBooleanExpressionTreeRelationFilterSolvable);
   }
 
   /**
+   * Apply the filter to prune the relations.
    * @param { Map<string, boolean>} filters
-   * @param {ITreeRelation[]} acceptedRelation - the current accepted relation
-   * @returns {ITreeRelation[]} the relation when the nodes has been filtered
+   * @param {ITreeRelation[]} acceptedRelations - the current accepted relation
+   * @returns {ITreeRelation[]} the resulting relations
    */
-  private handleFilter(filters: Map<string, boolean>, acceptedRelation: ITreeRelation[]): ITreeRelation[] {
+  private applyFilter(filters: Map<string, boolean>, acceptedRelations: ITreeRelation[]): ITreeRelation[] {
     return filters.size > 0 ?
-      acceptedRelation.filter(relation => filters?.get(relation.node)) :
-      acceptedRelation;
+      acceptedRelations.filter(relation => filters?.get(relation.node)) :
+      acceptedRelations;
   }
 
   /**
    * A helper function to find all the relations of a TREE document and the possible next nodes to visit.
    * The next nodes are not guaranteed to have as subject the URL of the current page,
    * so filtering is necessary afterward.
-   * @param {RDF.Quad} quad - The current quad.
-   * @param {string} currentPageUrl - The url of the page.
-   * @param {Set<string>} relationIdentifiers - Identifiers of the relationships defined by the TREE document,
-   *                                            represented as stringified RDF terms.
-   * @param {[string, string][]} nodeLinks - An array of pairs of relationship identifiers and next page link to another
-   *                                         TREE document, represented as stringified RDF terms.
-   * @param {Map<string, ITreeRelationRaw>} relationDescriptions - Maps relationship identifiers to their description.
+   * @param {RDF.Quad} quad - current quad 
+   * @param {string} url - url of the current node 
+   * @param {Map<string, string>} relationNodeSubject - the tree:Relation id and the subject of the node
+   * @param {[string, string][]} nodeLinks - the subject of the node and the next link
+   * @param {Set<string>} effectiveTreeDocumentSubject - the subjects of the node that is linked to tree:relation considering the type of node
+   * @param {Map<string, ITreeRelationRaw>} relationDescriptions - the tree:Relation id associated with the relation description
+   * @param {boolean} strictMode - define whether we the subject of the node should match the page URL 
    */
   private interpretQuad(
     quad: RDF.Quad,
     url: string,
     relationNodeSubject: Map<string, string>,
     nodeLinks: [string, string][],
-    rootNodeEffectiveSubject: Set<string>,
+    effectiveTreeDocumentSubject: Set<string>,
     relationDescriptions: Map<string, ITreeRelationRaw>,
     strictMode: boolean,
   ): void {
@@ -155,16 +157,15 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
       (!strictMode || quad.subject.value === url) &&
       (quad.predicate.equals(ActorExtractLinksTree.aView) ||
         quad.predicate.equals(ActorExtractLinksTree.aSubset))) {
-      rootNodeEffectiveSubject.add(termToString(quad.object));
+      effectiveTreeDocumentSubject.add(termToString(quad.object));
     }
 
     if (
       (!strictMode || quad.object.value === url) &&
       quad.predicate.equals(ActorExtractLinksTree.isPartOf)) {
-      rootNodeEffectiveSubject.add(termToString(quad.subject));
+      effectiveTreeDocumentSubject.add(termToString(quad.subject));
     }
 
-    // If it's a node forward
     if (quad.predicate.equals(ActorExtractLinksTree.aNodeType)) {
       nodeLinks.push([ termToString(quad.subject), quad.object.value ]);
     }
@@ -177,10 +178,10 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
   }
 
   /**
- * Materialize a raw tree relation using the captured values.
- * @param relationRaw Raw representation of a tree relation.
- * @param nextLink Link to the next page.
- * @returns ITreeRelation
+ * Materialize a raw tree Relation using the captured values.
+ * @param {ITreeRelationRaw} relationRaw - Raw representation of a tree relation.
+ * @param {string} nextLink -  Link to the next page.
+ * @returns {ITreeRelation} The tree:Relation javascript object
  */
   public static materializeTreeRelation(
     relationRaw: ITreeRelationRaw,
@@ -210,12 +211,11 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
   }
 
   /**
-   * From a quad stream return a relation element if it exist.
-   * For example if the quad is the operator the function will return
-   * the value of the operator and
+   * From a quad stream return a {@link ITreeRelationElement} if the quad refer to one.
+   * For example if the quad describe the operator the tree:relation it will return
+   * the value of the operator and the key operator
    * @param {RDF.Quad} quad - Current quad of the stream.
-   * @returns {ITreeRelationElement | undefined} The relation element
-   * and the key associated with it.
+   * @returns {ITreeRelationElement | undefined} The {@link ITreeRelationElement}
    */
   public static buildRelationElement(
     quad: RDF.Quad,
@@ -242,11 +242,11 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
   }
 
   /**
-   * Update the relationDescriptions with the new quad value
-   * @param {Map<string, ITreeRelationRaw>} relationDescriptions - Maps relationship identifiers to their description.
-   * @param {RDF.Quad} quad - Current quad of the steam.
-   * @param {SparqlRelationOperator | number | string} value - Current description value fetch
-   * @param {keyof ITreeRelationRaw} key - Key associated with the value.
+   * Update the relationDescriptions with the new relevant quad value.
+   * @param {Map<string, ITreeRelationRaw>} relationDescriptions - maps relationship identifiers to their description.
+   * @param {RDF.Quad} quad - current quad of the steam
+   * @param {SparqlRelationOperator | number | string} value - current description value fetch
+   * @param {keyof ITreeRelationRaw} key - key associated with the value.
    */
   public static addRelationDescription(
     relationDescriptions: Map<string, ITreeRelationRaw>,

@@ -11,10 +11,9 @@ const AF = new AlgebraFactory();
 const BF = new BindingsFactory();
 
 /**
-   * Return the filter expression if the TREE node has relations
-   * @param {ITreeNode} node - The current TREE node
+   * Return the filter expression from the context.
    * @param {IActionContext} context - The context
-   * @returns {Algebra.Expression | undefined} The filter expression or undefined if the TREE node has no relations
+   * @returns {Algebra.Expression | undefined} the filter expression or undefined if it is not defined
    */
 export function getFilterExpression(context: IActionContext): Algebra.Expression | undefined {
   const query: Algebra.Operation = context.get(KeysInitQuery.query)!;
@@ -27,12 +26,12 @@ export function getFilterExpression(context: IActionContext): Algebra.Expression
 }
 
 /**
-   * Analyze if the tree:relation(s) of a tree:Node should be followed and return a map
-   * where if the value of the key representing the URL to follow is true than the link must be followed
-   * if it is false then it should be ignored.
-   * @param {ITreeNode} node - The current TREE node
-   * @param {IActionContext} context - The context
-   * @returns {Promise<Map<string, boolean>>} A map of the indicating if a tree:relation should be follow
+   * Analyze if the tree:Relation(s) of a tree:Node should be followed.
+   * It used a {@link SatisfactionChecker} to evaluate if the link should be filtered.
+   * @param {ITreeNode} node - the current TREE node
+   * @param {IActionContext} context - the context
+   * @param {SatisfactionChecker} satisfactionChecker - a function to check the satisfabillity of boolean expressions
+   * @returns {Promise<Map<string, boolean>>} a map indicating if a tree:Relation should be follow
    */
 export async function filterNode(
   node: ITreeNode,
@@ -59,7 +58,7 @@ export async function filterNode(
   // Extract the bgp of the query.
   const queryBody: Algebra.Operation = context.get(KeysInitQuery.query)!;
 
-  // Capture the relation from the function argument.
+  // Capture group relations by tree:path and tree:node to consider bounded node.
   const groupedRelations = groupRelations(node.relation);
 
   const calculatedFilterExpressions: Map<Variable, SparlFilterExpressionSolverInput> = new Map();
@@ -78,12 +77,13 @@ export async function filterNode(
       continue;
     }
     let filtered = false;
-    // For all the variable check if one is has a possible solutions.
+    // For all the variable check if one has a possible solutions.
     for (const variable of variables) {
       let inputFilterExpression = calculatedFilterExpressions.get(variable);
       if (!inputFilterExpression) {
         inputFilterExpression = new SparlFilterExpressionSolverInput(
-          structuredClone(filterOperation),
+          // make a deep copy of the filter
+          Util.mapExpression(filterOperation, {}, undefined),
           variable,
         );
       }
@@ -97,8 +97,8 @@ export async function filterNode(
 }
 
 /**
-  * Helper function to add to the filter map while considering that a previous relation group might
-  * have permit the access to the node. If the a group gives the access previously we should keep the access.
+  * Helper function to add value to the filter map while considering that a previous relation group might
+  * Have permits access to the node. If a group gives access previously, we should keep the access.
   * @param {Map<string, boolean>} filterMap - The current filter map
   * @param {boolean} filtered - The current access flag
   * @param {string} node - The target node
@@ -114,7 +114,7 @@ function addToFilterMap(filterMap: Map<string, boolean>, filtered: boolean, node
 
 /**
    * Find the variables from the BGP that match the predicate defined by the TREE:path from a TREE relation.
-   *  The subject can be anyting.
+   *  The subject can be anything.
    * @param {Algebra.Operation} queryBody - the body of the query
    * @param {string} path - TREE path
    * @returns {Variable[]} the variables of the Quad objects that contain the TREE path as predicate
@@ -168,8 +168,8 @@ export function groupRelations(relations: ITreeRelation[]): ITreeRelation[][] {
 }
 
 /**
-   * Find the first node of type `nodeType`, if it doesn't exist
-   * it return undefined.
+   * Find the first node of the type `nodeType`, if it doesn't exist
+   * it returns undefined.
    * @param {Algebra.Operation} query - the original query
    * @param {string} nodeType - the type of node requested
    * @returns {any}

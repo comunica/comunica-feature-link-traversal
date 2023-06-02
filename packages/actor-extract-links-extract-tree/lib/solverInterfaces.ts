@@ -81,7 +81,7 @@ export interface ISolverExpression {
   operator: SparqlRelationOperator;
 }
 /**
- * An input for the solve.
+ * An input for the solver.
  * It must be able to be resolved into a domain or an interval
  */
 export interface ISolverInput {

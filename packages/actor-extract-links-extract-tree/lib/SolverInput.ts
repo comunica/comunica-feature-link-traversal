@@ -29,6 +29,9 @@ const A_TRUE_EXPRESSION: SolutionInterval = new SolutionInterval(
 );
 const A_FALSE_EXPRESSION: SolutionInterval = new SolutionInterval([]);
 
+/**
+ * The representation in the solver domain of a SPARQL filter expression
+ */
 export class SparlFilterExpressionSolverInput implements ISolverInput {
   public readonly filterExpression: Algebra.Expression;
   public readonly variable: Variable;
@@ -45,7 +48,7 @@ export class SparlFilterExpressionSolverInput implements ISolverInput {
       if (error instanceof MisformatedExpressionError) {
         this.domain = SolutionDomain.newWithInitialIntervals(A_TRUE_EXPRESSION);
       } else if (error instanceof UnsupportedDataTypeError) {
-        // We don't support the data type so let need to explore that link to not diminush the completness of the result
+        // We don't support the data type so we will let the node be explored
         this.domain = SolutionDomain.newWithInitialIntervals(A_TRUE_EXPRESSION);
       } else {
         /* istanbul ignore next */
@@ -65,14 +68,13 @@ export class SparlFilterExpressionSolverInput implements ISolverInput {
 
   /**
  * Recursively traverse the filter expression and calculate the domain until it get to the current expression.
- * It will thrown an error if the expression is badly formated or if it's impossible to get the solution range.
+ * It will thrown an error if the expression is badly formated or if it's impossible to get the {@link SolutionInterval}.
  * @param {Algebra.Expression} filterExpression -
  * The current filter expression that we are traversing
+ * @param {Variable} variable - The variable targeted inside the filter expression
  * @param {SolutionDomain} domain - The current resultant solution domain
  * @param {LogicOperatorSymbol} logicOperator
  * - The current logic operator that we have to apply to the boolean expression
- * @param {Variable} variable - The variable targeted inside the filter expression
- * @param {boolean} notExpression
  * @returns {SolutionDomain} The solution domain of the whole expression
  */
   public static recursifResolve(
@@ -84,8 +86,6 @@ export class SparlFilterExpressionSolverInput implements ISolverInput {
     if (filterExpression.expressionType === Algebra.expressionTypes.TERM
     ) {
       // In that case we are confronted with a boolean expression
-      // add the associated interval into the domain in relation to
-      // the logic operator.
       if (filterExpression.term.value === 'false') {
         domain = logicOperator.apply({ interval: A_FALSE_EXPRESSION, domain });
       } else {
@@ -93,8 +93,6 @@ export class SparlFilterExpressionSolverInput implements ISolverInput {
       }
     } else if (
     // If it's an array of terms then we should be able to create a solver expression.
-    // Given the resulting solver expression we can calculate a solution interval
-    // that we will add to the domain with regards to the logic operator.
       filterExpression.args[0].expressionType === Algebra.expressionTypes.TERM &&
             filterExpression.args.length === 2
     ) {
@@ -122,7 +120,7 @@ export class SparlFilterExpressionSolverInput implements ISolverInput {
       const logicOperatorSymbol = LogicOperatorReversed.get(filterExpression.operator);
       if (logicOperatorSymbol) {
         for (const arg of filterExpression.args) {
-          // To solve the not operation we rewrite the path of filter expression to reverse every operation
+          // To solve the not operation we rewrite the path of the filter expression to reverse every operation
           // e.g, = : != ; > : <=
           if (logicOperatorSymbol === LogicOperatorSymbol.Not) {
             inverseFilter(arg);
@@ -138,11 +136,11 @@ export class SparlFilterExpressionSolverInput implements ISolverInput {
   }
 
   /**
- * From an Algebra expression return an solver expression if possible
- * @param {Algebra.Expression} expression - Algebra expression containing the a variable and a litteral.
- * @param {SparqlRelationOperator} operator - The SPARQL operator defining the expression.
- * @param {Variable} variable - The variable the expression should have to be part of a system of equation.
- * @returns {ISolverExpression | undefined} Return a solver expression if possible
+ * From an Algebra expression return an solver expression if possible.
+ * @param {Algebra.Expression} expression - {@link Algebra} expression containing the a variable and a litteral
+ * @param {SparqlRelationOperator} operator - the SPARQL operator defining the expression.
+ * @param {Variable} variable - the variable the expression should have to be part of a system of equation
+ * @returns {ISolverExpression | undefined} Return a {@link ISolverExpression} if it can be satisfy
  */
   public static resolveAFilterTerm(expression: Algebra.Expression,
     operator: SparqlRelationOperator,
@@ -153,10 +151,10 @@ export class SparlFilterExpressionSolverInput implements ISolverInput {
     let valueAsNumber: number | undefined;
     let hasVariable = false;
 
-    // Find the constituant element of the solver expression
+    // Find the constituent element of the solver expression
     for (const arg of expression.args) {
       if ('term' in arg && arg.term.termType === 'Variable') {
-        // Check if the expression has the same variable as the one the solver try to resolved
+        // Check if the expression has the same variable as the one of the solver
         if (arg.term.value !== variable) {
           return new MissMatchVariableError(`the variable ${arg.term.value} is in the filter whereas we are looking for the varibale ${variable}`);
         }
@@ -174,7 +172,7 @@ export class SparlFilterExpressionSolverInput implements ISolverInput {
         }
       }
     }
-    // Return if a fully form solver expression can be created
+    // Return if a fully form solver expression
     if (hasVariable && rawValue && valueType && valueAsNumber) {
       return {
         variable,
@@ -196,6 +194,9 @@ export class SparlFilterExpressionSolverInput implements ISolverInput {
   }
 }
 
+/**
+ * The representation in the solver domain of a tree:Relation
+ */
 export class TreeRelationSolverInput implements ISolverInput {
   public readonly domain: SolutionInterval | [SolutionInterval, SolutionInterval];
   public readonly treeRelation: ITreeRelation;
@@ -206,7 +207,7 @@ export class TreeRelationSolverInput implements ISolverInput {
     this.variable = variable;
 
     const relationsolverExpressions = TreeRelationSolverInput.convertTreeRelationToSolverExpression(relation, variable);
-    // The relation doesn't have a value or a type, so we accept it
+    // The relation doesn't have a value or a type, so we follow the link
     if (!relationsolverExpressions) {
       this.domain = A_TRUE_EXPRESSION;
       this.freeze();
@@ -236,11 +237,11 @@ export class TreeRelationSolverInput implements ISolverInput {
   }
 
   /**
- * Convert a TREE relation into a solver expression.
- * @param {ITreeRelation} relation - TREE relation.
- * @param {Variable} variable - variable of the SPARQL query associated with the tree:path of the relation.
- * @returns {ISolverExpression | undefined} Resulting solver expression if the data type is supported by SPARQL
- * and the value can be cast into a number.
+ * Convert a TREE relation into a {@link ISolverExpression}.
+ * @param {ITreeRelation} relation - TREE relation
+ * @param {Variable} variable - variable of the SPARQL query associated with the tree:path of the relation
+ * @returns {ISolverExpression | undefined} Resulting {@link ISolverExpression} if the data type is supported by SPARQL
+ * and the value can be cast into a number
  */
   public static convertTreeRelationToSolverExpression(relation: ITreeRelation,
     variable: Variable):
