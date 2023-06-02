@@ -76,7 +76,6 @@ module.exports = {
     'unicorn/consistent-destructuring': 'off',
     'unicorn/no-array-callback-reference': 'off',
     'unicorn/no-new-array': 'off',
-    'unicorn/prefer-at': 'off', // not compatible with node v14
 
     // TS
     '@typescript-eslint/lines-between-class-members': ['error', { exceptAfterSingleLine: true }],
