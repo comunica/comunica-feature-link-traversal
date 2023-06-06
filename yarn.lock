@@ -3123,6 +3123,11 @@
     componentsjs "^5.3.2"
     process "^0.11.10"
 
+"@comunica/types-link-traversal@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@comunica/types-link-traversal/-/types-link-traversal-0.1.0.tgz#5d9892db1746424cec6895b61d23e7be9f15b7bf"
+  integrity sha512-jDVq9wUPkFz66zNjHph9BFrFEK1tjypjvovknC7ahsUJjngfEpjne+DoiobhqXpDVv/BdRDilGDTh+IB0etkEQ==
+
 "@comunica/types@2.6.11-alpha.42.0":
   version "2.6.11-alpha.42.0"
   resolved "https://registry.yarnpkg.com/@comunica/types/-/types-2.6.11-alpha.42.0.tgz#6199f6a7072e9c2724942271c63917ff37532c77"

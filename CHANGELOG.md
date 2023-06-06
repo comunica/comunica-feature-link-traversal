@@ -1,6 +1,21 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+<a name="v0.2.0"></a>
+## [v0.2.0](https://github.com/comunica/comunica-feature-link-traversal/compare/v0.1.1...v0.2.0) - 2023-06-06
+
+### Added
+* [Allow strict-mode to be disabled for invalid TREE documents](https://github.com/comunica/comunica-feature-link-traversal/commit/83347a600a460104f332f69d511b012860e03a78)
+* [Add adaptive destroy join actor](https://github.com/comunica/comunica-feature-link-traversal/commit/942fc8b3ad9ba35f0e810931b15de8beeaa81d23)
+* [Add skipAdaptiveJoin context entry](https://github.com/comunica/comunica-feature-link-traversal/commit/2fe9b14f801873ecf3d7e8ca5ce43c03dd461910)
+* [Add adaptive Solid config](https://github.com/comunica/comunica-feature-link-traversal/commit/824731e73c64db946f767f9f40de46218f7ac2bd)
+
+### Changed
+* [Update to Comunica 2.7](https://github.com/comunica/comunica-feature-link-traversal/commit/643c76e0065ce9de88eb1ad26f76f121e3758d97)
+
+### Fixed
+* [Fix Solid auth not working due to invalid baseURL](https://github.com/comunica/comunica-feature-link-traversal/commit/31db332993b11dd45a30ce6bd3735385c98979b7)
+
 <a name="v0.1.1"></a>
 ## [v0.1.1](https://github.com/comunica/comunica-feature-link-traversal/compare/v0.1.0...v0.1.1) - 2023-03-08
 
