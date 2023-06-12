@@ -9,8 +9,8 @@ export interface ILogicOperator {
   /**
    * Apply the operation on a domain given an interval
    */
-  apply: ({ interval, domain }:
-  { interval: SolutionInterval | [SolutionInterval, SolutionInterval]; domain: SolutionDomain }) => SolutionDomain;
+  apply: ({ intervals, domain }:
+  { intervals: SolutionInterval | [SolutionInterval, SolutionInterval] | SolutionInterval[]; domain: SolutionDomain }) => SolutionDomain;
   /**
    * The name of the operator
    */
@@ -18,15 +18,17 @@ export interface ILogicOperator {
 }
 
 export class Or implements ILogicOperator {
-  public apply({ interval, domain }:
-  { interval: SolutionInterval | [SolutionInterval, SolutionInterval]; domain: SolutionDomain }): SolutionDomain {
-    if (Array.isArray(interval)) {
-      domain = this.apply({ interval: interval[0], domain });
-      return this.apply({ interval: interval[1], domain });
+  public apply({ intervals: intervals, domain }:
+  { intervals: SolutionInterval |SolutionInterval[] ; domain: SolutionDomain }): SolutionDomain {
+    if (Array.isArray(intervals)) {
+      for (const interval of intervals){
+        domain = this.apply({ intervals: interval, domain });
+      }
+      return domain
     }
     let newDomain: SolutionInterval[] = [];
 
-    let currentInterval = interval;
+    let currentInterval = intervals;
 
     // We iterate over all the domain
     newDomain = domain.getDomain().filter(el => {
@@ -55,16 +57,16 @@ export class Or implements ILogicOperator {
 }
 
 export class And implements ILogicOperator {
-  public apply({ interval, domain }:
-  { interval: SolutionInterval | [SolutionInterval, SolutionInterval]; domain: SolutionDomain }): SolutionDomain {
-    if (Array.isArray(interval)) {
+  public apply({ intervals: intervals, domain }:
+  { intervals: SolutionInterval | SolutionInterval[]| [SolutionInterval, SolutionInterval]; domain: SolutionDomain }): SolutionDomain {
+    if (Array.isArray(intervals)) {
       // We check if it is a step interval
-      if (interval[0].isOverlapping(interval[1])) {
+      if (intervals[0].isOverlapping(intervals[1])) {
         return domain;
       }
 
-      const testDomain1 = this.apply({ interval: interval[0], domain });
-      const testDomain2 = this.apply({ interval: interval[1], domain });
+      const testDomain1 = this.apply({ intervals: intervals[0], domain });
+      const testDomain2 = this.apply({ intervals: intervals[1], domain });
       // We check which part of the interval can be added to domain.
       const cannotAddDomain1 = testDomain1.isDomainEmpty();
       const cannotAddDomain2 = testDomain2.isDomainEmpty();
@@ -86,28 +88,28 @@ export class And implements ILogicOperator {
       let intervalRes: SolutionInterval;
       let newDomain: SolutionDomain;
       if (testDomain1.getDomain().length > testDomain2.getDomain().length) {
-        intervalRes = interval[1];
+        intervalRes = intervals[1];
         newDomain = testDomain1;
       } else {
-        intervalRes = interval[0];
+        intervalRes = intervals[0];
         newDomain = testDomain2;
       }
 
       return new Or().apply({
-        interval: intervalRes, domain: newDomain,
+        intervals: intervalRes, domain: newDomain,
       });
     }
     const newDomain: SolutionInterval[] = [];
 
     // If the domain is empty then simply add the new range
     if (domain.getDomain().length === 0) {
-      newDomain.push(interval);
-      return SolutionDomain.newWithInitialIntervals(interval);
+      newDomain.push(intervals);
+      return SolutionDomain.newWithInitialIntervals(intervals);
     }
     // Considering the current domain if there is an intersection
     // add the intersection to the new domain
     domain.getDomain().forEach(el => {
-      const intersection = SolutionInterval.getIntersection(el, interval);
+      const intersection = SolutionInterval.getIntersection(el, intervals);
       if (!intersection.isEmpty) {
         newDomain.push(intersection);
       }

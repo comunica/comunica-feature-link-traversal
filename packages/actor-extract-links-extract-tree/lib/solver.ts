@@ -46,7 +46,7 @@ export function isBooleanExpressionTreeRelationFilterSolvable(inputs: ISolverInp
   }
 
   for (const interval of intervals) {
-    domain = AND.apply({ interval, domain });
+    domain = AND.apply({ intervals: interval, domain });
   }
 
   return !domain.isDomainEmpty();

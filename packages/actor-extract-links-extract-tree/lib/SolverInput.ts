@@ -88,9 +88,9 @@ export class SparlFilterExpressionSolverInput implements ISolverInput {
     ) {
       // In that case we are confronted with a boolean expression
       if (filterExpression.term.value === 'false') {
-        domain = logicOperator.apply({ interval: A_FALSE_EXPRESSION, domain });
+        domain = logicOperator.apply({ intervals: A_FALSE_EXPRESSION, domain });
       } else {
-        domain = logicOperator.apply({ interval: A_TRUE_EXPRESSION, domain });
+        domain = logicOperator.apply({ intervals: A_TRUE_EXPRESSION, domain });
       }
     } else if (
     // If it's an array of terms then we should be able to create a solver expression.
@@ -113,7 +113,7 @@ export class SparlFilterExpressionSolverInput implements ISolverInput {
             throw new UnsupportedDataTypeError('The operator is not supported');
           }
         }
-        domain = logicOperator.apply({ interval: solutionInterval, domain });
+        domain = logicOperator.apply({ intervals: solutionInterval, domain });
       }
     } else {
       // In that case we are traversing the filter expression TREE.

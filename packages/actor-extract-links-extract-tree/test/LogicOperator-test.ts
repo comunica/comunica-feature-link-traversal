@@ -24,7 +24,7 @@ describe('LogicOperator', () => {
         const interval = new SolutionInterval([ 0, 1 ]);
         const solutionDomain = new SolutionDomain();
         const expectedSolutionDomain = SolutionDomain.newWithInitialIntervals(interval);
-        expect(or.apply({ domain: solutionDomain, interval })).toStrictEqual(expectedSolutionDomain);
+        expect(or.apply({ domain: solutionDomain, intervals: interval })).toStrictEqual(expectedSolutionDomain);
       });
 
       it('given an empty domain should be able to add multiple intervals that doesn\'t overlap', () => {
@@ -38,7 +38,7 @@ describe('LogicOperator', () => {
         let solutionDomain = new SolutionDomain();
 
         givenIntervals.forEach((interval, idx) => {
-          solutionDomain = or.apply({ domain: solutionDomain, interval });
+          solutionDomain = or.apply({ domain: solutionDomain, intervals: interval });
           expect(solutionDomain.getDomain().length).toBe(idx + 1);
         });
 
@@ -54,7 +54,7 @@ describe('LogicOperator', () => {
 
       it('given a domain should not add an interval that is inside another', () => {
         const anOverlappingInterval = new SolutionInterval([ 22, 23 ]);
-        const newDomain = or.apply({ domain: aDomain, interval: anOverlappingInterval });
+        const newDomain = or.apply({ domain: aDomain, intervals: anOverlappingInterval });
 
         expect(newDomain.getDomain().length).toBe(aDomain.getDomain().length);
         expect(newDomain.getDomain()).toStrictEqual(intervals);
@@ -64,7 +64,7 @@ describe('LogicOperator', () => {
       single domain if all the domain segments are contained into the new interval`,
       () => {
         const anOverlappingInterval = new SolutionInterval([ -100, 100 ]);
-        const newDomain = or.apply({ domain: aDomain, interval: anOverlappingInterval });
+        const newDomain = or.apply({ domain: aDomain, intervals: anOverlappingInterval });
 
         expect(newDomain.getDomain().length).toBe(1);
         expect(newDomain.getDomain()).toStrictEqual([ anOverlappingInterval ]);
@@ -72,7 +72,7 @@ describe('LogicOperator', () => {
 
       it('given a domain should be able to fuse multiple domain segment if the new interval overlaps with them', () => {
         const aNewInterval = new SolutionInterval([ 1, 23 ]);
-        const newDomain = or.apply({ domain: aDomain, interval: aNewInterval });
+        const newDomain = or.apply({ domain: aDomain, intervals: aNewInterval });
 
         const expectedResultingDomainInterval = [
           new SolutionInterval([ -1, 0 ]),
@@ -110,7 +110,7 @@ describe('LogicOperator', () => {
         const domain = new SolutionDomain();
         const interval = new SolutionInterval([ 0, 1 ]);
 
-        const newDomain = and.apply({ interval, domain });
+        const newDomain = and.apply({ intervals:interval, domain });
 
         expect(newDomain.getDomain()).toStrictEqual([ interval ]);
       });
@@ -118,7 +118,7 @@ describe('LogicOperator', () => {
       it('should return an empty domain if there is no intersection with the new interval', () => {
         const interval = new SolutionInterval([ -200, -100 ]);
 
-        const newDomain = and.apply({ interval, domain: aDomain });
+        const newDomain = and.apply({ intervals:interval, domain: aDomain });
 
         expect(newDomain.isDomainEmpty()).toBe(true);
       });
@@ -126,7 +126,7 @@ describe('LogicOperator', () => {
       it('given a new interval inside a part of the domain should only return the intersection', () => {
         const interval = new SolutionInterval([ 22, 30 ]);
 
-        const newDomain = and.apply({ interval, domain: aDomain });
+        const newDomain = and.apply({ intervals: interval, domain: aDomain });
 
         expect(newDomain.getDomain()).toStrictEqual([ interval ]);
       });
@@ -138,7 +138,7 @@ describe('LogicOperator', () => {
           new SolutionInterval([ 21, 25 ]),
         ];
 
-        const newDomain = and.apply({ interval, domain: aDomain });
+        const newDomain = and.apply({ intervals: interval, domain: aDomain });
 
         expect(newDomain.getDomain()).toStrictEqual(expectedDomain);
       });
@@ -153,7 +153,7 @@ describe('LogicOperator', () => {
           new SolutionInterval([ 21, 25 ]),
         ];
 
-        const newDomain = and.apply({ interval, domain: aDomain });
+        const newDomain = and.apply({ intervals: interval, domain: aDomain });
 
         expect(newDomain.getDomain()).toStrictEqual(expectedDomain);
       });
@@ -163,7 +163,7 @@ describe('LogicOperator', () => {
         const interval1 = new SolutionInterval([ 0, 2 ]);
         const interval2 = new SolutionInterval([ 1, 2 ]);
 
-        const newDomain = and.apply({ interval: [ interval1, interval2 ], domain });
+        const newDomain = and.apply({ intervals: [ interval1, interval2 ], domain });
 
         expect(newDomain.isDomainEmpty()).toBe(true);
       });
@@ -172,7 +172,7 @@ describe('LogicOperator', () => {
         const interval1 = new SolutionInterval([ 0, 2 ]);
         const interval2 = new SolutionInterval([ 1, 2 ]);
 
-        const newDomain = and.apply({ interval: [ interval1, interval2 ], domain: aDomain });
+        const newDomain = and.apply({ intervals: [ interval1, interval2 ], domain: aDomain });
 
         expect(newDomain.equal(aDomain)).toBe(true);
       });
@@ -182,7 +182,7 @@ describe('LogicOperator', () => {
         const interval1 = new SolutionInterval([ -100, -50 ]);
         const interval2 = new SolutionInterval([ -25, -23 ]);
 
-        const newDomain = and.apply({ interval: [ interval1, interval2 ], domain: aDomain });
+        const newDomain = and.apply({ intervals: [ interval1, interval2 ], domain: aDomain });
 
         expect(newDomain.getDomain()).toStrictEqual(aDomain.getDomain());
       });
@@ -192,7 +192,7 @@ describe('LogicOperator', () => {
         const interval1 = new SolutionInterval([ 1, 3 ]);
         const interval2 = new SolutionInterval([ -25, -23 ]);
 
-        const newDomain = and.apply({ interval: [ interval1, interval2 ], domain: aDomain });
+        const newDomain = and.apply({ intervals: [ interval1, interval2 ], domain: aDomain });
         const expectedDomain = SolutionDomain.newWithInitialIntervals(interval1);
         expect(newDomain.getDomain()).toStrictEqual(expectedDomain.getDomain());
       });
@@ -202,7 +202,7 @@ describe('LogicOperator', () => {
         const interval1 = new SolutionInterval([ -25, -23 ]);
         const interval2 = new SolutionInterval([ 1, 3 ]);
 
-        const newDomain = and.apply({ interval: [ interval1, interval2 ], domain: aDomain });
+        const newDomain = and.apply({ intervals: [ interval1, interval2 ], domain: aDomain });
         const expectedDomain = SolutionDomain.newWithInitialIntervals(interval2);
         expect(newDomain.getDomain()).toStrictEqual(expectedDomain.getDomain());
       });
@@ -213,7 +213,7 @@ describe('LogicOperator', () => {
         const interval1 = new SolutionInterval([ 2, 70 ]);
         const interval2 = new SolutionInterval([ 1, 1 ]);
 
-        const newDomain = and.apply({ interval: [ interval1, interval2 ], domain: aDomain });
+        const newDomain = and.apply({ intervals: [ interval1, interval2 ], domain: aDomain });
         const expectedDomain = SolutionDomain.newWithInitialIntervals([
           interval2,
           new SolutionInterval([ 2, 5 ]),
@@ -230,7 +230,7 @@ describe('LogicOperator', () => {
 
         const interval2 = new SolutionInterval([ 2, 70 ]);
 
-        const newDomain = and.apply({ interval: [ interval1, interval2 ], domain: aDomain });
+        const newDomain = and.apply({ intervals: [ interval1, interval2 ], domain: aDomain });
         const expectedDomain = SolutionDomain.newWithInitialIntervals([
           interval1,
           new SolutionInterval([ 2, 5 ]),
