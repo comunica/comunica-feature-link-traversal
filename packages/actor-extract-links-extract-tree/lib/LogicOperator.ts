@@ -92,7 +92,7 @@ export class And implements ILogicOperator {
     // Considering the current domain if there is an intersection
     // add the intersection to the new domain
     domain.getDomain().forEach(el => {
-      const intersection = SolutionInterval.getIntersection(el, intervals);
+      const intersection = SolutionInterval.getIntersection(el, <SolutionInterval> intervals);
       if (!intersection.isEmpty) {
         newDomain.push(intersection);
       }

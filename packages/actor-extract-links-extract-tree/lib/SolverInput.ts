@@ -9,13 +9,17 @@ import type { ILogicOperator } from './LogicOperator';
 import { Or, operatorFactory } from './LogicOperator';
 import { SolutionDomain } from './SolutionDomain';
 import { SolutionInterval } from './SolutionInterval';
-import { LogicOperatorReversed,
+import {
+  LogicOperatorReversed,
   LogicOperatorSymbol,
-  SparqlOperandDataTypesReversed } from './solverInterfaces';
-import type { ISolverInput,
+  SparqlOperandDataTypesReversed,
+} from './solverInterfaces';
+import type {
+  ISolverInput,
   ISolverExpression,
   Variable,
-  SparqlOperandDataTypes } from './solverInterfaces';
+  SparqlOperandDataTypes,
+} from './solverInterfaces';
 import {
   castSparqlRdfTermIntoNumber,
   filterOperatorToSparqlRelationOperator,
@@ -67,6 +71,49 @@ export class SparlFilterExpressionSolverInput implements ISolverInput {
   }
 
   /**
+   * Rewrite the expression to make to make outer not statement inner.
+   * @param {Algebra.Expression} filterExpression -
+   * The current filter expression that we are traversing
+   */
+  private static rewriteExpression(filterExpression: Algebra.Expression): void {
+    if (
+      !(
+        (filterExpression.expressionType === Algebra.expressionTypes.TERM) ||
+        filterExpression.args.length === 0 ||
+        (
+          filterExpression.args[0].expressionType === Algebra.expressionTypes.TERM &&
+          filterExpression.args.length === 2
+        )
+      )
+
+    ) {
+      const logicOperatorSymbol = filterExpression.operator;
+      if (logicOperatorSymbol) {
+        if (logicOperatorSymbol === LogicOperatorSymbol.Not) {
+          inverseFilter(filterExpression);
+        }
+        if (filterExpression.args) {
+          for (const arg of filterExpression.args) {
+            SparlFilterExpressionSolverInput.rewriteExpression(arg);
+          }
+          if (filterExpression.args[0].expressionType === Algebra.expressionTypes.TERM) {
+            delete filterExpression.operator;
+            filterExpression.type = filterExpression.args[0].type;
+            filterExpression.term = filterExpression.args[0].term;
+            filterExpression.expressionType = filterExpression.args[0].expressionType;
+            delete filterExpression.args;
+          } else if (filterExpression.operator === LogicOperatorSymbol.Not ||
+            filterExpression.operator === LogicOperatorSymbol.Exist) {
+            filterExpression.operator = filterExpression.args[0].operator;
+            filterExpression.expressionType = filterExpression.args[0].expressionType;
+            filterExpression.args = filterExpression.args[0].args;
+          }
+        }
+      }
+    }
+  }
+
+  /**
  * Recursively traverse the filter expression and calculate the domain until it get to the current expression.
  * It will thrown an error if the expression is badly formated or
  * if it's impossible to get the {@link SolutionInterval}.
@@ -76,6 +123,7 @@ export class SparlFilterExpressionSolverInput implements ISolverInput {
  * @param {SolutionDomain} domain - The current resultant solution domain
  * @param {LogicOperatorSymbol} logicOperator
  * - The current logic operator that we have to apply to the boolean expression
+ * @param {boolean} rewrite - rewrite the query to make the negative statement inner
  * @returns {SolutionDomain} The solution domain of the whole expression
  */
   public static recursifResolve(
@@ -83,7 +131,11 @@ export class SparlFilterExpressionSolverInput implements ISolverInput {
     variable: Variable,
     domain: SolutionDomain = new SolutionDomain(),
     logicOperator: ILogicOperator = new Or(),
+    rewrite = true,
   ): SolutionDomain {
+    if (rewrite) {
+      SparlFilterExpressionSolverInput.rewriteExpression(filterExpression);
+    }
     if (filterExpression.expressionType === Algebra.expressionTypes.TERM
     ) {
       // In that case we are confronted with a boolean expression
@@ -93,9 +145,9 @@ export class SparlFilterExpressionSolverInput implements ISolverInput {
         domain = logicOperator.apply({ intervals: A_TRUE_EXPRESSION, domain });
       }
     } else if (
-    // If it's an array of terms then we should be able to create a solver expression.
+      // If it's an array of terms then we should be able to create a solver expression.
       filterExpression.args[0].expressionType === Algebra.expressionTypes.TERM &&
-            filterExpression.args.length === 2
+      filterExpression.args.length === 2
     ) {
       const rawOperator = filterExpression.operator;
       const operator = filterOperatorToSparqlRelationOperator(rawOperator);
@@ -115,22 +167,19 @@ export class SparlFilterExpressionSolverInput implements ISolverInput {
         }
         domain = logicOperator.apply({ intervals: solutionInterval, domain });
       }
+    } else if (filterExpression.operator === '=') {
+      domain = logicOperator.apply({ intervals: A_TRUE_EXPRESSION, domain });
     } else {
       // In that case we are traversing the filter expression TREE.
       // We prepare the next recursion and we compute the accumulation of results.
       const logicOperatorSymbol = LogicOperatorReversed.get(filterExpression.operator);
       if (logicOperatorSymbol) {
+        let subdomain = new SolutionDomain();
         for (const arg of filterExpression.args) {
-          // To solve the not operation we rewrite the path of the filter expression to reverse every operation
-          // e.g, = : != ; > : <=
-          if (logicOperatorSymbol === LogicOperatorSymbol.Not) {
-            inverseFilter(arg);
-            domain = this.recursifResolve(arg, variable, domain, logicOperator);
-          } else {
-            const newLogicOperator = operatorFactory(logicOperatorSymbol);
-            domain = this.recursifResolve(arg, variable, domain, newLogicOperator);
-          }
+          const newLogicOperator = operatorFactory(logicOperatorSymbol);
+          subdomain = this.recursifResolve(arg, variable, subdomain, newLogicOperator, false);
         }
+        domain = logicOperator.apply({ intervals: subdomain.getDomain(), domain });
       }
     }
     return domain;

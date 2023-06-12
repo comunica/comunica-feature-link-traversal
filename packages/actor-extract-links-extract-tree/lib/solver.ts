@@ -45,6 +45,10 @@ export function isBooleanExpressionTreeRelationFilterSolvable(inputs: ISolverInp
     throw new InvalidExpressionSystem('there should be at least one TREE relation to resolved');
   }
 
+  if (domain.isDomainEmpty()) {
+    return false;
+  }
+
   for (const interval of intervals) {
     domain = AND.apply({ intervals: interval, domain });
   }

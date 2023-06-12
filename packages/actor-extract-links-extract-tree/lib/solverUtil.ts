@@ -23,7 +23,7 @@ export function areTypesCompatible(expressions: ISolverExpression[]): boolean {
   for (const expression of expressions) {
     const areIdentical = expression.valueType === firstType;
     const areNumbers = isSparqlOperandNumberType(firstType) &&
-        isSparqlOperandNumberType(expression.valueType);
+      isSparqlOperandNumberType(expression.valueType);
 
     if (!(areIdentical || areNumbers)) {
       return false;
@@ -72,8 +72,8 @@ export function castSparqlRdfTermIntoNumber(rdfTermValue: string,
   number | undefined {
   if (
     rdfTermType === SparqlOperandDataTypes.Decimal ||
-      rdfTermType === SparqlOperandDataTypes.Float ||
-      rdfTermType === SparqlOperandDataTypes.Double
+    rdfTermType === SparqlOperandDataTypes.Float ||
+    rdfTermType === SparqlOperandDataTypes.Double
   ) {
     const val = Number.parseFloat(rdfTermValue);
     return Number.isNaN(val) ? undefined : val;
@@ -112,19 +112,19 @@ export function castSparqlRdfTermIntoNumber(rdfTermValue: string,
    */
 export function isSparqlOperandNumberType(rdfTermType: SparqlOperandDataTypes): boolean {
   return rdfTermType === SparqlOperandDataTypes.Integer ||
-      rdfTermType === SparqlOperandDataTypes.NonPositiveInteger ||
-      rdfTermType === SparqlOperandDataTypes.NegativeInteger ||
-      rdfTermType === SparqlOperandDataTypes.Long ||
-      rdfTermType === SparqlOperandDataTypes.Short ||
-      rdfTermType === SparqlOperandDataTypes.NonNegativeInteger ||
-      rdfTermType === SparqlOperandDataTypes.UnsignedLong ||
-      rdfTermType === SparqlOperandDataTypes.UnsignedInt ||
-      rdfTermType === SparqlOperandDataTypes.UnsignedShort ||
-      rdfTermType === SparqlOperandDataTypes.PositiveInteger ||
-      rdfTermType === SparqlOperandDataTypes.Float ||
-      rdfTermType === SparqlOperandDataTypes.Double ||
-      rdfTermType === SparqlOperandDataTypes.Decimal ||
-      rdfTermType === SparqlOperandDataTypes.Int;
+    rdfTermType === SparqlOperandDataTypes.NonPositiveInteger ||
+    rdfTermType === SparqlOperandDataTypes.NegativeInteger ||
+    rdfTermType === SparqlOperandDataTypes.Long ||
+    rdfTermType === SparqlOperandDataTypes.Short ||
+    rdfTermType === SparqlOperandDataTypes.NonNegativeInteger ||
+    rdfTermType === SparqlOperandDataTypes.UnsignedLong ||
+    rdfTermType === SparqlOperandDataTypes.UnsignedInt ||
+    rdfTermType === SparqlOperandDataTypes.UnsignedShort ||
+    rdfTermType === SparqlOperandDataTypes.PositiveInteger ||
+    rdfTermType === SparqlOperandDataTypes.Float ||
+    rdfTermType === SparqlOperandDataTypes.Double ||
+    rdfTermType === SparqlOperandDataTypes.Decimal ||
+    rdfTermType === SparqlOperandDataTypes.Int;
 }
 /**
    * Convert a filter operator to {@link SparqlRelationOperator}.
@@ -228,12 +228,12 @@ export function inverseFilter(filterExpression: Algebra.Expression): void {
   ) {
     if (filterExpression.term.value === 'false') {
       filterExpression.term.value = 'true';
-    } else {
+    } else if (filterExpression.term.value === 'true') {
       filterExpression.term.value = 'false';
     }
   } else if (
     filterExpression.args[0].expressionType === Algebra.expressionTypes.TERM &&
-      filterExpression.args.length === 2
+    filterExpression.args.length === 2
   ) {
     filterExpression.operator = reverseRawOperator(filterExpression.operator);
   } else {
@@ -241,12 +241,14 @@ export function inverseFilter(filterExpression: Algebra.Expression): void {
     if (reversedOperator) {
       filterExpression.operator = reversedOperator;
     }
-    for (const arg of filterExpression.args) {
-      const newReversedOperator = reverseRawLogicOperator(filterExpression.operator);
-      if (newReversedOperator) {
-        filterExpression.operator = newReversedOperator;
+    if (filterExpression.args) {
+      for (const arg of filterExpression.args) {
+        const newReversedOperator = reverseRawLogicOperator(filterExpression.operator);
+        if (newReversedOperator) {
+          filterExpression.operator = newReversedOperator;
+        }
+        inverseFilter(arg);
       }
-      inverseFilter(arg);
     }
   }
 }

@@ -589,10 +589,8 @@ describe('SolverInput', () => {
                   SELECT * WHERE { ?x ?y ?z 
                   FILTER( !(!(?x=2)) && ?x<5)
                   }`).input.expression;
-
         const resp = SparlFilterExpressionSolverInput.recursifResolve(
           expression,
-
           'x',
         );
 
