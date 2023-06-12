@@ -10,7 +10,7 @@ export interface ILogicOperator {
    * Apply the operation on a domain given an interval
    */
   apply: ({ intervals, domain }:
-  { intervals: SolutionInterval | [SolutionInterval, SolutionInterval] | SolutionInterval[]; domain: SolutionDomain }) => SolutionDomain;
+  { intervals: SolutionInterval | SolutionInterval[]; domain: SolutionDomain }) => SolutionDomain;
   /**
    * The name of the operator
    */
@@ -18,13 +18,13 @@ export interface ILogicOperator {
 }
 
 export class Or implements ILogicOperator {
-  public apply({ intervals: intervals, domain }:
-  { intervals: SolutionInterval |SolutionInterval[] ; domain: SolutionDomain }): SolutionDomain {
+  public apply({ intervals, domain }:
+  { intervals: SolutionInterval | SolutionInterval[]; domain: SolutionDomain }): SolutionDomain {
     if (Array.isArray(intervals)) {
-      for (const interval of intervals){
+      for (const interval of intervals) {
         domain = this.apply({ intervals: interval, domain });
       }
-      return domain
+      return domain;
     }
     let newDomain: SolutionInterval[] = [];
 
@@ -57,47 +57,30 @@ export class Or implements ILogicOperator {
 }
 
 export class And implements ILogicOperator {
-  public apply({ intervals: intervals, domain }:
-  { intervals: SolutionInterval | SolutionInterval[]| [SolutionInterval, SolutionInterval]; domain: SolutionDomain }): SolutionDomain {
+  public apply({ intervals, domain }:
+  { intervals: SolutionInterval | SolutionInterval[]; domain: SolutionDomain }): SolutionDomain {
     if (Array.isArray(intervals)) {
-      // We check if it is a step interval
-      if (intervals[0].isOverlapping(intervals[1])) {
+      const domain_intervals = domain.getDomain();
+      intervals = intervals.sort(SolutionDomain.sortDomainRangeByLowerBound);
+      if (SolutionDomain.isThereOverlapInsideDomain(intervals)) {
         return domain;
       }
 
-      const testDomain1 = this.apply({ intervals: intervals[0], domain });
-      const testDomain2 = this.apply({ intervals: intervals[1], domain });
-      // We check which part of the interval can be added to domain.
-      const cannotAddDomain1 = testDomain1.isDomainEmpty();
-      const cannotAddDomain2 = testDomain2.isDomainEmpty();
-
-      if (cannotAddDomain1 && cannotAddDomain2) {
-        return domain;
+      let resulting_interval: SolutionInterval[] = [];
+      for (const interval of intervals) {
+        for (const domain_interval of domain_intervals) {
+          const temp_domain = this.apply({
+            intervals: interval,
+            domain: SolutionDomain.newWithInitialIntervals(domain_interval),
+          });
+          resulting_interval = resulting_interval.concat(temp_domain.getDomain());
+        }
       }
-
-      if (!cannotAddDomain1 && cannotAddDomain2) {
-        return testDomain1;
+      let resp_domain = new SolutionDomain();
+      for (const interval of resulting_interval) {
+        resp_domain = new Or().apply({ intervals: interval, domain: resp_domain });
       }
-
-      if (cannotAddDomain1 && !cannotAddDomain2) {
-        return testDomain2;
-      }
-
-      // If both can be added we consider the larger domain and use an OR operation
-      // to add the other part.
-      let intervalRes: SolutionInterval;
-      let newDomain: SolutionDomain;
-      if (testDomain1.getDomain().length > testDomain2.getDomain().length) {
-        intervalRes = intervals[1];
-        newDomain = testDomain1;
-      } else {
-        intervalRes = intervals[0];
-        newDomain = testDomain2;
-      }
-
-      return new Or().apply({
-        intervals: intervalRes, domain: newDomain,
-      });
+      return resp_domain;
     }
     const newDomain: SolutionInterval[] = [];
 

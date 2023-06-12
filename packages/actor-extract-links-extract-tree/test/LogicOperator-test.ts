@@ -110,7 +110,7 @@ describe('LogicOperator', () => {
         const domain = new SolutionDomain();
         const interval = new SolutionInterval([ 0, 1 ]);
 
-        const newDomain = and.apply({ intervals:interval, domain });
+        const newDomain = and.apply({ intervals: interval, domain });
 
         expect(newDomain.getDomain()).toStrictEqual([ interval ]);
       });
@@ -118,7 +118,7 @@ describe('LogicOperator', () => {
       it('should return an empty domain if there is no intersection with the new interval', () => {
         const interval = new SolutionInterval([ -200, -100 ]);
 
-        const newDomain = and.apply({ intervals:interval, domain: aDomain });
+        const newDomain = and.apply({ intervals: interval, domain: aDomain });
 
         expect(newDomain.isDomainEmpty()).toBe(true);
       });
@@ -178,13 +178,13 @@ describe('LogicOperator', () => {
       });
 
       it(`given a domain and two intervals that are not overlapping and also 
-      don't overlap with the domain should return the initial domain`, () => {
+      don't overlap with the domain should return an empty domain`, () => {
         const interval1 = new SolutionInterval([ -100, -50 ]);
         const interval2 = new SolutionInterval([ -25, -23 ]);
 
         const newDomain = and.apply({ intervals: [ interval1, interval2 ], domain: aDomain });
 
-        expect(newDomain.getDomain()).toStrictEqual(aDomain.getDomain());
+        expect(newDomain.isDomainEmpty()).toBe(true);
       });
 
       it(`given a domain and two intervals that are not overlapping and where the first 

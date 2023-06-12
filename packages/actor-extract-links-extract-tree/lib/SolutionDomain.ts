@@ -65,7 +65,7 @@ export class SolutionDomain {
       // We keep the domain sorted
       initialIntervals.sort(SolutionDomain.sortDomainRangeByLowerBound);
       newSolutionDomain.domain = initialIntervals;
-      if (newSolutionDomain.isThereOverlapInsideDomain()) {
+      if (SolutionDomain.isThereOverlapInsideDomain(newSolutionDomain.getDomain())) {
         throw new RangeError('There is overlap inside the domain.');
       }
     } else if (!initialIntervals.isEmpty) {
@@ -94,9 +94,9 @@ export class SolutionDomain {
    * There should be no overlapping domain segment.
    * @returns {boolean} whether or not the domain is overlapping
    */
-  private isThereOverlapInsideDomain(): boolean {
-    for (let i = 0; i < this.domain.length - 1; i++) {
-      if (this.domain[i].isOverlapping(this.domain[i + 1])) {
+  public static isThereOverlapInsideDomain(domain: SolutionInterval[]): boolean {
+    for (let i = 0; i < domain.length - 1; i++) {
+      if (domain[i].isOverlapping(domain[i + 1])) {
         return true;
       }
     }
