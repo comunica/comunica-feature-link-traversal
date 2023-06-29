@@ -43,7 +43,7 @@
     "@types/parse-link-header": "^2.0.0",
     "@types/shexj": "2.1.1",
     "parse-link-header": "^2.0.0",
-    "rdf-store-stream": "^1.3.0",
+    "rdf-store-stream": "^2.0.0",
     "relative-to-absolute-iri": "^1.0.6",
     "sparqlalgebrajs": "^4.0.2"
   },
