@@ -888,6 +888,32 @@ describe('solver function', () => {
       expect(isBooleanExpressionTreeRelationFilterSolvable(inputs)).toBe(true);
     });
 
+    it(`should accept the link with a solvable simple boolean and an and operator linked with a not expression inside a parenthesis`, () => {
+      const relation: ITreeRelation = {
+        type: SparqlRelationOperator.EqualThanRelation,
+        remainingItems: 10,
+        path: 'ex:path',
+        value: {
+          value: '5',
+          term: DF.literal('5', DF.namedNode('http://www.w3.org/2001/XMLSchema#integer')),
+        },
+        node: 'https://www.example.be',
+      };
+
+      const filterExpression = translate(`
+            SELECT * WHERE { ?x ?y ?z 
+            FILTER(?x = 5 && !(false && true))
+            }`).input.expression;
+
+      const variable = 'x';
+      const inputs = [
+        new TreeRelationSolverInput(relation, variable),
+        new SparlFilterExpressionSolverInput(filterExpression, variable),
+      ];
+
+      expect(isBooleanExpressionTreeRelationFilterSolvable(inputs)).toBe(true);
+    });
+
     it(`Should ignore the SPARQL function when prunning links`, () => {
       const relation: ITreeRelation = {
         type: SparqlRelationOperator.EqualThanRelation,

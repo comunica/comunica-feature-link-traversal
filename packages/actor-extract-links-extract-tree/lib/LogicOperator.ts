@@ -61,7 +61,7 @@ export class And implements ILogicOperator {
   { intervals: SolutionInterval | SolutionInterval[]; domain: SolutionDomain }): SolutionDomain {
     if (Array.isArray(intervals)) {
       const domain_intervals = domain.getDomain();
-      intervals = intervals.sort(SolutionDomain.sortDomainRangeByLowerBound);
+      intervals = intervals.slice().sort(SolutionDomain.sortDomainRangeByLowerBound);
       if (SolutionDomain.isThereOverlapInsideDomain(intervals)) {
         return domain;
       }
