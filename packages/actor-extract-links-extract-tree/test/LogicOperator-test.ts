@@ -168,6 +168,12 @@ describe('LogicOperator', () => {
         expect(newDomain.isDomainEmpty()).toBe(true);
       });
 
+      it('given an a domain and no interval in an array should return the domain', () => {
+        const newDomain = and.apply({ intervals: [ ], domain: aDomain });
+
+        expect(newDomain).toStrictEqual(aDomain);
+      });
+
       it('given a domain and two intervals that are overlapping the domain should remain empty', () => {
         const interval1 = new SolutionInterval([ 0, 2 ]);
         const interval2 = new SolutionInterval([ 1, 2 ]);

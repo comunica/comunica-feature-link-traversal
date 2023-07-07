@@ -60,27 +60,34 @@ export class And implements ILogicOperator {
   public apply({ intervals, domain }:
   { intervals: SolutionInterval | SolutionInterval[]; domain: SolutionDomain }): SolutionDomain {
     if (Array.isArray(intervals)) {
-      const domain_intervals = domain.getDomain();
-      intervals = intervals.slice().sort(SolutionDomain.sortDomainRangeByLowerBound);
-      if (SolutionDomain.isThereOverlapInsideDomain(intervals)) {
-        return domain;
+      if (intervals.length > 1) {
+        const domain_intervals = domain.getDomain();
+        const new_interval = intervals.slice().sort(SolutionDomain.sortDomainRangeByLowerBound);
+        if (SolutionDomain.isThereOverlapInsideDomain(new_interval)) {
+          return domain;
+        }
+
+        let resulting_interval: SolutionInterval[] = [];
+        for (const interval of new_interval) {
+          for (const domain_interval of domain_intervals) {
+            const temp_domain = this.apply({
+              intervals: interval,
+              domain: SolutionDomain.newWithInitialIntervals(domain_interval),
+            });
+            resulting_interval = resulting_interval.concat(temp_domain.getDomain());
+          }
+        }
+        let resp_domain = new SolutionDomain();
+        for (const interval of resulting_interval) {
+          resp_domain = new Or().apply({ intervals: interval, domain: resp_domain });
+        }
+        return resp_domain;
       }
 
-      let resulting_interval: SolutionInterval[] = [];
-      for (const interval of intervals) {
-        for (const domain_interval of domain_intervals) {
-          const temp_domain = this.apply({
-            intervals: interval,
-            domain: SolutionDomain.newWithInitialIntervals(domain_interval),
-          });
-          resulting_interval = resulting_interval.concat(temp_domain.getDomain());
-        }
+      if (intervals.length === 0) {
+        return domain;
       }
-      let resp_domain = new SolutionDomain();
-      for (const interval of resulting_interval) {
-        resp_domain = new Or().apply({ intervals: interval, domain: resp_domain });
-      }
-      return resp_domain;
+      intervals = intervals[0];
     }
     const newDomain: SolutionInterval[] = [];
 
@@ -92,7 +99,7 @@ export class And implements ILogicOperator {
     // Considering the current domain if there is an intersection
     // add the intersection to the new domain
     domain.getDomain().forEach(el => {
-      const intersection = SolutionInterval.getIntersection(el, <SolutionInterval> intervals);
+      const intersection = SolutionInterval.getIntersection(el, <SolutionInterval>intervals);
       if (!intersection.isEmpty) {
         newDomain.push(intersection);
       }

@@ -140,11 +140,12 @@ export class SparlFilterExpressionSolverInput implements ISolverInput {
     ) {
       // In that case we are confronted with a boolean expression
       if (filterExpression.term.value === 'false') {
-        domain = logicOperator.apply({ intervals: A_FALSE_EXPRESSION, domain });
-      } else {
-        domain = logicOperator.apply({ intervals: A_TRUE_EXPRESSION, domain });
+        return logicOperator.apply({ intervals: A_FALSE_EXPRESSION, domain });
       }
-    } else if (
+      return logicOperator.apply({ intervals: A_TRUE_EXPRESSION, domain });
+    }
+
+    if (
       // If it's an array of terms then we should be able to create a solver expression.
       filterExpression.args[0].expressionType === Algebra.expressionTypes.TERM &&
       filterExpression.args.length === 2
@@ -165,10 +166,10 @@ export class SparlFilterExpressionSolverInput implements ISolverInput {
             throw new UnsupportedDataTypeError('The operator is not supported');
           }
         }
-        domain = logicOperator.apply({ intervals: solutionInterval, domain });
+        return logicOperator.apply({ intervals: solutionInterval, domain });
       }
     } else if (filterExpression.operator === '=') {
-      domain = logicOperator.apply({ intervals: A_TRUE_EXPRESSION, domain });
+      return logicOperator.apply({ intervals: A_TRUE_EXPRESSION, domain });
     } else {
       // In that case we are traversing the filter expression TREE.
       // We prepare the next recursion and we compute the accumulation of results.
@@ -179,7 +180,7 @@ export class SparlFilterExpressionSolverInput implements ISolverInput {
           const newLogicOperator = operatorFactory(logicOperatorSymbol);
           subdomain = this.recursifResolve(arg, variable, subdomain, newLogicOperator, false);
         }
-        domain = logicOperator.apply({ intervals: subdomain.getDomain(), domain });
+        return logicOperator.apply({ intervals: subdomain.getDomain(), domain });
       }
     }
     return domain;
