@@ -4,6 +4,7 @@ import { ActionContext, Bus } from '@comunica/core';
 import { DataFactory } from 'rdf-data-factory';
 import type * as RDF from 'rdf-js';
 import { ActorExtractLinksTree } from '../lib/ActorExtractLinksTree';
+
 const stream = require('streamify-array');
 
 const DF = new DataFactory<RDF.BaseQuad>();

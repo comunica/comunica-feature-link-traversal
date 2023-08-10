@@ -42,8 +42,8 @@ export class ActorRdfResolveHypermediaLinksTraverse extends ActorRdfResolveHyper
         // there is no httpProxyHandler.
         if (fileLink.url.startsWith('http:') &&
           (this.upgradeInsecureRequests ??
-            (global.window &&
-              global.window.location.protocol === 'https:' &&
+            (globalThis.window &&
+              globalThis.window.location.protocol === 'https:' &&
               !action.context.get(KeysHttpProxy.httpProxyHandler)))) {
           // Avoid mixed content when using https
           fileLink.url = fileLink.url.replace('http:', 'https:');

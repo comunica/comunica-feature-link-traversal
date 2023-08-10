@@ -3,6 +3,7 @@ import type { Algebra } from 'sparqlalgebrajs';
 import { Factory } from 'sparqlalgebrajs';
 import { ContentPolicy } from '../lib/ContentPolicy';
 import { SimpleSclParser } from '../lib/SimpleSclParser';
+
 const DF = new DataFactory();
 
 describe('SimpleSclParser', () => {

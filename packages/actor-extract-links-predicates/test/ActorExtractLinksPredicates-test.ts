@@ -1,6 +1,7 @@
 import type { Readable } from 'stream';
 import { ActionContext, Bus } from '@comunica/core';
 import { ActorExtractLinksPredicates } from '../lib/ActorExtractLinksPredicates';
+
 const quad = require('rdf-quad');
 const stream = require('streamify-array');
 

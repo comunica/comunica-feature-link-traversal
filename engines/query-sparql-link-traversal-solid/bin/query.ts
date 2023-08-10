@@ -4,6 +4,7 @@ import { ActionContext } from '@comunica/core';
 import { CliArgsHandlerSolidAuth } from '@comunica/query-sparql-solid';
 import { runArgsInProcessStatic } from '@comunica/runner-cli';
 import { CliArgsHandlerAnnotateSources } from '../lib/CliArgsHandlerAnnotateSources';
+
 const cliArgsHandlerSolidAuth = new CliArgsHandlerSolidAuth();
 runArgsInProcessStatic(require('../engine-default.js'), {
   context: new ActionContext({
