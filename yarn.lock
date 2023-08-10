@@ -4230,12 +4230,7 @@
     hierarchy-closure "^1.2.1"
     sync-request "^6.1.0"
 
-"@shexjs/visitor@1.0.0-alpha.22":
-  version "1.0.0-alpha.22"
-  resolved "https://registry.yarnpkg.com/@shexjs/visitor/-/visitor-1.0.0-alpha.22.tgz#d2e221dbe2af2efb3b4f168f9ced13a18989ca4c"
-  integrity sha512-uqANt+FCAhrxocYQczT2vk5ll0A9ZSW0klVMKNkosOjrXz9mhJd5cPBo9zlosg6Pz+6O9RDWcwgmei0Reb+++Q==
-
-"@shexjs/visitor@^1.0.0-alpha.25":
+"@shexjs/visitor@1.0.0-alpha.25", "@shexjs/visitor@^1.0.0-alpha.25":
   version "1.0.0-alpha.25"
   resolved "https://registry.yarnpkg.com/@shexjs/visitor/-/visitor-1.0.0-alpha.25.tgz#1c0e79be34c876f65309e870d11e95f4b794b18d"
   integrity sha512-DbqXXbzbzjJm2mjld7cSORgmJRyBr/RsXirDaNcRrQfZKXp+TJea8jHjY6PuHubs6SVA3Xj/SwTPGz6o5z8+WA==
