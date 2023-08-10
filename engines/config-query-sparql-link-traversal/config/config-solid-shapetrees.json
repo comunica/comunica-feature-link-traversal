@@ -8,7 +8,7 @@
     "ccqslt:config/extract-links/actors/predicates-common.json",
     "ccqslt:config/extract-links/actors/predicates-ldp.json",
     "ccqslt:config/extract-links/actors/predicates-solidstorage.json",
-    "ccqslt:config/extract-links/actors/solid-type-index.json",
+    "ccqslt:config/extract-links/actors/solid-type-index-noinference.json",
 
     "ccqslt:config/rdf-metadata-extract/actors/shapetrees.json",
     "ccqslt:config/rdf-resolve-hypermedia-links/actors/traverse-prune-shapetrees.json"
