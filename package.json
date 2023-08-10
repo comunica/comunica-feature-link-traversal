@@ -103,7 +103,7 @@
     "version": "manual-git-changelog onversion"
   },
   "resolutions": {
-    "@types/yargs": "17.0.13",
+    "@types/yargs": "17.0.24",
     "@types/node": "^18.0.0"
   }
 }
