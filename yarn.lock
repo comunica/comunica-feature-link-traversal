@@ -4549,12 +4549,7 @@
     "@pollyjs/core" "^6.0.5"
     "@pollyjs/persister" "^6.0.5"
 
-"@types/shexj@2.1.1":
-  version "2.1.1"
-  resolved "https://registry.yarnpkg.com/@types/shexj/-/shexj-2.1.1.tgz#463dd3b8c48afe62fc99b80aaf0d3c09314a53a3"
-  integrity sha512-UpzXaBgVCRh/OJcpQoeqnjJNW92aC3J6N7cuvpxgqGA6Bezmna8z0Yi4BH9lrnEG3NmSRUW3qUCJnEmhkwVH4w==
-
-"@types/shexj@^2.1.4":
+"@types/shexj@2.1.4", "@types/shexj@^2.1.4":
   version "2.1.4"
   resolved "https://registry.yarnpkg.com/@types/shexj/-/shexj-2.1.4.tgz#3aad89f22ff9463aced0e1bc046c3c3cd59fbe1d"
   integrity sha512-/dcF8vT/CHseZxNTcWR+otf6018PACgHiKFukPYsxQCRppGZq0UcALMedZUUnj7IM4WOesFoERwJBhEw44d/VQ==

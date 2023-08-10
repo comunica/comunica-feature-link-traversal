@@ -41,7 +41,7 @@
     "@shexjs/parser": "1.0.0-alpha.21",
     "@shexjs/visitor": "1.0.0-alpha.22",
     "@types/parse-link-header": "^2.0.0",
-    "@types/shexj": "2.1.1",
+    "@types/shexj": "2.1.4",
     "parse-link-header": "^2.0.0",
     "querystring": "^0.2.1",
     "rdf-store-stream": "^2.0.0",
