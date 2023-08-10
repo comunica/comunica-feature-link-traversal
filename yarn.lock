@@ -2404,16 +2404,6 @@
     rdf-data-factory "^1.1.1"
     rdf-string "^1.6.1"
 
-"@comunica/bindings-factory@2.6.11-alpha.42.0":
-  version "2.6.11-alpha.42.0"
-  resolved "https://registry.yarnpkg.com/@comunica/bindings-factory/-/bindings-factory-2.6.11-alpha.42.0.tgz#705a4d45aecde54b326521ac0f22819ef7d721db"
-  integrity sha512-8klYszo/aPpL51724CeN3LCSIpAcY560kV86yO5IW8rxyDW5HZBQEWpDvnBvoFyMkn0NjP0SD618aAbUH446lQ==
-  dependencies:
-    "@rdfjs/types" "*"
-    immutable "^4.1.0"
-    rdf-data-factory "^1.1.1"
-    rdf-string "^1.6.1"
-
 "@comunica/bindings-factory@^2.0.1", "@comunica/bindings-factory@^2.7.0":
   version "2.7.0"
   resolved "https://registry.yarnpkg.com/@comunica/bindings-factory/-/bindings-factory-2.7.0.tgz#b35810178beed08803ba1891faf50bcd017f52c8"
@@ -2713,13 +2703,13 @@
   dependencies:
     "@rdfjs/types" "*"
 
-"@comunica/jest@2.6.11-alpha.42.0":
-  version "2.6.11-alpha.42.0"
-  resolved "https://registry.yarnpkg.com/@comunica/jest/-/jest-2.6.11-alpha.42.0.tgz#9b20f6813fce58f8645ef337f76d5b54abc07179"
-  integrity sha512-wKW1QKhfQg3zB5c6moyb8hKplswMKInuaHRv2sj/IiSyTXPHmFL/VSeqAnXYmEt8twbt1n5H37WIsb+ajwdb2A==
+"@comunica/jest@2.8.1":
+  version "2.8.1"
+  resolved "https://registry.yarnpkg.com/@comunica/jest/-/jest-2.8.1.tgz#22a6b1f7bf07ecf21586a312a8f85d916e3fc081"
+  integrity sha512-Ns0QY9+7aKOCwYjZwcOAt5aoZA2mf65liyZugRprBDQivULegwDH02ZvvXJOf+5KBublOsSpmSl11eDIyV5/Qg==
   dependencies:
-    "@comunica/bindings-factory" "2.6.11-alpha.42.0"
-    "@comunica/types" "2.6.11-alpha.42.0"
+    "@comunica/bindings-factory" "^2.7.0"
+    "@comunica/types" "^2.8.1"
     "@rdfjs/types" "*"
     arrayify-stream "^2.0.1"
 
@@ -3113,17 +3103,7 @@
     componentsjs "^5.3.2"
     process "^0.11.10"
 
-"@comunica/types@2.6.11-alpha.42.0":
-  version "2.6.11-alpha.42.0"
-  resolved "https://registry.yarnpkg.com/@comunica/types/-/types-2.6.11-alpha.42.0.tgz#6199f6a7072e9c2724942271c63917ff37532c77"
-  integrity sha512-M3hBLCeedsNqD2X88vX5Gg+2FM1w8nm6M95UVBnatA6ZvrGfSgw2Zw/sT7BlSVmGuPkoqrR7kgyNHwdW19HaIA==
-  dependencies:
-    "@rdfjs/types" "*"
-    "@types/yargs" "^17.0.13"
-    asynciterator "^3.8.0"
-    sparqlalgebrajs "^4.0.5"
-
-"@comunica/types@^2.8.2":
+"@comunica/types@^2.8.1", "@comunica/types@^2.8.2":
   version "2.8.2"
   resolved "https://registry.yarnpkg.com/@comunica/types/-/types-2.8.2.tgz#b910c1ed767118958184e47432c9cc47e9c4c884"
   integrity sha512-gF/wlBtr0Q1VVozYna7DLYlIU528vqinpc0MJ67uvFALJJHP9uqhjOsmVokdoEirf1WIut5GkEp33IGyBvOv5Q==
@@ -12212,7 +12192,7 @@ spark-md5@^3.0.1:
   resolved "https://registry.yarnpkg.com/spark-md5/-/spark-md5-3.0.2.tgz#7952c4a30784347abcee73268e473b9c0167e3fc"
   integrity sha512-wcFzz9cDfbuqe0FZzfi2or1sgyIrsDwmPwfZC4hiNidPdPINjeUwNfv5kldczoEAcjl9Y1L3SM7Uz2PUEQzxQw==
 
-sparqlalgebrajs@^4.0.0, sparqlalgebrajs@^4.0.2, sparqlalgebrajs@^4.0.5, sparqlalgebrajs@^4.2.0:
+sparqlalgebrajs@^4.0.0, sparqlalgebrajs@^4.0.2, sparqlalgebrajs@^4.2.0:
   version "4.2.0"
   resolved "https://registry.yarnpkg.com/sparqlalgebrajs/-/sparqlalgebrajs-4.2.0.tgz#b70945bdd2ab2897a0bc22adb804dd1a2b0ec98c"
   integrity sha512-tdlJdrvgQqgx9zubcl9iiyCxMOp4qRT2fs1Sne8X35QTm1Pj2ulB+gGEHunJJnw5FW7Uhtmw7J3px0sCmgJSbw==
