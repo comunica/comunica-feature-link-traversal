@@ -4,9 +4,6 @@
   "dependencies": {
     "@comunica/web-client-generator": "^1.8.0"
   },
-  "overrides": {
-    "readable-stream": "4.3.0"
-  },
   "scripts": {
     "generate": "comunica-web-client-generator"
   }

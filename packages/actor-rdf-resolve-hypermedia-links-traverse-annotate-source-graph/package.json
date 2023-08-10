@@ -37,7 +37,7 @@
     "@comunica/core": "^2.8.2",
     "@types/readable-stream": "^2.3.15",
     "rdf-data-factory": "^1.1.0",
-    "readable-stream": "^4.3.0"
+    "readable-stream": "^4.4.2"
   },
   "scripts": {
     "build": "npm run build:ts && npm run build:components",
