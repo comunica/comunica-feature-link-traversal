@@ -5,6 +5,7 @@ import { ActionContext, Bus } from '@comunica/core';
 import { DataFactory } from 'rdf-data-factory';
 import { Factory } from 'sparqlalgebrajs';
 import { ActorExtractLinksQuadPattern } from '../lib/ActorExtractLinksQuadPattern';
+
 const quad = require('rdf-quad');
 const stream = require('streamify-array');
 

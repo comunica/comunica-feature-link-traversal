@@ -17,7 +17,7 @@ import { Algebra, Util as AlgebraUtil } from 'sparqlalgebrajs';
 import { ShapeTree } from './ShapeTree';
 
 const shexParser = require('@shexjs/parser');
-const shexVisitor = require('@shexjs/visitor');
+const shexVisitor = require('@shexjs/visitor').Visitor;
 
 /**
  * A comunica Shapetrees RDF Metadata Extract Actor.
@@ -199,15 +199,15 @@ export class ActorRdfMetadataExtractShapetrees extends ActorRdfMetadataExtract {
     const parser = shexParser.construct(shapeIri);
     const schema: ShEx.Schema = parser.parse(data);
     if (schema.shapes) {
-      for (const shapeExpression of schema.shapes) {
-        const shape = <ShEx.Shape> shapeExpression;
+      for (const shapeDeclaration of schema.shapes) {
+        const shape = <ShEx.Shape> shapeDeclaration.shapeExpr;
 
         // TODO: workaround for https://github.com/shexjs/shex.js/issues/93
-        if (shape.id === 'https://shapes.pub/ns/medical-record/MedicalRecordShape') {
-          shape.id = 'http://shapes.pub/ns/medical-record/shex#MedicalRecordShape';
+        if (shapeDeclaration.id === 'https://shapes.pub/ns/medical-record/MedicalRecordShape') {
+          shapeDeclaration.id = 'http://shapes.pub/ns/medical-record/shex#MedicalRecordShape';
         }
 
-        if (shape.id === shapeIri) {
+        if (shapeDeclaration.id === shapeIri) {
           return shape;
         }
       }

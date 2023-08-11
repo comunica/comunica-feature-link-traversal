@@ -8,6 +8,7 @@ import { ArrayIterator } from 'asynciterator';
 import { DataFactory } from 'rdf-data-factory';
 import { Factory as AlgebraFactory } from 'sparqlalgebrajs';
 import { ActorExtractLinksSolidTypeIndex } from '../lib/ActorExtractLinksSolidTypeIndex';
+
 const quad = require('rdf-quad');
 const stream = require('streamify-array');
 

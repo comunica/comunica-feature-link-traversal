@@ -1,3 +1,4 @@
+// eslint-disable-next-line import/no-nodejs-modules
 import type { Readable, TransformCallback } from 'stream';
 import {
   ActorRdfResolveHypermediaLinks,

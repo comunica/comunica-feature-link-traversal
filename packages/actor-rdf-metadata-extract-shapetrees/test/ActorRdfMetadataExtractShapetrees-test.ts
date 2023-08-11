@@ -180,7 +180,6 @@ PREFIX med: <http://shapes.pub/ns/medical-record/terms#>
                       type: 'NodeConstraint',
                     },
                   },
-                  id: 'http://shapes.pub/ns/medical-record/shex#MedicalRecordShape1',
                   type: 'Shape',
                 }, 'http://base.org/template1'),
               ],
@@ -196,7 +195,6 @@ PREFIX med: <http://shapes.pub/ns/medical-record/terms#>
                       type: 'NodeConstraint',
                     },
                   },
-                  id: 'http://shapes.pub/ns/medical-record/shex#MedicalRecordShape2',
                   type: 'Shape',
                 }, 'http://base.org/template2'),
               ],
@@ -293,7 +291,6 @@ PREFIX med: <http://shapes.pub/ns/medical-record/terms#>
                   type: 'NodeConstraint',
                 },
               },
-              id: 'ex:s1',
               type: 'Shape',
             }, 'http://base.org/template1'),
             new ShapeTree('ex:st2', {
@@ -305,7 +302,6 @@ PREFIX med: <http://shapes.pub/ns/medical-record/terms#>
                   type: 'NodeConstraint',
                 },
               },
-              id: 'ex:s2',
               type: 'Shape',
             }, 'http://base.org/template2'),
           ]);
@@ -371,7 +367,6 @@ PREFIX med: <http://shapes.pub/ns/medical-record/terms#>
                   type: 'NodeConstraint',
                 },
               },
-              id: 'http://shapes.pub/ns/medical-record/shex#MedicalRecordShape',
               type: 'Shape',
             }, 'http://base.org/template1'),
           ]);
@@ -507,6 +502,6 @@ PREFIX med: <http://shapes.pub/ns/medical-record/terms#>
 function createShapeTree(shex: string): ShapeTree {
   const parser = shexParser.construct('ex:shape');
   const schema: ShEx.Schema = parser.parse(shex);
-  const expression = <ShEx.Shape> schema.shapes![0];
+  const expression = <ShEx.Shape> schema.shapes![0].shapeExpr;
   return new ShapeTree('ex:shape', expression, 'template');
 }

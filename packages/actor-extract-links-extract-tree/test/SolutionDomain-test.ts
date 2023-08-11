@@ -1,5 +1,5 @@
-import { SolutionInterval } from '../lib//SolutionInterval';
 import { SolutionDomain } from '../lib/SolutionDomain';
+import { SolutionInterval } from '../lib/SolutionInterval';
 
 describe('SolutionDomain', () => {
   describe('constructor', () => {

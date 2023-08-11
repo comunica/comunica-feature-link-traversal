@@ -4,6 +4,7 @@ import type { IActionContext } from '@comunica/types';
 import { DataFactory } from 'rdf-data-factory';
 import { Factory } from 'sparqlalgebrajs';
 import { ActorRdfJoinEntriesSortTraversalZeroKnowledge } from '../lib/ActorRdfJoinEntriesSortTraversalZeroKnowledge';
+
 const FACTORY = new Factory();
 const DF = new DataFactory();
 

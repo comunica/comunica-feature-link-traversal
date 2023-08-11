@@ -2,6 +2,7 @@ import type { Readable } from 'stream';
 import { ActorExtractLinks } from '@comunica/bus-extract-links';
 import { ActionContext, Bus } from '@comunica/core';
 import { ActorExtractLinksAll } from '../lib/ActorExtractLinksAll';
+
 const quad = require('rdf-quad');
 const stream = require('streamify-array');
 

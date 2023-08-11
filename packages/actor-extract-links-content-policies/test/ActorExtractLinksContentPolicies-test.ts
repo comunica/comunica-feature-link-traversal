@@ -12,8 +12,10 @@ import {
   KEY_CONTEXT_POLICIES,
   KEY_CONTEXT_WITHPOLICIES,
 } from '..';
+
 const quad = require('rdf-quad');
 const stream = require('streamify-array');
+
 const factory = new Factory();
 const DF = new DataFactory();
 const BF = new BindingsFactory(DF);

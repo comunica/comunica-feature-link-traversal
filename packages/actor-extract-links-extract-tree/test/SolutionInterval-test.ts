@@ -1,4 +1,4 @@
-import { SolutionInterval } from '../lib//SolutionInterval';
+import { SolutionInterval } from '../lib/SolutionInterval';
 
 const nextUp = require('ulp').nextUp;
 const nextDown = require('ulp').nextDown;

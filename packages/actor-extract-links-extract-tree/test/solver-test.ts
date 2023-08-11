@@ -26,6 +26,7 @@ import {
 } from '../lib/solverUtil';
 import { SparqlRelationOperator } from '../lib/TreeMetadata';
 import type { ITreeRelation } from '../lib/TreeMetadata';
+
 const nextUp = require('ulp').nextUp;
 const nextDown = require('ulp').nextDown;
 

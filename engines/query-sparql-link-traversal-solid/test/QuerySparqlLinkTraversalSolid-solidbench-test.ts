@@ -13,11 +13,7 @@ const queries = loadQueries();
 describe('System test: QuerySparqlLinkTraversalSolid', () => {
   usePolly();
 
-  let engine: QueryEngine;
-  beforeEach(async() => {
-    engine = new QueryEngine();
-    await engine.invalidateHttpCache(); // This *should* not be needed, but there appears to be a cache bug somewhere...
-  });
+  const engine: QueryEngine = new QueryEngine();
 
   describeEach([
     [ 'interactive-short-4-1.sparql', 1 ],

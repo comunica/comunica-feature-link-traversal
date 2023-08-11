@@ -9,6 +9,7 @@ import { DataFactory } from 'rdf-data-factory';
 import {
   ActorRdfResolveHypermediaLinksTraverseAnnotateSourceGraph,
 } from '../lib/ActorRdfResolveHypermediaLinksTraverseAnnotateSourceGraph';
+
 const streamifyArray = require('streamify-array');
 
 const DF = new DataFactory();

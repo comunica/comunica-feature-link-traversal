@@ -62,7 +62,7 @@ export class And implements ILogicOperator {
     if (Array.isArray(intervals)) {
       if (intervals.length > 1) {
         const domain_intervals = domain.getDomain();
-        const new_interval = intervals.slice().sort(SolutionDomain.sortDomainRangeByLowerBound);
+        const new_interval = [ ...intervals ].sort(SolutionDomain.sortDomainRangeByLowerBound);
         if (SolutionDomain.isThereOverlapInsideDomain(new_interval)) {
           return domain;
         }
@@ -74,7 +74,7 @@ export class And implements ILogicOperator {
               intervals: interval,
               domain: SolutionDomain.newWithInitialIntervals(domain_interval),
             });
-            resulting_interval = resulting_interval.concat(temp_domain.getDomain());
+            resulting_interval = [ ...resulting_interval, ...temp_domain.getDomain() ];
           }
         }
         let resp_domain = new SolutionDomain();

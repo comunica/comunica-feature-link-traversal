@@ -7,6 +7,7 @@ import { Factory } from 'sparqlalgebrajs';
 import {
   ActorExtractLinksQuadPatternQuery,
 } from '../lib/ActorExtractLinksQuadPatternQuery';
+
 const quad = require('rdf-quad');
 const stream = require('streamify-array');
 
