@@ -13,6 +13,7 @@ module.exports = {
     // TODO: Try to re-enable the following rules in the future
     'unicorn/prefer-at': 'off',
     'unicorn/prefer-string-replace-all': 'off',
+    'unicorn/no-new-array': 'off',
     'import/no-commonjs': 'off',
     'import/no-unassigned-import': 'off',
     'import/group-exports': 'off',

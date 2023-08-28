@@ -2,7 +2,14 @@
 
 [![npm version](https://badge.fury.io/js/%40comunica%2Factor-extract-links-tree.svg)](https://www.npmjs.com/package/@comunica/actor-extract-links-tree)
 
-A comunica [Extract Links](https://github.com/comunica/comunica-feature-link-traversal/tree/master/packages/bus-extract-links) [TREE](https://treecg.github.io/specification/) Actor.
+A comunica [Extract Links Actor](https://github.com/comunica/comunica-feature-link-traversal/tree/master/packages/bus-extract-links) for the [TREE specification](https://treecg.github.io/specification/).
+
+The [Guided Linked Traversal Query Processing](https://arxiv.org/abs/2005.02239)
+option can be enabled using the `filterPruning` flag. The traversal algorithm will 
+prune the links that cannot satisfy the combination of the 
+[`tree:relation`](https://treecg.github.io/specification/#Relation) and the SPARQL filter of the query. 
+A more thorough explanation is available in this article
+["How TREE hypermedia can speed up Link Traversal-based Query Processing for SPARQL queries with filters"](https://constraintautomaton.github.io/How-TREE-hypermedia-can-speed-up-Link-Traversal-based-Query-Processing-queries/). 
 
 This module is part of the [Comunica framework](https://github.com/comunica/comunica),
 and should only be used by [developers that want to build their own query engine](https://comunica.dev/docs/modify/).
@@ -22,13 +29,15 @@ After installing, this package can be added to your engine's configuration as fo
 {
   "@context": [
     ...
-    "https://linkedsoftwaredependencies.org/bundles/npm/@comunica/actor-extract-links-tree/^2.0.0/components/context.jsonld"  
+    "https://linkedsoftwaredependencies.org/bundles/npm/@comunica/actor-extract-links-tree/^0.0.1/components/context.jsonld"  
   ],
   "actors": [
     ...
     {
       "@id": "urn:comunica:default:extract-links/actors#extract-links-tree",
-      "@type": "ActorExtractLinksTree"
+      "@type": "ActorExtractLinksTree",
+      "filterPruning": true
+
     }
   ]
 }
