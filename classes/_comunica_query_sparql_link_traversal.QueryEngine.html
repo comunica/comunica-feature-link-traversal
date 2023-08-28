@@ -27,7 +27,7 @@
 <ul class="tsd-hierarchy">
 <li><span class="target">QueryEngine</span></li></ul></li></ul></section><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/comunica/comunica-feature-link-traversal/blob/01c16ad/engines/query-sparql-link-traversal/lib/QueryEngine.ts#L10">engines/query-sparql-link-traversal/lib/QueryEngine.ts:10</a></li></ul></aside>
+<li>Defined in <a href="https://github.com/comunica/comunica-feature-link-traversal/blob/c80e68b/engines/query-sparql-link-traversal/lib/QueryEngine.ts#L10">engines/query-sparql-link-traversal/lib/QueryEngine.ts:10</a></li></ul></aside>
 <section class="tsd-panel-group tsd-index-group">
 <section class="tsd-panel tsd-index-panel">
 <details class="tsd-index-content tsd-index-accordion" open><summary class="tsd-accordion-summary tsd-index-summary">
@@ -72,7 +72,7 @@ IQueryContextCommon,
 Omit&lt;QueryStringContext, &#39;sources&#39;&gt; &amp; { sources?: SourceType[] },
 Omit&lt;QueryAlgebraContext, &#39;sources&#39;&gt; &amp; { sources?: SourceType[] }&gt;.constructor</p>
 <ul>
-<li>Defined in <a href="https://github.com/comunica/comunica-feature-link-traversal/blob/01c16ad/engines/query-sparql-link-traversal/lib/QueryEngine.ts#L14">engines/query-sparql-link-traversal/lib/QueryEngine.ts:14</a></li></ul></aside></li></ul></section></section>
+<li>Defined in <a href="https://github.com/comunica/comunica-feature-link-traversal/blob/c80e68b/engines/query-sparql-link-traversal/lib/QueryEngine.ts#L14">engines/query-sparql-link-traversal/lib/QueryEngine.ts:14</a></li></ul></aside></li></ul></section></section>
 <section class="tsd-panel-group tsd-member-group">
 <h2>Methods</h2>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external"><a id="explain" class="tsd-anchor"></a>
@@ -93,18 +93,15 @@ Omit&lt;QueryAlgebraContext, &#39;sources&#39;&gt; &amp; { sources?: SourceType[
 <li>
 <h5><span class="tsd-kind-parameter">query</span>: <span class="tsd-signature-type tsd-kind-type-parameter">QueryFormatTypeInner</span></h5>
 <div class="tsd-comment tsd-typography"><p>A query string or algebra.</p>
-</div>
-<div class="tsd-comment tsd-typography"></div></li>
+</div></li>
 <li>
 <h5><span class="tsd-kind-parameter">context</span>: <span class="tsd-signature-type tsd-kind-type-parameter">QueryFormatTypeInner</span><span class="tsd-signature-symbol"> extends </span><span class="tsd-signature-type">string</span><br/><span>    </span><span class="tsd-signature-symbol">? </span><span class="tsd-signature-type ">Omit</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type ">QueryStringContext</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">&quot;sources&quot;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> &amp; </span><span class="tsd-signature-symbol">{ </span><br/><span>        </span><span class="tsd-kind-property">sources</span><span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type ">IDataSource</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">; </span><br/><span>    </span><span class="tsd-signature-symbol">}</span><br/><span>    </span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type ">Omit</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type ">QueryAlgebraContext</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">&quot;sources&quot;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> &amp; </span><span class="tsd-signature-symbol">{ </span><br/><span>        </span><span class="tsd-kind-property">sources</span><span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type ">IDataSource</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">; </span><br/><span>    </span><span class="tsd-signature-symbol">}</span></h5>
 <div class="tsd-comment tsd-typography"><p>An optional query context.</p>
-</div>
-<div class="tsd-comment tsd-typography"></div></li>
+</div></li>
 <li>
 <h5><span class="tsd-kind-parameter">explainMode</span>: <span class="tsd-signature-type ">QueryExplainMode</span></h5>
 <div class="tsd-comment tsd-typography"><p>The explain mode.</p>
-</div>
-<div class="tsd-comment tsd-typography"></div></li></ul></div>
+</div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type ">IQueryExplained</span><span class="tsd-signature-symbol">&gt;</span></h4><p>A promise that resolves to
                                                               the query output or explanation.</p>
 
@@ -123,8 +120,7 @@ Omit&lt;QueryAlgebraContext, &#39;sources&#39;&gt; &amp; { sources?: SourceType[
 <li>
 <h5><code class="tsd-tag ts-flagOptional">Optional</code> <span class="tsd-kind-parameter">context</span>: <span class="tsd-signature-type">any</span></h5>
 <div class="tsd-comment tsd-typography"><p>An optional context.</p>
-</div>
-<div class="tsd-comment tsd-typography"></div></li></ul></div>
+</div><code class="tsd-tag ts-flagOptional">Optional</code> </li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type ">Record</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4><p>All available SPARQL result media type formats.</p>
 
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
@@ -142,8 +138,7 @@ Omit&lt;QueryAlgebraContext, &#39;sources&#39;&gt; &amp; { sources?: SourceType[
 <li>
 <h5><code class="tsd-tag ts-flagOptional">Optional</code> <span class="tsd-kind-parameter">context</span>: <span class="tsd-signature-type">any</span></h5>
 <div class="tsd-comment tsd-typography"><p>An optional context.</p>
-</div>
-<div class="tsd-comment tsd-typography"></div></li></ul></div>
+</div><code class="tsd-tag ts-flagOptional">Optional</code> </li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type ">Record</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4><p>All available SPARQL (weighted) result media types.</p>
 
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
@@ -164,13 +159,11 @@ If no page URL is given, then all pages will be invalidated.</p>
 <li>
 <h5><code class="tsd-tag ts-flagOptional">Optional</code> <span class="tsd-kind-parameter">url</span>: <span class="tsd-signature-type">string</span></h5>
 <div class="tsd-comment tsd-typography"><p>The page URL to invalidate.</p>
-</div>
-<div class="tsd-comment tsd-typography"></div></li>
+</div><code class="tsd-tag ts-flagOptional">Optional</code> </li>
 <li>
 <h5><code class="tsd-tag ts-flagOptional">Optional</code> <span class="tsd-kind-parameter">context</span>: <span class="tsd-signature-type">any</span></h5>
 <div class="tsd-comment tsd-typography"><p>An optional ActionContext to pass to the actors.</p>
-</div>
-<div class="tsd-comment tsd-typography"></div></li></ul></div>
+</div><code class="tsd-tag ts-flagOptional">Optional</code> </li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></h4><p>A promise resolving when the caches have been invalidated.</p>
 
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
@@ -195,13 +188,11 @@ If no page URL is given, then all pages will be invalidated.</p>
 <li>
 <h5><span class="tsd-kind-parameter">query</span>: <span class="tsd-signature-type tsd-kind-type-parameter">QueryFormatTypeInner</span></h5>
 <div class="tsd-comment tsd-typography"><p>A query string or algebra.</p>
-</div>
-<div class="tsd-comment tsd-typography"></div></li>
+</div></li>
 <li>
 <h5><code class="tsd-tag ts-flagOptional">Optional</code> <span class="tsd-kind-parameter">context</span>: <span class="tsd-signature-type tsd-kind-type-parameter">QueryFormatTypeInner</span><span class="tsd-signature-symbol"> extends </span><span class="tsd-signature-type">string</span><br/><span>    </span><span class="tsd-signature-symbol">? </span><span class="tsd-signature-type ">Omit</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type ">QueryStringContext</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">&quot;sources&quot;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> &amp; </span><span class="tsd-signature-symbol">{ </span><br/><span>        </span><span class="tsd-kind-property">sources</span><span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type ">IDataSource</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">; </span><br/><span>    </span><span class="tsd-signature-symbol">}</span><br/><span>    </span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type ">Omit</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type ">QueryAlgebraContext</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">&quot;sources&quot;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> &amp; </span><span class="tsd-signature-symbol">{ </span><br/><span>        </span><span class="tsd-kind-property">sources</span><span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type ">IDataSource</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">; </span><br/><span>    </span><span class="tsd-signature-symbol">}</span></h5>
 <div class="tsd-comment tsd-typography"><p>An optional query context.</p>
-</div>
-<div class="tsd-comment tsd-typography"></div></li></ul></div>
+</div><code class="tsd-tag ts-flagOptional">Optional</code> </li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type ">QueryType</span><span class="tsd-signature-symbol">&gt;</span></h4><p>A promise that resolves to the query output.</p>
 
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
@@ -224,7 +215,7 @@ If no page URL is given, then all pages will be invalidated.</p>
 <li>
 <h5><span class="tsd-kind-parameter">query</span>: <span class="tsd-signature-type tsd-kind-type-parameter">QueryFormatTypeInner</span></h5></li>
 <li>
-<h5><code class="tsd-tag ts-flagOptional">Optional</code> <span class="tsd-kind-parameter">context</span>: <span class="tsd-signature-type tsd-kind-type-parameter">QueryFormatTypeInner</span><span class="tsd-signature-symbol"> extends </span><span class="tsd-signature-type">string</span><br/><span>    </span><span class="tsd-signature-symbol">? </span><span class="tsd-signature-type ">Omit</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type ">QueryStringContext</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">&quot;sources&quot;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> &amp; </span><span class="tsd-signature-symbol">{ </span><br/><span>        </span><span class="tsd-kind-property">sources</span><span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type ">IDataSource</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">; </span><br/><span>    </span><span class="tsd-signature-symbol">}</span><br/><span>    </span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type ">Omit</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type ">QueryAlgebraContext</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">&quot;sources&quot;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> &amp; </span><span class="tsd-signature-symbol">{ </span><br/><span>        </span><span class="tsd-kind-property">sources</span><span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type ">IDataSource</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">; </span><br/><span>    </span><span class="tsd-signature-symbol">}</span></h5></li></ul></div>
+<h5><code class="tsd-tag ts-flagOptional">Optional</code> <span class="tsd-kind-parameter">context</span>: <span class="tsd-signature-type tsd-kind-type-parameter">QueryFormatTypeInner</span><span class="tsd-signature-symbol"> extends </span><span class="tsd-signature-type">string</span><br/><span>    </span><span class="tsd-signature-symbol">? </span><span class="tsd-signature-type ">Omit</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type ">QueryStringContext</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">&quot;sources&quot;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> &amp; </span><span class="tsd-signature-symbol">{ </span><br/><span>        </span><span class="tsd-kind-property">sources</span><span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type ">IDataSource</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">; </span><br/><span>    </span><span class="tsd-signature-symbol">}</span><br/><span>    </span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type ">Omit</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type ">QueryAlgebraContext</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">&quot;sources&quot;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> &amp; </span><span class="tsd-signature-symbol">{ </span><br/><span>        </span><span class="tsd-kind-property">sources</span><span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type ">IDataSource</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">; </span><br/><span>    </span><span class="tsd-signature-symbol">}</span></h5><code class="tsd-tag ts-flagOptional">Optional</code> </li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type ">BindingsStream</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <p>Inherited from QueryEngineBase.queryBindings</p>
 <ul>
@@ -245,7 +236,7 @@ If no page URL is given, then all pages will be invalidated.</p>
 <li>
 <h5><span class="tsd-kind-parameter">query</span>: <span class="tsd-signature-type tsd-kind-type-parameter">QueryFormatTypeInner</span></h5></li>
 <li>
-<h5><code class="tsd-tag ts-flagOptional">Optional</code> <span class="tsd-kind-parameter">context</span>: <span class="tsd-signature-type tsd-kind-type-parameter">QueryFormatTypeInner</span><span class="tsd-signature-symbol"> extends </span><span class="tsd-signature-type">string</span><br/><span>    </span><span class="tsd-signature-symbol">? </span><span class="tsd-signature-type ">Omit</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type ">QueryStringContext</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">&quot;sources&quot;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> &amp; </span><span class="tsd-signature-symbol">{ </span><br/><span>        </span><span class="tsd-kind-property">sources</span><span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type ">IDataSource</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">; </span><br/><span>    </span><span class="tsd-signature-symbol">}</span><br/><span>    </span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type ">Omit</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type ">QueryAlgebraContext</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">&quot;sources&quot;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> &amp; </span><span class="tsd-signature-symbol">{ </span><br/><span>        </span><span class="tsd-kind-property">sources</span><span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type ">IDataSource</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">; </span><br/><span>    </span><span class="tsd-signature-symbol">}</span></h5></li></ul></div>
+<h5><code class="tsd-tag ts-flagOptional">Optional</code> <span class="tsd-kind-parameter">context</span>: <span class="tsd-signature-type tsd-kind-type-parameter">QueryFormatTypeInner</span><span class="tsd-signature-symbol"> extends </span><span class="tsd-signature-type">string</span><br/><span>    </span><span class="tsd-signature-symbol">? </span><span class="tsd-signature-type ">Omit</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type ">QueryStringContext</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">&quot;sources&quot;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> &amp; </span><span class="tsd-signature-symbol">{ </span><br/><span>        </span><span class="tsd-kind-property">sources</span><span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type ">IDataSource</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">; </span><br/><span>    </span><span class="tsd-signature-symbol">}</span><br/><span>    </span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type ">Omit</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type ">QueryAlgebraContext</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">&quot;sources&quot;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> &amp; </span><span class="tsd-signature-symbol">{ </span><br/><span>        </span><span class="tsd-kind-property">sources</span><span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type ">IDataSource</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">; </span><br/><span>    </span><span class="tsd-signature-symbol">}</span></h5><code class="tsd-tag ts-flagOptional">Optional</code> </li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <p>Inherited from QueryEngineBase.queryBoolean</p>
 <ul>
@@ -293,13 +284,11 @@ If no page URL is given, then all pages will be invalidated.</p>
 <li>
 <h5><span class="tsd-kind-parameter">query</span>: <span class="tsd-signature-type tsd-kind-type-parameter">QueryFormatTypeInner</span></h5>
 <div class="tsd-comment tsd-typography"><p>A query string or algebra.</p>
-</div>
-<div class="tsd-comment tsd-typography"></div></li>
+</div></li>
 <li>
 <h5><code class="tsd-tag ts-flagOptional">Optional</code> <span class="tsd-kind-parameter">context</span>: <span class="tsd-signature-type tsd-kind-type-parameter">QueryFormatTypeInner</span><span class="tsd-signature-symbol"> extends </span><span class="tsd-signature-type">string</span><br/><span>    </span><span class="tsd-signature-symbol">? </span><span class="tsd-signature-type ">Omit</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type ">QueryStringContext</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">&quot;sources&quot;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> &amp; </span><span class="tsd-signature-symbol">{ </span><br/><span>        </span><span class="tsd-kind-property">sources</span><span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type ">IDataSource</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">; </span><br/><span>    </span><span class="tsd-signature-symbol">}</span><br/><span>    </span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type ">Omit</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type ">QueryAlgebraContext</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">&quot;sources&quot;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> &amp; </span><span class="tsd-signature-symbol">{ </span><br/><span>        </span><span class="tsd-kind-property">sources</span><span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type ">IDataSource</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">; </span><br/><span>    </span><span class="tsd-signature-symbol">}</span></h5>
 <div class="tsd-comment tsd-typography"><p>An optional query context.</p>
-</div>
-<div class="tsd-comment tsd-typography"></div></li></ul></div>
+</div><code class="tsd-tag ts-flagOptional">Optional</code> </li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type ">IQueryExplained</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type ">QueryType</span><span class="tsd-signature-symbol">&gt;</span></h4><p>A promise that resolves to
                                                               the query output or explanation.</p>
 
@@ -323,7 +312,7 @@ If no page URL is given, then all pages will be invalidated.</p>
 <li>
 <h5><span class="tsd-kind-parameter">query</span>: <span class="tsd-signature-type tsd-kind-type-parameter">QueryFormatTypeInner</span></h5></li>
 <li>
-<h5><code class="tsd-tag ts-flagOptional">Optional</code> <span class="tsd-kind-parameter">context</span>: <span class="tsd-signature-type tsd-kind-type-parameter">QueryFormatTypeInner</span><span class="tsd-signature-symbol"> extends </span><span class="tsd-signature-type">string</span><br/><span>    </span><span class="tsd-signature-symbol">? </span><span class="tsd-signature-type ">Omit</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type ">QueryStringContext</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">&quot;sources&quot;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> &amp; </span><span class="tsd-signature-symbol">{ </span><br/><span>        </span><span class="tsd-kind-property">sources</span><span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type ">IDataSource</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">; </span><br/><span>    </span><span class="tsd-signature-symbol">}</span><br/><span>    </span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type ">Omit</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type ">QueryAlgebraContext</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">&quot;sources&quot;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> &amp; </span><span class="tsd-signature-symbol">{ </span><br/><span>        </span><span class="tsd-kind-property">sources</span><span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type ">IDataSource</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">; </span><br/><span>    </span><span class="tsd-signature-symbol">}</span></h5></li></ul></div>
+<h5><code class="tsd-tag ts-flagOptional">Optional</code> <span class="tsd-kind-parameter">context</span>: <span class="tsd-signature-type tsd-kind-type-parameter">QueryFormatTypeInner</span><span class="tsd-signature-symbol"> extends </span><span class="tsd-signature-type">string</span><br/><span>    </span><span class="tsd-signature-symbol">? </span><span class="tsd-signature-type ">Omit</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type ">QueryStringContext</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">&quot;sources&quot;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> &amp; </span><span class="tsd-signature-symbol">{ </span><br/><span>        </span><span class="tsd-kind-property">sources</span><span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type ">IDataSource</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">; </span><br/><span>    </span><span class="tsd-signature-symbol">}</span><br/><span>    </span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type ">Omit</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type ">QueryAlgebraContext</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">&quot;sources&quot;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> &amp; </span><span class="tsd-signature-symbol">{ </span><br/><span>        </span><span class="tsd-kind-property">sources</span><span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type ">IDataSource</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">; </span><br/><span>    </span><span class="tsd-signature-symbol">}</span></h5><code class="tsd-tag ts-flagOptional">Optional</code> </li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type ">AsyncIterator</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type ">Quad</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> &amp; </span><span class="tsd-signature-type ">ResultStream</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type ">Quad</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <p>Inherited from QueryEngineBase.queryQuads</p>
 <ul>
@@ -344,7 +333,7 @@ If no page URL is given, then all pages will be invalidated.</p>
 <li>
 <h5><span class="tsd-kind-parameter">query</span>: <span class="tsd-signature-type tsd-kind-type-parameter">QueryFormatTypeInner</span></h5></li>
 <li>
-<h5><code class="tsd-tag ts-flagOptional">Optional</code> <span class="tsd-kind-parameter">context</span>: <span class="tsd-signature-type tsd-kind-type-parameter">QueryFormatTypeInner</span><span class="tsd-signature-symbol"> extends </span><span class="tsd-signature-type">string</span><br/><span>    </span><span class="tsd-signature-symbol">? </span><span class="tsd-signature-type ">Omit</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type ">QueryStringContext</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">&quot;sources&quot;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> &amp; </span><span class="tsd-signature-symbol">{ </span><br/><span>        </span><span class="tsd-kind-property">sources</span><span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type ">IDataSource</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">; </span><br/><span>    </span><span class="tsd-signature-symbol">}</span><br/><span>    </span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type ">Omit</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type ">QueryAlgebraContext</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">&quot;sources&quot;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> &amp; </span><span class="tsd-signature-symbol">{ </span><br/><span>        </span><span class="tsd-kind-property">sources</span><span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type ">IDataSource</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">; </span><br/><span>    </span><span class="tsd-signature-symbol">}</span></h5></li></ul></div>
+<h5><code class="tsd-tag ts-flagOptional">Optional</code> <span class="tsd-kind-parameter">context</span>: <span class="tsd-signature-type tsd-kind-type-parameter">QueryFormatTypeInner</span><span class="tsd-signature-symbol"> extends </span><span class="tsd-signature-type">string</span><br/><span>    </span><span class="tsd-signature-symbol">? </span><span class="tsd-signature-type ">Omit</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type ">QueryStringContext</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">&quot;sources&quot;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> &amp; </span><span class="tsd-signature-symbol">{ </span><br/><span>        </span><span class="tsd-kind-property">sources</span><span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type ">IDataSource</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">; </span><br/><span>    </span><span class="tsd-signature-symbol">}</span><br/><span>    </span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type ">Omit</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type ">QueryAlgebraContext</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">&quot;sources&quot;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> &amp; </span><span class="tsd-signature-symbol">{ </span><br/><span>        </span><span class="tsd-kind-property">sources</span><span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type ">IDataSource</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">; </span><br/><span>    </span><span class="tsd-signature-symbol">}</span></h5><code class="tsd-tag ts-flagOptional">Optional</code> </li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <p>Inherited from QueryEngineBase.queryVoid</p>
 <ul>
@@ -362,18 +351,15 @@ If no page URL is given, then all pages will be invalidated.</p>
 <li>
 <h5><span class="tsd-kind-parameter">queryResult</span>: <span class="tsd-signature-type ">Query</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></h5>
 <div class="tsd-comment tsd-typography"><p>A query result.</p>
-</div>
-<div class="tsd-comment tsd-typography"></div></li>
+</div></li>
 <li>
 <h5><code class="tsd-tag ts-flagOptional">Optional</code> <span class="tsd-kind-parameter">mediaType</span>: <span class="tsd-signature-type">string</span></h5>
 <div class="tsd-comment tsd-typography"><p>A media type.</p>
-</div>
-<div class="tsd-comment tsd-typography"></div></li>
+</div><code class="tsd-tag ts-flagOptional">Optional</code> </li>
 <li>
 <h5><code class="tsd-tag ts-flagOptional">Optional</code> <span class="tsd-kind-parameter">context</span>: <span class="tsd-signature-type">any</span></h5>
 <div class="tsd-comment tsd-typography"><p>An optional context.</p>
-</div>
-<div class="tsd-comment tsd-typography"></div></li></ul></div>
+</div><code class="tsd-tag ts-flagOptional">Optional</code> </li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type ">IActorQueryResultSerializeOutput</span><span class="tsd-signature-symbol">&gt;</span></h4><p>A text stream.</p>
 
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
@@ -393,8 +379,7 @@ If no page URL is given, then all pages will be invalidated.</p>
 <li>
 <h5><span class="tsd-kind-parameter">finalResult</span>: <span class="tsd-signature-type ">Query</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></h5>
 <div class="tsd-comment tsd-typography"><p>A final query result.</p>
-</div>
-<div class="tsd-comment tsd-typography"></div></li></ul></div>
+</div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type ">IQueryOperationResult</span><span class="tsd-signature-symbol">&gt;</span></h4>
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <p>Inherited from QueryEngineBase.finalToInternalResult</p>
@@ -413,8 +398,7 @@ If no page URL is given, then all pages will be invalidated.</p>
 <li>
 <h5><span class="tsd-kind-parameter">internalResult</span>: <span class="tsd-signature-type ">IQueryOperationResult</span></h5>
 <div class="tsd-comment tsd-typography"><p>An intermediary query result.</p>
-</div>
-<div class="tsd-comment tsd-typography"></div></li></ul></div>
+</div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">QueryType</span></h4>
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <p>Inherited from QueryEngineBase.internalToFinalResult</p>
@@ -488,5 +472,5 @@ If no page URL is given, then all pages will be invalidated.</p>
 <li><a href="../modules/_comunica_mediator_combine_array.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>@comunica/mediator-<wbr/>combine-<wbr/>array -<wbr/> v0.2.0</span></a></li>
 <li><a href="../modules/_comunica_types_link_traversal.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>@comunica/types-<wbr/>link-<wbr/>traversal -<wbr/> v0.2.0</span></a></li></ul></nav></div></div></div>
 <div class="tsd-generator">
-<p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></div>
+<p>Generated using <a href="https://typedoc.org/" rel="noopener" target="_blank">TypeDoc</a></p></div>
 <div class="overlay"></div></body></html>
