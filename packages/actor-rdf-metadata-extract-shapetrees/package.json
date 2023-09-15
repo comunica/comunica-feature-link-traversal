@@ -32,7 +32,7 @@
     "lib/**/*.js.map"
   ],
   "dependencies": {
-    "@comunica/actor-init-query": "^2.8.2",
+    "@comunica/actor-init-query": "^2.9.0",
     "@comunica/bus-dereference-rdf": "^2.8.2",
     "@comunica/bus-http": "^2.8.2",
     "@comunica/bus-rdf-metadata-extract": "^2.8.2",
