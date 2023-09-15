@@ -2,5 +2,18 @@
   "extends": [
     "github>rubensworks/renovate-presets:js",
     "docker:disable"
+  ],
+  "rangeStrategy": "replace",
+  "packageRules": [
+    {
+      "matchSourceUrlPrefixes": ["https://github.com/comunica/comunica", "https://github.com/comunica/comunica-feature-solid"],
+      "groupName": "Comunica monorepo packages",
+      "rangeStrategy": "bump",
+      "automerge": true,
+      "stabilityDays": 0,
+      "schedule": null,
+      "prConcurrentLimit": 0,
+      "branchConcurrentLimit": 0
+    }
   ]
 }
