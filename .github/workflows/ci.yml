@@ -21,13 +21,13 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v3
       - name: Load cache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: |
             **/node_modules
           key: ${{ runner.os }}-test-modules-v1-${{ hashFiles('**/yarn.lock') }}
       - name: Install dependencies
-        run: yarn install --pure-lockfile
+        run: yarn install --frozen-lockfile
       - name: Build project
         run: yarn run build
       - name: Run tests
@@ -61,12 +61,12 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v3
       - name: Load cache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: '**/node_modules'
           key: ${{ runner.os }}-lint-modules-v1-${{ hashFiles('**/yarn.lock') }}
       - name: Install dependencies
-        run: yarn install --pure-lockfile
+        run: yarn install --frozen-lockfile
       - name: Run linter
         run: yarn run lint
 
@@ -83,12 +83,12 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v3
       - name: Load cache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: '**/node_modules'
           key: ${{ runner.os }}-docker-modules-v1-${{ hashFiles('**/yarn.lock') }}
       - name: Install dependencies
-        run: yarn install --pure-lockfile
+        run: yarn install --frozen-lockfile
       - name: Install Lerna Docker
         run: sh -c "`curl -fsSl https://raw.githubusercontent.com/rubensworks/lerna-docker/master/install.sh`"
       - name: Build Docker images
@@ -110,12 +110,12 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v3
       - name: Load cache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: '**/node_modules'
           key: ${{ runner.os }}-docs-modules-v1-${{ hashFiles('**/yarn.lock') }}
       - name: Install dependencies
-        run: yarn install --pure-lockfile
+        run: yarn install --frozen-lockfile
       - name: Build docs
         run: yarn run doc
       - name: Deploy TSDoc to GitHub Pages
@@ -139,12 +139,12 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v3
       - name: Load cache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: '**/node_modules'
           key: ${{ runner.os }}-webclients-modules-v1-${{ hashFiles('**/yarn.lock') }}
       - name: Install dependencies
-        run: yarn install --pure-lockfile
+        run: yarn install --frozen-lockfile
       - name: Build web clients
         run: ./web-clients/build-web-clients.sh
       - name: Deploy web clients
