@@ -40,13 +40,13 @@
     "@comunica/core": "^2.8.2",
     "@shexjs/parser": "1.0.0-alpha.26",
     "@shexjs/visitor": "1.0.0-alpha.25",
-    "@types/parse-link-header": "^2.0.0",
+    "@types/parse-link-header": "^2.0.1",
     "@types/shexj": "^2.1.4",
     "parse-link-header": "^2.0.0",
     "querystring": "^0.2.1",
     "rdf-store-stream": "^2.0.0",
-    "relative-to-absolute-iri": "^1.0.6",
-    "sparqlalgebrajs": "^4.0.2"
+    "relative-to-absolute-iri": "^1.0.7",
+    "sparqlalgebrajs": "^4.2.0"
   },
   "scripts": {
     "build": "npm run build:ts && npm run build:components",

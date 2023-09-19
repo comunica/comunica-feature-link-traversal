@@ -37,10 +37,10 @@
     "@comunica/bus-query-operation": "^2.9.0",
     "@comunica/context-entries": "^2.8.2",
     "@comunica/core": "^2.8.2",
-    "rdf-data-factory": "^1.1.0",
+    "rdf-data-factory": "^1.1.2",
     "rdf-store-stream": "^2.0.0",
-    "rdf-terms": "^1.7.0",
-    "sparqlalgebrajs": "^4.0.2"
+    "rdf-terms": "^1.11.0",
+    "sparqlalgebrajs": "^4.2.0"
   },
   "scripts": {
     "build": "npm run build:ts && npm run build:components",
