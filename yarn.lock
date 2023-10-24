@@ -4028,38 +4028,43 @@
   resolved "https://registry.yarnpkg.com/@rushstack/eslint-patch/-/eslint-patch-1.4.0.tgz#77e948b9760bd22736a5d26e335a690f76fda37b"
   integrity sha512-cEjvTPU32OM9lUFegJagO0mRnIn+rbqrG89vV8/xLnLFX0DoR0r1oy5IlTga71Q7uT3Qus7qm7wgeiMT/+Irlg==
 
-"@shexjs/parser@1.0.0-alpha.26":
-  version "1.0.0-alpha.26"
-  resolved "https://registry.yarnpkg.com/@shexjs/parser/-/parser-1.0.0-alpha.26.tgz#de3b48c22d9658e203016dadc39d682e884a642d"
-  integrity sha512-pnxwJQZb+CRxi0x5enF/84l4/bb8kAxcS3DZ36kj4Dcsqz8TSnNR7Zy73gpvF5rVDA3IxCCwmTZBr0QO7f5pFw==
+"@shexjs/parser@1.0.0-alpha.27":
+  version "1.0.0-alpha.27"
+  resolved "https://registry.yarnpkg.com/@shexjs/parser/-/parser-1.0.0-alpha.27.tgz#73799bd20b8aba04b017656c4090de7185783fdd"
+  integrity sha512-ahnc38+fQkaA3Vjbok88UvVCeowlvU5vFPYuCZ07OJVTm3Qhw5U4WmG4s3F2HhTRH90m/IYezaLc+X6y74DKOg==
   dependencies:
-    "@shexjs/util" "^1.0.0-alpha.25"
+    "@shexjs/util" "^1.0.0-alpha.27"
     "@ts-jison/parser" "^0.4.1-alpha.1"
 
-"@shexjs/term@^1.0.0-alpha.25":
-  version "1.0.0-alpha.25"
-  resolved "https://registry.yarnpkg.com/@shexjs/term/-/term-1.0.0-alpha.25.tgz#79ee57692dca0e624e62109d20cdeee151d2a694"
-  integrity sha512-GWJKO+tK87vfu4d17MhLQZt6sNnAu+tGJMlJ20d9qeS8VVzdWF0gWThxAZcMWxEA/x4mQFYgjQg5P2pCiyL4mQ==
+"@shexjs/term@^1.0.0-alpha.27":
+  version "1.0.0-alpha.27"
+  resolved "https://registry.yarnpkg.com/@shexjs/term/-/term-1.0.0-alpha.27.tgz#7a2a26f4a871ddb5e9a83491abb66b98f065c48a"
+  integrity sha512-+D7P7pglRPTZC2RkwaQuq+cgBZImx+61JZtcN77uEJVqcGaIscQK5hScsKhAPIo16/I+4jhIUCEFojXqw6otpg==
   dependencies:
-    "@types/shexj" "^2.1.4"
-    rdf-data-factory "^1.1.1"
-    relativize-url "^0.0.2"
+    "@types/shexj" "^2.1.6"
+    rdf-data-factory "^1.1.2"
+    relativize-url "^0.1.0"
 
-"@shexjs/util@^1.0.0-alpha.25":
-  version "1.0.0-alpha.25"
-  resolved "https://registry.yarnpkg.com/@shexjs/util/-/util-1.0.0-alpha.25.tgz#5b5b031763771acd08640ca8266ad1fb88a9070d"
-  integrity sha512-sBQZG0CBqzhkp+EY51kmLmHo5JG2cLjMuk3MpIoRxPRk+uN1MElL3xo1cAmN/OMOs8jcvWWvcHuuU4Sdzv4gJw==
+"@shexjs/util@^1.0.0-alpha.27":
+  version "1.0.0-alpha.27"
+  resolved "https://registry.yarnpkg.com/@shexjs/util/-/util-1.0.0-alpha.27.tgz#642d7501174c3958652cf0086a08a0985deeff75"
+  integrity sha512-Z1B18RXSL1cBcEcLeBE2gb4+RKHHY8nWIGGepU85WgRSSyVKmZQFTybmBj64sA09MbTGLjfN5w4FYonq0x/OwA==
   dependencies:
-    "@shexjs/term" "^1.0.0-alpha.25"
-    "@shexjs/visitor" "^1.0.0-alpha.25"
-    "@types/shexj" "^2.1.4"
+    "@shexjs/term" "^1.0.0-alpha.27"
+    "@shexjs/visitor" "^1.0.0-alpha.27"
+    "@types/shexj" "^2.1.6"
     hierarchy-closure "^1.2.1"
     sync-request "^6.1.0"
 
-"@shexjs/visitor@1.0.0-alpha.25", "@shexjs/visitor@^1.0.0-alpha.25":
+"@shexjs/visitor@1.0.0-alpha.25":
   version "1.0.0-alpha.25"
   resolved "https://registry.yarnpkg.com/@shexjs/visitor/-/visitor-1.0.0-alpha.25.tgz#1c0e79be34c876f65309e870d11e95f4b794b18d"
   integrity sha512-DbqXXbzbzjJm2mjld7cSORgmJRyBr/RsXirDaNcRrQfZKXp+TJea8jHjY6PuHubs6SVA3Xj/SwTPGz6o5z8+WA==
+
+"@shexjs/visitor@^1.0.0-alpha.27":
+  version "1.0.0-alpha.27"
+  resolved "https://registry.yarnpkg.com/@shexjs/visitor/-/visitor-1.0.0-alpha.27.tgz#c0263237a036d3f5fbf70058a8b233a1cefbf6de"
+  integrity sha512-9s67A+f0ZZNw/SNxqoi1483CqUca8dbnHM6WDWsRH4+eXlQpQqwOZDxA8uKEaWeX4VcDrDwzWpr0WvK6EyDWIQ==
 
 "@sigstore/bundle@^1.1.0":
   version "1.1.0"
@@ -4394,6 +4399,11 @@
   version "2.1.4"
   resolved "https://registry.yarnpkg.com/@types/shexj/-/shexj-2.1.4.tgz#3aad89f22ff9463aced0e1bc046c3c3cd59fbe1d"
   integrity sha512-/dcF8vT/CHseZxNTcWR+otf6018PACgHiKFukPYsxQCRppGZq0UcALMedZUUnj7IM4WOesFoERwJBhEw44d/VQ==
+
+"@types/shexj@^2.1.6":
+  version "2.1.6"
+  resolved "https://registry.yarnpkg.com/@types/shexj/-/shexj-2.1.6.tgz#86487d4922ccf0710fc80cd07ddc8cd0a1d9ac42"
+  integrity sha512-M3INxW+VUA/dqoVomrFyG/mMwTLoE8f+pcz6c1Of2r5QpcmlB4F6tprynLf6bNbqXJpvN7/v4LNrDPIDhm96Ag==
 
 "@types/spark-md5@^3.0.2":
   version "3.0.2"
@@ -11135,10 +11145,10 @@ relative-to-absolute-iri@^1.0.0, relative-to-absolute-iri@^1.0.2, relative-to-ab
   resolved "https://registry.yarnpkg.com/relative-to-absolute-iri/-/relative-to-absolute-iri-1.0.7.tgz#f2fd6ee60c78d9ffc4926bd20bdf84479b91d765"
   integrity sha512-Xjyl4HmIzg2jzK/Un2gELqbcE8Fxy85A/aLSHE6PE/3+OGsFwmKVA1vRyGaz6vLWSqLDMHA+5rjD/xbibSQN1Q==
 
-relativize-url@^0.0.2:
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/relativize-url/-/relativize-url-0.0.2.tgz#5f65e36d65f90f8c229572ca0b936c040cc56dff"
-  integrity sha512-J5O1e03TL5wfkgGJEwObPNByxStvpwnCsk/tNwYmYhbKjqLjdLt2RYfyMXeBT8pKlRlVzFrg48XHbzf9Aq08cw==
+relativize-url@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/relativize-url/-/relativize-url-0.1.0.tgz#ab82140122b615f6ab0a1fc718e39ad77e169c2b"
+  integrity sha512-YXet4a9wQP96Ru9MQSfoRUzsCaeboLPXj+rVG1ulH4t54zqFHiNmW6FPl7V2dTxk9uHlW3yb9+1jWO44AdWisw==
 
 require-directory@^2.1.1:
   version "2.1.1"
