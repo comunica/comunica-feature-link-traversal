@@ -32,8 +32,8 @@
     "lib/**/*.js.map"
   ],
   "dependencies": {
-    "@comunica/bus-query-operation": "^2.10.0",
-    "@comunica/bus-rdf-join": "^2.10.0",
+    "@comunica/bus-query-operation": "^2.10.1",
+    "@comunica/bus-rdf-join": "^2.10.1",
     "@comunica/context-entries": "^2.10.0",
     "@comunica/context-entries-link-traversal": "^0.2.0",
     "@comunica/mediatortype-join-coefficients": "^2.10.0",
