@@ -52,8 +52,8 @@ Show the help with all options:
 $ comunica-sparql-link-traversal --help
 ```
 
-Just like [Comunica SPARQL](https://github.com/comunica/comunica/tree/master/packages/query-sparql),
-a [dynamic variant](https://github.com/comunica/comunica/tree/master/packages/query-sparql#usage-from-the-command-line) (`comunica-dynamic-sparql-link-traversal`) also exists.
+Just like [Comunica SPARQL](https://github.com/comunica/comunica/tree/master/engines/query-sparql),
+a [dynamic variant](https://github.com/comunica/comunica/tree/master/engines/query-sparql#usage-from-the-command-line) (`comunica-dynamic-sparql-link-traversal`) also exists.
 
 _[**Read more** about querying from the command line](https://comunica.dev/docs/query/getting_started/query_cli/)._
 
