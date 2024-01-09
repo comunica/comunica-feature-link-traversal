@@ -32,7 +32,7 @@
     "lib/**/*.js.map"
   ],
   "dependencies": {
-    "@comunica/actor-init-query": "^2.10.1",
+    "@comunica/actor-init-query": "^2.10.2",
     "@comunica/bus-extract-links": "^0.2.0",
     "@comunica/bus-query-operation": "^2.10.1",
     "@comunica/context-entries": "^2.10.0",
