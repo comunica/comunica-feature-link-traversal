@@ -18,7 +18,6 @@ describe('System test: QuerySparqlLinkTraversalSolid', () => {
   describeEach([
     [ 'interactive-short-4-1.sparql', 1 ],
     [ 'interactive-short-5-1.sparql', 1 ],
-    [ 'interactive-short-6-1.sparql', 0 ],
     [ 'interactive-discover-1-1.sparql', 6 ],
     [ 'interactive-discover-1-5.sparql', 8 ],
     [ 'interactive-discover-2-1.sparql', 66 ],

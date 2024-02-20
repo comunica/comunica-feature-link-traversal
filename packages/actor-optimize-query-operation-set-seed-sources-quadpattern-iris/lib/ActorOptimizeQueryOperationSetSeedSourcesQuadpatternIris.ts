@@ -3,15 +3,18 @@ import type {
   IActorOptimizeQueryOperationOutput,
 } from '@comunica/bus-optimize-query-operation';
 import { ActorOptimizeQueryOperation } from '@comunica/bus-optimize-query-operation';
-import { KeysRdfResolveQuadPattern } from '@comunica/context-entries';
+import type { MediatorQuerySourceIdentify } from '@comunica/bus-query-source-identify';
+import { KeysQueryOperation, KeysQuerySourceIdentify } from '@comunica/context-entries';
 import type { IActorArgs, IActorTest } from '@comunica/core';
-import type { DataSources } from '@comunica/types';
+import { ActionContext } from '@comunica/core';
+import type { IQuerySourceWrapper } from '@comunica/types';
 import { Algebra, Util } from 'sparqlalgebrajs';
 
 /**
  * A comunica Set Seed Sources Quadpattern IRIs Optimize Query Operation Actor.
  */
 export class ActorOptimizeQueryOperationSetSeedSourcesQuadpatternIris extends ActorOptimizeQueryOperation {
+  public readonly mediatorQuerySourceIdentify: MediatorQuerySourceIdentify;
   private readonly extractSubjects: boolean;
   private readonly extractPredicates: boolean;
   private readonly extractObjects: boolean;
@@ -27,10 +30,27 @@ export class ActorOptimizeQueryOperationSetSeedSourcesQuadpatternIris extends Ac
   }
 
   public async run(action: IActionOptimizeQueryOperation): Promise<IActorOptimizeQueryOperationOutput> {
-    const contextSources: DataSources | undefined = action.context.get(KeysRdfResolveQuadPattern.sources);
-    if (!contextSources || contextSources.length === 0) {
-      const sources: string[] = [ ...new Set(this.extractIrisFromOperation(action.operation)) ];
-      action.context = action.context.set(KeysRdfResolveQuadPattern.sources, sources);
+    let sources: IQuerySourceWrapper[] | undefined = action.context.get(KeysQueryOperation.querySources);
+    if (!sources || sources.length === 0) {
+      sources = await Promise.all(
+        [ ...new Set(this.extractIrisFromOperation(action.operation)) ]
+          .map(async source => {
+            // Remove fragment from URL
+            const hashPosition = source.indexOf('#');
+            if (hashPosition >= 0) {
+              source = source.slice(0, hashPosition);
+            }
+
+            return (await this.mediatorQuerySourceIdentify.mediate({
+              querySourceUnidentified: {
+                value: source,
+                context: new ActionContext().set(KeysQuerySourceIdentify.traverse, true),
+              },
+              context: action.context,
+            })).querySource;
+          }),
+      );
+      action.context = action.context.set(KeysQueryOperation.querySources, sources);
     }
     return { ...action, context: action.context };
   }
@@ -74,6 +94,10 @@ export class ActorOptimizeQueryOperationSetSeedSourcesQuadpatternIris extends Ac
 
 export interface IActorOptimizeQueryOperationSetSeedSourcesQuadpatternIrisArgs
   extends IActorArgs<IActionOptimizeQueryOperation, IActorTest, IActorOptimizeQueryOperationOutput> {
+  /**
+   * Mediator for identifying query sources.
+   */
+  mediatorQuerySourceIdentify: MediatorQuerySourceIdentify;
   /**
    * If IRIs should be extracted from subject positions.
    * @default {true}

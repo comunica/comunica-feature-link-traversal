@@ -1,0 +1,44 @@
+{
+  "name": "@comunica/actor-context-preprocess-set-defaults-link-traversal",
+  "version": "0.0.1",
+  "description": "A set-defaults-link-traversal context-preprocess actor",
+  "lsd:module": true,
+  "main": "lib/index.js",
+  "typings": "lib/index",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/comunica/comunica.git",
+    "directory": "packages/actor-context-preprocess-set-defaults-link-traversal"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "sideEffects": false,
+  "keywords": [
+    "comunica",
+    "actor",
+    "context-preprocess",
+    "set-defaults-link-traversal"
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/comunica/comunica/issues"
+  },
+  "homepage": "https://comunica.dev/",
+  "files": [
+    "components",
+    "lib/**/*.d.ts",
+    "lib/**/*.js",
+    "lib/**/*.js.map"
+  ],
+  "dependencies": {
+    "@comunica/core": "^3.0.1-alpha.45.0",
+    "@comunica/bus-context-preprocess": "^3.0.1-alpha.45.0",
+    "@comunica/context-entries": "^3.0.1-alpha.45.0"
+  },
+  "scripts": {
+    "build": "npm run build:ts && npm run build:components",
+    "build:ts": "node \"../../node_modules/typescript/bin/tsc\"",
+    "build:components": "componentsjs-generator"
+  }
+}

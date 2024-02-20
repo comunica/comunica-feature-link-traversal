@@ -66,6 +66,44 @@ describe('MediatorCombineArray', () => {
       });
     });
   });
+
+  describe('An MediatorCombineArray instance with erroring actors', () => {
+    let mediator: MediatorCombineArray<DummyActor, IAction, IDummyTest, IDummyTest>;
+
+    beforeEach(() => {
+      mediator = new MediatorCombineArray({
+        name: 'mediator',
+        bus,
+        fields: [ 'field1', 'field2' ],
+        filterErrors: true,
+      });
+    });
+
+    it('should throw an error when mediateWith is called', () => {
+      return expect(() => (<any> mediator).mediateWith({}, [])).toThrow();
+    });
+
+    describe('without actors', () => {
+      it('should mediate', () => {
+        return expect(mediator.mediate({ context: new ActionContext() }))
+          .resolves.toEqual({ field1: [], field2: []});
+      });
+    });
+
+    describe('for defined actors', () => {
+      beforeEach(() => {
+        new DummyActor(1, [ 10 ], [ 1 ], bus);
+        new DummyActor(10, [ 20, 30 ], [ 2, 3 ], bus);
+        new DummyThrowActor(50, bus);
+        new DummyActor(100, [ 40, 50, 60 ], [ 4, 5, 6 ], bus);
+      });
+
+      it('should mediate', () => {
+        return expect(mediator.mediate({ context: new ActionContext() })).resolves
+          .toEqual({ field1: [ 10, 20, 30, 40, 50, 60 ], field2: [ 1, 2, 3, 4, 5, 6 ]});
+      });
+    });
+  });
 });
 
 class DummyActor extends Actor<IAction, IDummyTest, IDummyTest> {
@@ -84,6 +122,19 @@ class DummyActor extends Actor<IAction, IDummyTest, IDummyTest> {
 
   public async run(action: IAction): Promise<IDummyTest> {
     return { field1: this.data1, field2: this.data2, otherField: 'ignored' };
+  }
+}
+
+class DummyThrowActor extends DummyActor {
+  public constructor(
+    id: number,
+    bus: Bus<DummyActor, IAction, IDummyTest, IDummyTest>,
+  ) {
+    super(id, {}, {}, bus);
+  }
+
+  public async test(action: IAction): Promise<IDummyTest> {
+    throw new Error('Dummy Error');
   }
 }
 

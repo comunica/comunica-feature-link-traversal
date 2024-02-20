@@ -1,4 +1,3 @@
-import { KeysRdfResolveQuadPattern } from '@comunica/context-entries';
 import { KeysExtractLinksTree } from '@comunica/context-entries-link-traversal';
 import { ActionContext, Bus } from '@comunica/core';
 import { DataFactory } from 'rdf-data-factory';
@@ -36,9 +35,7 @@ describe('ActorExtractLinksExtractLinksTree', () => {
   describe('The ActorExtractLinksExtractLinksTree run method', () => {
     let actor: ActorExtractLinksTree;
     const treeUrl = 'ex:s';
-    const context = new ActionContext({
-      [KeysRdfResolveQuadPattern.source.name]: treeUrl,
-    });
+    const context = new ActionContext();
 
     beforeEach(() => {
       actor = new ActorExtractLinksTree({ name: 'actor', bus });

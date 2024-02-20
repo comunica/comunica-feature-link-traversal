@@ -1,4 +1,4 @@
-import { KeysRdfResolveQuadPattern } from '@comunica/context-entries';
+import { KeysQueryOperation } from '@comunica/context-entries';
 import { ActionContext, Bus } from '@comunica/core';
 import type { IActionContext } from '@comunica/types';
 import { DataFactory } from 'rdf-data-factory';
@@ -497,7 +497,10 @@ describe('ActorRdfJoinEntriesSortTraversalZeroKnowledge', () => {
       });
 
       it('should handle multiple entries', async() => {
-        context = context.set(KeysRdfResolveQuadPattern.sources, [ 'ex:seed', { value: 'ex:seed2' }]);
+        context = context.set(KeysQueryOperation.querySources, [
+          { source: { referenceValue: 'ex:seed' }},
+          { source: { referenceValue: 'ex:seed2' }},
+        ]);
         expect(await actor.run({
           entries: [
             {

@@ -5,8 +5,8 @@ import { ActorExtractLinks } from '@comunica/bus-extract-links';
 import type { ILink } from '@comunica/bus-rdf-resolve-hypermedia-links';
 import { KeysExtractLinksTree } from '@comunica/context-entries-link-traversal';
 import type { IActorTest } from '@comunica/core';
+import type * as RDF from '@rdfjs/types';
 import { DataFactory } from 'rdf-data-factory';
-import type * as RDF from 'rdf-js';
 
 const DF = new DataFactory<RDF.BaseQuad>();
 
