@@ -4,8 +4,8 @@ import type { MediatorDereferenceRdf } from '@comunica/bus-dereference-rdf';
 import type { IActionExtractLinks, IActorExtractLinksOutput } from '@comunica/bus-extract-links';
 import { ActorExtractLinks } from '@comunica/bus-extract-links';
 import type { ILink } from '@comunica/bus-rdf-resolve-hypermedia-links';
-import { KeysInitQuery, KeysQueryOperation } from '@comunica/context-entries';
-import { KeysRdfJoin, KeysRdfResolveHypermediaLinks } from '@comunica/context-entries-link-traversal';
+import { KeysInitQuery, KeysQueryOperation, KeysQuerySourceIdentify } from '@comunica/context-entries';
+import { KeysRdfJoin } from '@comunica/context-entries-link-traversal';
 import type { IActorArgs, IActorTest } from '@comunica/core';
 import type { IActionContext } from '@comunica/types';
 import type * as RDF from '@rdfjs/types';
@@ -130,7 +130,7 @@ export class ActorExtractLinksSolidTypeIndex extends ActorExtractLinks {
             (solid:instance|solid:instanceContainer) ?instance.
         }`, {
         sources: [ store ],
-        [KeysRdfResolveHypermediaLinks.traverse.name]: false,
+        [KeysQuerySourceIdentify.traverse.name]: false,
         [KeysRdfJoin.skipAdaptiveJoin.name]: true,
         lenient: true,
       })).toArray();
@@ -184,7 +184,7 @@ export class ActorExtractLinksSolidTypeIndex extends ActorExtractLinks {
           <${predicateValue}> rdfs:domain ?domain.
         }`, {
       sources: [ predicateValue ],
-      [KeysRdfResolveHypermediaLinks.traverse.name]: false,
+      [KeysQuerySourceIdentify.traverse.name]: false,
       [KeysRdfJoin.skipAdaptiveJoin.name]: true,
       lenient: true,
     });
