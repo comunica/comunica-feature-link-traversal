@@ -25,7 +25,7 @@ export class ActorOptimizeQueryOperationSetSeedSourcesQuadpatternIris extends Ac
     super(args);
   }
 
-  public async test(action: IActionOptimizeQueryOperation): Promise<IActorTest> {
+  public async test(_action: IActionOptimizeQueryOperation): Promise<IActorTest> {
     return true;
   }
 
@@ -34,7 +34,7 @@ export class ActorOptimizeQueryOperationSetSeedSourcesQuadpatternIris extends Ac
     if (!sources || sources.length === 0) {
       sources = await Promise.all(
         [ ...new Set(this.extractIrisFromOperation(action.operation)) ]
-          .map(async source => {
+          .map(async(source) => {
             // Remove fragment from URL
             const hashPosition = source.indexOf('#');
             if (hashPosition >= 0) {
@@ -58,7 +58,7 @@ export class ActorOptimizeQueryOperationSetSeedSourcesQuadpatternIris extends Ac
   public extractIrisFromOperation(operation: Algebra.Operation): string[] {
     const iris: string[] = [];
     Util.recurseOperation(operation, {
-      [Algebra.types.PATH]: path => {
+      [Algebra.types.PATH]: (path) => {
         if (this.extractSubjects && path.subject.termType === 'NamedNode') {
           iris.push(path.subject.value);
         }
@@ -71,7 +71,7 @@ export class ActorOptimizeQueryOperationSetSeedSourcesQuadpatternIris extends Ac
         }
         return false;
       },
-      [Algebra.types.PATTERN]: pattern => {
+      [Algebra.types.PATTERN]: (pattern) => {
         if (this.extractSubjects && pattern.subject.termType === 'NamedNode') {
           iris.push(pattern.subject.value);
         }

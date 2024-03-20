@@ -3,17 +3,16 @@
   "version": "0.2.0",
   "description": "default configuration files for Comunica SPARQL Link Traversal",
   "lsd:module": true,
-  "main": "lib/index.js",
-  "typings": "lib/index",
+  "license": "MIT",
+  "homepage": "https://comunica.dev/",
   "repository": {
     "type": "git",
     "url": "https://github.com/comunica/comunica-feature-link-traversal.git",
     "directory": "engines/config-query-sparql-link-traversal"
   },
-  "publishConfig": {
-    "access": "public"
+  "bugs": {
+    "url": "https://github.com/comunica/comunica-feature-link-traversal/issues"
   },
-  "sideEffects": false,
   "keywords": [
     "comunica",
     "sparql",
@@ -23,11 +22,12 @@
     "config",
     "link-traversal"
   ],
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/comunica/comunica-feature-link-traversal/issues"
+  "sideEffects": false,
+  "main": "lib/index.js",
+  "typings": "lib/index",
+  "publishConfig": {
+    "access": "public"
   },
-  "homepage": "https://comunica.dev/",
   "files": [
     "components",
     "config",

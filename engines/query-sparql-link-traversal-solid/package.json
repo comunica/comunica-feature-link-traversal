@@ -3,13 +3,12 @@
   "version": "0.2.0",
   "description": "A Comunica engine for link traversal-based query evaluation over Solid data pods",
   "lsd:module": true,
-  "main": "lib/index.js",
-  "typings": "lib/index",
+  "license": "MIT",
+  "homepage": "https://comunica.dev/",
   "repository": "https://github.com/comunica/comunica-feature-link-traversal/tree/master/packages/query-sparql-link-traversal-solid",
-  "publishConfig": {
-    "access": "public"
+  "bugs": {
+    "url": "https://github.com/comunica/comunica-feature-solid/issues"
   },
-  "sideEffects": false,
   "keywords": [
     "comunica",
     "sparql",
@@ -23,27 +22,33 @@
     "link-traversal",
     "solid"
   ],
-  "license": "MIT",
+  "sideEffects": false,
+  "main": "lib/index.js",
+  "typings": "lib/index",
+  "publishConfig": {
+    "access": "public"
+  },
   "bin": {
     "comunica-sparql-link-traversal-solid": "bin/query.js",
     "comunica-sparql-link-traversal-solid-http": "bin/http.js",
     "comunica-dynamic-sparql-link-traversal-solid": "bin/query-dynamic.js"
   },
-  "bugs": {
-    "url": "https://github.com/comunica/comunica-feature-solid/issues"
-  },
-  "homepage": "https://comunica.dev/",
   "files": [
-    "components",
-    "config",
     "bin/**/*.d.ts",
     "bin/**/*.js",
     "bin/**/*.js.map",
+    "components",
+    "config",
+    "engine-default.js",
     "lib/**/*.d.ts",
     "lib/**/*.js",
-    "lib/**/*.js.map",
-    "engine-default.js"
+    "lib/**/*.js.map"
   ],
+  "scripts": {
+    "build": "npm run build:ts",
+    "build:ts": "node \"../../node_modules/typescript/bin/tsc\"",
+    "prepare": "comunica-compile-config config/config-default.json > engine-default.js"
+  },
   "dependencies": {
     "@comunica/actor-context-preprocess-set-defaults-link-traversal": "^0.0.1",
     "@comunica/actor-extract-links-all": "^0.2.0",
@@ -70,11 +75,6 @@
     "@comunica/query-sparql-link-traversal": "^0.2.0",
     "@comunica/query-sparql-solid": "^3.0.1",
     "@comunica/runner-cli": "^3.0.1"
-  },
-  "scripts": {
-    "build": "npm run build:ts",
-    "build:ts": "node \"../../node_modules/typescript/bin/tsc\"",
-    "prepare": "comunica-compile-config config/config-default.json > engine-default.js"
   },
   "browser": {
     "./lib/index.js": "./lib/index-browser.js"

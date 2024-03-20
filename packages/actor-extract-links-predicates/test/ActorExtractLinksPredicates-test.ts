@@ -1,4 +1,4 @@
-import type { Readable } from 'stream';
+import type { Readable } from 'node:stream';
 import { ActionContext, Bus } from '@comunica/core';
 import { ActorExtractLinksPredicates } from '../lib/ActorExtractLinksPredicates';
 
@@ -33,13 +33,13 @@ describe('ActorExtractLinksTraversePredicates', () => {
       ]);
     });
 
-    it('should test ', () => {
-      return expect(actor.test({ url: 'ex:s', metadata: input, requestTime: 0, context: new ActionContext() }))
-        .resolves.toEqual(true);
+    it('should test ', async() => {
+      await expect(actor.test({ url: 'ex:s', metadata: input, requestTime: 0, context: new ActionContext() }))
+        .resolves.toBe(true);
     });
 
-    it('should run on a stream and return all ldp:contains values', () => {
-      return expect(actor.run({ url: 'ex:s', metadata: input, requestTime: 0, context: new ActionContext() })).resolves
+    it('should run on a stream and return all ldp:contains values', async() => {
+      await expect(actor.run({ url: 'ex:s', metadata: input, requestTime: 0, context: new ActionContext() })).resolves
         .toEqual({
           links: [
             { url: 'ex:r1' },
@@ -70,8 +70,8 @@ describe('ActorExtractLinksTraversePredicates', () => {
       ]);
     });
 
-    it('should run on a stream and return all ldp:contains values', () => {
-      return expect(actor.run({ url: 'ex:s', metadata: input, requestTime: 0, context: new ActionContext() })).resolves
+    it('should run on a stream and return all ldp:contains values', async() => {
+      await expect(actor.run({ url: 'ex:s', metadata: input, requestTime: 0, context: new ActionContext() })).resolves
         .toEqual({
           links: [
             { url: 'ex:r1' },

@@ -11,7 +11,7 @@ export class ActorExtractLinksAll extends ActorExtractLinks {
     super(args);
   }
 
-  public async test(action: IActionExtractLinks): Promise<IActorTest> {
+  public async test(_action: IActionExtractLinks): Promise<IActorTest> {
     return true;
   }
 

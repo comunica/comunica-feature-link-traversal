@@ -1,5 +1,8 @@
-import type { IActionRdfResolveHypermediaLinks,
-  IActorRdfResolveHypermediaLinksOutput, ILink } from '@comunica/bus-rdf-resolve-hypermedia-links';
+import type {
+  IActionRdfResolveHypermediaLinks,
+  IActorRdfResolveHypermediaLinksOutput,
+  ILink,
+} from '@comunica/bus-rdf-resolve-hypermedia-links';
 import { ActorRdfResolveHypermediaLinks } from '@comunica/bus-rdf-resolve-hypermedia-links';
 import { KeysHttpProxy, KeysQuerySourceIdentify } from '@comunica/context-entries';
 import type { IActorArgs, IActorTest } from '@comunica/core';
@@ -54,7 +57,9 @@ export class ActorRdfResolveHypermediaLinksTraverse extends ActorRdfResolveHyper
 }
 
 export interface IActorRdfResolveHypermediaLinksTraverse extends IActorArgs<
-IActionRdfResolveHypermediaLinks, IActorTest, IActorRdfResolveHypermediaLinksOutput
+IActionRdfResolveHypermediaLinks,
+IActorTest,
+IActorRdfResolveHypermediaLinksOutput
 > {
   /**
    * Upgrade insecure http requests to https when performing

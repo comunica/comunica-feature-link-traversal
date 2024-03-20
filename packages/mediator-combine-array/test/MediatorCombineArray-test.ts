@@ -30,12 +30,12 @@ describe('MediatorCombineArray', () => {
     });
 
     it('should throw an error when mediateWith is called', () => {
-      return expect(() => (<any> mediator).mediateWith({}, [])).toThrow();
+      expect(() => (<any> mediator).mediateWith({}, [])).toThrow('Method not supported.');
     });
 
     describe('without actors', () => {
-      it('should mediate', () => {
-        return expect(mediator.mediate({ context: new ActionContext() }))
+      it('should mediate', async() => {
+        await expect(mediator.mediate({ context: new ActionContext() }))
           .resolves.toEqual({ field1: [], field2: []});
       });
     });
@@ -47,8 +47,8 @@ describe('MediatorCombineArray', () => {
         new DummyActor(100, [ 40, 50, 60 ], [ 4, 5, 6 ], bus);
       });
 
-      it('should mediate', () => {
-        return expect(mediator.mediate({ context: new ActionContext() })).resolves
+      it('should mediate', async() => {
+        await expect(mediator.mediate({ context: new ActionContext() })).resolves
           .toEqual({ field1: [ 10, 20, 30, 40, 50, 60 ], field2: [ 1, 2, 3, 4, 5, 6 ]});
       });
     });
@@ -60,8 +60,8 @@ describe('MediatorCombineArray', () => {
         new DummyActor(100, undefined, [ 4, 5, 6 ], bus);
       });
 
-      it('should mediate', () => {
-        return expect(mediator.mediate({ context: new ActionContext() })).resolves
+      it('should mediate', async() => {
+        await expect(mediator.mediate({ context: new ActionContext() })).resolves
           .toEqual({ field1: [ 10, 20, 30 ], field2: [ 1, 4, 5, 6 ]});
       });
     });
@@ -80,12 +80,12 @@ describe('MediatorCombineArray', () => {
     });
 
     it('should throw an error when mediateWith is called', () => {
-      return expect(() => (<any> mediator).mediateWith({}, [])).toThrow();
+      expect(() => (<any> mediator).mediateWith({}, [])).toThrow('Method not supported.');
     });
 
     describe('without actors', () => {
-      it('should mediate', () => {
-        return expect(mediator.mediate({ context: new ActionContext() }))
+      it('should mediate', async() => {
+        await expect(mediator.mediate({ context: new ActionContext() }))
           .resolves.toEqual({ field1: [], field2: []});
       });
     });
@@ -98,8 +98,8 @@ describe('MediatorCombineArray', () => {
         new DummyActor(100, [ 40, 50, 60 ], [ 4, 5, 6 ], bus);
       });
 
-      it('should mediate', () => {
-        return expect(mediator.mediate({ context: new ActionContext() })).resolves
+      it('should mediate', async() => {
+        await expect(mediator.mediate({ context: new ActionContext() })).resolves
           .toEqual({ field1: [ 10, 20, 30, 40, 50, 60 ], field2: [ 1, 2, 3, 4, 5, 6 ]});
       });
     });
@@ -133,7 +133,7 @@ class DummyThrowActor extends DummyActor {
     super(id, {}, {}, bus);
   }
 
-  public async test(action: IAction): Promise<IDummyTest> {
+  public override async test(action: IAction): Promise<IDummyTest> {
     throw new Error('Dummy Error');
   }
 }

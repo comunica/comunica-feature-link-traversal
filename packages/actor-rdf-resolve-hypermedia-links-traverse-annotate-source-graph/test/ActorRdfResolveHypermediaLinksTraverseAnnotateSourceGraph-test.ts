@@ -1,5 +1,5 @@
-import type { Readable, TransformCallback } from 'stream';
-import { Transform } from 'stream';
+import type { Readable, TransformCallback } from 'node:stream';
+import { Transform } from 'node:stream';
 import type { MediatorRdfResolveHypermediaLinks } from '@comunica/bus-rdf-resolve-hypermedia-links';
 import { KeysRdfResolveHypermediaLinks } from '@comunica/context-entries-link-traversal';
 import { ActionContext, Bus } from '@comunica/core';
@@ -50,7 +50,7 @@ describe('ActorRdfResolveHypermediaLinksTraverseAnnotateSourceGraph', () => {
 
     describe('test', () => {
       it('should pass on annotateSources graph in the context', async() => {
-        expect(await actor.test({ context, metadata: {}})).toBeTruthy();
+        await expect(actor.test({ context, metadata: {}})).resolves.toBeTruthy();
       });
 
       it('should not pass on annotateSources non-graph in the context', async() => {
@@ -70,21 +70,21 @@ describe('ActorRdfResolveHypermediaLinksTraverseAnnotateSourceGraph', () => {
       it('should attach a transformer to links', async() => {
         const { links } = await actor.run({ context, metadata: {}});
 
-        expect(links.length).toBe(2);
-        expect(await arrayifyStream(await links[0].transform!(streamifyArray([
+        expect(links).toHaveLength(2);
+        await expect(arrayifyStream(await links[0].transform!(streamifyArray([
           DF.quad(DF.namedNode('ex:s1'), DF.namedNode('ex:p1'), DF.namedNode('ex:o1')),
           DF.quad(DF.namedNode('ex:s2'), DF.namedNode('ex:p2'), DF.namedNode('ex:o2')),
           DF.quad(DF.namedNode('ex:s3'), DF.namedNode('ex:p3'), DF.namedNode('ex:o3'), DF.namedNode('ex:g1')),
-        ])))).toEqual([
+        ])))).resolves.toEqual([
           DF.quad(DF.namedNode('ex:s1'), DF.namedNode('ex:p1'), DF.namedNode('ex:o1'), DF.namedNode('ex:link1')),
           DF.quad(DF.namedNode('ex:s2'), DF.namedNode('ex:p2'), DF.namedNode('ex:o2'), DF.namedNode('ex:link1')),
           DF.quad(DF.namedNode('ex:s3'), DF.namedNode('ex:p3'), DF.namedNode('ex:o3'), DF.namedNode('ex:g1')),
         ]);
-        expect(await arrayifyStream(await links[1].transform!(streamifyArray([
+        await expect(arrayifyStream(await links[1].transform!(streamifyArray([
           DF.quad(DF.namedNode('ex:s1'), DF.namedNode('ex:p1'), DF.namedNode('ex:o1')),
           DF.quad(DF.namedNode('ex:s2'), DF.namedNode('ex:p2'), DF.namedNode('ex:o2')),
           DF.quad(DF.namedNode('ex:s3'), DF.namedNode('ex:p3'), DF.namedNode('ex:o3'), DF.namedNode('ex:g1')),
-        ])))).toEqual([
+        ])))).resolves.toEqual([
           DF.quad(DF.namedNode('ex:s1'), DF.namedNode('ex:p1'), DF.namedNode('ex:o1'), DF.namedNode('ex:link2')),
           DF.quad(DF.namedNode('ex:s2'), DF.namedNode('ex:p2'), DF.namedNode('ex:o2'), DF.namedNode('ex:link2')),
           DF.quad(DF.namedNode('ex:s3'), DF.namedNode('ex:p3'), DF.namedNode('ex:o3'), DF.namedNode('ex:g1')),
@@ -118,22 +118,22 @@ describe('ActorRdfResolveHypermediaLinksTraverseAnnotateSourceGraph', () => {
 
         const { links } = await actor.run({ context, metadata: {}});
 
-        expect(links.length).toBe(2);
-        expect(await arrayifyStream(await links[0].transform!(streamifyArray([
+        expect(links).toHaveLength(2);
+        await expect(arrayifyStream(await links[0].transform!(streamifyArray([
           DF.quad(DF.namedNode('ex:s1'), DF.namedNode('ex:p1'), DF.namedNode('ex:o1')),
           DF.quad(DF.namedNode('ex:s2'), DF.namedNode('ex:p2'), DF.namedNode('ex:o2')),
           DF.quad(DF.namedNode('ex:s3'), DF.namedNode('ex:p3'), DF.namedNode('ex:o3'), DF.namedNode('ex:g1')),
-        ])))).toEqual([
+        ])))).resolves.toEqual([
           DF.quad(DF.namedNode('ex:s1'), DF.namedNode('ex:p1'), DF.namedNode('ex:o1'), DF.namedNode('ex:link1')),
           DF.quad(DF.namedNode('ex:s2'), DF.namedNode('ex:p2'), DF.namedNode('ex:o2'), DF.namedNode('ex:link1')),
           DF.quad(DF.namedNode('ex:s3'), DF.namedNode('ex:p3'), DF.namedNode('ex:o3'), DF.namedNode('ex:g1')),
           DF.quad(DF.namedNode('ex:end'), DF.namedNode('ex:end'), DF.namedNode('ex:end'), DF.namedNode('ex:link1')),
         ]);
-        expect(await arrayifyStream(await links[1].transform!(streamifyArray([
+        await expect(arrayifyStream(await links[1].transform!(streamifyArray([
           DF.quad(DF.namedNode('ex:s1'), DF.namedNode('ex:p1'), DF.namedNode('ex:o1')),
           DF.quad(DF.namedNode('ex:s2'), DF.namedNode('ex:p2'), DF.namedNode('ex:o2')),
           DF.quad(DF.namedNode('ex:s3'), DF.namedNode('ex:p3'), DF.namedNode('ex:o3'), DF.namedNode('ex:g1')),
-        ])))).toEqual([
+        ])))).resolves.toEqual([
           DF.quad(DF.namedNode('ex:s1'), DF.namedNode('ex:p1'), DF.namedNode('ex:o1'), DF.namedNode('ex:link2')),
           DF.quad(DF.namedNode('ex:s2'), DF.namedNode('ex:p2'), DF.namedNode('ex:o2'), DF.namedNode('ex:link2')),
           DF.quad(DF.namedNode('ex:s3'), DF.namedNode('ex:p3'), DF.namedNode('ex:o3'), DF.namedNode('ex:g1')),

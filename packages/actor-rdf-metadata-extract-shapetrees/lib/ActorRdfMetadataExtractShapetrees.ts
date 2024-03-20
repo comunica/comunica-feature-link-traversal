@@ -16,7 +16,9 @@ import type * as ShEx from 'shexj';
 import { Algebra, Util as AlgebraUtil } from 'sparqlalgebrajs';
 import { ShapeTree } from './ShapeTree';
 
+// eslint-disable-next-line ts/no-require-imports,ts/no-var-requires
 const shexParser = require('@shexjs/parser');
+// eslint-disable-next-line ts/no-require-imports,ts/no-var-requires
 const shexVisitor = require('@shexjs/visitor').Visitor;
 
 /**
@@ -87,6 +89,7 @@ export class ActorRdfMetadataExtractShapetrees extends ActorRdfMetadataExtract {
       const links = parseLink(headers.get('link'));
       if (links) {
         // TODO: remove old rel type
+        // eslint-disable-next-line ts/prefer-nullish-coalescing
         const shapeTree = links[ActorRdfMetadataExtractShapetrees.IRI_SHAPETREE] ||
           links[ActorRdfMetadataExtractShapetrees.IRI_SHAPETREE_OLD];
         if (shapeTree) {
@@ -154,7 +157,7 @@ export class ActorRdfMetadataExtractShapetrees extends ActorRdfMetadataExtract {
         }`, { sources: [ store ]})).toArray();
 
     return await Promise.all(bindingsArray
-      .map(async bindings => {
+      .map(async(bindings) => {
         let shapeIri = bindings.get('shape')!.value;
 
         // TODO: workaround for incorrect prefix use on https://shapetrees.pub/ts/medical-record/shapetree
@@ -178,9 +181,9 @@ export class ActorRdfMetadataExtractShapetrees extends ActorRdfMetadataExtract {
   /**
    * Dereference a shape
    * @param shapeIri The URL of a shape definition.
-   * @param context An action context.
+   * @param _context An action context.
    */
-  public async dereferenceShape(shapeIri: string, context: IActionContext): Promise<ShEx.Shape> {
+  public async dereferenceShape(shapeIri: string, _context: IActionContext): Promise<ShEx.Shape> {
     // Fetch the shape
     const response = await this.mediatorHttp.mediate({
       input: shapeIri,

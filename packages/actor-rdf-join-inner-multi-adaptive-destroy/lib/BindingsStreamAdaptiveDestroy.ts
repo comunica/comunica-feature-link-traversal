@@ -47,10 +47,11 @@ export class BindingsStreamAdaptiveDestroy extends TransformIterator<Bindings> {
   }
 
   protected override _push(item: Bindings): void {
-    // eslint-disable-next-line @typescript-eslint/no-base-to-string
+    // eslint-disable-next-line ts/no-base-to-string
     const bindingsKey = item.toString();
     if (this.timeoutHandle) {
       // If we're in the first stream, store the pushed bindings
+      // eslint-disable-next-line ts/prefer-nullish-coalescing
       this.pushedBindings.set(bindingsKey, (this.pushedBindings.get(bindingsKey) || 0) + 1);
       super._push(item);
     } else {

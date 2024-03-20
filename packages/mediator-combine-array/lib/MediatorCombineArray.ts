@@ -6,8 +6,12 @@ import { Mediator } from '@comunica/core';
  *
  * The actors that are registered first will appear earlier in the array.
  */
-export class MediatorCombineArray<A extends Actor<I, T, O>, I extends IAction, T extends IActorTest,
-  O extends IActorOutput> extends Mediator<A, I, T, O> implements IMediatorCombineUnionArgs<A, I, T, O> {
+export class MediatorCombineArray<
+  A extends Actor<I, T, O>,
+I extends IAction,
+T extends IActorTest,
+O extends IActorOutput,
+> extends Mediator<A, I, T, O> implements IMediatorCombineUnionArgs<A, I, T, O> {
   public readonly filterErrors: boolean | undefined;
   public readonly fields: string[];
   public readonly combiner: (results: O[]) => O;
@@ -58,20 +62,23 @@ export class MediatorCombineArray<A extends Actor<I, T, O>, I extends IAction, T
       for (const field of this.fields) {
         data[field] = [];
         // eslint-disable-next-line unicorn/prefer-spread
-        [[]].concat(results.map((result: any) => result[field]))
-          .forEach((value, index, arr) => {
-            if (value) {
-              data[field].push(...value);
-            }
-          });
+        for (const value of [[]].concat(results.map((result: any) => result[field]))) {
+          if (value) {
+            data[field].push(...value);
+          }
+        }
       }
       return data;
     };
   }
 }
 
-export interface IMediatorCombineUnionArgs<A extends Actor<I, T, O>, I extends IAction, T extends IActorTest,
-  O extends IActorOutput> extends IMediatorArgs<A, I, T, O> {
+export interface IMediatorCombineUnionArgs<
+  A extends Actor<I, T, O>,
+I extends IAction,
+T extends IActorTest,
+O extends IActorOutput,
+> extends IMediatorArgs<A, I, T, O> {
   /**
    * If actors that throw test errors should be ignored
    */

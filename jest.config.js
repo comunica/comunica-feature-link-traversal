@@ -1,18 +1,18 @@
 module.exports = {
   transform: {
-    '^.+\\.ts$': ['ts-jest', {
-      isolatedModules: true
-    }]
+    '^.+\\.ts$': [ 'ts-jest', {
+      isolatedModules: true,
+    }],
   },
   testRegex: '/test/.*-test.ts$',
   moduleFileExtensions: [
     'ts',
-    'js'
+    'js',
   ],
   globals: {
     window: {
-      location: new URL("http://localhost")
-    }
+      location: new URL('http://localhost'),
+    },
   },
   setupFilesAfterEnv: [ './setup-jest.js' ],
   collectCoverage: true,
@@ -27,7 +27,7 @@ module.exports = {
       branches: 100,
       functions: 100,
       lines: 100,
-      statements: 100
-    }
-  }
+      statements: 100,
+    },
+  },
 };

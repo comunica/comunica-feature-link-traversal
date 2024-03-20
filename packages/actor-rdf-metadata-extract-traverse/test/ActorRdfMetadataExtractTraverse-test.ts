@@ -23,12 +23,12 @@ describe('ActorRdfMetadataExtractTraverse', () => {
       actor = new ActorRdfMetadataExtractTraverse({ name: 'actor', bus, mediatorExtractLinks });
     });
 
-    it('should test', () => {
-      return expect(actor.test(<any> {})).resolves.toEqual(true);
+    it('should test', async() => {
+      await expect(actor.test(<any> {})).resolves.toBe(true);
     });
 
-    it('should run', () => {
-      return expect(actor.run(<any> {})).resolves.toEqual({
+    it('should run', async() => {
+      await expect(actor.run(<any> {})).resolves.toEqual({
         metadata: {
           traverse: [{ url: 'a' }],
           traverseConditional: [{ url: 'b' }],

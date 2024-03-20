@@ -2,7 +2,8 @@ import { ClosableTransformIterator } from '@comunica/bus-query-operation';
 import type {
   IActionRdfJoin,
   IActorRdfJoinArgs,
-  MediatorRdfJoin, IActorRdfJoinOutputInner,
+  MediatorRdfJoin,
+  IActorRdfJoinOutputInner,
 } from '@comunica/bus-rdf-join';
 import {
   ActorRdfJoin,
@@ -87,8 +88,8 @@ export class ActorRdfJoinInnerMultiAdaptiveDestroy extends ActorRdfJoin {
   }
 
   protected override async getJoinCoefficients(
-    action: IActionRdfJoin,
-    metadatas: MetadataBindings[],
+    _action: IActionRdfJoin,
+    _metadatas: MetadataBindings[],
   ): Promise<IMediatorTypeJoinCoefficients> {
     // Dummy join coefficients to make sure we always run first
     return {

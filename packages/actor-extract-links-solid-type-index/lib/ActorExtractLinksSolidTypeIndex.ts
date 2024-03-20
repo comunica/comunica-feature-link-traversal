@@ -48,16 +48,16 @@ export class ActorExtractLinksSolidTypeIndex extends ActorExtractLinks {
     // Dereference all type indexes, and collect them in one record
     const typeLinks = (await Promise.all(typeIndexes
       .map(typeIndex => this.dereferenceTypeIndex(typeIndex, action.context))))
-      // eslint-disable-next-line unicorn/prefer-object-from-entries
+
       .reduce<Record<string, ILink[]>>((acc, typeLinksInner) => {
-      for (const [ type, linksInner ] of Object.entries(typeLinksInner)) {
-        if (!acc[type]) {
-          acc[type] = [];
+        for (const [ type, linksInner ] of Object.entries(typeLinksInner)) {
+          if (!acc[type]) {
+            acc[type] = [];
+          }
+          acc[type].push(...linksInner);
         }
-        acc[type].push(...linksInner);
-      }
-      return acc;
-    }, {});
+        return acc;
+      }, {});
 
     // Avoid further processing if no type index entries were discovered
     if (Object.keys(typeLinks).length === 0) {
@@ -152,8 +152,10 @@ export class ActorExtractLinksSolidTypeIndex extends ActorExtractLinks {
    * @param predicateSubjects A dictionary of predicate and its subjects from the query.
    * @param typeSubjects A dictionary of class type and its subjects from the query.
    */
-  public async linkPredicateDomains(predicateSubjects: Record<string, RDF.Term>,
-    typeSubjects: Record<string, RDF.Term[]>): Promise<void> {
+  public async linkPredicateDomains(
+    predicateSubjects: Record<string, RDF.Term>,
+    typeSubjects: Record<string, RDF.Term[]>,
+  ): Promise<void> {
     if (Object.keys(predicateSubjects).length > 0) {
       const predicateDomainsInner = await Promise.all(Object.keys(predicateSubjects)
         .map(async predicate => [ predicate, await this.fetchPredicateDomains(predicate) ]));

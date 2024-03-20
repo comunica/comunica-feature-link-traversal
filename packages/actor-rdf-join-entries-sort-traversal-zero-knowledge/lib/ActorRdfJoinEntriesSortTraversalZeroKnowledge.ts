@@ -1,5 +1,4 @@
-import type { IActionRdfJoinEntriesSort,
-  IActorRdfJoinEntriesSortOutput } from '@comunica/bus-rdf-join-entries-sort';
+import type { IActionRdfJoinEntriesSort, IActorRdfJoinEntriesSortOutput } from '@comunica/bus-rdf-join-entries-sort';
 import { ActorRdfJoinEntriesSort } from '@comunica/bus-rdf-join-entries-sort';
 import { KeysQueryOperation } from '@comunica/context-entries';
 import type { IActorArgs, IActorTest } from '@comunica/core';
@@ -126,7 +125,7 @@ export class ActorRdfJoinEntriesSortTraversalZeroKnowledge extends ActorRdfJoinE
     });
   }
 
-  public async test(action: IActionRdfJoinEntriesSort): Promise<IActorTest> {
+  public async test(_action: IActionRdfJoinEntriesSort): Promise<IActorTest> {
     return true;
   }
 
