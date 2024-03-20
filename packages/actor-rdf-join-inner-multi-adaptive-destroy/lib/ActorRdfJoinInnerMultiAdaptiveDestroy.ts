@@ -26,14 +26,14 @@ export class ActorRdfJoinInnerMultiAdaptiveDestroy extends ActorRdfJoin {
     });
   }
 
-  public async test(action: IActionRdfJoin): Promise<IMediatorTypeJoinCoefficients> {
+  public override async test(action: IActionRdfJoin): Promise<IMediatorTypeJoinCoefficients> {
     if (action.context.get(KeysRdfJoin.skipAdaptiveJoin)) {
       throw new Error(`Actor ${this.name} could not run because adaptive join processing is disabled.`);
     }
     return super.test(action);
   }
 
-  public async run(action: IActionRdfJoin): Promise<IQueryOperationResultBindings> {
+  public override async run(action: IActionRdfJoin): Promise<IQueryOperationResultBindings> {
     return super.run(action);
   }
 
@@ -55,7 +55,7 @@ export class ActorRdfJoinInnerMultiAdaptiveDestroy extends ActorRdfJoin {
     }));
   }
 
-  protected async getOutput(action: IActionRdfJoin): Promise<IActorRdfJoinOutputInner> {
+  protected override async getOutput(action: IActionRdfJoin): Promise<IActorRdfJoinOutputInner> {
     // Disable adaptive joins in recursive calls to this bus, to avoid infinite recursion on this actor.
     const subContext = action.context.set(KeysRdfJoin.skipAdaptiveJoin, true);
 
@@ -86,7 +86,7 @@ export class ActorRdfJoinInnerMultiAdaptiveDestroy extends ActorRdfJoin {
     };
   }
 
-  protected async getJoinCoefficients(
+  protected override async getJoinCoefficients(
     action: IActionRdfJoin,
     metadatas: MetadataBindings[],
   ): Promise<IMediatorTypeJoinCoefficients> {

@@ -17,7 +17,7 @@ export class MediatorCombineArray<A extends Actor<I, T, O>, I extends IAction, T
     this.combiner = this.createCombiner();
   }
 
-  public async mediate(action: I): Promise<O> {
+  public override async mediate(action: I): Promise<O> {
     let testResults: IActorReply<A, I, T, O>[];
     try {
       testResults = this.publish(action);
@@ -48,7 +48,7 @@ export class MediatorCombineArray<A extends Actor<I, T, O>, I extends IAction, T
     return this.combiner(results);
   }
 
-  protected mediateWith(): Promise<A> {
+  protected override mediateWith(): Promise<A> {
     throw new Error('Method not supported.');
   }
 
