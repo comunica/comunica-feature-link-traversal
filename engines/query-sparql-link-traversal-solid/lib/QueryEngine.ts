@@ -11,7 +11,7 @@ export class QueryEngine extends QueryEngineBase<
 IQueryContextCommon,
 Omit<QueryStringContext, 'sources'> & { sources?: SourceType[] },
 Omit<QueryAlgebraContext, 'sources'> & { sources?: SourceType[] }> {
-  public constructor(engine: ActorInitQueryBase = engineDefault) {
+  public constructor(engine: ActorInitQueryBase = engineDefault()) {
     super(engine);
   }
 }
