@@ -46,7 +46,7 @@ O extends IActorOutput,
     const settledResult = await Promise.allSettled(testResults.map(({ reply }) => reply));
 
     const rejectedActorIndex: Set<number> = new Set();
-    // Don't run the actor with rejected test
+    // Don't run the actors with rejected test.
     for (const [ i, element ] of settledResult.entries()) {
       if (element.status === 'rejected') {
         rejectedActorIndex.add(Number(i));
@@ -54,7 +54,7 @@ O extends IActorOutput,
     }
     testResults = testResults.filter((_, index) => !rejectedActorIndex.has(index));
 
-    // Run action on all actors.
+    // Run action of the authors with accepted tests.
     const results: O[] = await Promise.all(testResults.map(result => result.actor.runObservable(action)));
 
     // Return the combined results.
