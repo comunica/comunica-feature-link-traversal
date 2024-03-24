@@ -15,9 +15,9 @@ describe('MediatorCombineArray', () => {
     });
 
     it('should be a MediatorCombineArray constructor', () => {
-      expect(new (<any> MediatorCombineArray)({ name: 'mediator', bus, fields: [ 'field1', 'field2' ]}))
+      expect(new (<any>MediatorCombineArray)({ name: 'mediator', bus, fields: [ 'field1', 'field2' ]}))
         .toBeInstanceOf(MediatorCombineArray);
-      expect(new (<any> MediatorCombineArray)({ name: 'mediator', bus, fields: [ 'field1', 'field2' ]}))
+      expect(new (<any>MediatorCombineArray)({ name: 'mediator', bus, fields: [ 'field1', 'field2' ]}))
         .toBeInstanceOf(Mediator);
     });
   });
@@ -30,7 +30,7 @@ describe('MediatorCombineArray', () => {
     });
 
     it('should throw an error when mediateWith is called', () => {
-      return expect(() => (<any> mediator).mediateWith({}, [])).toThrow();
+      return expect(() => (<any>mediator).mediateWith({}, [])).toThrow();
     });
 
     describe('without actors', () => {
@@ -45,6 +45,22 @@ describe('MediatorCombineArray', () => {
         new DummyActor(1, [ 10 ], [ 1 ], bus);
         new DummyActor(10, [ 20, 30 ], [ 2, 3 ], bus);
         new DummyActor(100, [ 40, 50, 60 ], [ 4, 5, 6 ], bus);
+      });
+
+      it('should mediate', () => {
+        return expect(mediator.mediate({ context: new ActionContext() })).resolves
+          .toEqual({ field1: [ 10, 20, 30, 40, 50, 60 ], field2: [ 1, 2, 3, 4, 5, 6 ]});
+      });
+    });
+
+    describe('for defined actors with s test that reject', () => {
+      beforeEach(() => {
+        bus = new Bus({ name: 'bus' });
+        new DummyActor(1, [ 10 ], [ 1 ], bus);
+        new DummyActor(1_000, [ 70, 80, 90, 100 ], [ 7, 8, 9, 10 ], bus, true);
+        new DummyActor(10, [ 20, 30 ], [ 2, 3 ], bus);
+        new DummyActor(100, [ 40, 50, 60 ], [ 4, 5, 6 ], bus);
+        mediator = new MediatorCombineArray({ name: 'mediator', bus, fields: [ 'field1', 'field2' ]});
       });
 
       it('should mediate', () => {
@@ -71,15 +87,27 @@ describe('MediatorCombineArray', () => {
 class DummyActor extends Actor<IAction, IDummyTest, IDummyTest> {
   public readonly data1: any;
   public readonly data2: any;
+  public readonly rejectTest: boolean;
 
-  public constructor(id: number, data1: any, data2: any, bus: Bus<DummyActor, IAction, IDummyTest, IDummyTest>) {
+  public constructor(id: number,
+    data1: any,
+    data2: any,
+    bus: Bus<DummyActor, IAction, IDummyTest, IDummyTest>,
+    rejectTest?: boolean) {
     super({ name: `dummy${id}`, bus });
     this.data1 = data1;
     this.data2 = data2;
+    this.rejectTest = rejectTest === undefined ? false : rejectTest;
   }
 
   public async test(action: IAction): Promise<IDummyTest> {
-    return { field1: this.data1, field2: this.data2, otherField: 'ignored' };
+    return new Promise((resolve, reject) => {
+      if (this.rejectTest) {
+        reject(new Error('foo'));
+        return;
+      }
+      resolve({ field1: this.data1, field2: this.data2, otherField: 'ignored' });
+    });
   }
 
   public async run(action: IAction): Promise<IDummyTest> {
