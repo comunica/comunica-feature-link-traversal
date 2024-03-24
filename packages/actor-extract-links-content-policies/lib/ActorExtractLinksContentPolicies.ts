@@ -1,7 +1,6 @@
 import type { ActorInitQueryBase } from '@comunica/actor-init-query';
 import { QueryEngineBase } from '@comunica/actor-init-query';
-import type { IActionExtractLinks,
-  IActorExtractLinksOutput } from '@comunica/bus-extract-links';
+import type { IActionExtractLinks, IActorExtractLinksOutput } from '@comunica/bus-extract-links';
 import {
   ActorExtractLinks,
 } from '@comunica/bus-extract-links';
@@ -10,7 +9,7 @@ import { KeysQueryOperation } from '@comunica/context-entries';
 import type { IActorArgs, IActorTest } from '@comunica/core';
 import { ActionContext, ActionContextKey } from '@comunica/core';
 import type { Bindings, IActionContext } from '@comunica/types';
-import type * as RDF from 'rdf-js';
+import type * as RDF from '@rdfjs/types';
 import { storeStream } from 'rdf-store-stream';
 import { matchPatternComplete } from 'rdf-terms';
 import type { Algebra } from 'sparqlalgebrajs';
@@ -34,12 +33,12 @@ export class ActorExtractLinksContentPolicies extends ActorExtractLinks
     this.queryEngine = new QueryEngineBase(args.actorInitQuery);
   }
 
-  public async test(action: IActionExtractLinks): Promise<IActorTest> {
+  public async test(_action: IActionExtractLinks): Promise<IActorTest> {
     return true;
   }
 
   public static getContentPolicies(context: IActionContext): ContentPolicy[] {
-    return context.get(KEY_CONTEXT_POLICIES) || [];
+    return context.get(KEY_CONTEXT_POLICIES) ?? [];
   }
 
   protected async getContentPoliciesFromDocument(documentIri: string, store: RDF.Store): Promise<ContentPolicy[]> {
@@ -143,7 +142,7 @@ export class ActorExtractLinksContentPolicies extends ActorExtractLinks
 }
 
 export interface IActorExtractLinksContentPoliciesArgs
-  extends IActorArgs<IActionExtractLinks, IActorTest, IActorExtractLinksOutput>{
+  extends IActorArgs<IActionExtractLinks, IActorTest, IActorExtractLinksOutput> {
   /**
    * An init query actor that is used to query all links to follow from a stream.
    * @default {<urn:comunica:default:init/actors#query>}

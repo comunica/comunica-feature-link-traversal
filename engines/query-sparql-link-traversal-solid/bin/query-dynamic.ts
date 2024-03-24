@@ -6,6 +6,7 @@ import { runArgsInProcess } from '@comunica/runner-cli';
 import { CliArgsHandlerAnnotateSources } from '../lib/CliArgsHandlerAnnotateSources';
 
 const cliArgsHandlerSolidAuth = new CliArgsHandlerSolidAuth();
+// eslint-disable-next-line node/no-path-concat
 runArgsInProcess(`${__dirname}/../`, `${__dirname}/../config/config-default.json`, {
   context: new ActionContext({
     [KeysInitQuery.cliArgsHandlers.name]: [

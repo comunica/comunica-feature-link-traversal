@@ -36,11 +36,11 @@ export class ActorRdfResolveHypermediaLinksTraversePruneShapetrees extends Actor
 
     // Obtain links and shapetrees from metadata
     let links: ILink[] = action.metadata.traverse;
-    const applicable: ShapeTree[] = action.metadata.shapetrees.applicable;
+    // Const applicable: ShapeTree[] = action.metadata.shapetrees.applicable;
     const nonApplicable: ShapeTree[] = action.metadata.shapetrees.nonApplicable;
 
     // Prune links from non-applicable shapetrees
-    links = links.filter(link => {
+    links = links.filter((link) => {
       for (const shapeTree of nonApplicable) {
         if (this.urlMatchesTemplate(link.url, shapeTree.uriTemplate)) {
           return false;
@@ -68,7 +68,7 @@ export class ActorRdfResolveHypermediaLinksTraversePruneShapetrees extends Actor
    */
   public urlMatchesTemplate(url: string, template: string): boolean {
     // TODO: this is not able to handle more complex cases, see https://datatracker.ietf.org/doc/html/rfc6570
-    const templateRegex = new RegExp(template.replace(/\{[^}]*\}/gu, '.+'), 'u');
+    const templateRegex = new RegExp(template.replaceAll(/\{[^}]*\}/gu, '.+'), 'u');
     return templateRegex.test(url);
   }
 }

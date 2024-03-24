@@ -1,48 +1,48 @@
 {
   "name": "@comunica/actor-rdf-join-inner-multi-adaptive-destroy",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "A inner-multi-adaptive-destroy rdf-join actor",
   "lsd:module": true,
-  "main": "lib/index.js",
-  "typings": "lib/index",
+  "license": "MIT",
+  "homepage": "https://comunica.dev/",
   "repository": {
     "type": "git",
     "url": "https://github.com/comunica/comunica.git",
     "directory": "packages/actor-rdf-join-inner-multi-adaptive-destroy"
   },
-  "publishConfig": {
-    "access": "public"
+  "bugs": {
+    "url": "https://github.com/comunica/comunica/issues"
   },
-  "sideEffects": false,
   "keywords": [
     "comunica",
     "actor",
     "rdf-join",
     "inner-multi-adaptive-destroy"
   ],
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/comunica/comunica/issues"
+  "sideEffects": false,
+  "main": "lib/index.js",
+  "typings": "lib/index",
+  "publishConfig": {
+    "access": "public"
   },
-  "homepage": "https://comunica.dev/",
   "files": [
     "components",
     "lib/**/*.d.ts",
     "lib/**/*.js",
     "lib/**/*.js.map"
   ],
-  "dependencies": {
-    "@comunica/bus-query-operation": "^2.10.1",
-    "@comunica/bus-rdf-join": "^2.10.1",
-    "@comunica/context-entries": "^2.10.0",
-    "@comunica/context-entries-link-traversal": "^0.2.0",
-    "@comunica/mediatortype-join-coefficients": "^2.10.0",
-    "@comunica/types": "^2.10.0",
-    "asynciterator": "^3.8.1"
-  },
   "scripts": {
     "build": "npm run build:ts && npm run build:components",
     "build:ts": "node \"../../node_modules/typescript/bin/tsc\"",
     "build:components": "componentsjs-generator"
+  },
+  "dependencies": {
+    "@comunica/bus-query-operation": "^3.0.1",
+    "@comunica/bus-rdf-join": "^3.0.1",
+    "@comunica/context-entries": "^3.0.1",
+    "@comunica/context-entries-link-traversal": "^0.3.0",
+    "@comunica/mediatortype-join-coefficients": "^3.0.1",
+    "@comunica/types": "^3.0.1",
+    "asynciterator": "^3.9.0"
   }
 }

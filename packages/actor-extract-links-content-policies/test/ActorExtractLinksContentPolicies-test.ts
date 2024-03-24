@@ -1,4 +1,4 @@
-import type { Readable } from 'stream';
+import type { Readable } from 'node:stream';
 import { BindingsFactory } from '@comunica/bindings-factory';
 import { KeysQueryOperation } from '@comunica/context-entries';
 import { ActionContext, Bus } from '@comunica/core';
@@ -40,7 +40,7 @@ describe('ActorExtractLinksContentPolicies', () => {
             DF.quad(DF.namedNode('ex:s'), DF.namedNode('ex:p'), DF.namedNode('ex:o')),
           ]);
         }),
-        queryBindings: jest.fn(pattern => {
+        queryBindings: jest.fn((pattern) => {
           if (typeof pattern === 'string') {
             // Query in getContentPoliciesFromDocument
             return {
@@ -124,26 +124,26 @@ describe('ActorExtractLinksContentPolicies', () => {
       ]);
     });
 
-    it('should test', () => {
-      return expect(actor.test({ url: '', metadata: input, requestTime: 0, context: new ActionContext() }))
-        .resolves.toEqual(true);
+    it('should test', async() => {
+      await expect(actor.test({ url: '', metadata: input, requestTime: 0, context: new ActionContext() }))
+        .resolves.toBe(true);
     });
 
-    it('should run without context', () => {
-      return expect(actor.run({ url: '', metadata: input, requestTime: 0, context: new ActionContext() }))
+    it('should run without context', async() => {
+      await expect(actor.run({ url: '', metadata: input, requestTime: 0, context: new ActionContext() }))
         .resolves.toEqual({
           links: [],
         });
     });
 
-    it('should run with empty context', () => {
+    it('should run with empty context', async() => {
       const context = new ActionContext({});
-      return expect(actor.run({ url: '', metadata: input, requestTime: 0, context })).resolves.toEqual({
+      await expect(actor.run({ url: '', metadata: input, requestTime: 0, context })).resolves.toEqual({
         links: [],
       });
     });
 
-    it('should run with one content policy that produces no matches', () => {
+    it('should run with one content policy that produces no matches', async() => {
       const context = new ActionContext({
         [KEY_CONTEXT_POLICIES.name]: [
           new ContentPolicy(
@@ -158,12 +158,12 @@ describe('ActorExtractLinksContentPolicies', () => {
           ),
         ],
       });
-      return expect(actor.run({ url: '', metadata: input, requestTime: 0, context })).resolves.toEqual({
+      await expect(actor.run({ url: '', metadata: input, requestTime: 0, context })).resolves.toEqual({
         links: [],
       });
     });
 
-    it('should run with one content policy that produces matches', () => {
+    it('should run with one content policy that produces matches', async() => {
       const context = new ActionContext({
         [KEY_CONTEXT_POLICIES.name]: [
           new ContentPolicy(
@@ -178,7 +178,7 @@ describe('ActorExtractLinksContentPolicies', () => {
           ),
         ],
       });
-      return expect(actor.run({ url: '', metadata: input, requestTime: 0, context })).resolves.toEqual({
+      await expect(actor.run({ url: '', metadata: input, requestTime: 0, context })).resolves.toEqual({
         links: [
           {
             url: 'ex:match1',
@@ -194,7 +194,7 @@ describe('ActorExtractLinksContentPolicies', () => {
       });
     });
 
-    it('should run with one content policy that produces matches and traverseConditional', () => {
+    it('should run with one content policy that produces matches and traverseConditional', async() => {
       actor = new ActorExtractLinksContentPolicies({
         name: 'actor',
         bus,
@@ -216,7 +216,7 @@ describe('ActorExtractLinksContentPolicies', () => {
           ),
         ],
       });
-      return expect(actor.run({ url: '', metadata: input, requestTime: 0, context })).resolves.toEqual({
+      await expect(actor.run({ url: '', metadata: input, requestTime: 0, context })).resolves.toEqual({
         links: [],
         linksConditional: [
           {
@@ -233,7 +233,7 @@ describe('ActorExtractLinksContentPolicies', () => {
       });
     });
 
-    it('should run with two content policies that produce matches', () => {
+    it('should run with two content policies that produce matches', async() => {
       const context = new ActionContext({
         [KEY_CONTEXT_POLICIES.name]: [
           new ContentPolicy(
@@ -258,7 +258,7 @@ describe('ActorExtractLinksContentPolicies', () => {
           ),
         ],
       });
-      return expect(actor.run({ url: '', metadata: input, requestTime: 0, context })).resolves.toEqual({
+      await expect(actor.run({ url: '', metadata: input, requestTime: 0, context })).resolves.toEqual({
         links: [
           { url: 'ex:match1', context: new ActionContext({ [KEY_CONTEXT_WITHPOLICIES.name]: false }) },
           { url: 'ex:match3', context: new ActionContext({ [KEY_CONTEXT_WITHPOLICIES.name]: false }) },
@@ -303,12 +303,16 @@ describe('ActorExtractLinksContentPolicies', () => {
       const result = await actor.run({ url: '', metadata: input, requestTime: 0, context });
       expect(result).toEqual({
         links: [
-          { url: 'ex:match1',
+          {
+            url: 'ex:match1',
             transform: expect.anything(),
-            context: new ActionContext({ [KEY_CONTEXT_WITHPOLICIES.name]: false }) },
-          { url: 'ex:match3',
+            context: new ActionContext({ [KEY_CONTEXT_WITHPOLICIES.name]: false }),
+          },
+          {
+            url: 'ex:match3',
             transform: expect.anything(),
-            context: new ActionContext({ [KEY_CONTEXT_WITHPOLICIES.name]: false }) },
+            context: new ActionContext({ [KEY_CONTEXT_WITHPOLICIES.name]: false }),
+          },
         ],
       });
       expect(result.links[0].transform).toBeInstanceOf(Function);
@@ -316,7 +320,7 @@ describe('ActorExtractLinksContentPolicies', () => {
 
       expect(queryEngine.queryBindings).toHaveBeenCalledTimes(1);
       expect(queryEngine.queryQuads).toHaveBeenCalledTimes(0);
-      expect(await arrayifyStream(await result.links[0].transform!(new ArrayIterator()))).toEqual([
+      await expect(arrayifyStream(await result.links[0].transform!(new ArrayIterator()))).resolves.toEqual([
         DF.quad(DF.namedNode('ex:s'), DF.namedNode('ex:p'), DF.namedNode('ex:o')),
       ]);
       expect(queryEngine.queryBindings).toHaveBeenCalledTimes(1);
@@ -325,7 +329,7 @@ describe('ActorExtractLinksContentPolicies', () => {
         sources: [ expect.anything() ],
         initialBindings: BF.bindings([[ DF.variable('varA'), DF.namedNode('ex:match1') ]]),
       });
-      expect(await arrayifyStream(await result.links[1].transform!(new ArrayIterator()))).toEqual([
+      await expect(arrayifyStream(await result.links[1].transform!(new ArrayIterator()))).resolves.toEqual([
         DF.quad(DF.namedNode('ex:s'), DF.namedNode('ex:p'), DF.namedNode('ex:o')),
       ]);
       expect(queryEngine.queryBindings).toHaveBeenCalledTimes(1);
@@ -336,7 +340,7 @@ describe('ActorExtractLinksContentPolicies', () => {
       });
     });
 
-    it('should run with one content policy that produces withPolicies matches', () => {
+    it('should run with one content policy that produces withPolicies matches', async() => {
       const context = new ActionContext({
         [KEY_CONTEXT_POLICIES.name]: [
           new ContentPolicy(
@@ -351,7 +355,7 @@ describe('ActorExtractLinksContentPolicies', () => {
           ),
         ],
       });
-      return expect(actor.run({ url: '', metadata: input, requestTime: 0, context })).resolves.toEqual({
+      await expect(actor.run({ url: '', metadata: input, requestTime: 0, context })).resolves.toEqual({
         links: [
           { url: 'ex:match1', context: new ActionContext({ [KEY_CONTEXT_WITHPOLICIES.name]: true }) },
           { url: 'ex:match3', context: new ActionContext({ [KEY_CONTEXT_WITHPOLICIES.name]: true }) },
@@ -359,20 +363,20 @@ describe('ActorExtractLinksContentPolicies', () => {
       });
     });
 
-    it('should run withPolicies with one content policy over a doc without policies', () => {
+    it('should run withPolicies with one content policy over a doc without policies', async() => {
       const context = new ActionContext({
         [KEY_CONTEXT_WITHPOLICIES.name]: true,
       });
-      return expect(actor.run({ url: 'no_policies', metadata: input, requestTime: 0, context })).resolves.toEqual({
+      await expect(actor.run({ url: 'no_policies', metadata: input, requestTime: 0, context })).resolves.toEqual({
         links: [],
       });
     });
 
-    it('should run withPolicies with one content policy over a doc with one policy', () => {
+    it('should run withPolicies with one content policy over a doc with one policy', async() => {
       const context = new ActionContext({
         [KEY_CONTEXT_WITHPOLICIES.name]: true,
       });
-      return expect(actor.run({ url: 'one_policy', metadata: input, requestTime: 0, context })).resolves.toEqual({
+      await expect(actor.run({ url: 'one_policy', metadata: input, requestTime: 0, context })).resolves.toEqual({
         links: [
           { url: 'ex:match1', context: new ActionContext({ [KEY_CONTEXT_WITHPOLICIES.name]: true }) },
           { url: 'ex:match3', context: new ActionContext({ [KEY_CONTEXT_WITHPOLICIES.name]: true }) },
@@ -380,11 +384,11 @@ describe('ActorExtractLinksContentPolicies', () => {
       });
     });
 
-    it('should run withPolicies with one content policy over a doc with two policies', () => {
+    it('should run withPolicies with one content policy over a doc with two policies', async() => {
       const context = new ActionContext({
         [KEY_CONTEXT_WITHPOLICIES.name]: true,
       });
-      return expect(actor.run({ url: 'two_policies', metadata: input, requestTime: 0, context })).resolves.toEqual({
+      await expect(actor.run({ url: 'two_policies', metadata: input, requestTime: 0, context })).resolves.toEqual({
         links: [
           { url: 'ex:match1', context: new ActionContext({ [KEY_CONTEXT_WITHPOLICIES.name]: true }) },
           { url: 'ex:match3', context: new ActionContext({ [KEY_CONTEXT_WITHPOLICIES.name]: true }) },
@@ -393,7 +397,7 @@ describe('ActorExtractLinksContentPolicies', () => {
       });
     });
 
-    it('should run withPolicies with one content policy over a doc with one policy and an input policy', () => {
+    it('should run withPolicies with one content policy over a doc with one policy and an input policy', async() => {
       const context = new ActionContext({
         [KEY_CONTEXT_WITHPOLICIES.name]: true,
         [KEY_CONTEXT_POLICIES.name]: [
@@ -409,7 +413,7 @@ describe('ActorExtractLinksContentPolicies', () => {
           ),
         ],
       });
-      return expect(actor.run({ url: 'one_policy', metadata: input, requestTime: 0, context })).resolves.toEqual({
+      await expect(actor.run({ url: 'one_policy', metadata: input, requestTime: 0, context })).resolves.toEqual({
         links: [
           { url: 'ex:match2Bis', context: new ActionContext({ [KEY_CONTEXT_WITHPOLICIES.name]: false }) },
           { url: 'ex:match1', context: new ActionContext({ [KEY_CONTEXT_WITHPOLICIES.name]: true }) },
@@ -418,11 +422,11 @@ describe('ActorExtractLinksContentPolicies', () => {
       });
     });
 
-    it('should run over a doc with two policies with include', () => {
+    it('should run over a doc with two policies with include', async() => {
       const context = new ActionContext({
         [KEY_CONTEXT_WITHPOLICIES.name]: true,
       });
-      return expect(actor.run({ url: 'two_policies_include', metadata: input, requestTime: 0, context }))
+      await expect(actor.run({ url: 'two_policies_include', metadata: input, requestTime: 0, context }))
         .resolves.toEqual({
           links: [
             { url: 'ex:match1', context: new ActionContext({ [KEY_CONTEXT_WITHPOLICIES.name]: true }) },
@@ -432,7 +436,7 @@ describe('ActorExtractLinksContentPolicies', () => {
         });
     });
 
-    it('should run with current quad pattern over a doc with two policies and match include', () => {
+    it('should run with current quad pattern over a doc with two policies and match include', async() => {
       const context = new ActionContext({
         [KEY_CONTEXT_WITHPOLICIES.name]: true,
         [KeysQueryOperation.operation.name]: factory.createPattern(
@@ -441,7 +445,7 @@ describe('ActorExtractLinksContentPolicies', () => {
           DF.variable('o'),
         ),
       });
-      return expect(actor.run({ url: 'two_includes', metadata: input, requestTime: 0, context })).resolves.toEqual({
+      await expect(actor.run({ url: 'two_includes', metadata: input, requestTime: 0, context })).resolves.toEqual({
         links: [
           {
             url: 'ex:match1',

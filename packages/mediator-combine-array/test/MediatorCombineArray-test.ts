@@ -30,12 +30,12 @@ describe('MediatorCombineArray', () => {
     });
 
     it('should throw an error when mediateWith is called', () => {
-      return expect(() => (<any>mediator).mediateWith({}, [])).toThrow();
+      expect(() => (<any> mediator).mediateWith({}, [])).toThrow('Method not supported.');
     });
 
     describe('without actors', () => {
-      it('should mediate', () => {
-        return expect(mediator.mediate({ context: new ActionContext() }))
+      it('should mediate', async() => {
+        await expect(mediator.mediate({ context: new ActionContext() }))
           .resolves.toEqual({ field1: [], field2: []});
       });
     });
@@ -47,8 +47,24 @@ describe('MediatorCombineArray', () => {
         new DummyActor(100, [ 40, 50, 60 ], [ 4, 5, 6 ], bus);
       });
 
-      it('should mediate', () => {
-        return expect(mediator.mediate({ context: new ActionContext() })).resolves
+      it('should mediate', async() => {
+        await expect(mediator.mediate({ context: new ActionContext() })).resolves
+          .toEqual({ field1: [ 10, 20, 30, 40, 50, 60 ], field2: [ 1, 2, 3, 4, 5, 6 ]});
+      });
+    });
+
+    describe('for defined actors with s test that reject', () => {
+      beforeEach(() => {
+        bus = new Bus({ name: 'bus' });
+        new DummyActor(1, [ 10 ], [ 1 ], bus);
+        new DummyActor(1_000, [ 70, 80, 90, 100 ], [ 7, 8, 9, 10 ], bus, true);
+        new DummyActor(10, [ 20, 30 ], [ 2, 3 ], bus);
+        new DummyActor(100, [ 40, 50, 60 ], [ 4, 5, 6 ], bus);
+        mediator = new MediatorCombineArray({ name: 'mediator', bus, fields: [ 'field1', 'field2' ]});
+      });
+
+      it('should mediate', async() => {
+        await expect(mediator.mediate({ context: new ActionContext() })).resolves
           .toEqual({ field1: [ 10, 20, 30, 40, 50, 60 ], field2: [ 1, 2, 3, 4, 5, 6 ]});
       });
     });
@@ -76,9 +92,47 @@ describe('MediatorCombineArray', () => {
         new DummyActor(100, undefined, [ 4, 5, 6 ], bus);
       });
 
-      it('should mediate', () => {
-        return expect(mediator.mediate({ context: new ActionContext() })).resolves
+      it('should mediate', async() => {
+        await expect(mediator.mediate({ context: new ActionContext() })).resolves
           .toEqual({ field1: [ 10, 20, 30 ], field2: [ 1, 4, 5, 6 ]});
+      });
+    });
+  });
+
+  describe('An MediatorCombineArray instance with erroring actors', () => {
+    let mediator: MediatorCombineArray<DummyActor, IAction, IDummyTest, IDummyTest>;
+
+    beforeEach(() => {
+      mediator = new MediatorCombineArray({
+        name: 'mediator',
+        bus,
+        fields: [ 'field1', 'field2' ],
+        filterErrors: true,
+      });
+    });
+
+    it('should throw an error when mediateWith is called', () => {
+      expect(() => (<any> mediator).mediateWith({}, [])).toThrow('Method not supported.');
+    });
+
+    describe('without actors', () => {
+      it('should mediate', async() => {
+        await expect(mediator.mediate({ context: new ActionContext() }))
+          .resolves.toEqual({ field1: [], field2: []});
+      });
+    });
+
+    describe('for defined actors', () => {
+      beforeEach(() => {
+        new DummyActor(1, [ 10 ], [ 1 ], bus);
+        new DummyActor(10, [ 20, 30 ], [ 2, 3 ], bus);
+        new DummyThrowActor(50, bus);
+        new DummyActor(100, [ 40, 50, 60 ], [ 4, 5, 6 ], bus);
+      });
+
+      it('should mediate', async() => {
+        await expect(mediator.mediate({ context: new ActionContext() })).resolves
+          .toEqual({ field1: [ 10, 20, 30, 40, 50, 60 ], field2: [ 1, 2, 3, 4, 5, 6 ]});
       });
     });
   });
@@ -112,6 +166,19 @@ class DummyActor extends Actor<IAction, IDummyTest, IDummyTest> {
 
   public async run(action: IAction): Promise<IDummyTest> {
     return { field1: this.data1, field2: this.data2, otherField: 'ignored' };
+  }
+}
+
+class DummyThrowActor extends DummyActor {
+  public constructor(
+    id: number,
+    bus: Bus<DummyActor, IAction, IDummyTest, IDummyTest>,
+  ) {
+    super(id, {}, {}, bus);
+  }
+
+  public override async test(action: IAction): Promise<IDummyTest> {
+    throw new Error('Dummy Error');
   }
 }
 

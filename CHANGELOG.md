@@ -1,6 +1,20 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+<a name="v0.3.0"></a>
+## [v0.3.0](https://github.com/comunica/comunica-feature-link-traversal/compare/v0.2.0...v0.3.0) - 2024-03-20
+
+### Changed
+* [Update to Comunica v3](https://github.com/comunica/comunica-feature-link-traversal/commit/b1314c1813df156e726f568f04b9f96d67f00968)
+  * [Remove KeysRdfResolveHypermediaLinks.traverse](https://github.com/comunica/comunica-feature-link-traversal/commit/1bdd810eec99355e71ddfd5a3dd1d60c98a3389a)
+* [Disable type index inference by default, as it's unevaluated](https://github.com/comunica/comunica-feature-link-traversal/commit/f1c37bfa9706ec092a902942202b8cad859041c2)
+* [Update dependency cross-fetch to v4](https://github.com/comunica/comunica-feature-link-traversal/commit/6b484e95060f5cd3be1056d8c6f1d2fcb662c5c9)
+* [Update dependency rdf-store-stream to v2 (#113)](https://github.com/comunica/comunica-feature-link-traversal/commit/8291759566131084868a392075fa0387d88332e0)
+
+### Fixed
+* [Fix breaking changes in ShEx, Closes #68](https://github.com/comunica/comunica-feature-link-traversal/commit/e1eb462dc6ee80d45a8e1468698d448786b16dd4)
+* [Fix webpacking of shapetrees config failing](https://github.com/comunica/comunica-feature-link-traversal/commit/367d2961b18e4f4632c38201b5f1f099f5a9d451)
+
 <a name="v0.2.0"></a>
 ## [v0.2.0](https://github.com/comunica/comunica-feature-link-traversal/compare/v0.1.1...v0.2.0) - 2023-06-06
 

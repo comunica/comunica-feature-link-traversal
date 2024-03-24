@@ -33,27 +33,29 @@ describe('ActorRdfResolveHypermediaLinksTraversePruneShapetrees', () => {
     });
 
     describe('test', () => {
-      it('should fail with empty metadata', () => {
-        return expect(actor.test({ metadata: {}, context })).rejects
+      it('should fail with empty metadata', async() => {
+        await expect(actor.test({ metadata: {}, context })).rejects
           .toThrow(new Error('Actor actor requires a \'traverse\' metadata entry.'));
       });
 
-      it('should fail without shapetrees in metadata', () => {
-        return expect(actor.test({ metadata: { traverse: true }, context })).rejects.toThrow();
+      it('should fail without shapetrees in metadata', async() => {
+        await expect(actor.test({ metadata: { traverse: true }, context }))
+          .rejects.toThrow(`Actor actor requires a 'shapetrees' metadata entry.`);
       });
 
-      it('should fail without traverse in metadata', () => {
-        return expect(actor.test({ metadata: { shapetrees: true }, context })).rejects.toThrow();
+      it('should fail without traverse in metadata', async() => {
+        await expect(actor.test({ metadata: { shapetrees: true }, context }))
+          .rejects.toThrow(`Actor actor requires a 'traverse' metadata entry.`);
       });
 
-      it('should pass with traverse and shapetrees in metadata', () => {
-        return expect(actor.test({ metadata: { traverse: true, shapetrees: true }, context }))
-          .resolves.toEqual(true);
+      it('should pass with traverse and shapetrees in metadata', async() => {
+        await expect(actor.test({ metadata: { traverse: true, shapetrees: true }, context }))
+          .resolves.toBe(true);
       });
     });
 
     describe('run', () => {
-      it('should run with empty data', () => {
+      it('should run with empty data', async() => {
         const action = {
           metadata: {
             traverse: [],
@@ -61,7 +63,7 @@ describe('ActorRdfResolveHypermediaLinksTraversePruneShapetrees', () => {
           },
           context,
         };
-        return expect(actor.run(action)).resolves.toEqual({
+        await expect(actor.run(action)).resolves.toEqual({
           metadata: {
             traverse: [],
           },
@@ -69,7 +71,7 @@ describe('ActorRdfResolveHypermediaLinksTraversePruneShapetrees', () => {
         });
       });
 
-      it('should run with a mix of links matching or not with nonApplicable', () => {
+      it('should run with a mix of links matching or not with nonApplicable', async() => {
         const action = {
           metadata: {
             traverse: [
@@ -89,7 +91,7 @@ describe('ActorRdfResolveHypermediaLinksTraversePruneShapetrees', () => {
           },
           context,
         };
-        return expect(actor.run(action)).resolves.toEqual({
+        await expect(actor.run(action)).resolves.toEqual({
           metadata: {
             traverse: [
               { url: 'ex:url/a' },

@@ -12,7 +12,7 @@ export class LinkQueueLimitDepth extends LinkQueueWrapper {
     this.limit = limit;
   }
 
-  public push(link: ILink, parent: ILink): boolean {
+  public override push(link: ILink, parent: ILink): boolean {
     // Ensure our parent has a defined depth
     if (!parent.metadata) {
       parent.metadata = {};

@@ -7,6 +7,7 @@ import { KeysRdfJoin } from '@comunica/context-entries-link-traversal';
 import { ActionContext, Bus } from '@comunica/core';
 import { MetadataValidationState } from '@comunica/metadata';
 import type { IActionContext, IJoinEntry } from '@comunica/types';
+import type * as RDF from '@rdfjs/types';
 import { ArrayIterator } from 'asynciterator';
 import { DataFactory } from 'rdf-data-factory';
 import { ActorRdfJoinInnerMultiAdaptiveDestroy } from '../lib/ActorRdfJoinInnerMultiAdaptiveDestroy';
@@ -28,7 +29,7 @@ describe('ActorRdfJoinInnerMultiAdaptiveDestroy', () => {
     entries = [
       {
         output: {
-          bindingsStream: new ArrayIterator([
+          bindingsStream: new ArrayIterator<RDF.Bindings>([
             BF.bindings([
               [ DF.variable('a'), DF.literal('a1') ],
               [ DF.variable('b'), DF.literal('b1') ],
@@ -54,7 +55,7 @@ describe('ActorRdfJoinInnerMultiAdaptiveDestroy', () => {
       },
       {
         output: {
-          bindingsStream: new ArrayIterator([
+          bindingsStream: new ArrayIterator<RDF.Bindings>([
             BF.bindings([
               [ DF.variable('a'), DF.literal('a1') ],
               [ DF.variable('c'), DF.literal('c1') ],
@@ -91,7 +92,7 @@ describe('ActorRdfJoinInnerMultiAdaptiveDestroy', () => {
         mediate: async() => ({ selectivity: 1 }),
       };
       mediatorJoin = <any> {
-        mediate: jest.fn(async action => {
+        mediate: jest.fn(async(action) => {
           // Fully consume the input entries
           for (const entry of action.entries) {
             await entry.output.bindingsStream.toArray();
@@ -116,8 +117,8 @@ describe('ActorRdfJoinInnerMultiAdaptiveDestroy', () => {
       });
     });
 
-    it('should test', () => {
-      return expect(actor.test({
+    it('should test', async() => {
+      await expect(actor.test({
         context,
         type: 'inner',
         entries,
@@ -129,8 +130,8 @@ describe('ActorRdfJoinInnerMultiAdaptiveDestroy', () => {
       });
     });
 
-    it('should not test with skipAdaptiveJoin', () => {
-      return expect(actor.test({
+    it('should not test with skipAdaptiveJoin', async() => {
+      await expect(actor.test({
         context: context.set(KeysRdfJoin.skipAdaptiveJoin, true),
         type: 'inner',
         entries,
@@ -147,8 +148,8 @@ describe('ActorRdfJoinInnerMultiAdaptiveDestroy', () => {
       const destroy0 = jest.spyOn(entries[0].output.bindingsStream, 'destroy');
       const destroy1 = jest.spyOn(entries[0].output.bindingsStream, 'destroy');
 
-      expect(output.type).toEqual('bindings');
-      expect(await (<any> output).metadata()).toEqual({ a: 'b' });
+      expect(output.type).toBe('bindings');
+      await expect((<any> output).metadata()).resolves.toEqual({ a: 'b' });
       await expect(output.bindingsStream).toEqualBindingsStream([
         BF.fromRecord({ a: DF.namedNode('ex:a1') }),
         BF.fromRecord({ a: DF.namedNode('ex:a2') }),
@@ -176,8 +177,8 @@ describe('ActorRdfJoinInnerMultiAdaptiveDestroy', () => {
 
       jest.runAllTimers();
 
-      expect(output.type).toEqual('bindings');
-      expect(await (<any> output).metadata()).toEqual({ a: 'b' });
+      expect(output.type).toBe('bindings');
+      await expect((<any> output).metadata()).resolves.toEqual({ a: 'b' });
       await expect(output.bindingsStream).toEqualBindingsStream([
         BF.fromRecord({ a: DF.namedNode('ex:a1') }),
         BF.fromRecord({ a: DF.namedNode('ex:a2') }),

@@ -81,7 +81,12 @@ export interface IActorExtractLinksOutput extends IActorOutput {
 }
 
 export type IActorExtractLinksArgs = IActorArgs<
-IActionExtractLinks, IActorTest, IActorExtractLinksOutput>;
+IActionExtractLinks,
+IActorTest,
+IActorExtractLinksOutput
+>;
 
 export type MediatorExtractLinks = Mediate<
-IActionExtractLinks, IActorExtractLinksOutput>;
+IActionExtractLinks,
+IActorExtractLinksOutput
+>;

@@ -1,12 +1,14 @@
 // eslint-disable-next-line import/no-nodejs-modules
-import type { Readable, TransformCallback } from 'stream';
+import type { Readable, TransformCallback } from 'node:stream';
 import {
   ActorRdfResolveHypermediaLinks,
 } from '@comunica/bus-rdf-resolve-hypermedia-links';
-import type { IActionRdfResolveHypermediaLinks,
+import type {
+  IActionRdfResolveHypermediaLinks,
   IActorRdfResolveHypermediaLinksOutput,
   ILink,
-  MediatorRdfResolveHypermediaLinks } from '@comunica/bus-rdf-resolve-hypermedia-links';
+  MediatorRdfResolveHypermediaLinks,
+} from '@comunica/bus-rdf-resolve-hypermedia-links';
 import { KeysRdfResolveHypermediaLinks } from '@comunica/context-entries-link-traversal';
 import type { IActorArgs, IActorTest } from '@comunica/core';
 import type * as RDF from '@rdfjs/types';

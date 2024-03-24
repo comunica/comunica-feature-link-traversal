@@ -12,7 +12,10 @@ import type { Actor, IActorArgs, IActorTest, Mediator } from '@comunica/core';
 export class ActorRdfResolveHypermediaLinksTraverseReplaceConditional extends ActorRdfResolveHypermediaLinks {
   private readonly mediatorRdfResolveHypermediaLinks: Mediator<
   Actor<IActionRdfResolveHypermediaLinks, IActorTest, IActorRdfResolveHypermediaLinksOutput>,
-  IActionRdfResolveHypermediaLinks, IActorTest, IActorRdfResolveHypermediaLinksOutput>;
+  IActionRdfResolveHypermediaLinks,
+IActorTest,
+IActorRdfResolveHypermediaLinksOutput
+>;
 
   public constructor(args: IActorRdfResolveHypermediaLinksTraverseReplaceConditionalArgs) {
     super(args);
@@ -55,8 +58,14 @@ export class ActorRdfResolveHypermediaLinksTraverseReplaceConditional extends Ac
 }
 
 export interface IActorRdfResolveHypermediaLinksTraverseReplaceConditionalArgs extends IActorArgs<
-IActionRdfResolveHypermediaLinks, IActorTest, IActorRdfResolveHypermediaLinksOutput> {
+IActionRdfResolveHypermediaLinks,
+IActorTest,
+IActorRdfResolveHypermediaLinksOutput
+> {
   mediatorRdfResolveHypermediaLinks: Mediator<
   Actor<IActionRdfResolveHypermediaLinks, IActorTest, IActorRdfResolveHypermediaLinksOutput>,
-  IActionRdfResolveHypermediaLinks, IActorTest, IActorRdfResolveHypermediaLinksOutput>;
+  IActionRdfResolveHypermediaLinks,
+IActorTest,
+IActorRdfResolveHypermediaLinksOutput
+>;
 }

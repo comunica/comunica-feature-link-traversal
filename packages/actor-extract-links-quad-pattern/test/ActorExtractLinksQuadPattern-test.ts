@@ -1,4 +1,4 @@
-import type { Readable } from 'stream';
+import type { Readable } from 'node:stream';
 import { ActorExtractLinks } from '@comunica/bus-extract-links';
 import { KeysQueryOperation } from '@comunica/context-entries';
 import { ActionContext, Bus } from '@comunica/core';
@@ -32,7 +32,9 @@ describe('ActorExtractLinksQuadPattern', () => {
     });
 
     it('should not be able to create new ActorExtractLinksQuadPattern objects without \'new\'', () => {
-      expect(() => { (<any> ActorExtractLinksQuadPattern)(); }).toThrow();
+      expect(() => {
+        (<any> ActorExtractLinksQuadPattern)();
+      }).toThrow(`Class constructor ActorExtractLinksQuadPattern cannot be invoked without 'new'`);
     });
   });
 
@@ -60,24 +62,24 @@ describe('ActorExtractLinksQuadPattern', () => {
       context = new ActionContext({ [KeysQueryOperation.operation.name]: pattern });
     });
 
-    it('should fail to test without query operation in context', () => {
+    it('should fail to test without query operation in context', async() => {
       context = new ActionContext({});
-      return expect(actor.test({ url: '', metadata: input, requestTime: 0, context })).rejects
+      await expect(actor.test({ url: '', metadata: input, requestTime: 0, context })).rejects
         .toThrow(new Error('Actor actor can only work in the context of a quad pattern.'));
     });
 
-    it('should fail to test with query operation of wrong type in context', () => {
+    it('should fail to test with query operation of wrong type in context', async() => {
       context = new ActionContext({ [KeysQueryOperation.operation.name]: FACTORY.createBgp([]) });
-      return expect(actor.test({ url: '', metadata: input, requestTime: 0, context })).rejects
+      await expect(actor.test({ url: '', metadata: input, requestTime: 0, context })).rejects
         .toThrow(new Error('Actor actor can only work in the context of a quad pattern.'));
     });
 
-    it('should test with quad pattern query operation in context', () => {
-      return expect(actor.test({ url: '', metadata: input, requestTime: 0, context })).resolves.toEqual(true);
+    it('should test with quad pattern query operation in context', async() => {
+      await expect(actor.test({ url: '', metadata: input, requestTime: 0, context })).resolves.toBe(true);
     });
 
-    it('should run on a stream and return urls matching the pattern', () => {
-      return expect(actor.run({ url: '', metadata: input, requestTime: 0, context })).resolves
+    it('should run on a stream and return urls matching the pattern', async() => {
+      await expect(actor.run({ url: '', metadata: input, requestTime: 0, context })).resolves
         .toEqual({
           links: [
             { url: 'ex:s2' },
@@ -116,8 +118,8 @@ describe('ActorExtractLinksQuadPattern', () => {
       context = new ActionContext({ [KeysQueryOperation.operation.name]: pattern });
     });
 
-    it('should run on a stream and return urls matching the pattern', () => {
-      return expect(actor.run({ url: '', metadata: input, requestTime: 0, context })).resolves
+    it('should run on a stream and return urls matching the pattern', async() => {
+      await expect(actor.run({ url: '', metadata: input, requestTime: 0, context })).resolves
         .toEqual({
           links: [
             { url: 'ex:s2' },
