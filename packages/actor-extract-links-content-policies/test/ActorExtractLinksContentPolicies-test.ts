@@ -2,6 +2,7 @@ import type { Readable } from 'node:stream';
 import { BindingsFactory } from '@comunica/bindings-factory';
 import { KeysQueryOperation } from '@comunica/context-entries';
 import { ActionContext, Bus } from '@comunica/core';
+import { REACHABILITY_LABEL } from '@comunica/types-link-traversal';
 import arrayifyStream from 'arrayify-stream';
 import { ArrayIterator } from 'asynciterator';
 import { DataFactory } from 'rdf-data-factory';
@@ -456,6 +457,52 @@ describe('ActorExtractLinksContentPolicies', () => {
             url: 'ex:match3',
             context: new ActionContext({ [KEY_CONTEXT_WITHPOLICIES.name]: true }),
             transform: expect.anything(),
+          },
+          // URL match2Bis will not match the query operation pattern
+          // { url: 'ex:match2Bis', context: new ActionContext({ [KEY_CONTEXT_WITHPOLICIES.name]: false }) },
+        ],
+      });
+    });
+
+    it(`should run with current quad pattern over a doc 
+    with two policies and match include with annotated reachability`, async() => {
+      actor = new ActorExtractLinksContentPolicies({
+        name: 'actor',
+        bus,
+        actorInitQuery: <any> {},
+        traverseConditional: false,
+        labelLinksWithReachability: true,
+      });
+      (<any> actor).queryEngine = queryEngine;
+      input = stream([
+        quad('ex:s1', 'ex:px', 'ex:o1', 'ex:gx'),
+        quad('ex:s2', 'ex:p', '"o"', 'ex:g'),
+        quad('ex:s3', 'ex:px', 'ex:o3', 'ex:gx'),
+        quad('ex:s4', 'ex:p', 'ex:o4', 'ex:g'),
+        quad('ex:s5', 'ex:p', 'ex:o5', 'ex:gx'),
+      ]);
+
+      const context = new ActionContext({
+        [KEY_CONTEXT_WITHPOLICIES.name]: true,
+        [KeysQueryOperation.operation.name]: factory.createPattern(
+          DF.variable('s'),
+          DF.namedNode('ex:p1'),
+          DF.variable('o'),
+        ),
+      });
+      await expect(actor.run({ url: 'two_includes', metadata: input, requestTime: 0, context })).resolves.toEqual({
+        links: [
+          {
+            url: 'ex:match1',
+            context: new ActionContext({ [KEY_CONTEXT_WITHPOLICIES.name]: true }),
+            transform: expect.anything(),
+            metadata: { [REACHABILITY_LABEL]: ActorExtractLinksContentPolicies.REACHABILITY_LABEL },
+          },
+          {
+            url: 'ex:match3',
+            context: new ActionContext({ [KEY_CONTEXT_WITHPOLICIES.name]: true }),
+            transform: expect.anything(),
+            metadata: { [REACHABILITY_LABEL]: ActorExtractLinksContentPolicies.REACHABILITY_LABEL },
           },
           // URL match2Bis will not match the query operation pattern
           // { url: 'ex:match2Bis', context: new ActionContext({ [KEY_CONTEXT_WITHPOLICIES.name]: false }) },
