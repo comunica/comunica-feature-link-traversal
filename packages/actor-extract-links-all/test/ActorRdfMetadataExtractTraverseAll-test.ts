@@ -1,6 +1,7 @@
 import type { Readable } from 'node:stream';
 import { ActorExtractLinks } from '@comunica/bus-extract-links';
 import { ActionContext, Bus } from '@comunica/core';
+import { REACHABILITY_LABEL } from '@comunica/types-link-traversal';
 import { ActorExtractLinksAll } from '../lib/ActorExtractLinksAll';
 
 const quad = require('rdf-quad');
@@ -19,15 +20,15 @@ describe('ActorExtractLinksAll', () => {
     });
 
     it('should be a ActorExtractLinksAll constructor', () => {
-      expect(new (<any> ActorExtractLinksAll)({ name: 'actor', bus }))
+      expect(new (<any>ActorExtractLinksAll)({ name: 'actor', bus }))
         .toBeInstanceOf(ActorExtractLinksAll);
-      expect(new (<any> ActorExtractLinksAll)({ name: 'actor', bus }))
+      expect(new (<any>ActorExtractLinksAll)({ name: 'actor', bus }))
         .toBeInstanceOf(ActorExtractLinks);
     });
 
     it('should not be able to create new ActorExtractLinksAll objects without \'new\'', () => {
       expect(() => {
-        (<any> ActorExtractLinksAll)();
+        (<any>ActorExtractLinksAll)();
       }).toThrow(`Class constructor ActorExtractLinksAll cannot be invoked without 'new'`);
     });
   });
@@ -76,6 +77,37 @@ describe('ActorExtractLinksAll', () => {
             { url: 'ex:o5' },
             { url: 'ex:gx' },
           ],
+        });
+    });
+
+    it('should run on a stream and return all urls with reachability annotation', async() => {
+      actor = new ActorExtractLinksAll({ name: 'actor', bus, labelLinksWithReachability: true });
+      await expect(actor.run({ url: '', metadata: input, requestTime: 0, context: new ActionContext() })).resolves
+        .toEqual({
+          links: [
+            { url: 'ex:s1' },
+            { url: 'ex:px' },
+            { url: 'ex:o1' },
+            { url: 'ex:gx' },
+            { url: 'ex:s2' },
+            { url: 'ex:p' },
+            { url: 'ex:g' },
+            { url: 'ex:s3' },
+            { url: 'ex:px' },
+            { url: 'ex:o3' },
+            { url: 'ex:gx' },
+            { url: 'ex:s4' },
+            { url: 'ex:p' },
+            { url: 'ex:o4' },
+            { url: 'ex:g' },
+            { url: 'ex:s5' },
+            { url: 'ex:p' },
+            { url: 'ex:o5' },
+            { url: 'ex:gx' },
+          ].map((link) => {
+            link.metadata = { [REACHABILITY_LABEL]: ActorExtractLinksAll.REACHABILITY_LABEL };
+            return link;
+          }),
         });
     });
   });

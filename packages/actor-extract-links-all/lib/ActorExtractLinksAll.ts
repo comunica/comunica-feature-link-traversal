@@ -7,8 +7,12 @@ import { getNamedNodes, getTerms } from 'rdf-terms';
  * A comunica Traverse All RDF Metadata Extract Actor.
  */
 export class ActorExtractLinksAll extends ActorExtractLinks {
+  public static readonly REACHABILITY_LABEL = 'cAll';
+
   public constructor(args: IActorArgs<IActionExtractLinks, IActorTest, IActorExtractLinksOutput>) {
     super(args);
+    this.reachabilityLabel = ActorExtractLinksAll.REACHABILITY_LABEL;
+    Object.freeze(this.reachabilityLabel);
   }
 
   public async test(_action: IActionExtractLinks): Promise<IActorTest> {
@@ -19,7 +23,7 @@ export class ActorExtractLinksAll extends ActorExtractLinks {
     return {
       links: await ActorExtractLinks.collectStream(action.metadata, (quad, links) => {
         for (const link of getNamedNodes(getTerms(quad))) {
-          links.push({ url: link.value });
+          links.push(this.annotateLinkWithTheReachabilityCriteria({ url: link.value }));
         }
       }),
     };
