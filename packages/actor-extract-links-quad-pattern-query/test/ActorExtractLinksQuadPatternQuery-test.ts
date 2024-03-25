@@ -2,6 +2,7 @@ import type { Readable } from 'node:stream';
 import { ActorExtractLinks } from '@comunica/bus-extract-links';
 import { KeysInitQuery } from '@comunica/context-entries';
 import { ActionContext, Bus } from '@comunica/core';
+import { REACHABILITY_LABEL } from '@comunica/types-link-traversal';
 import { DataFactory } from 'rdf-data-factory';
 import { Factory } from 'sparqlalgebrajs';
 import {
@@ -197,6 +198,38 @@ describe('ActorExtractLinksQuadPatternQuery', () => {
           ],
         });
     });
+
+    it('should run on a stream and return urls with annotation matching a query with nps property path', async() => {
+      actor = new ActorExtractLinksQuadPatternQuery({
+        name: 'actor',
+        bus,
+        onlyVariables: false,
+        labelLinksWithReachability: true,
+      });
+      operation = FACTORY.createPath(
+        DF.namedNode('ex:s'),
+        FACTORY.createNps([
+          DF.namedNode('ex:p1'),
+          DF.namedNode('ex:p'),
+          DF.namedNode('ex:p3'),
+        ]),
+        DF.variable('o'),
+        DF.namedNode('ex:g'),
+      );
+      context = new ActionContext({ [KeysInitQuery.query.name]: operation });
+      await expect(actor.run({ url: '', metadata: input, requestTime: 0, context })).resolves
+        .toEqual({
+          links: [
+            { url: 'ex:s2', metadata: { [REACHABILITY_LABEL]: ActorExtractLinksQuadPatternQuery.REACHABILITY_LABEL }},
+            { url: 'ex:p', metadata: { [REACHABILITY_LABEL]: ActorExtractLinksQuadPatternQuery.REACHABILITY_LABEL }},
+            { url: 'ex:g', metadata: { [REACHABILITY_LABEL]: ActorExtractLinksQuadPatternQuery.REACHABILITY_LABEL }},
+            { url: 'ex:s4', metadata: { [REACHABILITY_LABEL]: ActorExtractLinksQuadPatternQuery.REACHABILITY_LABEL }},
+            { url: 'ex:p', metadata: { [REACHABILITY_LABEL]: ActorExtractLinksQuadPatternQuery.REACHABILITY_LABEL }},
+            { url: 'ex:o4', metadata: { [REACHABILITY_LABEL]: ActorExtractLinksQuadPatternQuery.REACHABILITY_LABEL }},
+            { url: 'ex:g', metadata: { [REACHABILITY_LABEL]: ActorExtractLinksQuadPatternQuery.REACHABILITY_LABEL }},
+          ],
+        });
+    });
   });
 
   describe('An ActorExtractLinksQuadPatternQuery instance with onlyVariables true', () => {
@@ -264,6 +297,55 @@ describe('ActorExtractLinksQuadPatternQuery', () => {
         .toEqual({
           links: [
             { url: 'ex:o6' },
+          ],
+        });
+    });
+
+    it(`should run on a stream and 
+    return urls annotated matching a query's variables with multiple patterns`, async() => {
+      actor = new ActorExtractLinksQuadPatternQuery({
+        name: 'actor',
+        bus,
+        onlyVariables: true,
+        labelLinksWithReachability: true,
+      });
+      operation = FACTORY.createBgp([
+        FACTORY.createPattern(
+          DF.namedNode('ex:s1'),
+          DF.namedNode('ex:p'),
+          DF.variable('o'),
+          DF.namedNode('ex:g'),
+        ),
+        FACTORY.createPattern(
+          DF.namedNode('ex:s2'),
+          DF.namedNode('ex:p'),
+          DF.variable('o'),
+          DF.namedNode('ex:g'),
+        ),
+        FACTORY.createPattern(
+          DF.namedNode('ex:s3'),
+          DF.namedNode('ex:p'),
+          DF.variable('o'),
+          DF.namedNode('ex:g'),
+        ),
+        FACTORY.createPattern(
+          DF.namedNode('ex:s4'),
+          DF.namedNode('ex:p'),
+          DF.namedNode('ex:o4'),
+          DF.namedNode('ex:g'),
+        ),
+        FACTORY.createPattern(
+          DF.namedNode('ex:s6'),
+          DF.namedNode('ex:p'),
+          DF.variable('o'),
+          DF.namedNode('ex:g'),
+        ),
+      ]);
+      context = new ActionContext({ [KeysInitQuery.query.name]: operation });
+      await expect(actor.run({ url: '', metadata: input, requestTime: 0, context })).resolves
+        .toEqual({
+          links: [
+            { url: 'ex:o6', metadata: { [REACHABILITY_LABEL]: ActorExtractLinksQuadPatternQuery.REACHABILITY_LABEL }},
           ],
         });
     });
