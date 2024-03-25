@@ -42,7 +42,6 @@ export class ActorRdfResolveHypermediaLinksQueueWrapperInfoOccupancy
   public async run(action: IActionRdfResolveHypermediaLinksQueue): Promise<IActorRdfResolveHypermediaLinksQueueOutput> {
     const context = action.context.set(KEY_CONTEXT_WRAPPED, true);
     const query: Algebra.Operation = action.context.get(KeysInitQuery.query)!;
-    query.equals
     const queryIdentifier: string | undefined = action.context.get(KEY_QUERY_IDENTIFIER);
     const pathObject = Path.parse(this.filePath);
 
