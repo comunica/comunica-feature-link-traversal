@@ -1,6 +1,7 @@
 import type { ILink } from '@comunica/bus-rdf-resolve-hypermedia-links';
 import type { IActorArgs, IActorOutput, IActorTest, Mediate, IAction } from '@comunica/core';
 import { Actor } from '@comunica/core';
+import { REACHABILITY_LABEL } from '@comunica/types-link-traversal';
 import type * as RDF from '@rdfjs/types';
 
 /**
@@ -15,11 +16,14 @@ import type * as RDF from '@rdfjs/types';
  * @see IActorExtractLinksOutput
  */
 export abstract class ActorExtractLinks extends Actor<IActionExtractLinks, IActorTest, IActorExtractLinksOutput> {
+  protected readonly labelLinksWithReachability: boolean;
+  protected reachabilityLabel: string;
   /**
    * @param args - @defaultNested {<default_bus> a <cc:components/Bus.jsonld#Bus>} bus
    */
   public constructor(args: IActorExtractLinksArgs) {
     super(args);
+    this.labelLinksWithReachability = args.labelLinksWithReachability ?? false;
   }
 
   /**
@@ -46,6 +50,18 @@ export abstract class ActorExtractLinks extends Actor<IActionExtractLinks, IActo
         resolve(links);
       });
     });
+  }
+
+  /**
+   * An helper function to help the creation of ILink with metadata
+   * @param {string} url - The URL of the link
+   * @returns {ILink} The outputed link
+   */
+  public generateLink(url: string): ILink {
+    if (this.labelLinksWithReachability) {
+      return { url, metadata: { [REACHABILITY_LABEL]: this.reachabilityLabel }};
+    }
+    return { url };
   }
 }
 
@@ -79,14 +95,18 @@ export interface IActorExtractLinksOutput extends IActorOutput {
    */
   linksConditional?: ILink[];
 }
-
-export type IActorExtractLinksArgs = IActorArgs<
-IActionExtractLinks,
-IActorTest,
-IActorExtractLinksOutput
->;
+export interface IActorExtractLinksArgs extends IActorArgs<
+  IActionExtractLinks,
+  IActorTest,
+  IActorExtractLinksOutput
+> {
+  /**
+   * If true the links will be label with the reachability criteria.
+   */
+  labelLinksWithReachability?: boolean;
+}
 
 export type MediatorExtractLinks = Mediate<
-IActionExtractLinks,
-IActorExtractLinksOutput
+  IActionExtractLinks,
+  IActorExtractLinksOutput
 >;

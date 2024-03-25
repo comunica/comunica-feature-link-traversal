@@ -88,7 +88,7 @@ describe('ActorExtractLinksTraversePredicates', () => {
         predicateRegexes: [
           'http://www.w3.org/ns/ldp#contains',
         ],
-        labelLinkWithReachability: true,
+        labelLinksWithReachability: true,
       });
       await expect(actor.run({ url: 'ex:s', metadata: input, requestTime: 0, context: new ActionContext() })).resolves
         .toEqual({
@@ -108,7 +108,7 @@ describe('ActorExtractLinksTraversePredicates', () => {
         predicateRegexes: [
           'http://www.w3.org/ns/ldp#contains',
         ],
-        labelLinkWithReachability: true,
+        labelLinksWithReachability: true,
       });
       await expect(actor.run({ url: 'ex:s', metadata: input, requestTime: 0, context: new ActionContext() })).resolves
         .toEqual({
@@ -138,7 +138,7 @@ describe('ActorExtractLinksTraversePredicates', () => {
           'http://www.w3.org/2002/07/owl##sameAs',
           'http://xmlns.com/foaf/0.1/isPrimaryTopicOf',
         ],
-        labelLinkWithReachability: true,
+        labelLinksWithReachability: true,
       });
       const expectedLink = { url, metadata: { [REACHABILITY_LABEL]: 'cCommon' }};
       expect(actor.generateLink(url)).toStrictEqual(expectedLink);
@@ -152,7 +152,7 @@ describe('ActorExtractLinksTraversePredicates', () => {
         predicateRegexes: [
           'http://www.w3.org/ns/ldp#contains',
         ],
-        labelLinkWithReachability: true,
+        labelLinksWithReachability: true,
       });
       const expectedLink = { url, metadata: { [REACHABILITY_LABEL]: 'cLDP' }};
       expect(actor.generateLink(url)).toStrictEqual(expectedLink);
@@ -166,7 +166,7 @@ describe('ActorExtractLinksTraversePredicates', () => {
         predicateRegexes: [
           'http://www.w3.org/ns/pim/space#storage',
         ],
-        labelLinkWithReachability: true,
+        labelLinksWithReachability: true,
       });
       const expectedLink = { url, metadata: { [REACHABILITY_LABEL]: 'cSolidStorage' }};
       expect(actor.generateLink(url)).toStrictEqual(expectedLink);
@@ -179,7 +179,7 @@ describe('ActorExtractLinksTraversePredicates', () => {
         checkSubject: false,
         predicateRegexes: [
         ],
-        labelLinkWithReachability: true,
+        labelLinksWithReachability: true,
       });
       const expectedLink = { url, metadata: { [REACHABILITY_LABEL]: 'cPredicateNothing' }};
       expect(actor.generateLink(url)).toStrictEqual(expectedLink);
@@ -193,7 +193,7 @@ describe('ActorExtractLinksTraversePredicates', () => {
         predicateRegexes: [
           'foo',
         ],
-        labelLinkWithReachability: true,
+        labelLinksWithReachability: true,
       });
       const expectedLink = { url, metadata: { [REACHABILITY_LABEL]: 'cPredicate_foo' }};
       expect(actor.generateLink(url)).toStrictEqual(expectedLink);
@@ -209,7 +209,7 @@ describe('ActorExtractLinksTraversePredicates', () => {
           'bar',
           'boo',
         ],
-        labelLinkWithReachability: true,
+        labelLinksWithReachability: true,
       });
       const expectedLink = { url, metadata: { [REACHABILITY_LABEL]: 'cPredicate_foo_bar_boo' }};
       expect(actor.generateLink(url)).toStrictEqual(expectedLink);
@@ -225,7 +225,7 @@ describe('ActorExtractLinksTraversePredicates', () => {
           'bar',
           'boo',
         ],
-        labelLinkWithReachability: false,
+        labelLinksWithReachability: false,
       });
       const expectedLink = { url };
       expect(actor.generateLink(url)).toStrictEqual(expectedLink);

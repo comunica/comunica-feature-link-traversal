@@ -1,8 +1,6 @@
 import type { IActionExtractLinks, IActorExtractLinksOutput } from '@comunica/bus-extract-links';
 import { ActorExtractLinks } from '@comunica/bus-extract-links';
-import type { ILink } from '@comunica/bus-rdf-resolve-hypermedia-links';
 import type { IActorArgs, IActorTest } from '@comunica/core';
-import { REACHABILITY_LABEL } from '@comunica/types-link-traversal';
 
 /**
  * A comunica Traverse Predicates RDF Metadata Extract Actor.
@@ -10,15 +8,12 @@ import { REACHABILITY_LABEL } from '@comunica/types-link-traversal';
 export class ActorExtractLinksPredicates extends ActorExtractLinks {
   private readonly checkSubject: boolean;
   private readonly predicates: RegExp[];
-  private readonly reachabilityLabel: string;
-  private readonly labelLinkWithReachability: boolean;
 
   public constructor(args: IActorExtractLinksTraversePredicatesArgs) {
     super(args);
 
     this.predicates = args.predicateRegexes.map(stringRegex => new RegExp(stringRegex, 'u'));
     this.reachabilityLabel = ActorExtractLinksPredicates.reachabilityLabel(new Set(args.predicateRegexes));
-    this.labelLinkWithReachability = args.labelLinkWithReachability ?? false;
     Object.freeze(this.reachabilityLabel);
   }
 
@@ -47,13 +42,6 @@ export class ActorExtractLinksPredicates extends ActorExtractLinks {
       subject = subject.slice(0, fragmentPos);
     }
     return subject === url;
-  }
-
-  public generateLink(url: string): ILink {
-    if (this.labelLinkWithReachability) {
-      return { url, metadata: { [REACHABILITY_LABEL]: this.reachabilityLabel }};
-    }
-    return { url };
   }
 
   public static reachabilityLabel(predicates: Set<string>): string {
@@ -97,10 +85,6 @@ export interface IActorExtractLinksTraversePredicatesArgs
    * A list of regular expressions that will be tested against predicates of quads.
    */
   predicateRegexes: string[];
-  /**
-   * If true the links will be labeled with the reachability criteria.
-   */
-  labelLinkWithReachability?: boolean;
 }
 
 const PREDICATE_COMMON = new Set([
