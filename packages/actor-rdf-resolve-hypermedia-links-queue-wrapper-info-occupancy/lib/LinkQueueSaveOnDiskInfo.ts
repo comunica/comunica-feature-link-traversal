@@ -5,7 +5,7 @@ import { LinkQueueWrapper } from '@comunica/bus-rdf-resolve-hypermedia-links-que
 import { REACHABILITY_LABEL } from '@comunica/types-link-traversal';
 
 /**
- * Optional parameters necesitaty special processing
+ * Optional parameters necessitating special processing
  */
 interface IOptionalLinkQueueParameters {
 }

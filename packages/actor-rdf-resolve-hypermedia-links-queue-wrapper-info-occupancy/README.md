@@ -9,6 +9,9 @@ and should only be used by [developers that want to build their own query engine
 
 [Click here if you just want to query with Comunica](https://comunica.dev/docs/query/).
 
+The purpose of this wrapper is to collect in a file information about the occupancy of the link queue.
+It should not be used in production or in a browser environment.
+To observe non-standard properties of the link queue the `IOptionalLinkQueueParameters` can be extended and the methods can be modified in consequence to process those parameters.
 ## Install
 
 ```bash
