@@ -62,7 +62,7 @@ export class ActorExtractLinksPredicates extends ActorExtractLinks {
     }
 
     if (predicates.size === 1) {
-      const [reachability] = predicates;
+      const [ reachability ] = predicates;
       return `cPredicate_${reachability}`;
     }
 
@@ -93,12 +93,12 @@ const PREDICATE_COMMON = new Set([
   'http://xmlns.com/foaf/0.1/isPrimaryTopicOf',
 ]);
 
-const PREDICATE_LDP = new Set(['http://www.w3.org/ns/ldp#contains']);
-const PREDICATE_SOLID_STORAGE = new Set(['http://www.w3.org/ns/pim/space#storage']);
+const PREDICATE_LDP = new Set([ 'http://www.w3.org/ns/ldp#contains' ]);
+const PREDICATE_SOLID_STORAGE = new Set([ 'http://www.w3.org/ns/pim/space#storage' ]);
 
 function setEquals(setA: Set<string>, setB: Set<string>): boolean {
   if (setA.size !== setB.size) {
     return false;
   }
-  return [...setA].every(x => setB.has(x));
+  return [ ...setA ].every(x => setB.has(x));
 }
