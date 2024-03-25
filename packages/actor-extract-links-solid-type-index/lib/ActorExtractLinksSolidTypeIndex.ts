@@ -19,6 +19,7 @@ import { Util as AlgebraUtil } from 'sparqlalgebrajs';
  */
 export class ActorExtractLinksSolidTypeIndex extends ActorExtractLinks {
   public static readonly RDF_TYPE = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type';
+  public static readonly REACHABILITY_LABEL = 'cTypeIndex';
 
   private readonly typeIndexPredicates: string[];
   private readonly onlyMatchingTypes: boolean;
@@ -29,6 +30,8 @@ export class ActorExtractLinksSolidTypeIndex extends ActorExtractLinks {
   public constructor(args: IActorExtractLinksSolidTypeIndexArgs) {
     super(args);
     this.queryEngine = new QueryEngineBase(args.actorInitQuery);
+    this.reachabilityLabel = ActorExtractLinksSolidTypeIndex.REACHABILITY_LABEL;
+    Object.freeze(this.reachabilityLabel);
   }
 
   public async test(action: IActionExtractLinks): Promise<IActorTest> {
@@ -142,7 +145,7 @@ export class ActorExtractLinksSolidTypeIndex extends ActorExtractLinks {
       if (!typeLinks[type]) {
         typeLinks[type] = [];
       }
-      typeLinks[type].push({ url: bindings.get('instance')!.value });
+      typeLinks[type].push(this.annotateLinkWithTheReachabilityCriteria({ url: bindings.get('instance')!.value }));
     }
     return typeLinks;
   }

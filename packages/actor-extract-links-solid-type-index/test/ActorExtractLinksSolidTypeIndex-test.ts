@@ -4,6 +4,7 @@ import { BindingsFactory } from '@comunica/bindings-factory';
 import type { MediatorDereferenceRdf } from '@comunica/bus-dereference-rdf';
 import { KeysInitQuery, KeysQueryOperation } from '@comunica/context-entries';
 import { ActionContext, Bus } from '@comunica/core';
+import { REACHABILITY_LABEL } from '@comunica/types-link-traversal';
 import { ArrayIterator } from 'asynciterator';
 import { DataFactory } from 'rdf-data-factory';
 import { Factory as AlgebraFactory } from 'sparqlalgebrajs';
@@ -145,6 +146,63 @@ describe('ActorExtractLinksSolidTypeIndex', () => {
             },
             {
               url: 'ex:file2',
+            },
+          ],
+        });
+
+      expect(mediatorDereferenceRdf.mediate).toHaveBeenCalledTimes(2);
+      expect(mediatorDereferenceRdf.mediate).toHaveBeenCalledWith({ url: 'ex:index1', context });
+      expect(mediatorDereferenceRdf.mediate).toHaveBeenCalledWith({ url: 'ex:index2', context });
+    });
+
+    it('should run on a stream with type index predicates with annotation', async() => {
+      actor = new ActorExtractLinksSolidTypeIndex({
+        name: 'actor',
+        bus,
+        typeIndexPredicates: [
+          'ex:typeIndex1',
+          'ex:typeIndex2',
+        ],
+        onlyMatchingTypes: false,
+        mediatorDereferenceRdf,
+        actorInitQuery,
+        inference: false,
+        labelLinksWithReachability: true,
+      });
+      (<any> actor).queryEngine = {
+        queryBindings: jest.fn(async() => ({
+          toArray: async() => [
+            BF.fromRecord({ instance: DF.namedNode('ex:file1'), class: DF.namedNode('ex:class1') }),
+            BF.fromRecord({ instance: DF.namedNode('ex:file2'), class: DF.namedNode('ex:class2') }),
+          ],
+        })),
+      };
+      input = stream([
+        quad('ex:s1', 'ex:typeIndex1', 'ex:index1'),
+        quad('ex:s2', 'ex:typeIndex2', 'ex:index2'),
+        quad('ex:s3', 'ex:px', 'ex:o3', 'ex:gx'),
+        quad('ex:s4', 'ex:p', 'ex:o4', 'ex:g'),
+        quad('ex:s5', 'ex:p', 'ex:o5', 'ex:gx'),
+      ]);
+
+      await expect(actor.run({ url: '', metadata: input, requestTime: 0, context })).resolves
+        .toEqual({
+          links: [
+            {
+              url: 'ex:file1',
+              metadata: { [REACHABILITY_LABEL]: ActorExtractLinksSolidTypeIndex.REACHABILITY_LABEL },
+            },
+            {
+              url: 'ex:file1',
+              metadata: { [REACHABILITY_LABEL]: ActorExtractLinksSolidTypeIndex.REACHABILITY_LABEL },
+            },
+            {
+              url: 'ex:file2',
+              metadata: { [REACHABILITY_LABEL]: ActorExtractLinksSolidTypeIndex.REACHABILITY_LABEL },
+            },
+            {
+              url: 'ex:file2',
+              metadata: { [REACHABILITY_LABEL]: ActorExtractLinksSolidTypeIndex.REACHABILITY_LABEL },
             },
           ],
         });
@@ -509,6 +567,80 @@ describe('ActorExtractLinksSolidTypeIndex', () => {
       expect(mediatorDereferenceRdf.mediate).toHaveBeenCalledWith({ url: 'ex:index1', context });
     });
 
+    it(`should run on a stream with type index predicate 
+    with multiple domains with reachability annotation`, async() => {
+      actor = new ActorExtractLinksSolidTypeIndex({
+        name: 'actor',
+        bus,
+        typeIndexPredicates: [
+          'ex:typeIndex1',
+          'ex:typeIndex2',
+        ],
+        onlyMatchingTypes: true,
+        inference: true,
+        mediatorDereferenceRdf,
+        actorInitQuery,
+        labelLinksWithReachability: true,
+      });
+      (<any> actor).queryEngine = {
+        queryBindings: jest.fn(async() => ({
+          toArray: async() => [
+            BF.fromRecord({ instance: DF.namedNode('ex:file1'), class: DF.namedNode('ex:class1') }),
+            BF.fromRecord({ instance: DF.namedNode('ex:file2'), class: DF.namedNode('ex:class2') }),
+          ],
+        })),
+      };
+
+      input = stream([
+        quad('ex:s1', 'ex:typeIndex1', 'ex:index1'),
+        quad('ex:s3', 'ex:px', 'ex:o3', 'ex:gx'),
+        quad('ex:s4', 'ex:p', 'ex:o4', 'ex:g'),
+        quad('ex:s5', 'ex:p', 'ex:o5', 'ex:gx'),
+      ]);
+      (<any> actor).queryEngine.queryBindings = (query: string) => {
+        if (query.includes('solid:TypeRegistration')) {
+          return {
+            toArray: async() => [
+              BF.fromRecord({ instance: DF.namedNode('ex:file1'), class: DF.namedNode('ex:class1') }),
+              BF.fromRecord({ instance: DF.namedNode('ex:file2'), class: DF.namedNode('ex:class2') }),
+            ],
+          };
+        }
+        if (query.includes('ex:predicate10')) {
+          return {
+            toArray: async() => [
+              BF.fromRecord({ domain: DF.namedNode('ex:class2') }),
+              BF.fromRecord({ domain: DF.namedNode('ex:class1') }),
+            ],
+          };
+        }
+      };
+      context = new ActionContext({
+        [KeysInitQuery.query.name]: AF.createBgp([
+          AF.createPattern(DF.variable('s1'), DF.namedNode('ex:predicate10'), DF.namedNode('ex:bla')),
+        ]),
+        [KeysQueryOperation.operation.name]: AF.createPattern(
+          DF.variable('s1'),
+          DF.namedNode('ex:predicate10'),
+          DF.namedNode('ex:bla'),
+        ),
+      });
+      await expect(actor.run({ url: '', metadata: input, requestTime: 0, context })).resolves
+        .toEqual({
+          links: [
+            {
+              url: 'ex:file2',
+              metadata: { [REACHABILITY_LABEL]: ActorExtractLinksSolidTypeIndex.REACHABILITY_LABEL },
+            },
+            {
+              url: 'ex:file1',
+              metadata: { [REACHABILITY_LABEL]: ActorExtractLinksSolidTypeIndex.REACHABILITY_LABEL },
+            },
+          ],
+        });
+      expect(mediatorDereferenceRdf.mediate).toHaveBeenCalledTimes(1);
+      expect(mediatorDereferenceRdf.mediate).toHaveBeenCalledWith({ url: 'ex:index1', context });
+    });
     it('should run on a stream with type index predicates for an nps property path query', async() => {
       input = stream([
         quad('ex:s1', 'ex:typeIndex1', 'ex:index1'),
@@ -647,6 +779,64 @@ describe('ActorExtractLinksSolidTypeIndex', () => {
             },
             {
               url: 'ex:file2',
+            },
+          ],
+        });
+      expect(mediatorDereferenceRdf.mediate).toHaveBeenCalledTimes(1);
+      expect(mediatorDereferenceRdf.mediate).toHaveBeenCalledWith({ url: 'ex:index1', context });
+    });
+
+    it(`should run on a stream with multiple type index predicates
+     without class in query and reachability annotation`, async() => {
+      actor = new ActorExtractLinksSolidTypeIndex({
+        name: 'actor',
+        bus,
+        typeIndexPredicates: [
+          'ex:typeIndex1',
+          'ex:typeIndex2',
+        ],
+        onlyMatchingTypes: true,
+        inference: false,
+        mediatorDereferenceRdf,
+        actorInitQuery,
+        labelLinksWithReachability: true,
+      });
+      (<any> actor).queryEngine = {
+        queryBindings: jest.fn(async() => ({
+          toArray: async() => [
+            BF.fromRecord({ instance: DF.namedNode('ex:file1'), class: DF.namedNode('ex:class1') }),
+            BF.fromRecord({ instance: DF.namedNode('ex:file2'), class: DF.namedNode('ex:class2') }),
+          ],
+        })),
+      };
+
+      input = stream([
+        quad('ex:s1', 'ex:typeIndex1', 'ex:index1'),
+        quad('ex:s3', 'ex:px', 'ex:o3', 'ex:gx'),
+        quad('ex:s4', 'ex:p', 'ex:o4', 'ex:g'),
+        quad('ex:s5', 'ex:p', 'ex:o5', 'ex:gx'),
+      ]);
+      context = new ActionContext({
+        [KeysInitQuery.query.name]: AF.createBgp([
+          AF.createPattern(DF.variable('s1'), DF.namedNode('ex:predicate1'), DF.namedNode('ex:bla')),
+          AF.createPattern(DF.variable('s2'), DF.namedNode('ex:predicate2'), DF.namedNode('ex:bla')),
+        ]),
+        [KeysQueryOperation.operation.name]: AF.createPattern(
+          DF.variable('s1'),
+          DF.namedNode('ex:predicate1'),
+          DF.namedNode('ex:bla'),
+        ),
+      });
+      await expect(actor.run({ url: '', metadata: input, requestTime: 0, context })).resolves
+        .toEqual({
+          links: [
+            {
+              url: 'ex:file1',
+              metadata: { [REACHABILITY_LABEL]: ActorExtractLinksSolidTypeIndex.REACHABILITY_LABEL },
+            },
+            {
+              url: 'ex:file2',
+              metadata: { [REACHABILITY_LABEL]: ActorExtractLinksSolidTypeIndex.REACHABILITY_LABEL },
             },
           ],
         });
