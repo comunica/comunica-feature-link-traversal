@@ -40,6 +40,6 @@
     "@comunica/bus-rdf-resolve-hypermedia-links-queue": "^3.0.1",
     "@comunica/context-entries": "^3.0.1",
     "@comunica/core": "^3.0.1",
-    "@comunica/types-link-traversal": "^0.2.0"
+    "@comunica/types-link-traversal": "^0.3.0"
   }
 }
