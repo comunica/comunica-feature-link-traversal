@@ -59,7 +59,7 @@ export abstract class ActorExtractLinks extends Actor<IActionExtractLinks, IActo
    */
   public annotateLinkWithTheReachabilityCriteria(link: ILink): ILink {
     if (this.labelLinksWithReachability) {
-      link.metadata = { [REACHABILITY_LABEL]: this.reachabilityLabel };
+      link.metadata = { ...link.metadata, [REACHABILITY_LABEL]: this.reachabilityLabel };
       return link;
     }
     return link;
