@@ -1,6 +1,6 @@
 {
   "name": "@comunica/actor-rdf-resolve-hypermedia-links-queue-wrapper-info-occupancy",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "A wrapper-info-occupancy rdf-resolve-hypermedia-links-queue actor",
   "lsd:module": true,
   "license": "MIT",
