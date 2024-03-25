@@ -12,6 +12,7 @@ import { KeysInitQuery } from '@comunica/context-entries';
 import type { Actor, IActorArgs, IActorTest, Mediator } from '@comunica/core';
 import { ActionContextKey } from '@comunica/core';
 import { LinkQueueSaveOnDiskInfo } from './LinkQueueSaveOnDiskInfo';
+import { type Algebra } from 'sparqlalgebrajs';
 
 /**
  * A comunica Wrapper Info Occupancy RDF Resolve Hypermedia Links Queue Actor.
@@ -40,12 +41,20 @@ export class ActorRdfResolveHypermediaLinksQueueWrapperInfoOccupancy
 
   public async run(action: IActionRdfResolveHypermediaLinksQueue): Promise<IActorRdfResolveHypermediaLinksQueueOutput> {
     const context = action.context.set(KEY_CONTEXT_WRAPPED, true);
-    const query: string = action.context.get(KeysInitQuery.queryString)!;
+    const query: Algebra.Operation = action.context.get(KeysInitQuery.query)!;
+    query.equals
     const queryIdentifier: string | undefined = action.context.get(KEY_QUERY_IDENTIFIER);
     const pathObject = Path.parse(this.filePath);
 
     if (queryIdentifier === undefined) {
-      const hashed_query = createHash('md5').update(query).digest('hex');
+      const stringQueryObject = JSON.stringify(query, function (key, value) {
+        if (key === 'metadata') {
+          return undefined
+        }
+        return value
+      });
+
+      const hashed_query = createHash('md5').update(stringQueryObject).digest('hex');
       pathObject.name += `_${hashed_query}`;
     } else {
       pathObject.name += `_${queryIdentifier}`;
