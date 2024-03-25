@@ -121,7 +121,7 @@ describe('ActorExtractLinksTraversePredicates', () => {
     });
   });
 
-  describe('generateLink', () => {
+  describe('annotateLinkWithTheReachabilityCriteria', () => {
     let actor: ActorExtractLinksPredicates | undefined;
     const url = 'foo';
     beforeEach(() => {
@@ -141,7 +141,7 @@ describe('ActorExtractLinksTraversePredicates', () => {
         labelLinksWithReachability: true,
       });
       const expectedLink = { url, metadata: { [REACHABILITY_LABEL]: 'cCommon' }};
-      expect(actor.generateLink(url)).toStrictEqual(expectedLink);
+      expect(actor.annotateLinkWithTheReachabilityCriteria({url})).toStrictEqual(expectedLink);
     });
 
     it('should anotate link with the LDP reachability given the LDP predicate', () => {
@@ -155,7 +155,7 @@ describe('ActorExtractLinksTraversePredicates', () => {
         labelLinksWithReachability: true,
       });
       const expectedLink = { url, metadata: { [REACHABILITY_LABEL]: 'cLDP' }};
-      expect(actor.generateLink(url)).toStrictEqual(expectedLink);
+      expect(actor.annotateLinkWithTheReachabilityCriteria({url})).toStrictEqual(expectedLink);
     });
 
     it('should anotate link with the solid storage reachability given the solid storage predicate', () => {
@@ -169,7 +169,7 @@ describe('ActorExtractLinksTraversePredicates', () => {
         labelLinksWithReachability: true,
       });
       const expectedLink = { url, metadata: { [REACHABILITY_LABEL]: 'cSolidStorage' }};
-      expect(actor.generateLink(url)).toStrictEqual(expectedLink);
+      expect(actor.annotateLinkWithTheReachabilityCriteria({url})).toStrictEqual(expectedLink);
     });
 
     it('should anotate link with cPredicateNothing reachability given no predicate', () => {
@@ -182,7 +182,7 @@ describe('ActorExtractLinksTraversePredicates', () => {
         labelLinksWithReachability: true,
       });
       const expectedLink = { url, metadata: { [REACHABILITY_LABEL]: 'cPredicateNothing' }};
-      expect(actor.generateLink(url)).toStrictEqual(expectedLink);
+      expect(actor.annotateLinkWithTheReachabilityCriteria({url})).toStrictEqual(expectedLink);
     });
 
     it('should anotate link with a reachability given a predicate ', () => {
@@ -196,7 +196,7 @@ describe('ActorExtractLinksTraversePredicates', () => {
         labelLinksWithReachability: true,
       });
       const expectedLink = { url, metadata: { [REACHABILITY_LABEL]: 'cPredicate_foo' }};
-      expect(actor.generateLink(url)).toStrictEqual(expectedLink);
+      expect(actor.annotateLinkWithTheReachabilityCriteria({url})).toStrictEqual(expectedLink);
     });
 
     it('should anotate link with a reachability given multiple predicates ', () => {
@@ -212,7 +212,7 @@ describe('ActorExtractLinksTraversePredicates', () => {
         labelLinksWithReachability: true,
       });
       const expectedLink = { url, metadata: { [REACHABILITY_LABEL]: 'cPredicate_foo_bar_boo' }};
-      expect(actor.generateLink(url)).toStrictEqual(expectedLink);
+      expect(actor.annotateLinkWithTheReachabilityCriteria({url})).toStrictEqual(expectedLink);
     });
 
     it('should not anotate a link given the flag is set to fake', () => {
@@ -228,7 +228,7 @@ describe('ActorExtractLinksTraversePredicates', () => {
         labelLinksWithReachability: false,
       });
       const expectedLink = { url };
-      expect(actor.generateLink(url)).toStrictEqual(expectedLink);
+      expect(actor.annotateLinkWithTheReachabilityCriteria({url})).toStrictEqual(expectedLink);
     });
   });
 });

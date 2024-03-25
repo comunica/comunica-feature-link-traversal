@@ -53,15 +53,16 @@ export abstract class ActorExtractLinks extends Actor<IActionExtractLinks, IActo
   }
 
   /**
-   * An helper function to help the creation of ILink with metadata
+   * An helper function to annotate links a reachability criteria
    * @param {string} url - The URL of the link
    * @returns {ILink} The outputed link
    */
-  public generateLink(url: string): ILink {
+  public annotateLinkWithTheReachabilityCriteria(link: ILink): ILink {
     if (this.labelLinksWithReachability) {
-      return { url, metadata: { [REACHABILITY_LABEL]: this.reachabilityLabel }};
+      link.metadata ={ [REACHABILITY_LABEL]: this.reachabilityLabel } 
+      return  link
     }
-    return { url };
+    return link;
   }
 }
 
