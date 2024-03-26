@@ -1,7 +1,11 @@
 import { QueryEngineBase } from '@comunica/actor-init-query';
 import type { ActorInitQueryBase } from '@comunica/actor-init-query';
 import type { MediatorDereferenceRdf } from '@comunica/bus-dereference-rdf';
-import type { IActionExtractLinks, IActorExtractLinksOutput } from '@comunica/bus-extract-links';
+import type {
+  IActionExtractLinks,
+  IActorExtractLinksArgs,
+  IActorExtractLinksOutput,
+} from '@comunica/bus-extract-links';
 import { ActorExtractLinks } from '@comunica/bus-extract-links';
 import type { ILink } from '@comunica/bus-rdf-resolve-hypermedia-links';
 import { KeysInitQuery, KeysQueryOperation, KeysQuerySourceIdentify } from '@comunica/context-entries';
@@ -291,7 +295,7 @@ export class ActorExtractLinksSolidTypeIndex extends ActorExtractLinks {
 }
 
 export interface IActorExtractLinksSolidTypeIndexArgs
-  extends IActorArgs<IActionExtractLinks, IActorTest, IActorExtractLinksOutput> {
+  extends IActorArgs<IActionExtractLinks, IActorTest, IActorExtractLinksOutput>, IActorExtractLinksArgs {
   /**
    * The type index predicate URLs that will be followed.
    * @default {http://www.w3.org/ns/solid/terms#publicTypeIndex}

@@ -1,4 +1,8 @@
-import type { IActionExtractLinks, IActorExtractLinksOutput } from '@comunica/bus-extract-links';
+import type {
+  IActionExtractLinks,
+  IActorExtractLinksArgs,
+  IActorExtractLinksOutput,
+} from '@comunica/bus-extract-links';
 import { ActorExtractLinks } from '@comunica/bus-extract-links';
 import { KeysQueryOperation } from '@comunica/context-entries';
 import type { IActorArgs, IActorTest } from '@comunica/core';
@@ -64,7 +68,7 @@ export class ActorExtractLinksQuadPattern extends ActorExtractLinks {
 }
 
 export interface IActorExtractLinksQuadPatternArgs
-  extends IActorArgs<IActionExtractLinks, IActorTest, IActorExtractLinksOutput> {
+  extends IActorArgs<IActionExtractLinks, IActorTest, IActorExtractLinksOutput>, IActorExtractLinksArgs {
   /**
    * @default {true}
    */

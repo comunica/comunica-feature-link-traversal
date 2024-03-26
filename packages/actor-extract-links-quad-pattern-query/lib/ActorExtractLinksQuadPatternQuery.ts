@@ -1,4 +1,8 @@
-import type { IActionExtractLinks, IActorExtractLinksOutput } from '@comunica/bus-extract-links';
+import type {
+  IActionExtractLinks,
+  IActorExtractLinksArgs,
+  IActorExtractLinksOutput,
+} from '@comunica/bus-extract-links';
 import { ActorExtractLinks } from '@comunica/bus-extract-links';
 import { KeysInitQuery } from '@comunica/context-entries';
 import type { IActorArgs, IActorTest } from '@comunica/core';
@@ -114,7 +118,7 @@ export class ActorExtractLinksQuadPatternQuery extends ActorExtractLinks {
 }
 
 export interface IActorExtractLinksQuadPatternQueryArgs
-  extends IActorArgs<IActionExtractLinks, IActorTest, IActorExtractLinksOutput> {
+  extends IActorArgs<IActionExtractLinks, IActorTest, IActorExtractLinksOutput>, IActorExtractLinksArgs {
   /**
    * If only links that match a variable in the query should be included.
    * @default {true}

@@ -1,6 +1,10 @@
 import type { ActorInitQueryBase } from '@comunica/actor-init-query';
 import { QueryEngineBase } from '@comunica/actor-init-query';
-import type { IActionExtractLinks, IActorExtractLinksOutput } from '@comunica/bus-extract-links';
+import type {
+  IActionExtractLinks,
+  IActorExtractLinksArgs,
+  IActorExtractLinksOutput,
+} from '@comunica/bus-extract-links';
 import {
   ActorExtractLinks,
 } from '@comunica/bus-extract-links';
@@ -19,8 +23,7 @@ import { SimpleSclParser } from './SimpleSclParser';
 /**
  * A comunica Traverse Content Policies RDF Metadata Extract Actor.
  */
-export class ActorExtractLinksContentPolicies extends ActorExtractLinks
-  implements IActorExtractLinksContentPoliciesArgs {
+export class ActorExtractLinksContentPolicies extends ActorExtractLinks {
   private readonly sclParser: SimpleSclParser;
 
   public readonly actorInitQuery: ActorInitQueryBase;
@@ -145,7 +148,7 @@ export class ActorExtractLinksContentPolicies extends ActorExtractLinks
 }
 
 export interface IActorExtractLinksContentPoliciesArgs
-  extends IActorArgs<IActionExtractLinks, IActorTest, IActorExtractLinksOutput> {
+  extends IActorArgs<IActionExtractLinks, IActorTest, IActorExtractLinksOutput>, IActorExtractLinksArgs {
   /**
    * An init query actor that is used to query all links to follow from a stream.
    * @default {<urn:comunica:default:init/actors#query>}

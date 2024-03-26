@@ -1,4 +1,8 @@
-import type { IActionExtractLinks, IActorExtractLinksOutput } from '@comunica/bus-extract-links';
+import type {
+  IActionExtractLinks,
+  IActorExtractLinksArgs,
+  IActorExtractLinksOutput,
+} from '@comunica/bus-extract-links';
 import { ActorExtractLinks } from '@comunica/bus-extract-links';
 import type { IActorArgs, IActorTest } from '@comunica/core';
 
@@ -76,7 +80,7 @@ export class ActorExtractLinksPredicates extends ActorExtractLinks {
 }
 
 export interface IActorExtractLinksTraversePredicatesArgs
-  extends IActorArgs<IActionExtractLinks, IActorTest, IActorExtractLinksOutput> {
+  extends IActorArgs<IActionExtractLinks, IActorTest, IActorExtractLinksOutput>, IActorExtractLinksArgs {
   /**
    * If only quads will be considered that have a subject equal to the request URL.
    */
