@@ -181,7 +181,7 @@ describe('ActorExtractLinksTraversePredicates', () => {
         ],
         labelLinksWithReachability: true,
       });
-      const expectedLink = { url, metadata: { [REACHABILITY_LABEL]: 'cPredicateNothing' }};
+      const expectedLink = { url, metadata: { [REACHABILITY_LABEL]: 'cNone' }};
       expect(actor.annotateLinkWithTheReachabilityCriteria({ url })).toStrictEqual(expectedLink);
     });
 

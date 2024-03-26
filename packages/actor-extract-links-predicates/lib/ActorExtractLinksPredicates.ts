@@ -12,6 +12,11 @@ import type { IActorArgs, IActorTest } from '@comunica/core';
 export class ActorExtractLinksPredicates extends ActorExtractLinks {
   private readonly checkSubject: boolean;
   private readonly predicates: RegExp[];
+  public static readonly REACHABILITY_LABEL_COMMON = 'cCommon';
+  public static readonly REACHABILITY_LABEL_LDP = 'cLDP';
+  public static readonly REACHABILITY_LABEL_SOLID_STORAGE = 'cSolidStorage';
+  public static readonly REACHABILITY_LABEL_NONE = 'cNone';
+  private static readonly REACHABILITY_PREDICATE = 'cPredicate';
 
   public constructor(args: IActorExtractLinksTraversePredicatesArgs) {
     super(args);
@@ -50,32 +55,32 @@ export class ActorExtractLinksPredicates extends ActorExtractLinks {
 
   public static reachabilityLabel(predicates: Set<string>): string {
     if (setEquals(PREDICATE_COMMON, predicates)) {
-      return 'cCommon';
+      return ActorExtractLinksPredicates.REACHABILITY_LABEL_COMMON;
     }
 
     if (setEquals(PREDICATE_LDP, predicates)) {
-      return 'cLDP';
+      return ActorExtractLinksPredicates.REACHABILITY_LABEL_LDP;
     }
 
     if (setEquals(PREDICATE_SOLID_STORAGE, predicates)) {
-      return 'cSolidStorage';
+      return ActorExtractLinksPredicates.REACHABILITY_LABEL_SOLID_STORAGE;
     }
 
     if (predicates.size === 0) {
-      return 'cPredicateNothing';
+      return ActorExtractLinksPredicates.REACHABILITY_LABEL_NONE;
     }
 
     if (predicates.size === 1) {
       const [ reachability ] = predicates;
-      return `cPredicate_${reachability}`;
+      return `${ActorExtractLinksPredicates.REACHABILITY_PREDICATE}_${reachability}`;
     }
 
-    let label = 'Predicate';
+    let label = ActorExtractLinksPredicates.REACHABILITY_PREDICATE;
     for (const val of predicates.values()) {
       label += `_${val}`;
     }
 
-    return `c${label}`;
+    return `${label}`;
   }
 }
 
