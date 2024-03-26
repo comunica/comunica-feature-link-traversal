@@ -6,6 +6,7 @@ jest.mock('node:fs');
 
 describe('LinkQueueFilterLinks', () => {
   const filePath = '';
+  const query = 'foo';
   describe('constructor', () => {
     it('should construct', () => {
       const linkqueue: any = {
@@ -16,9 +17,10 @@ describe('LinkQueueFilterLinks', () => {
         iris_popped: [],
         iris_pushed: [],
         started_empty: true,
+        query,
       };
 
-      const wrapper = new LinkQueueSaveOnDiskInfo(linkqueue, filePath);
+      const wrapper = new LinkQueueSaveOnDiskInfo(linkqueue, filePath, query);
 
       expect(wrapper.filePath).toBe(filePath);
       expect(wrapper.getHistory()).toStrictEqual(expectedHistory);
@@ -34,9 +36,10 @@ describe('LinkQueueFilterLinks', () => {
         iris_popped: [],
         iris_pushed: [],
         started_empty: true,
+        query,
       };
 
-      const wrapper = new LinkQueueSaveOnDiskInfo(linkqueue, filePath);
+      const wrapper = new LinkQueueSaveOnDiskInfo(linkqueue, filePath, query);
 
       expect(wrapper.filePath).toBe(filePath);
       expect(wrapper.getHistory()).toStrictEqual(expectedHistory);
@@ -52,9 +55,10 @@ describe('LinkQueueFilterLinks', () => {
         iris_popped: [],
         iris_pushed: [],
         started_empty: false,
+        query,
       };
 
-      const wrapper = new LinkQueueSaveOnDiskInfo(linkqueue, filePath);
+      const wrapper = new LinkQueueSaveOnDiskInfo(linkqueue, filePath, query);
 
       expect(wrapper.filePath).toBe(filePath);
       expect(wrapper.getHistory()).toStrictEqual(expectedHistory);
@@ -79,11 +83,12 @@ describe('LinkQueueFilterLinks', () => {
         iris_popped: [],
         iris_pushed: [{ url: iri.url, reachability_criteria: null, timestamp: 1 }],
         started_empty: true,
+        query,
       };
 
       jest.spyOn(Date, 'now').mockImplementation().mockReturnValueOnce(1);
 
-      const wrapper = new LinkQueueSaveOnDiskInfo(linkQueue, filePath);
+      const wrapper = new LinkQueueSaveOnDiskInfo(linkQueue, filePath, query);
       const resp = wrapper.push(iri, iri);
 
       expect(resp).toBe(true);
@@ -105,9 +110,10 @@ describe('LinkQueueFilterLinks', () => {
         iris_popped: [],
         iris_pushed: [],
         started_empty: true,
+        query,
       };
 
-      const wrapper = new LinkQueueSaveOnDiskInfo(linkQueue, filePath);
+      const wrapper = new LinkQueueSaveOnDiskInfo(linkQueue, filePath, query);
       const resp = wrapper.push(iri, iri);
 
       expect(resp).toBe(false);
@@ -123,7 +129,7 @@ describe('LinkQueueFilterLinks', () => {
         isEmpty: () => false,
       };
       jest.spyOn(Date, 'now').mockImplementation(() => i);
-      const wrapper = new LinkQueueSaveOnDiskInfo(linkQueue, filePath);
+      const wrapper = new LinkQueueSaveOnDiskInfo(linkQueue, filePath, query);
       const iris_pushed: any[] = [];
       for (; i < n; i++) {
         let iri: any = {
@@ -142,6 +148,7 @@ describe('LinkQueueFilterLinks', () => {
           iris_popped: [],
           iris_pushed,
           started_empty: false,
+          query,
         };
 
         const resp = wrapper.push(iri, iri);
@@ -172,10 +179,11 @@ describe('LinkQueueFilterLinks', () => {
         iris_popped: [{ url: iri.url, reachability_criteria: null, timestamp: 1 }],
         iris_pushed: [],
         started_empty: true,
+        query,
       };
       jest.spyOn(Date, 'now').mockImplementation().mockReturnValueOnce(1);
 
-      const wrapper = new LinkQueueSaveOnDiskInfo(linkQueue, filePath);
+      const wrapper = new LinkQueueSaveOnDiskInfo(linkQueue, filePath, query);
       const resp = wrapper.pop();
 
       expect(resp).toStrictEqual(iri);
@@ -194,9 +202,10 @@ describe('LinkQueueFilterLinks', () => {
         iris_popped: [],
         iris_pushed: [],
         started_empty: false,
+        query,
       };
 
-      const wrapper = new LinkQueueSaveOnDiskInfo(linkQueue, filePath);
+      const wrapper = new LinkQueueSaveOnDiskInfo(linkQueue, filePath, query);
       const resp = wrapper.pop();
 
       expect(resp).toBeUndefined();
@@ -224,7 +233,7 @@ describe('LinkQueueFilterLinks', () => {
         isEmpty: () => false,
       };
       jest.spyOn(Date, 'now').mockImplementation(() => i);
-      const wrapper = new LinkQueueSaveOnDiskInfo(linkQueue, filePath);
+      const wrapper = new LinkQueueSaveOnDiskInfo(linkQueue, filePath, query);
       const iris_popped: any[] = [];
       for (; i < n; i++) {
         if (i % 4 === 0 && i !== 0) {
@@ -236,6 +245,7 @@ describe('LinkQueueFilterLinks', () => {
           iris_popped,
           iris_pushed: [],
           started_empty: false,
+          query,
         };
         let expectedLink: any;
         const resp = wrapper.pop();

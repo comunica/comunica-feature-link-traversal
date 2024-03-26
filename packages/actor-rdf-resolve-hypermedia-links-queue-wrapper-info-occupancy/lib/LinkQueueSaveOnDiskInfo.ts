@@ -3,6 +3,7 @@ import { writeFileSync } from 'node:fs';
 import type { ILinkQueue, ILink } from '@comunica/bus-rdf-resolve-hypermedia-links-queue';
 import { LinkQueueWrapper } from '@comunica/bus-rdf-resolve-hypermedia-links-queue';
 import { REACHABILITY_LABEL } from '@comunica/types-link-traversal';
+import type { Algebra } from 'sparqlalgebrajs';
 
 /**
  * Optional parameters necessitating special processing
@@ -14,6 +15,7 @@ interface IHistory {
   iris_popped: IURLStatistic[];
   iris_pushed: IURLStatistic[];
   started_empty: boolean;
+  query: Algebra.Operation | string;
 }
 
 interface IURLStatistic {
@@ -30,6 +32,7 @@ export class LinkQueueSaveOnDiskInfo extends LinkQueueWrapper {
     iris_popped: [],
     iris_pushed: [],
     started_empty: true,
+    query: '',
   };
 
   /**
@@ -37,11 +40,16 @@ export class LinkQueueSaveOnDiskInfo extends LinkQueueWrapper {
    * @param {ILinkQueue & IOptionalLinkQueueParameters} linkQueue - The link queue with optional public parameters
    * @param {string} filePath - The path where the information is saved
    */
-  public constructor(linkQueue: ILinkQueue & IOptionalLinkQueueParameters, filePath: string) {
+  public constructor(
+    linkQueue: ILinkQueue & IOptionalLinkQueueParameters,
+    filePath: string,
+    query: Algebra.Operation | string,
+  ) {
     super(linkQueue);
     this.filePath = filePath;
     Object.freeze(this.filePath);
     this.history.started_empty = this.isEmpty();
+    this.history.query = query;
   }
 
   /**

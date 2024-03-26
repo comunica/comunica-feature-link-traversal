@@ -1,7 +1,4 @@
 // eslint-disable-next-line import/no-nodejs-modules
-import { createHash } from 'node:crypto';
-
-// eslint-disable-next-line import/no-nodejs-modules
 import * as Path from 'node:path';
 import type {
   IActionRdfResolveHypermediaLinksQueue,
@@ -11,8 +8,8 @@ import { ActorRdfResolveHypermediaLinksQueue } from '@comunica/bus-rdf-resolve-h
 import { KeysInitQuery } from '@comunica/context-entries';
 import type { Actor, IActorArgs, IActorTest, Mediator } from '@comunica/core';
 import { ActionContextKey } from '@comunica/core';
+import type { Algebra } from 'sparqlalgebrajs';
 import { LinkQueueSaveOnDiskInfo } from './LinkQueueSaveOnDiskInfo';
-import { type Algebra } from 'sparqlalgebrajs';
 
 /**
  * A comunica Wrapper Info Occupancy RDF Resolve Hypermedia Links Queue Actor.
@@ -26,6 +23,8 @@ export class ActorRdfResolveHypermediaLinksQueueWrapperInfoOccupancy
     IActorTest,
     IActorRdfResolveHypermediaLinksQueueOutput
   >;
+
+  private queryCounter = 0;
 
   public constructor(args: IActorRdfResolveHypermediaLinksQueueWrapperInfoOccupancyArgs) {
     super(args);
@@ -42,19 +41,16 @@ export class ActorRdfResolveHypermediaLinksQueueWrapperInfoOccupancy
   public async run(action: IActionRdfResolveHypermediaLinksQueue): Promise<IActorRdfResolveHypermediaLinksQueueOutput> {
     const context = action.context.set(KEY_CONTEXT_WRAPPED, true);
     const query: Algebra.Operation = action.context.get(KeysInitQuery.query)!;
+    const stringQueryObject = JSON.stringify(query, (key, value) => {
+      if (key === 'metadata') {
+        return;
+      }
+      return value;
+    });
     const queryIdentifier: string | undefined = action.context.get(KEY_QUERY_IDENTIFIER);
     const pathObject = Path.parse(this.filePath);
-
     if (queryIdentifier === undefined) {
-      const stringQueryObject = JSON.stringify(query, function (key, value) {
-        if (key === 'metadata') {
-          return undefined
-        }
-        return value
-      });
-
-      const hashed_query = createHash('md5').update(stringQueryObject).digest('hex');
-      pathObject.name += `_${hashed_query}`;
+      pathObject.name += `_${this.queryCounter}`;
     } else {
       pathObject.name += `_${queryIdentifier}`;
     }
@@ -62,7 +58,14 @@ export class ActorRdfResolveHypermediaLinksQueueWrapperInfoOccupancy
     const path = Path.join(pathObject.dir, `${pathObject.name}${pathObject.ext}`);
 
     const { linkQueue } = await this.mediatorRdfResolveHypermediaLinksQueue.mediate({ ...action, context });
-    return { linkQueue: new LinkQueueSaveOnDiskInfo(linkQueue, path) };
+    this.queryCounter += 1;
+    return {
+      linkQueue: new LinkQueueSaveOnDiskInfo(
+        linkQueue,
+        path,
+        queryIdentifier ?? JSON.parse(stringQueryObject),
+      ),
+    };
   }
 }
 

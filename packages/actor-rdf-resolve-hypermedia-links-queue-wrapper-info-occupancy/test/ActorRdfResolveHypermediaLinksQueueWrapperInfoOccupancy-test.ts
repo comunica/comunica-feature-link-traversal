@@ -1,3 +1,4 @@
+import { KeysInitQuery } from '@comunica/context-entries';
 import { Bus, ActionContext } from '@comunica/core';
 import {
   ActorRdfResolveHypermediaLinksQueueWrapperInfoOccupancy,
@@ -69,11 +70,11 @@ describe('ActorRdfResolveHypermediaLinksQueueRdfResolveHypermediaLinkQueueWrappe
         await expect(actor.run(action)).rejects.toBeInstanceOf(Error);
       });
 
-      it('should returns the link queue and add the context wrapped flag in the context', async() => {
+      it(`should returns the link queue and 
+      add the context wrapped flag in the context for multiple queries`, async() => {
         const mediator: any = {
-          mediate: jest.fn().mockResolvedValueOnce({ linkQueue }),
+          mediate: jest.fn().mockResolvedValue({ linkQueue }),
         };
-
         actor = new ActorRdfResolveHypermediaLinksQueueWrapperInfoOccupancy({
           name: 'actor',
           bus,
@@ -85,17 +86,21 @@ describe('ActorRdfResolveHypermediaLinksQueueRdfResolveHypermediaLinkQueueWrappe
           if (key.name === KEY_QUERY_IDENTIFIER.name) {
             return undefined;
           }
-          return 'foo';
+          if (key.name === KeysInitQuery.query.name) {
+            return { q: true, metadata: { abc: 'dfg' }};
+          }
+          return undefined;
         });
 
-        // The hash of foo the mock query
-        const expectedFilePath = 'bar_acbd18db4cc2f85cedef654fccc4a4d8.json';
+        for (let i = 0; i < 10; ++i) {
+          const expectedFilePath = `bar_${i}.json`;
 
-        const expectedLinkQueueWrapper = new LinkQueueSaveOnDiskInfo(linkQueue, expectedFilePath);
+          const expectedLinkQueueWrapper = new LinkQueueSaveOnDiskInfo(linkQueue, expectedFilePath, <any>{ q: true });
 
-        await expect(actor.run(action)).resolves.toStrictEqual({ linkQueue: expectedLinkQueueWrapper });
-        expect(action.context.set).toHaveBeenCalledTimes(1);
-        expect(action.context.set).toHaveBeenLastCalledWith(KEY_CONTEXT_WRAPPED, true);
+          await expect(actor.run(action)).resolves.toStrictEqual({ linkQueue: expectedLinkQueueWrapper });
+          expect(action.context.set).toHaveBeenCalledTimes(i + 1);
+          expect(action.context.set).toHaveBeenLastCalledWith(KEY_CONTEXT_WRAPPED, true);
+        }
       });
 
       it(`should returns the link queue with the right path if a query identifier is defined
@@ -118,7 +123,7 @@ describe('ActorRdfResolveHypermediaLinksQueueRdfResolveHypermediaLinkQueueWrappe
         });
         const expectedFilePath = 'bar_Q1.json';
 
-        const expectedLinkQueueWrapper = new LinkQueueSaveOnDiskInfo(linkQueue, expectedFilePath);
+        const expectedLinkQueueWrapper = new LinkQueueSaveOnDiskInfo(linkQueue, expectedFilePath, 'Q1');
 
         await expect(actor.run(action)).resolves.toStrictEqual({ linkQueue: expectedLinkQueueWrapper });
         expect(action.context.set).toHaveBeenCalledTimes(1);
