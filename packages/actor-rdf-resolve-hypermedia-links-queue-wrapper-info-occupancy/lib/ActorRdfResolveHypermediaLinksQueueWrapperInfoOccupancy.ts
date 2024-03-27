@@ -9,6 +9,7 @@ import { KeysInitQuery } from '@comunica/context-entries';
 import type { Actor, IActorArgs, IActorTest, Mediator } from '@comunica/core';
 import { ActionContextKey } from '@comunica/core';
 import type { Algebra } from 'sparqlalgebrajs';
+import { v4 as uuidv4 } from 'uuid';
 import { LinkQueueSaveOnDiskInfo } from './LinkQueueSaveOnDiskInfo';
 
 /**
@@ -25,10 +26,12 @@ export class ActorRdfResolveHypermediaLinksQueueWrapperInfoOccupancy
   >;
 
   private queryCounter = 0;
+  private readonly randomQueryIdentifier: boolean;
 
   public constructor(args: IActorRdfResolveHypermediaLinksQueueWrapperInfoOccupancyArgs) {
     super(args);
     this.filePath = args.filePath;
+    this.randomQueryIdentifier = args.randomQueryIdentifier ?? false;
   }
 
   public async test(action: IActionRdfResolveHypermediaLinksQueue): Promise<IActorTest> {
@@ -50,7 +53,7 @@ export class ActorRdfResolveHypermediaLinksQueueWrapperInfoOccupancy
     const queryIdentifier: string | undefined = action.context.get(KEY_QUERY_IDENTIFIER);
     const pathObject = Path.parse(this.filePath);
     if (queryIdentifier === undefined) {
-      pathObject.name += `_${this.queryCounter}`;
+      pathObject.name += this.randomQueryIdentifier ? `_${uuidv4()}` : `_${this.queryCounter}`;
     } else {
       pathObject.name += `_${queryIdentifier}`;
     }
@@ -85,6 +88,12 @@ export interface IActorRdfResolveHypermediaLinksQueueWrapperInfoOccupancyArgs
    * with an id.
    */
   filePath: string;
+  /**
+   * The query identifier for the file of the link queue will be random.
+   * If in the context `@comunica/actor-rdf-resolve-hypermedia-links-queue-wrapper-info-occupance:query-identifier`
+   * is define the identifier will be the one in the context.
+   */
+  randomQueryIdentifier?: boolean;
 }
 
 export const KEY_CONTEXT_WRAPPED = new ActionContextKey<boolean>(

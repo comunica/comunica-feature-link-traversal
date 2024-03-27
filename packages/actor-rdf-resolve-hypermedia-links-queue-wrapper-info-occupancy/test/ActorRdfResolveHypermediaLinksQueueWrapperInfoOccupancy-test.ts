@@ -129,6 +129,40 @@ describe('ActorRdfResolveHypermediaLinksQueueRdfResolveHypermediaLinkQueueWrappe
         expect(action.context.set).toHaveBeenCalledTimes(1);
         expect(action.context.set).toHaveBeenLastCalledWith(KEY_CONTEXT_WRAPPED, true);
       });
+
+      it(`should returns the link queue with the right path if a random identifier is defined
+       and add the context wrapped flag in the context`, async() => {
+        const mediator: any = {
+          mediate: jest.fn().mockResolvedValue({ linkQueue }),
+        };
+
+        actor = new ActorRdfResolveHypermediaLinksQueueWrapperInfoOccupancy({
+          name: 'actor',
+          bus,
+          filePath,
+          mediatorRdfResolveHypermediaLinksQueue: mediator,
+          randomQueryIdentifier: true,
+        });
+        jest.spyOn(action.context, 'get').mockImplementation((key: any) => {
+          if (key.name === KEY_QUERY_IDENTIFIER.name) {
+            return undefined;
+          }
+          return 'foo';
+        });
+
+        const expectedLinkQueueWrapper = new LinkQueueSaveOnDiskInfo(linkQueue, 'boo', 'foo');
+        const resp = await actor.run(action);
+        const wrappedQueue: LinkQueueSaveOnDiskInfo = resp.linkQueue;
+
+        expect(wrappedQueue.getHistory()).toStrictEqual(expectedLinkQueueWrapper.getHistory());
+        expect(action.context.set).toHaveBeenCalledTimes(1);
+        expect(action.context.set).toHaveBeenLastCalledWith(KEY_CONTEXT_WRAPPED, true);
+
+        const resp2 = await actor.run(action);
+        const wrappedQueue2: LinkQueueSaveOnDiskInfo = resp2.linkQueue;
+        expect(wrappedQueue2.filePath).not.toBe(wrappedQueue.filePath);
+        expect(wrappedQueue2.getHistory()).toStrictEqual(expectedLinkQueueWrapper.getHistory());
+      });
     });
   });
 });
