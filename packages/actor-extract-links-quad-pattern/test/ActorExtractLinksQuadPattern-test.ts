@@ -2,6 +2,7 @@ import type { Readable } from 'node:stream';
 import { ActorExtractLinks } from '@comunica/bus-extract-links';
 import { KeysQueryOperation } from '@comunica/context-entries';
 import { ActionContext, Bus } from '@comunica/core';
+import { REACHABILITY_LABEL } from '@comunica/types-link-traversal';
 import { DataFactory } from 'rdf-data-factory';
 import { Factory } from 'sparqlalgebrajs';
 import { ActorExtractLinksQuadPattern } from '../lib/ActorExtractLinksQuadPattern';
@@ -25,15 +26,15 @@ describe('ActorExtractLinksQuadPattern', () => {
     });
 
     it('should be a ActorExtractLinksQuadPattern constructor', () => {
-      expect(new (<any> ActorExtractLinksQuadPattern)({ name: 'actor', bus }))
+      expect(new (<any>ActorExtractLinksQuadPattern)({ name: 'actor', bus }))
         .toBeInstanceOf(ActorExtractLinksQuadPattern);
-      expect(new (<any> ActorExtractLinksQuadPattern)({ name: 'actor', bus }))
+      expect(new (<any>ActorExtractLinksQuadPattern)({ name: 'actor', bus }))
         .toBeInstanceOf(ActorExtractLinks);
     });
 
     it('should not be able to create new ActorExtractLinksQuadPattern objects without \'new\'', () => {
       expect(() => {
-        (<any> ActorExtractLinksQuadPattern)();
+        (<any>ActorExtractLinksQuadPattern)();
       }).toThrow(`Class constructor ActorExtractLinksQuadPattern cannot be invoked without 'new'`);
     });
   });
@@ -92,6 +93,30 @@ describe('ActorExtractLinksQuadPattern', () => {
           ],
         });
     });
+
+    it('should run on a stream and return urls matching the pattern with annotation', async() => {
+      actor = new ActorExtractLinksQuadPattern({
+        name: 'actor',
+        bus,
+        onlyVariables: false,
+        labelLinksWithReachability: true,
+      });
+      await expect(actor.run({ url: '', metadata: input, requestTime: 0, context })).resolves
+        .toEqual({
+          links: [
+            { url: 'ex:s2' },
+            { url: 'ex:p' },
+            { url: 'ex:g' },
+            { url: 'ex:s4' },
+            { url: 'ex:p' },
+            { url: 'ex:o4' },
+            { url: 'ex:g' },
+          ].map((link: any) => {
+            link.metadata = { [REACHABILITY_LABEL]: ActorExtractLinksQuadPattern.REACHABILITY_LABEL };
+            return link;
+          }),
+        });
+    });
   });
 
   describe('An ActorExtractLinksQuadPattern instance with onlyVariables true', () => {
@@ -126,6 +151,27 @@ describe('ActorExtractLinksQuadPattern', () => {
             { url: 'ex:s4' },
             { url: 'ex:o4' },
           ],
+        });
+    });
+
+    it('should run on a stream and return urls matching the pattern with annotation', async() => {
+      actor = new ActorExtractLinksQuadPattern({
+        name: 'actor',
+        bus,
+        onlyVariables: true,
+        labelLinksWithReachability: true,
+      });
+
+      await expect(actor.run({ url: '', metadata: input, requestTime: 0, context })).resolves
+        .toEqual({
+          links: [
+            { url: 'ex:s2' },
+            { url: 'ex:s4' },
+            { url: 'ex:o4' },
+          ].map((link: any) => {
+            link.metadata = { [REACHABILITY_LABEL]: ActorExtractLinksQuadPattern.REACHABILITY_LABEL };
+            return link;
+          }),
         });
     });
   });

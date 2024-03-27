@@ -1,5 +1,6 @@
 import { KeysExtractLinksTree } from '@comunica/context-entries-link-traversal';
 import { ActionContext, Bus } from '@comunica/core';
+import { REACHABILITY_LABEL } from '@comunica/types-link-traversal';
 import { DataFactory } from 'rdf-data-factory';
 import type * as RDF from 'rdf-js';
 import { ActorExtractLinksTree } from '../lib/ActorExtractLinksTree';
@@ -123,6 +124,35 @@ describe('ActorExtractLinksExtractLinksTree', () => {
 
       expect(result).toEqual({ links: expectedUrl.map((value) => {
         return { url: value };
+      }) });
+    });
+
+    it(`should return the links annotated of a TREE 
+    with multiple relations combining blank nodes and named nodes`, async() => {
+      actor = new ActorExtractLinksTree({ name: 'actor', bus, labelLinksWithReachability: true });
+      const expectedUrl = [ 'http://foo.com', 'http://bar.com', 'http://example.com', 'http://example.com' ];
+      const input = stream([
+        DF.quad(DF.namedNode(treeUrl), DF.namedNode('https://w3id.org/tree#relation'), DF.blankNode('_:_g1'), DF.namedNode('ex:gx')),
+        DF.quad(DF.blankNode('_:_g1'), DF.namedNode('https://w3id.org/tree#node'), DF.literal(expectedUrl[0]), DF.namedNode('ex:gx')),
+        DF.quad(DF.namedNode(treeUrl), DF.namedNode('ex:p'), DF.namedNode('ex:o'), DF.namedNode('ex:gx')),
+        DF.quad(DF.namedNode(treeUrl), DF.namedNode('https://w3id.org/tree#foo'), DF.literal(expectedUrl[0]), DF.namedNode('ex:gx')),
+        DF.quad(DF.namedNode(treeUrl), DF.namedNode('https://w3id.org/tree#relation'), DF.literal(expectedUrl[0]), DF.namedNode('ex:gx')),
+        DF.quad(DF.namedNode(treeUrl), DF.namedNode('https://w3id.org/tree#relation'), DF.blankNode('ex:r1'), DF.namedNode('ex:gx')),
+        DF.quad(DF.blankNode('ex:r1'), DF.namedNode('https://w3id.org/tree#node'), DF.literal(expectedUrl[1]), DF.namedNode('ex:gx')),
+        DF.quad(DF.namedNode(treeUrl), DF.namedNode('https://w3id.org/tree#relation'), DF.blankNode('ex:r2'), DF.namedNode('ex:gx')),
+        DF.quad(DF.blankNode('ex:r2'), DF.namedNode('https://w3id.org/tree#node'), DF.literal(expectedUrl[2]), DF.namedNode('ex:gx')),
+        DF.quad(DF.namedNode(treeUrl), DF.namedNode('https://w3id.org/tree#relation'), DF.blankNode('_:_g2'), DF.namedNode('ex:gx')),
+        DF.quad(DF.blankNode('_:_g2'), DF.namedNode('https://w3id.org/tree#node'), DF.literal(expectedUrl[3]), DF.namedNode('ex:gx')),
+      ]);
+      const action = { url: treeUrl, metadata: input, requestTime: 0, context };
+
+      const result = await actor.run(action);
+
+      expect(result).toEqual({ links: expectedUrl.map((value) => {
+        return {
+          url: value,
+          metadata: { [REACHABILITY_LABEL]: ActorExtractLinksTree.REACHABILITY_LABEL },
+        };
       }) });
     });
 

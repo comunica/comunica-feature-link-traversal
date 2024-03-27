@@ -1,6 +1,10 @@
 import type { ActorInitQueryBase } from '@comunica/actor-init-query';
 import { QueryEngineBase } from '@comunica/actor-init-query';
-import type { IActionExtractLinks, IActorExtractLinksOutput } from '@comunica/bus-extract-links';
+import type {
+  IActionExtractLinks,
+  IActorExtractLinksArgs,
+  IActorExtractLinksOutput,
+} from '@comunica/bus-extract-links';
 import {
   ActorExtractLinks,
 } from '@comunica/bus-extract-links';
@@ -19,18 +23,20 @@ import { SimpleSclParser } from './SimpleSclParser';
 /**
  * A comunica Traverse Content Policies RDF Metadata Extract Actor.
  */
-export class ActorExtractLinksContentPolicies extends ActorExtractLinks
-  implements IActorExtractLinksContentPoliciesArgs {
+export class ActorExtractLinksContentPolicies extends ActorExtractLinks {
   private readonly sclParser: SimpleSclParser;
 
   public readonly actorInitQuery: ActorInitQueryBase;
   public readonly traverseConditional: boolean;
   public readonly queryEngine: QueryEngineBase;
+  public static readonly REACHABILITY_LABEL = 'cSclContentPolicies';
 
   public constructor(args: IActorExtractLinksContentPoliciesArgs) {
     super(args);
     this.sclParser = new SimpleSclParser();
     this.queryEngine = new QueryEngineBase(args.actorInitQuery);
+    this.reachabilityLabel = ActorExtractLinksContentPolicies.REACHABILITY_LABEL;
+    Object.freeze(this.reachabilityLabel);
   }
 
   public async test(_action: IActionExtractLinks): Promise<IActorTest> {
@@ -127,7 +133,7 @@ export class ActorExtractLinksContentPolicies extends ActorExtractLinks
         for (const variable of contentPolicy.variables) {
           const term = binding.get(variable.name);
           if (term && term.termType === 'NamedNode') {
-            const link: ILink = { url: term.value, transform };
+            const link: ILink = this.annotateLinkWithTheReachabilityCriteria({ url: term.value, transform });
 
             // Mark in the context if the linked document's policies should be considered
             link.context = new ActionContext({ [KEY_CONTEXT_WITHPOLICIES.name]: variable.withPolicies });
@@ -142,7 +148,7 @@ export class ActorExtractLinksContentPolicies extends ActorExtractLinks
 }
 
 export interface IActorExtractLinksContentPoliciesArgs
-  extends IActorArgs<IActionExtractLinks, IActorTest, IActorExtractLinksOutput> {
+  extends IActorArgs<IActionExtractLinks, IActorTest, IActorExtractLinksOutput>, IActorExtractLinksArgs {
   /**
    * An init query actor that is used to query all links to follow from a stream.
    * @default {<urn:comunica:default:init/actors#query>}

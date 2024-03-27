@@ -22,9 +22,12 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
   public static readonly aView = DF.namedNode('https://w3id.org/tree#view');
   public static readonly aSubset = DF.namedNode('http://rdfs.org/ns/void#subset');
   public static readonly isPartOf = DF.namedNode('http://purl.org/dc/terms/isPartOf');
+  public static readonly REACHABILITY_LABEL = 'cTree';
 
   public constructor(args: IActorExtractLinksArgs) {
     super(args);
+    this.reachabilityLabel = ActorExtractLinksTree.REACHABILITY_LABEL;
+    Object.freeze(this.reachabilityLabel);
   }
 
   public async test(_action: IActionExtractLinks): Promise<IActorTest> {
@@ -70,7 +73,7 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
           const subjectOfRelation = relationNodeSubject.get(nodeValue);
           if (subjectOfRelation && effectiveTreeDocumentSubject.has(subjectOfRelation)
           ) {
-            links.push({ url: link });
+            links.push(this.annotateLinkWithTheReachabilityCriteria({ url: link }));
           }
         }
 

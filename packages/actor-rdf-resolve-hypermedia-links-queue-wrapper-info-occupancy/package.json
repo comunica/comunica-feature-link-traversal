@@ -1,22 +1,23 @@
 {
-  "name": "@comunica/bus-extract-links",
-  "version": "0.3.0",
-  "description": "A comunica bus for extract-links events.",
+  "name": "@comunica/actor-rdf-resolve-hypermedia-links-queue-wrapper-info-occupancy",
+  "version": "0.0.1",
+  "description": "A wrapper-info-occupancy rdf-resolve-hypermedia-links-queue actor",
   "lsd:module": true,
   "license": "MIT",
   "homepage": "https://comunica.dev/",
   "repository": {
     "type": "git",
     "url": "https://github.com/comunica/comunica.git",
-    "directory": "packages/bus-extract-links"
+    "directory": "packages/actor-rdf-resolve-hypermedia-links-queue-wrapper-info-occupancy"
   },
   "bugs": {
     "url": "https://github.com/comunica/comunica/issues"
   },
   "keywords": [
     "comunica",
-    "bus",
-    "extract-links"
+    "actor",
+    "rdf-resolve-hypermedia-links-queue",
+    "wrapper-info-occupancy"
   ],
   "sideEffects": false,
   "main": "lib/index.js",
@@ -36,9 +37,10 @@
     "build:components": "componentsjs-generator"
   },
   "dependencies": {
-    "@comunica/bus-rdf-metadata-extract": "^3.0.1",
-    "@comunica/bus-rdf-resolve-hypermedia-links": "^3.0.1",
+    "@comunica/bus-rdf-resolve-hypermedia-links-queue": "^3.0.1",
+    "@comunica/context-entries": "^3.0.1",
     "@comunica/core": "^3.0.1",
-    "@comunica/types-link-traversal": "^0.3.0"
+    "@comunica/types-link-traversal": "^0.3.0",
+    "uuid": "^9.0.1"
   }
 }

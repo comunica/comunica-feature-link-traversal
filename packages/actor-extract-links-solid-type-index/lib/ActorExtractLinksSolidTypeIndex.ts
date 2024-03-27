@@ -1,7 +1,11 @@
 import { QueryEngineBase } from '@comunica/actor-init-query';
 import type { ActorInitQueryBase } from '@comunica/actor-init-query';
 import type { MediatorDereferenceRdf } from '@comunica/bus-dereference-rdf';
-import type { IActionExtractLinks, IActorExtractLinksOutput } from '@comunica/bus-extract-links';
+import type {
+  IActionExtractLinks,
+  IActorExtractLinksArgs,
+  IActorExtractLinksOutput,
+} from '@comunica/bus-extract-links';
 import { ActorExtractLinks } from '@comunica/bus-extract-links';
 import type { ILink } from '@comunica/bus-rdf-resolve-hypermedia-links';
 import { KeysInitQuery, KeysQueryOperation, KeysQuerySourceIdentify } from '@comunica/context-entries';
@@ -19,6 +23,7 @@ import { Util as AlgebraUtil } from 'sparqlalgebrajs';
  */
 export class ActorExtractLinksSolidTypeIndex extends ActorExtractLinks {
   public static readonly RDF_TYPE = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type';
+  public static readonly REACHABILITY_LABEL = 'cTypeIndex';
 
   private readonly typeIndexPredicates: string[];
   private readonly onlyMatchingTypes: boolean;
@@ -29,6 +34,8 @@ export class ActorExtractLinksSolidTypeIndex extends ActorExtractLinks {
   public constructor(args: IActorExtractLinksSolidTypeIndexArgs) {
     super(args);
     this.queryEngine = new QueryEngineBase(args.actorInitQuery);
+    this.reachabilityLabel = ActorExtractLinksSolidTypeIndex.REACHABILITY_LABEL;
+    Object.freeze(this.reachabilityLabel);
   }
 
   public async test(action: IActionExtractLinks): Promise<IActorTest> {
@@ -142,7 +149,7 @@ export class ActorExtractLinksSolidTypeIndex extends ActorExtractLinks {
       if (!typeLinks[type]) {
         typeLinks[type] = [];
       }
-      typeLinks[type].push({ url: bindings.get('instance')!.value });
+      typeLinks[type].push(this.annotateLinkWithTheReachabilityCriteria({ url: bindings.get('instance')!.value }));
     }
     return typeLinks;
   }
@@ -288,7 +295,7 @@ export class ActorExtractLinksSolidTypeIndex extends ActorExtractLinks {
 }
 
 export interface IActorExtractLinksSolidTypeIndexArgs
-  extends IActorArgs<IActionExtractLinks, IActorTest, IActorExtractLinksOutput> {
+  extends IActorArgs<IActionExtractLinks, IActorTest, IActorExtractLinksOutput>, IActorExtractLinksArgs {
   /**
    * The type index predicate URLs that will be followed.
    * @default {http://www.w3.org/ns/solid/terms#publicTypeIndex}

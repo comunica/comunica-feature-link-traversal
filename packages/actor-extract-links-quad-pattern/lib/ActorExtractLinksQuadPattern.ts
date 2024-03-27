@@ -1,4 +1,8 @@
-import type { IActionExtractLinks, IActorExtractLinksOutput } from '@comunica/bus-extract-links';
+import type {
+  IActionExtractLinks,
+  IActorExtractLinksArgs,
+  IActorExtractLinksOutput,
+} from '@comunica/bus-extract-links';
 import { ActorExtractLinks } from '@comunica/bus-extract-links';
 import { KeysQueryOperation } from '@comunica/context-entries';
 import type { IActorArgs, IActorTest } from '@comunica/core';
@@ -11,9 +15,12 @@ import type { Algebra } from 'sparqlalgebrajs';
  */
 export class ActorExtractLinksQuadPattern extends ActorExtractLinks {
   private readonly onlyVariables: boolean;
+  public static readonly REACHABILITY_LABEL = 'cQuadPatern';
 
   public constructor(args: IActorExtractLinksQuadPatternArgs) {
     super(args);
+    this.reachabilityLabel = ActorExtractLinksQuadPattern.REACHABILITY_LABEL;
+    Object.freeze(this.reachabilityLabel);
   }
 
   public static getCurrentQuadPattern(context: IActionContext): Algebra.Pattern | undefined {
@@ -42,7 +49,7 @@ export class ActorExtractLinksQuadPattern extends ActorExtractLinks {
           if (matchPatternComplete(quad, quadPattern)) {
             for (const quadTermName of filterQuadTermNames(quadPattern, value => value.termType === 'Variable')) {
               if (quad[quadTermName].termType === 'NamedNode') {
-                links.push({ url: quad[quadTermName].value });
+                links.push(this.annotateLinkWithTheReachabilityCriteria({ url: quad[quadTermName].value }));
               }
             }
           }
@@ -51,7 +58,7 @@ export class ActorExtractLinksQuadPattern extends ActorExtractLinks {
           // eslint-disable-next-line no-lonely-if
           if (matchPatternComplete(quad, quadPattern)) {
             for (const link of getNamedNodes(getTerms(quad))) {
-              links.push({ url: link.value });
+              links.push(this.annotateLinkWithTheReachabilityCriteria({ url: link.value }));
             }
           }
         }
@@ -61,7 +68,7 @@ export class ActorExtractLinksQuadPattern extends ActorExtractLinks {
 }
 
 export interface IActorExtractLinksQuadPatternArgs
-  extends IActorArgs<IActionExtractLinks, IActorTest, IActorExtractLinksOutput> {
+  extends IActorArgs<IActionExtractLinks, IActorTest, IActorExtractLinksOutput>, IActorExtractLinksArgs {
   /**
    * @default {true}
    */
