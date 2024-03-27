@@ -130,6 +130,33 @@ describe('ActorRdfResolveHypermediaLinksQueueRdfResolveHypermediaLinkQueueWrappe
         expect(action.context.set).toHaveBeenLastCalledWith(KEY_CONTEXT_WRAPPED, true);
       });
 
+      it(`should returns the link queue with the right path if a query identifier is defined
+      even if random identifier is defined and add the context wrapped flag in the context`, async() => {
+        const mediator: any = {
+          mediate: jest.fn().mockResolvedValueOnce({ linkQueue }),
+        };
+
+        actor = new ActorRdfResolveHypermediaLinksQueueWrapperInfoOccupancy({
+          name: 'actor',
+          bus,
+          filePath,
+          mediatorRdfResolveHypermediaLinksQueue: mediator,
+          randomQueryIdentifier: true,
+        });
+        jest.spyOn(action.context, 'get').mockImplementation((key: any) => {
+          if (key.name === KEY_QUERY_IDENTIFIER.name) {
+            return 'Q1';
+          }
+          return 'foo';
+        });
+        const expectedFilePath = 'bar_Q1.json';
+
+        const expectedLinkQueueWrapper = new LinkQueueSaveOnDiskInfo(linkQueue, expectedFilePath, 'Q1');
+
+        await expect(actor.run(action)).resolves.toStrictEqual({ linkQueue: expectedLinkQueueWrapper });
+        expect(action.context.set).toHaveBeenCalledTimes(1);
+        expect(action.context.set).toHaveBeenLastCalledWith(KEY_CONTEXT_WRAPPED, true);
+      });
       it(`should returns the link queue with the right path if a random identifier is defined
        and add the context wrapped flag in the context`, async() => {
         const mediator: any = {
