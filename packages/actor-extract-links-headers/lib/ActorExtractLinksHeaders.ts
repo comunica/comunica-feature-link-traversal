@@ -8,7 +8,7 @@ import type { ILink } from '@comunica/bus-rdf-resolve-hypermedia-links';
  */
 export class ActorExtractLinksHeaders extends ActorExtractLinks {
   private readonly headers: RegExp[];
-  private readonly linkRegEx = new RegExp("<(.*)>","u");
+  private readonly linkRegEx = new RegExp("<(.*)>", "u");
 
   public constructor(args: IActorExtractLinksTraverseHeadersArgs) {
     super(args);
@@ -20,28 +20,35 @@ export class ActorExtractLinksHeaders extends ActorExtractLinks {
   }
 
   public async run(action: IActionExtractLinks): Promise<IActorExtractLinksOutput> {
-    return {
-      links: this.collectLinkHeaders(action.headers),
-    };
-  }
+    return new Promise((resolve, reject) => {
+      // const metadata = action.metadata;
+      const headers = action.headers;
+      const links: ILink[] = [];
 
-  private collectLinkHeaders(headers?:Headers): ILink[] {
-    let links:ILink[] = [];
-    for (const regex of this.headers) {
-      headers?.forEach((header) => {
-        if (regex.test( header)) {
-          let match = header.match(this.linkRegEx);
-          if(match) {
-            links.push({ url: match[1] });
+      // // Forward errors
+      // metadata.on('error', reject);
+
+      // // Resolve to discovered links
+      // metadata.on('end', () => {      
+      for (const regex of this.headers) {
+        headers?.get('link')?.split(",").forEach((header) => {
+          if (regex.test(header)) {
+            let match = header.match(this.linkRegEx);
+            if (match) {
+              links.push({ url: new URL(match[1],action.url).href });
+            }
           }
-        }  
-      })
-    }
-    return links;
-  } 
+        })
+      }
+      resolve({ links });
+      //   });
+      // });
+    });
+  }
 }
 
+
 export interface IActorExtractLinksTraverseHeadersArgs
-  extends IActorArgs<IActionExtractLinks, IActorTest, IActorExtractLinksOutput> { 
+  extends IActorArgs<IActionExtractLinks, IActorTest, IActorExtractLinksOutput> {
   headersRegexes: string[];
 }

@@ -35,15 +35,15 @@ describe('ActorExtractLinksHeaders', () => {
     });
 
     it('should test ', () => {
-      return expect(actor.test({ url: 'ex:s', metadata:metadata, headers: input, requestTime: 0, context: new ActionContext() }))
+      return expect(actor.test({ url: 'http://pod.example.com/storage/resource', metadata:metadata, headers: input, requestTime: 0, context: new ActionContext() }))
         .resolves.toEqual(true);
     });
 
     it('should run on headers and return all describedby values', () => {
-      return expect(actor.run({ url: 'ex:s',metadata:metadata, headers: input, requestTime: 0, context: new ActionContext() })).resolves
+      return expect(actor.run({ url: 'http://pod.example.com/storage/resource',metadata:metadata, headers: input, requestTime: 0, context: new ActionContext() })).resolves
         .toEqual({
           links: [
-            { url: '/storage/resource.meta' },
+            { url: 'http://pod.example.com/storage/resource.meta' },
           ],
         });
     });
