@@ -1,12 +1,14 @@
-import type { IActionExtractLinks,
+import type {
+  IActionExtractLinks,
   IActorExtractLinksOutput,
-  IActorExtractLinksArgs } from '@comunica/bus-extract-links';
+  IActorExtractLinksArgs,
+} from '@comunica/bus-extract-links';
 import { ActorExtractLinks } from '@comunica/bus-extract-links';
 import type { ILink } from '@comunica/bus-rdf-resolve-hypermedia-links';
 import { KeysExtractLinksTree } from '@comunica/context-entries-link-traversal';
 import type { IActorTest } from '@comunica/core';
+import type * as RDF from '@rdfjs/types';
 import { DataFactory } from 'rdf-data-factory';
-import type * as RDF from 'rdf-js';
 
 const DF = new DataFactory<RDF.BaseQuad>();
 
@@ -25,7 +27,7 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
     super(args);
   }
 
-  public async test(action: IActionExtractLinks): Promise<IActorTest> {
+  public async test(_action: IActionExtractLinks): Promise<IActorTest> {
     return true;
   }
 
@@ -33,7 +35,7 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
     return new Promise((resolve, reject) => {
       const strictModeFlag: boolean | undefined =
        action.context.get(KeysExtractLinksTree.strictTraversal);
-      const strictMode = strictModeFlag === undefined ? true : strictModeFlag;
+      const strictMode = strictModeFlag ?? true;
       const metadata = action.metadata;
       const currentNodeUrl = action.url;
       // The relation node value and the subject of the relation are the values of the map
@@ -47,12 +49,14 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
 
       // Invoke callback on each metadata quad
       metadata.on('data', (quad: RDF.Quad) =>
-        this.getTreeQuadsRawRelations(quad,
+        this.getTreeQuadsRawRelations(
+          quad,
           currentNodeUrl,
           relationNodeSubject,
           nodeLinks,
           effectiveTreeDocumentSubject,
-          strictMode));
+          strictMode,
+        ));
 
       // Resolve to discovered links
       metadata.on('end', () => {

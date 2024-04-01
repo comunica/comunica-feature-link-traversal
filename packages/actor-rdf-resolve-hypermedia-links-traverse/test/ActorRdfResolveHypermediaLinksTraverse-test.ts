@@ -1,5 +1,5 @@
 import { ActorRdfResolveHypermediaLinks } from '@comunica/bus-rdf-resolve-hypermedia-links';
-import { KeysRdfResolveHypermediaLinks } from '@comunica/context-entries-link-traversal';
+import { KeysQuerySourceIdentify } from '@comunica/context-entries';
 import { ActionContext, Bus } from '@comunica/core';
 import { ActorRdfResolveHypermediaLinksTraverse } from '../lib/ActorRdfResolveHypermediaLinksTraverse';
 
@@ -23,7 +23,9 @@ describe('ActorRdfResolveHypermediaLinksTraverse', () => {
     });
 
     it('should not be able to create new ActorRdfResolveHypermediaLinksTraverse objects without \'new\'', () => {
-      expect(() => { (<any> ActorRdfResolveHypermediaLinksTraverse)(); }).toThrow();
+      expect(() => {
+        (<any> ActorRdfResolveHypermediaLinksTraverse)();
+      }).toThrow(`Class constructor ActorRdfResolveHypermediaLinksTraverse cannot be invoked without 'new'`);
     });
   });
 
@@ -34,103 +36,101 @@ describe('ActorRdfResolveHypermediaLinksTraverse', () => {
       actor = new ActorRdfResolveHypermediaLinksTraverse({ name: 'actor', bus });
     });
 
-    it('should fail to test with empty metadata', () => {
-      return expect(actor.test({ context: new ActionContext(), metadata: {}})).rejects
+    it('should fail to test with empty metadata', async() => {
+      await expect(actor.test({ context: new ActionContext(), metadata: {}})).rejects
         .toThrow(new Error('Actor actor requires a \'traverse\' metadata entry.'));
     });
 
-    it('should test with traverse in metadata', () => {
-      return expect(actor.test({ context: new ActionContext(), metadata: { traverse: true }}))
-        .resolves.toEqual(true);
+    it('should test with traverse in metadata', async() => {
+      await expect(actor.test({ context: new ActionContext(), metadata: { traverse: true }}))
+        .resolves.toBe(true);
     });
 
-    it('should fail to test when traverse is disable in the context', () => {
-      return expect(actor.test({ context: new ActionContext({
-        [KeysRdfResolveHypermediaLinks.traverse.name]: false,
-      }),
-      metadata: { traverse: true }})).rejects
+    it('should fail to test when traverse is disable in the context', async() => {
+      await expect(actor.test({ context: new ActionContext({
+        [KeysQuerySourceIdentify.traverse.name]: false,
+      }), metadata: { traverse: true }})).rejects
         .toThrow(new Error('Link traversal has been disabled via the context.'));
     });
 
-    it('should run', () => {
-      return expect(actor.run({ context: new ActionContext(), metadata: { traverse: [{ url: 'a' }, { url: 'b' }]}}))
+    it('should run', async() => {
+      await expect(actor.run({ context: new ActionContext(), metadata: { traverse: [{ url: 'a' }, { url: 'b' }]}}))
         .resolves.toMatchObject({ links: [{ url: 'a' }, { url: 'b' }]});
     });
 
-    it('should run and remove hashes from URLs', () => {
-      return expect(actor.run({ context: new ActionContext(),
-        metadata: { traverse: [
-          { url: 'http://example.org?abc' },
-          { url: 'http://example.org#abc' },
-        ]}}))
+    it('should run and remove hashes from URLs', async() => {
+      await expect(actor.run({ context: new ActionContext(), metadata: { traverse: [
+        { url: 'http://example.org?abc' },
+        { url: 'http://example.org#abc' },
+      ]}}))
         .resolves.toMatchObject({ links: [
           { url: 'http://example.org?abc' },
           { url: 'http://example.org' },
         ]});
     });
 
-    it('should run and convert insecure links to https in the browser', () => {
+    it('should run and convert insecure links to https in the browser', async() => {
       globalThis.window = <any> { location: new URL('https://mywebapp.com') };
       actor = new ActorRdfResolveHypermediaLinksTraverse({ name: 'actor', bus });
-      const result = actor.run({ context: new ActionContext(),
-        metadata: { traverse: [
-          { url: 'http://example.org?abc' },
-          { url: 'http://example.org' },
-        ]}});
+      const result = actor.run({ context: new ActionContext(), metadata: { traverse: [
+        { url: 'http://example.org?abc' },
+        { url: 'http://example.org' },
+      ]}});
       globalThis.window = <any> { location: new URL('http://localhost') };
-      return expect(result)
+      await expect(result)
         .resolves.toMatchObject({ links: [
           { url: 'https://example.org?abc' },
           { url: 'https://example.org' },
         ]});
     });
 
-    it('should run and keep insecure links when running from an insecure context', () => {
+    it('should run and keep insecure links when running from an insecure context', async() => {
       globalThis.window = <any> { location: new URL('http://mywebapp.com') };
       actor = new ActorRdfResolveHypermediaLinksTraverse({ name: 'actor', bus });
-      const result = actor.run({ context: new ActionContext(),
-        metadata: { traverse: [
-          { url: 'http://example.org?abc' },
-          { url: 'http://example.org' },
-        ]}});
+      const result = actor.run({ context: new ActionContext(), metadata: { traverse: [
+        { url: 'http://example.org?abc' },
+        { url: 'http://example.org' },
+      ]}});
       globalThis.window = <any> { location: new URL('http://localhost') };
-      return expect(result)
+      await expect(result)
         .resolves.toMatchObject({ links: [
           { url: 'http://example.org?abc' },
           { url: 'http://example.org' },
         ]});
     });
 
-    it('should run and not convert insecure links to https when upgradeInsecureRequests is set to false', () => {
+    it('should run and not convert insecure links to https when upgradeInsecureRequests is set to false', async() => {
       globalThis.window = <any> { location: new URL('https://mywebapp.com') };
       actor = new ActorRdfResolveHypermediaLinksTraverse({
-        name: 'actor', bus, upgradeInsecureRequests: false,
+        name: 'actor',
+        bus,
+        upgradeInsecureRequests: false,
       });
-      const result = actor.run({ context: new ActionContext(),
-        metadata: { traverse: [
-          { url: 'http://example.org?abc' },
-          { url: 'http://example.org' },
-        ]}});
+      const result = actor.run({ context: new ActionContext(), metadata: { traverse: [
+        { url: 'http://example.org?abc' },
+        { url: 'http://example.org' },
+      ]}});
       globalThis.window = <any> { location: new URL('http://localhost') };
-      return expect(result)
+      await expect(result)
         .resolves.toMatchObject({ links: [
           { url: 'http://example.org?abc' },
           { url: 'http://example.org' },
         ]});
     });
 
-    it('should run and convert insecure links to https when upgradeInsecureRequests is set to true', () => {
+    it('should run and convert insecure links to https when upgradeInsecureRequests is set to true', async() => {
       globalThis.window = <any> { location: new URL('http://mywebapp.com') };
       actor = new ActorRdfResolveHypermediaLinksTraverse({
-        name: 'actor', bus, upgradeInsecureRequests: true,
+        name: 'actor',
+        bus,
+        upgradeInsecureRequests: true,
       });
-      const result = actor.run({ context: new ActionContext(),
-        metadata: { traverse: [
-          { url: 'http://example.org?abc' },
-          { url: 'http://example.org' },
-        ]}});
+      const result = actor.run({ context: new ActionContext(), metadata: { traverse: [
+        { url: 'http://example.org?abc' },
+        { url: 'http://example.org' },
+      ]}});
       globalThis.window = <any> { location: new URL('http://localhost') };
-      return expect(result)
+      await expect(result)
         .resolves.toMatchObject({ links: [
           { url: 'https://example.org?abc' },
           { url: 'https://example.org' },

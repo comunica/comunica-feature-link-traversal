@@ -14,7 +14,10 @@ export class ActorRdfResolveHypermediaLinksQueueWrapperLimitCount extends ActorR
   private readonly limit: number;
   private readonly mediatorRdfResolveHypermediaLinksQueue: Mediator<
   Actor<IActionRdfResolveHypermediaLinksQueue, IActorTest, IActorRdfResolveHypermediaLinksQueueOutput>,
-  IActionRdfResolveHypermediaLinksQueue, IActorTest, IActorRdfResolveHypermediaLinksQueueOutput>;
+  IActionRdfResolveHypermediaLinksQueue,
+IActorTest,
+IActorRdfResolveHypermediaLinksQueueOutput
+>;
 
   public constructor(args: IActorRdfResolveHypermediaLinksQueueWrapperLimitCountArgs) {
     super(args);
@@ -39,7 +42,10 @@ export interface IActorRdfResolveHypermediaLinksQueueWrapperLimitCountArgs
   limit: number;
   mediatorRdfResolveHypermediaLinksQueue: Mediator<
   Actor<IActionRdfResolveHypermediaLinksQueue, IActorTest, IActorRdfResolveHypermediaLinksQueueOutput>,
-  IActionRdfResolveHypermediaLinksQueue, IActorTest, IActorRdfResolveHypermediaLinksQueueOutput>;
+  IActionRdfResolveHypermediaLinksQueue,
+IActorTest,
+IActorRdfResolveHypermediaLinksQueueOutput
+>;
 }
 
 export const KEY_CONTEXT_WRAPPED = new ActionContextKey<boolean>(

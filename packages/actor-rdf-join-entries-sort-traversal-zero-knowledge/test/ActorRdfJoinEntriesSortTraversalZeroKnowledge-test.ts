@@ -1,4 +1,4 @@
-import { KeysRdfResolveQuadPattern } from '@comunica/context-entries';
+import { KeysQueryOperation } from '@comunica/context-entries';
 import { ActionContext, Bus } from '@comunica/core';
 import type { IActionContext } from '@comunica/types';
 import { DataFactory } from 'rdf-data-factory';
@@ -182,24 +182,24 @@ describe('ActorRdfJoinEntriesSortTraversalZeroKnowledge', () => {
 
     describe('getSourceUri', () => {
       it('should handle URIs without hashes', () => {
-        return expect(ActorRdfJoinEntriesSortTraversalZeroKnowledge.getSourceUri(DF.namedNode('http://example.org/')))
-          .toEqual('http://example.org/');
+        expect(ActorRdfJoinEntriesSortTraversalZeroKnowledge.getSourceUri(DF.namedNode('http://example.org/')))
+          .toBe('http://example.org/');
       });
 
       it('should handle URIs with hashes', () => {
-        return expect(ActorRdfJoinEntriesSortTraversalZeroKnowledge
+        expect(ActorRdfJoinEntriesSortTraversalZeroKnowledge
           .getSourceUri(DF.namedNode('http://example.org/page.html#somehash')))
-          .toEqual('http://example.org/page.html');
+          .toBe('http://example.org/page.html');
       });
     });
 
     describe('getScoreSeedNonVocab', () => {
       it('should be 0 for no sources', () => {
-        return expect(ActorRdfJoinEntriesSortTraversalZeroKnowledge.getScoreSeedNonVocab(FACTORY.createPattern(
+        expect(ActorRdfJoinEntriesSortTraversalZeroKnowledge.getScoreSeedNonVocab(FACTORY.createPattern(
           DF.namedNode('http://example.org/s'),
           DF.namedNode('http://example.org/p'),
           DF.namedNode('http://example.org/o'),
-        ), [])).toEqual(0);
+        ), [])).toBe(0);
       });
 
       it('should be 1 for one applicable sources', () => {
@@ -207,17 +207,17 @@ describe('ActorRdfJoinEntriesSortTraversalZeroKnowledge', () => {
           DF.namedNode('http://example.org/s'),
           DF.namedNode('http://example.org/p'),
           DF.namedNode('http://example.org/o'),
-        ), [ 'http://example.org/s' ])).toEqual(1);
+        ), [ 'http://example.org/s' ])).toBe(1);
         expect(ActorRdfJoinEntriesSortTraversalZeroKnowledge.getScoreSeedNonVocab(FACTORY.createPattern(
           DF.namedNode('http://example.org/s'),
           DF.namedNode('http://example.org/p'),
           DF.namedNode('http://example.org/o'),
-        ), [ 'http://example.org/o' ])).toEqual(1);
+        ), [ 'http://example.org/o' ])).toBe(1);
         expect(ActorRdfJoinEntriesSortTraversalZeroKnowledge.getScoreSeedNonVocab(FACTORY.createPattern(
           DF.namedNode('http://example.org/s'),
           DF.namedNode('http://example.org/p'),
           DF.namedNode('http://example.org/o'),
-        ), [ 'http://example.org/o', 'http://example.org/p' ])).toEqual(1);
+        ), [ 'http://example.org/o', 'http://example.org/p' ])).toBe(1);
       });
 
       it('should be 2 for two applicable sources', () => {
@@ -225,12 +225,12 @@ describe('ActorRdfJoinEntriesSortTraversalZeroKnowledge', () => {
           DF.namedNode('http://example.org/s'),
           DF.namedNode('http://example.org/p'),
           DF.namedNode('http://example.org/o'),
-        ), [ 'http://example.org/s', 'http://example.org/o' ])).toEqual(2);
+        ), [ 'http://example.org/s', 'http://example.org/o' ])).toBe(2);
         expect(ActorRdfJoinEntriesSortTraversalZeroKnowledge.getScoreSeedNonVocab(FACTORY.createPattern(
           DF.namedNode('http://example.org/s'),
           DF.namedNode('http://example.org/p'),
           DF.namedNode('http://example.org/o'),
-        ), [ 'http://example.org/s', 'http://example.org/o', 'http://example.org/p' ])).toEqual(2);
+        ), [ 'http://example.org/s', 'http://example.org/o', 'http://example.org/p' ])).toBe(2);
       });
 
       it('should be 2 for repeated source presence', () => {
@@ -238,69 +238,69 @@ describe('ActorRdfJoinEntriesSortTraversalZeroKnowledge', () => {
           DF.namedNode('http://example.org/s'),
           DF.namedNode('http://example.org/p'),
           DF.namedNode('http://example.org/s#hash'),
-        ), [ 'http://example.org/s' ])).toEqual(2);
+        ), [ 'http://example.org/s' ])).toBe(2);
       });
     });
 
     describe('getScoreSelectivity', () => {
       it('should be 4 for a pattern with no variables', () => {
-        return expect(ActorRdfJoinEntriesSortTraversalZeroKnowledge.getScoreSelectivity(FACTORY.createPattern(
+        expect(ActorRdfJoinEntriesSortTraversalZeroKnowledge.getScoreSelectivity(FACTORY.createPattern(
           DF.namedNode('http://example.org/s'),
           DF.namedNode('http://example.org/p'),
           DF.namedNode('http://example.org/o'),
-        ))).toEqual(4);
+        ))).toBe(4);
       });
 
       it('should be 3 for a pattern with 1 variable', () => {
-        return expect(ActorRdfJoinEntriesSortTraversalZeroKnowledge.getScoreSelectivity(FACTORY.createPattern(
+        expect(ActorRdfJoinEntriesSortTraversalZeroKnowledge.getScoreSelectivity(FACTORY.createPattern(
           DF.namedNode('http://example.org/s'),
           DF.variable('p'),
           DF.namedNode('http://example.org/o'),
-        ))).toEqual(3);
+        ))).toBe(3);
       });
 
       it('should be 1 for a pattern with 3 variables', () => {
-        return expect(ActorRdfJoinEntriesSortTraversalZeroKnowledge.getScoreSelectivity(FACTORY.createPattern(
+        expect(ActorRdfJoinEntriesSortTraversalZeroKnowledge.getScoreSelectivity(FACTORY.createPattern(
           DF.variable('s'),
           DF.variable('p'),
           DF.variable('o'),
-        ))).toEqual(1);
+        ))).toBe(1);
       });
 
       it('should be 4 for a path with no variables', () => {
-        return expect(ActorRdfJoinEntriesSortTraversalZeroKnowledge.getScoreSelectivity(FACTORY.createPath(
+        expect(ActorRdfJoinEntriesSortTraversalZeroKnowledge.getScoreSelectivity(FACTORY.createPath(
           DF.namedNode('http://example.org/s'),
           FACTORY.createLink(DF.namedNode('http://example.org/p')),
           DF.namedNode('http://example.org/o'),
-        ))).toEqual(4);
+        ))).toBe(4);
       });
 
       it('should be 3 for a path with 1 variable', () => {
-        return expect(ActorRdfJoinEntriesSortTraversalZeroKnowledge.getScoreSelectivity(FACTORY.createPath(
+        expect(ActorRdfJoinEntriesSortTraversalZeroKnowledge.getScoreSelectivity(FACTORY.createPath(
           DF.namedNode('http://example.org/s'),
           FACTORY.createNps([ DF.namedNode('http://example.org/p') ]),
           DF.variable('o'),
-        ))).toEqual(3);
+        ))).toBe(3);
       });
 
       it('should be 1 for a path with 2 variables', () => {
-        return expect(ActorRdfJoinEntriesSortTraversalZeroKnowledge.getScoreSelectivity(FACTORY.createPath(
+        expect(ActorRdfJoinEntriesSortTraversalZeroKnowledge.getScoreSelectivity(FACTORY.createPath(
           DF.variable('s'),
           FACTORY.createNps([ DF.namedNode('http://example.org/p1'), DF.namedNode('http://example.org/p2') ]),
           DF.variable('o'),
-        ))).toEqual(2);
+        ))).toBe(2);
       });
     });
 
     describe('sortJoinEntries', () => {
       it('should handle an empty array', () => {
         const sources: string[] = [];
-        return expect(ActorRdfJoinEntriesSortTraversalZeroKnowledge.sortJoinEntries([], sources)).toEqual([]);
+        expect(ActorRdfJoinEntriesSortTraversalZeroKnowledge.sortJoinEntries([], sources)).toEqual([]);
       });
 
       it('should prioritize patterns with seed IRIs', () => {
         const sources: string[] = [ 'ex:seed' ];
-        return expect(ActorRdfJoinEntriesSortTraversalZeroKnowledge.sortJoinEntries([
+        expect(ActorRdfJoinEntriesSortTraversalZeroKnowledge.sortJoinEntries([
           {
             output: <any> {},
             metadata: <any> {},
@@ -337,7 +337,7 @@ describe('ActorRdfJoinEntriesSortTraversalZeroKnowledge', () => {
 
       it('should prioritize patterns with the fewest variables', () => {
         const sources: string[] = [ 'ex:seed' ];
-        return expect(ActorRdfJoinEntriesSortTraversalZeroKnowledge.sortJoinEntries([
+        expect(ActorRdfJoinEntriesSortTraversalZeroKnowledge.sortJoinEntries([
           {
             output: <any> {},
             metadata: <any> {},
@@ -374,7 +374,7 @@ describe('ActorRdfJoinEntriesSortTraversalZeroKnowledge', () => {
 
       it('should prioritize patterns with seed IRIs, and then by fewest variables', () => {
         const sources: string[] = [ 'ex:seed' ];
-        return expect(ActorRdfJoinEntriesSortTraversalZeroKnowledge.sortJoinEntries([
+        expect(ActorRdfJoinEntriesSortTraversalZeroKnowledge.sortJoinEntries([
           {
             output: <any> {},
             metadata: <any> {},
@@ -463,20 +463,20 @@ describe('ActorRdfJoinEntriesSortTraversalZeroKnowledge', () => {
 
     describe('test', () => {
       it('should return true', async() => {
-        expect(await actor.test(<any> {})).toBeTruthy();
+        await expect(actor.test(<any> {})).resolves.toBeTruthy();
       });
     });
 
     describe('run', () => {
       it('should handle zero entries', async() => {
-        expect(await actor.run({
+        await expect(actor.run({
           entries: [],
           context,
-        })).toEqual({ entries: []});
+        })).resolves.toEqual({ entries: []});
       });
 
       it('should handle one entry', async() => {
-        expect(await actor.run({
+        await expect(actor.run({
           entries: [
             {
               output: <any> {},
@@ -485,7 +485,7 @@ describe('ActorRdfJoinEntriesSortTraversalZeroKnowledge', () => {
             },
           ],
           context,
-        })).toEqual({
+        })).resolves.toEqual({
           entries: [
             {
               output: <any> {},
@@ -497,8 +497,11 @@ describe('ActorRdfJoinEntriesSortTraversalZeroKnowledge', () => {
       });
 
       it('should handle multiple entries', async() => {
-        context = context.set(KeysRdfResolveQuadPattern.sources, [ 'ex:seed', { value: 'ex:seed2' }]);
-        expect(await actor.run({
+        context = context.set(KeysQueryOperation.querySources, [
+          { source: { referenceValue: 'ex:seed' }},
+          { source: { referenceValue: 'ex:seed2' }},
+        ]);
+        await expect(actor.run({
           entries: [
             {
               output: <any> {},
@@ -517,7 +520,7 @@ describe('ActorRdfJoinEntriesSortTraversalZeroKnowledge', () => {
             },
           ],
           context,
-        })).toEqual({
+        })).resolves.toEqual({
           entries: [
             {
               output: <any> {},

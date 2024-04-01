@@ -1,4 +1,4 @@
-import type { Readable } from 'stream';
+import type { Readable } from 'node:stream';
 import { ActorExtractLinks } from '@comunica/bus-extract-links';
 import { ActionContext, Bus } from '@comunica/core';
 import { ActorExtractLinksAll } from '../lib/ActorExtractLinksAll';
@@ -26,7 +26,9 @@ describe('ActorExtractLinksAll', () => {
     });
 
     it('should not be able to create new ActorExtractLinksAll objects without \'new\'', () => {
-      expect(() => { (<any> ActorExtractLinksAll)(); }).toThrow();
+      expect(() => {
+        (<any> ActorExtractLinksAll)();
+      }).toThrow(`Class constructor ActorExtractLinksAll cannot be invoked without 'new'`);
     });
   });
 
@@ -45,13 +47,13 @@ describe('ActorExtractLinksAll', () => {
       ]);
     });
 
-    it('should test ', () => {
-      return expect(actor.test({ url: '', metadata: input, requestTime: 0, context: new ActionContext() }))
-        .resolves.toEqual(true);
+    it('should test ', async() => {
+      await expect(actor.test({ url: '', metadata: input, requestTime: 0, context: new ActionContext() }))
+        .resolves.toBe(true);
     });
 
-    it('should run on a stream and return all urls', () => {
-      return expect(actor.run({ url: '', metadata: input, requestTime: 0, context: new ActionContext() })).resolves
+    it('should run on a stream and return all urls', async() => {
+      await expect(actor.run({ url: '', metadata: input, requestTime: 0, context: new ActionContext() })).resolves
         .toEqual({
           links: [
             { url: 'ex:s1' },

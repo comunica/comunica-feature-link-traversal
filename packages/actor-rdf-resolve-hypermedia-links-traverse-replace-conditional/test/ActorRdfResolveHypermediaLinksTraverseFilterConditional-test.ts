@@ -26,7 +26,9 @@ describe('ActorRdfResolveHypermediaLinksTraverseReplaceConditional', () => {
 
     it('should not be able to create new ActorRdfResolveHypermediaLinksTraverseReplaceConditional ' +
       'objects without \'new\'', () => {
-      expect(() => { (<any> ActorRdfResolveHypermediaLinksTraverseReplaceConditional)(); }).toThrow();
+      expect(() => {
+        (<any> ActorRdfResolveHypermediaLinksTraverseReplaceConditional)();
+      }).toThrow(`Class constructor ActorRdfResolveHypermediaLinksTraverseReplaceConditional cannot be invoked without 'new'`);
     });
   });
 
@@ -47,25 +49,27 @@ describe('ActorRdfResolveHypermediaLinksTraverseReplaceConditional', () => {
       context = new ActionContext();
     });
 
-    it('should fail to test with empty metadata', () => {
-      return expect(actor.test({ metadata: {}, context })).rejects
+    it('should fail to test with empty metadata', async() => {
+      await expect(actor.test({ metadata: {}, context })).rejects
         .toThrow(new Error('Actor actor requires a \'traverse\' metadata entry.'));
     });
 
-    it('should fail to test without traverseConditional in metadata', () => {
-      return expect(actor.test({ metadata: { traverse: true }, context })).rejects.toThrow();
+    it('should fail to test without traverseConditional in metadata', async() => {
+      await expect(actor.test({ metadata: { traverse: true }, context }))
+        .rejects.toThrow(`Actor actor requires a 'traverseConditional' metadata entry.`);
     });
 
-    it('should fail to test without traverse in metadata', () => {
-      return expect(actor.test({ metadata: { traverseConditional: true }, context })).rejects.toThrow();
+    it('should fail to test without traverse in metadata', async() => {
+      await expect(actor.test({ metadata: { traverseConditional: true }, context }))
+        .rejects.toThrow(`Actor actor requires a 'traverse' metadata entry.`);
     });
 
-    it('should test with traverse and traverseConditional in metadata', () => {
-      return expect(actor.test({ metadata: { traverse: true, traverseConditional: true }, context }))
-        .resolves.toEqual(true);
+    it('should test with traverse and traverseConditional in metadata', async() => {
+      await expect(actor.test({ metadata: { traverse: true, traverseConditional: true }, context }))
+        .resolves.toBe(true);
     });
 
-    it('should run with empty data', () => {
+    it('should run with empty data', async() => {
       const action = {
         metadata: {
           traverse: [],
@@ -73,7 +77,7 @@ describe('ActorRdfResolveHypermediaLinksTraverseReplaceConditional', () => {
         },
         context,
       };
-      return expect(actor.run(action)).resolves.toEqual({
+      await expect(actor.run(action)).resolves.toEqual({
         metadata: {
           traverse: [],
         },
@@ -81,7 +85,7 @@ describe('ActorRdfResolveHypermediaLinksTraverseReplaceConditional', () => {
       });
     });
 
-    it('should run with empty traverseConditional', () => {
+    it('should run with empty traverseConditional', async() => {
       const action = {
         metadata: {
           traverse: [
@@ -93,7 +97,7 @@ describe('ActorRdfResolveHypermediaLinksTraverseReplaceConditional', () => {
         },
         context,
       };
-      return expect(actor.run(action)).resolves.toEqual({
+      await expect(actor.run(action)).resolves.toEqual({
         metadata: {
           traverse: [
             { url: 'a' },
@@ -105,7 +109,7 @@ describe('ActorRdfResolveHypermediaLinksTraverseReplaceConditional', () => {
       });
     });
 
-    it('should run', () => {
+    it('should run', async() => {
       const action = {
         metadata: {
           traverse: [
@@ -120,7 +124,7 @@ describe('ActorRdfResolveHypermediaLinksTraverseReplaceConditional', () => {
         },
         context,
       };
-      return expect(actor.run(action)).resolves.toEqual({
+      await expect(actor.run(action)).resolves.toEqual({
         metadata: {
           traverse: [
             { url: 'a' },

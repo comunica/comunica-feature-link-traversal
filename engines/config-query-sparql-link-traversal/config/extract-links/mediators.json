@@ -6,5 +6,6 @@
   "@id": "urn:comunica:default:extract-links/mediators#main",
   "@type": "MediatorCombineArray",
   "bus": { "@id": "ActorExtractLinks:_default_bus" },
-  "fields": [ "links", "linksConditional" ]
+  "fields": ["links", "linksConditional"],
+  "filterErrors": true
 }

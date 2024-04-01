@@ -20,7 +20,10 @@ describe('ActorRdfResolveHypermediaLinksQueueWrapperLimitDepth', () => {
     let actor: ActorRdfResolveHypermediaLinksQueueWrapperLimitDepth;
     let mediatorRdfResolveHypermediaLinksQueue: Mediator<
     Actor<IActionRdfResolveHypermediaLinksQueue, IActorTest, IActorRdfResolveHypermediaLinksQueueOutput>,
-    IActionRdfResolveHypermediaLinksQueue, IActorTest, IActorRdfResolveHypermediaLinksQueueOutput>;
+    IActionRdfResolveHypermediaLinksQueue,
+IActorTest,
+IActorRdfResolveHypermediaLinksQueueOutput
+>;
 
     beforeEach(() => {
       mediatorRdfResolveHypermediaLinksQueue = <any> {
@@ -31,21 +34,21 @@ describe('ActorRdfResolveHypermediaLinksQueueWrapperLimitDepth', () => {
       );
     });
 
-    it('should test', () => {
-      return expect(actor.test({ firstUrl: 'first', context: new ActionContext() })).resolves.toBeTruthy();
+    it('should test', async() => {
+      await expect(actor.test({ firstUrl: 'first', context: new ActionContext() })).resolves.toBeTruthy();
     });
 
-    it('should not test when called recursively', () => {
-      return expect(actor.test({
+    it('should not test when called recursively', async() => {
+      await expect(actor.test({
         firstUrl: 'first',
         context: new ActionContext({
           [KEY_CONTEXT_WRAPPED.name]: true,
         }),
-      })).rejects.toThrowError('Unable to wrap link queues multiple times');
+      })).rejects.toThrow('Unable to wrap link queues multiple times');
     });
 
     it('should run', async() => {
-      expect(await actor.run({ firstUrl: 'first', context: new ActionContext() })).toMatchObject({
+      await expect(actor.run({ firstUrl: 'first', context: new ActionContext() })).resolves.toMatchObject({
         linkQueue: new LinkQueueLimitDepth(<any> 'inner', 10),
       });
       expect(mediatorRdfResolveHypermediaLinksQueue.mediate).toHaveBeenCalledWith({

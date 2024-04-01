@@ -1,8 +1,8 @@
 {
   "@context": [
-    "https://linkedsoftwaredependencies.org/bundles/npm/@comunica/config-query-sparql/^2.0.0/components/context.jsonld",
+    "https://linkedsoftwaredependencies.org/bundles/npm/@comunica/config-query-sparql/^3.0.0/components/context.jsonld",
 
-    "https://linkedsoftwaredependencies.org/bundles/npm/@comunica/runner/^2.0.0/components/context.jsonld",
+    "https://linkedsoftwaredependencies.org/bundles/npm/@comunica/runner/^3.0.0/components/context.jsonld",
 
     "https://linkedsoftwaredependencies.org/bundles/npm/@comunica/actor-optimize-query-operation-set-seed-sources-quadpattern-iris/^0.0.0/components/context.jsonld"
   ],
@@ -12,7 +12,11 @@
   "actors": [
     {
       "@id": "urn:comunica:default:optimize-query-operation/actors#set-seed-sources-quadpattern-iris",
-      "@type": "ActorOptimizeQueryOperationSetSeedSourcesQuadpatternIris"
+      "@type": "ActorOptimizeQueryOperationSetSeedSourcesQuadpatternIris",
+      "mediatorQuerySourceIdentify": { "@id": "urn:comunica:default:query-source-identify/mediators#main" },
+      "beforeActors": [
+        { "@id": "urn:comunica:default:optimize-query-operation/actors#assign-sources-exhaustive" }
+      ]
     }
   ]
 }

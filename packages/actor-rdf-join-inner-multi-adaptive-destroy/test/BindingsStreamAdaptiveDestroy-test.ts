@@ -27,7 +27,7 @@ describe('BindingsStreamAdaptiveDestroy', () => {
       BF.fromRecord({ a: DF.namedNode('ex:a1') }),
       BF.fromRecord({ a: DF.namedNode('ex:a2') }),
     ]);
-    expect(delayedSource).not.toBeCalled();
+    expect(delayedSource).not.toHaveBeenCalled();
   });
 
   it('consumes part of the second iterator if the timeout is reached', async() => {
@@ -46,7 +46,7 @@ describe('BindingsStreamAdaptiveDestroy', () => {
       { timeout: 5_000 },
     );
 
-    await new Promise<void>(resolve => {
+    await new Promise<void>((resolve) => {
       const firstDataListener = (bindings: RDF.Bindings) => {
         it.removeListener('data', firstDataListener);
         expect(bindings).toEqualBindings(BF.fromRecord({ a: DF.namedNode('ex:a1') }));
@@ -58,7 +58,7 @@ describe('BindingsStreamAdaptiveDestroy', () => {
 
     jest.runAllTimers();
 
-    await new Promise<void>(resolve => {
+    await new Promise<void>((resolve) => {
       const firstDataListener = (bindings: RDF.Bindings) => {
         it.removeListener('data', firstDataListener);
         expect(bindings).toEqualBindings(BF.fromRecord({ a: DF.namedNode('ex:a2') }));

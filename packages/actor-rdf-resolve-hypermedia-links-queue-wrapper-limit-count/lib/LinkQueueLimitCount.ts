@@ -12,7 +12,7 @@ export class LinkQueueLimitCount extends LinkQueueWrapper {
     this.limit = limit;
   }
 
-  public push(link: ILink, parent: ILink): boolean {
+  public override push(link: ILink, parent: ILink): boolean {
     if (this.limit === 0) {
       return false;
     }

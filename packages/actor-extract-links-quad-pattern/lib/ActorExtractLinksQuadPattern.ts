@@ -1,5 +1,4 @@
-import type { IActionExtractLinks,
-  IActorExtractLinksOutput } from '@comunica/bus-extract-links';
+import type { IActionExtractLinks, IActorExtractLinksOutput } from '@comunica/bus-extract-links';
 import { ActorExtractLinks } from '@comunica/bus-extract-links';
 import { KeysQueryOperation } from '@comunica/context-entries';
 import type { IActorArgs, IActorTest } from '@comunica/core';

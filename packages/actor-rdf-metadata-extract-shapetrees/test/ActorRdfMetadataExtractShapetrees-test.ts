@@ -82,35 +82,35 @@ describe('ActorRdfMetadataExtractShapetrees', () => {
     });
 
     describe('test', () => {
-      it('should reject for an empty context', () => {
-        return expect(actor.test(<any> { context: new ActionContext() })).rejects
-          .toThrowError('Actor actor can only work in the context of a query.');
+      it('should reject for an empty context', async() => {
+        await expect(actor.test(<any> { context: new ActionContext() })).rejects
+          .toThrow('Actor actor can only work in the context of a query.');
       });
 
-      it('should reject for a context without query operation', () => {
-        return expect(actor.test(<any> {
+      it('should reject for a context without query operation', async() => {
+        await expect(actor.test(<any> {
           context: new ActionContext({
             [KeysInitQuery.query.name]: {},
           }),
-        })).rejects.toThrowError('Actor actor can only work in the context of a query operation.');
+        })).rejects.toThrow('Actor actor can only work in the context of a query operation.');
       });
 
-      it('should reject for a context without query', () => {
-        return expect(actor.test(<any> {
+      it('should reject for a context without query', async() => {
+        await expect(actor.test(<any> {
           context: new ActionContext({
             [KeysQueryOperation.operation.name]: {},
           }),
-        })).rejects.toThrowError('Actor actor can only work in the context of a query.');
+        })).rejects.toThrow('Actor actor can only work in the context of a query.');
       });
 
-      it('should be true for a valid context', () => {
-        return expect(actor.test(<any> { context })).resolves.toBeTruthy();
+      it('should be true for a valid context', async() => {
+        await expect(actor.test(<any> { context })).resolves.toBeTruthy();
       });
     });
 
     describe('run', () => {
-      it('should run for empty headers', () => {
-        return expect(actor.run(<any> {})).resolves.toMatchObject({
+      it('should run for empty headers', async() => {
+        await expect(actor.run(<any> {})).resolves.toMatchObject({
           metadata: {
             shapetrees: {
               applicable: [],
@@ -209,52 +209,52 @@ PREFIX med: <http://shapes.pub/ns/medical-record/terms#>
 
     describe('discoverShapeTreeLocator', () => {
       it('should return undefined on undefined headers', () => {
-        expect(actor.discoverShapeTreeLocator()).toEqual(undefined);
+        expect(actor.discoverShapeTreeLocator()).toBeUndefined();
       });
 
       it('should return undefined on empty headers', () => {
-        expect(actor.discoverShapeTreeLocator(new Headers())).toEqual(undefined);
+        expect(actor.discoverShapeTreeLocator(new Headers())).toBeUndefined();
       });
 
       it('should return undefined on empty link header', () => {
         expect(actor.discoverShapeTreeLocator(new Headers({
           link: '',
-        }))).toEqual(undefined);
+        }))).toBeUndefined();
       });
 
       it('should return undefined on invalid link header', () => {
         expect(actor.discoverShapeTreeLocator(new Headers({
           link: 'bla',
-        }))).toEqual(undefined);
+        }))).toBeUndefined();
       });
 
       it('should return undefined on other link header', () => {
         expect(actor.discoverShapeTreeLocator(new Headers({
           link: '<https://storage.example/meta/c560224b>; rel="OTHER"',
-        }))).toEqual(undefined);
+        }))).toBeUndefined();
       });
 
       it('should return the target on a valid link header', () => {
         expect(actor.discoverShapeTreeLocator(new Headers({
           link: '<https://storage.example/meta/c560224b>; rel="http://www.w3.org/ns/shapetrees#ShapeTreeLocator"',
-        }))).toEqual('https://storage.example/meta/c560224b');
+        }))).toBe('https://storage.example/meta/c560224b');
       });
 
       it('should return the target on a valid link header with the old rel type', () => {
         expect(actor.discoverShapeTreeLocator(new Headers({
           link: '<https://storage.example/meta/c560224b>; rel="http://shapetrees.org/#ShapeTree"',
-        }))).toEqual('https://storage.example/meta/c560224b');
+        }))).toBe('https://storage.example/meta/c560224b');
       });
     });
 
     describe('fetchShapeTreesLocatorShapeTrees', () => {
       it('should invoke the dereference mediator and query engine', async() => {
         context = new ActionContext();
-        expect(await actor.fetchShapeTreesLocatorShapeTrees('ex:locator', context))
+        await expect(actor.fetchShapeTreesLocatorShapeTrees('ex:locator', context)).resolves
           .toEqual([ 'ex:st1', 'ex:st2' ]);
 
         expect(mediatorDereferenceRdf.mediate).toHaveBeenCalledWith({ url: 'ex:locator', context });
-        expect(actor.queryEngine.queryBindings).toHaveBeenCalled();
+        expect(actor.queryEngine.queryBindings).toHaveBeenCalledTimes(1);
       });
     });
 
@@ -278,7 +278,7 @@ PREFIX med: <http://shapes.pub/ns/medical-record/terms#>
         };
 
         context = new ActionContext();
-        expect(await actor.dereferenceShapeTrees('ex:shapetree', 'http://base.org/', context))
+        await expect(actor.dereferenceShapeTrees('ex:shapetree', 'http://base.org/', context)).resolves
           .toEqual([
             new ShapeTree('ex:st1', {
               expression: {
@@ -308,7 +308,7 @@ PREFIX med: <http://shapes.pub/ns/medical-record/terms#>
 
         expect(mediatorDereferenceRdf.mediate)
           .toHaveBeenCalledWith({ url: 'ex:shapetree', mediaType: 'text/turtle', context });
-        expect(actor.queryEngine.queryBindings).toHaveBeenCalled();
+        expect(actor.queryEngine.queryBindings).toHaveBeenCalledTimes(1);
       });
 
       it('should throw if the requested shape is not present in the response', async() => {
@@ -354,7 +354,7 @@ PREFIX med: <http://shapes.pub/ns/medical-record/terms#>
         }));
 
         context = new ActionContext();
-        expect(await actor.dereferenceShapeTrees('ex:shapetree', 'http://base.org/', context))
+        await expect(actor.dereferenceShapeTrees('ex:shapetree', 'http://base.org/', context)).resolves
           .toEqual([
             new ShapeTree('ex:st1', {
               expression: {
@@ -373,7 +373,7 @@ PREFIX med: <http://shapes.pub/ns/medical-record/terms#>
 
         expect(mediatorDereferenceRdf.mediate)
           .toHaveBeenCalledWith({ url: 'ex:shapetree', mediaType: 'text/turtle', context });
-        expect(actor.queryEngine.queryBindings).toHaveBeenCalled();
+        expect(actor.queryEngine.queryBindings).toHaveBeenCalledTimes(1);
       });
     });
 

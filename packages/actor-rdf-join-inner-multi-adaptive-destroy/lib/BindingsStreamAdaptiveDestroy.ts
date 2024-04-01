@@ -28,7 +28,7 @@ export class BindingsStreamAdaptiveDestroy extends TransformIterator<Bindings> {
     this.pushedBindings = new Map();
   }
 
-  protected _init(autoStart: boolean): void {
+  protected override _init(autoStart: boolean): void {
     super._init(autoStart);
 
     // Switch to the second stream after a timeout
@@ -46,11 +46,12 @@ export class BindingsStreamAdaptiveDestroy extends TransformIterator<Bindings> {
     }, this.timeout);
   }
 
-  protected _push(item: Bindings): void {
-    // eslint-disable-next-line @typescript-eslint/no-base-to-string
+  protected override _push(item: Bindings): void {
+    // eslint-disable-next-line ts/no-base-to-string
     const bindingsKey = item.toString();
     if (this.timeoutHandle) {
       // If we're in the first stream, store the pushed bindings
+      // eslint-disable-next-line ts/prefer-nullish-coalescing
       this.pushedBindings.set(bindingsKey, (this.pushedBindings.get(bindingsKey) || 0) + 1);
       super._push(item);
     } else {
@@ -64,7 +65,7 @@ export class BindingsStreamAdaptiveDestroy extends TransformIterator<Bindings> {
     }
   }
 
-  protected _end(destroy: boolean): void {
+  protected override _end(destroy: boolean): void {
     super._end(destroy);
     if (this.timeoutHandle) {
       clearTimeout(this.timeoutHandle);

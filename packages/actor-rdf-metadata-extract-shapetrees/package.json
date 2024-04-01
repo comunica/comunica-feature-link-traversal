@@ -1,56 +1,56 @@
 {
   "name": "@comunica/actor-rdf-metadata-extract-shapetrees",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "A shapetrees rdf-metadata-extract actor",
   "lsd:module": true,
-  "main": "lib/index.js",
-  "typings": "lib/index",
+  "license": "MIT",
+  "homepage": "https://comunica.dev/",
   "repository": {
     "type": "git",
     "url": "https://github.com/comunica/comunica.git",
     "directory": "packages/actor-rdf-metadata-extract-shapetrees"
   },
-  "publishConfig": {
-    "access": "public"
+  "bugs": {
+    "url": "https://github.com/comunica/comunica/issues"
   },
-  "sideEffects": false,
   "keywords": [
     "comunica",
     "actor",
     "rdf-metadata-extract",
     "shapetrees"
   ],
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/comunica/comunica/issues"
+  "sideEffects": false,
+  "main": "lib/index.js",
+  "typings": "lib/index",
+  "publishConfig": {
+    "access": "public"
   },
-  "homepage": "https://comunica.dev/",
   "files": [
     "components",
     "lib/**/*.d.ts",
     "lib/**/*.js",
     "lib/**/*.js.map"
   ],
+  "scripts": {
+    "build": "npm run build:ts && npm run build:components",
+    "build:ts": "node \"../../node_modules/typescript/bin/tsc\"",
+    "build:components": "componentsjs-generator"
+  },
   "dependencies": {
-    "@comunica/actor-init-query": "^2.10.2",
-    "@comunica/bus-dereference-rdf": "^2.10.0",
-    "@comunica/bus-http": "^2.10.2",
-    "@comunica/bus-rdf-metadata-extract": "^2.10.0",
-    "@comunica/context-entries": "^2.10.0",
-    "@comunica/core": "^2.10.0",
-    "@shexjs/parser": "1.0.0-alpha.27",
+    "@comunica/actor-init-query": "^3.0.1",
+    "@comunica/bus-dereference-rdf": "^3.0.1",
+    "@comunica/bus-http": "^3.0.1",
+    "@comunica/bus-rdf-metadata-extract": "^3.0.1",
+    "@comunica/context-entries": "^3.0.1",
+    "@comunica/core": "^3.0.1",
+    "@shexjs/parser": "1.0.0-alpha.28",
     "@shexjs/visitor": "1.0.0-alpha.25",
     "@types/parse-link-header": "^2.0.1",
     "@types/shexj": "^2.1.4",
     "parse-link-header": "^2.0.0",
     "querystring": "^0.2.1",
-    "rdf-store-stream": "^2.0.0",
+    "rdf-store-stream": "^2.0.1",
     "relative-to-absolute-iri": "^1.0.7",
     "sparqlalgebrajs": "^4.2.0"
-  },
-  "scripts": {
-    "build": "npm run build:ts && npm run build:components",
-    "build:ts": "node \"../../node_modules/typescript/bin/tsc\"",
-    "build:components": "componentsjs-generator"
   }
 }

@@ -1,11 +1,9 @@
-import type { IActionRdfJoinEntriesSort,
-  IActorRdfJoinEntriesSortOutput } from '@comunica/bus-rdf-join-entries-sort';
+import type { IActionRdfJoinEntriesSort, IActorRdfJoinEntriesSortOutput } from '@comunica/bus-rdf-join-entries-sort';
 import { ActorRdfJoinEntriesSort } from '@comunica/bus-rdf-join-entries-sort';
-import { getDataSourceValue } from '@comunica/bus-rdf-resolve-quad-pattern';
-import { KeysRdfResolveQuadPattern } from '@comunica/context-entries';
+import { KeysQueryOperation } from '@comunica/context-entries';
 import type { IActorArgs, IActorTest } from '@comunica/core';
-import type { DataSources, IJoinEntryWithMetadata } from '@comunica/types';
-import type * as RDF from 'rdf-js';
+import type { IJoinEntryWithMetadata, IQuerySourceWrapper } from '@comunica/types';
+import type * as RDF from '@rdfjs/types';
 import { getNamedNodes, getTerms, getVariables, QUAD_TERM_NAMES } from 'rdf-terms';
 import { Algebra, Util as AlgebraUtil } from 'sparqlalgebrajs';
 
@@ -127,17 +125,18 @@ export class ActorRdfJoinEntriesSortTraversalZeroKnowledge extends ActorRdfJoinE
     });
   }
 
-  public async test(action: IActionRdfJoinEntriesSort): Promise<IActorTest> {
+  public async test(_action: IActionRdfJoinEntriesSort): Promise<IActorTest> {
     return true;
   }
 
   public async run(action: IActionRdfJoinEntriesSort): Promise<IActorRdfJoinEntriesSortOutput> {
     // Determine all current sources
     const sources: string[] = [];
-    const dataSources: DataSources | undefined = action.context.get(KeysRdfResolveQuadPattern.sources);
+    const dataSources: IQuerySourceWrapper[] | undefined = action.context
+      .get(KeysQueryOperation.querySources);
     if (dataSources) {
       for (const source of dataSources) {
-        const sourceValue = getDataSourceValue(source);
+        const sourceValue = source.source.referenceValue;
         if (typeof sourceValue === 'string') {
           sources.push(sourceValue);
         }

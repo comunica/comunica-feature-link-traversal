@@ -1,11 +1,10 @@
 {
-    "@context": [
-      "https://linkedsoftwaredependencies.org/bundles/npm/@comunica/config-query-sparql/^2.0.0/components/context.jsonld",
-      "https://linkedsoftwaredependencies.org/bundles/npm/@comunica/config-query-sparql-link-traversal/^0.0.0/components/context.jsonld"
-    ],
-    "import": [
-      "ccqslt:config/config-base.json",
-      "ccqslt:config/extract-links/actors/tree.json"
-    ]
-  }
-  
+  "@context": [
+    "https://linkedsoftwaredependencies.org/bundles/npm/@comunica/config-query-sparql/^3.0.0/components/context.jsonld",
+    "https://linkedsoftwaredependencies.org/bundles/npm/@comunica/config-query-sparql-link-traversal/^0.0.0/components/context.jsonld"
+  ],
+  "import": [
+    "ccqslt:config/config-base.json",
+    "ccqslt:config/extract-links/actors/tree.json"
+  ]
+}

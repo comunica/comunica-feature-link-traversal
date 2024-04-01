@@ -1,6 +1,6 @@
-import { readFileSync } from 'fs';
-import { resolve } from 'path';
-import * as Path from 'path';
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
+import * as Path from 'node:path';
 import { Polly } from '@pollyjs/core';
 import { setupPolly } from 'setup-polly-jest';
 
@@ -13,25 +13,23 @@ Polly.register(FSPersister);
 Polly.register(NodeHttpAdapter);
 
 // Configure everything related to PollyJS
-// eslint-disable-next-line mocha/no-exports
 export function usePolly() {
   const pollyContext = mockHttp();
 
-  // eslint-disable-next-line mocha/no-top-level-hooks
+  // eslint-disable-next-line jest/require-top-level-describe
   beforeEach(() => {
     pollyContext.polly.server.any().on('beforePersist', (req, recording) => {
       recording.request.headers = recording.request.headers.filter(({ name }: any) => name !== 'user-agent');
     });
   });
 
-  // eslint-disable-next-line mocha/no-top-level-hooks
+  // eslint-disable-next-line jest/require-top-level-describe
   afterEach(async() => {
     await pollyContext.polly.flush();
   });
 }
 
 // Mocks HTTP requests using Polly.JS
-// eslint-disable-next-line mocha/no-exports
 export function mockHttp() {
   return setupPolly({
     adapters: [ NodeHttpAdapter ],
@@ -71,7 +69,6 @@ for (const file of [
   queries[file] = readFileSync(Path.join(__dirname, '../../../web-clients/queries/solidbench', file), 'utf8');
 }
 
-// eslint-disable-next-line mocha/no-exports
 export function loadQueries() {
   return queries;
 }

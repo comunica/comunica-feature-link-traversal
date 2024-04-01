@@ -22,13 +22,14 @@ After installing, this package can be added to your engine's configuration as fo
 {
   "@context": [
     ...
-    "https://linkedsoftwaredependencies.org/bundles/npm/@comunica/actor-optimize-query-operation-set-seed-sources-quadpattern-iris/^1.0.0/components/context.jsonld"  
+    "https://linkedsoftwaredependencies.org/bundles/npm/@comunica/actor-optimize-query-operation-set-seed-sources-quadpattern-iris/^1.0.0/components/context.jsonld"
   ],
   "actors": [
     ...
     {
       "@id": "config-setsslt:set-seeds.json#mySeedSetter",
-      "@type": "ActorOptimizeQueryOperationSetSeedSourcesQuadpatternIris"
+      "@type": "ActorOptimizeQueryOperationSetSeedSourcesQuadpatternIris",
+      "mediatorQuerySourceIdentify": { "@id": "urn:comunica:default:query-source-identify/mediators#main" }
     }
   ]
 }
@@ -36,8 +37,9 @@ After installing, this package can be added to your engine's configuration as fo
 
 ### Config Parameters
 
-* `caoqosssqi:Actor/OptimizeQueryOperation/SetSeedSourcesQuadpatternIris#extractSubjects`: If IRIs should be extracted from subject positions. (default `true`)
-* `caoqosssqi:Actor/OptimizeQueryOperation/SetSeedSourcesQuadpatternIris#extractPredicates`: If IRIs should be extracted from predicate positions. (default `false`)
-* `caoqosssqi:Actor/OptimizeQueryOperation/SetSeedSourcesQuadpatternIris#extractObjects`: If IRIs should be extracted from object positions. (default `true`)
-* `caoqosssqi:Actor/OptimizeQueryOperation/SetSeedSourcesQuadpatternIris#extractGraphs`: If IRIs should be extracted from graph positions. (default `true`)
-* `caoqosssqi:Actor/OptimizeQueryOperation/SetSeedSourcesQuadpatternIris#extractVocabIris`: If object IRIs should be extracted if the predicate is rdf:type. (default `false`)
+* `mediatorQuerySourceIdentify`: A mediator over the [Query Source Identify bus](https://github.com/comunica/comunica/tree/master/packages/bus-query-source-identify).
+* `extractSubjects`: If IRIs should be extracted from subject positions. (default `true`)
+* `extractPredicates`: If IRIs should be extracted from predicate positions. (default `false`)
+* `extractObjects`: If IRIs should be extracted from object positions. (default `true`)
+* `extractGraphs`: If IRIs should be extracted from graph positions. (default `true`)
+* `extractVocabIris`: If object IRIs should be extracted if the predicate is rdf:type. (default `false`)
