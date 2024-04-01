@@ -21,15 +21,9 @@ export class ActorExtractLinksHeaders extends ActorExtractLinks {
 
   public async run(action: IActionExtractLinks): Promise<IActorExtractLinksOutput> {
     return new Promise((resolve, reject) => {
-      // const metadata = action.metadata;
       const headers = action.headers;
       const links: ILink[] = [];
 
-      // // Forward errors
-      // metadata.on('error', reject);
-
-      // // Resolve to discovered links
-      // metadata.on('end', () => {      
       for (const regex of this.headers) {
         headers?.get('link')?.split(",").forEach((header) => {
           if (regex.test(header)) {
@@ -41,12 +35,9 @@ export class ActorExtractLinksHeaders extends ActorExtractLinks {
         })
       }
       resolve({ links });
-      //   });
-      // });
     });
   }
 }
-
 
 export interface IActorExtractLinksTraverseHeadersArgs
   extends IActorArgs<IActionExtractLinks, IActorTest, IActorExtractLinksOutput> {
