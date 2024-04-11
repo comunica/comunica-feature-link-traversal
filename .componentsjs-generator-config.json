@@ -2,7 +2,8 @@
   "source": "lib",
   "ignorePackagePaths": [
     "engines/query-sparql-link-traversal",
-    "engines/query-sparql-link-traversal-solid"
+    "engines/query-sparql-link-traversal-solid",
+    "packages/context-entries-link-traversal"
   ],
   "ignoreComponents": [
     "Headers",
