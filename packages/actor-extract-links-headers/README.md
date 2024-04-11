@@ -31,7 +31,7 @@ After installing, this package can be added to your engine's configuration as fo
       "@id": "urn:comunica:default:extract-links/actors#headers",
       "@type": "ActorExtractLinksHeaders"
       "headersRegexes": [
-        'rel="describedby"'
+        "rel=\"describedby\""
       ]
     }
   ]
