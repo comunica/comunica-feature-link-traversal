@@ -29,7 +29,14 @@ export class ActorExtractLinksPredicates extends ActorExtractLinks {
             if (regex.test(quad.predicate.value)) {
               links.push({
                 url: quad.object.value,
-                metadata: { producedByActor: { name: this.name, predicates: this.stringPredicates }},
+                metadata: {
+                  producedByActor: {
+                    name: this.name,
+                    predicates: this.stringPredicates,
+                    matchingPredicate: quad.predicate.value,
+                    checkSubject: this.checkSubject,
+                  },
+                },
               });
               break;
             }

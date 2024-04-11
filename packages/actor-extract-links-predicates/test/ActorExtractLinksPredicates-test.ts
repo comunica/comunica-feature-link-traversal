@@ -47,7 +47,17 @@ describe('ActorExtractLinksTraversePredicates', () => {
             { url: 'ex:r1' },
             { url: 'ex:r2' },
           ].map((link) => {
-            return { ...link, metadata: { producedByActor: { name: actor.name, predicates: predicateRegexes }}};
+            return {
+              ...link,
+              metadata: {
+                producedByActor: {
+                  name: actor.name,
+                  predicates: predicateRegexes,
+                  matchingPredicate: 'http://www.w3.org/ns/ldp#contains',
+                  checkSubject: true,
+                },
+              },
+            };
           }),
         });
     });
@@ -84,7 +94,17 @@ describe('ActorExtractLinksTraversePredicates', () => {
             { url: 'ex:r2' },
             { url: 'ex:r3' },
           ].map((link) => {
-            return { ...link, metadata: { producedByActor: { name: actor.name, predicates: predicateRegexes }}};
+            return {
+              ...link,
+              metadata: {
+                producedByActor: {
+                  name: actor.name,
+                  predicates: predicateRegexes,
+                  matchingPredicate: 'http://www.w3.org/ns/ldp#contains',
+                  checkSubject: false,
+                },
+              },
+            };
           }),
         });
     });
