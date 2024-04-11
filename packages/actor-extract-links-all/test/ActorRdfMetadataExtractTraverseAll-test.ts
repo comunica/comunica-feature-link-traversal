@@ -19,15 +19,15 @@ describe('ActorExtractLinksAll', () => {
     });
 
     it('should be a ActorExtractLinksAll constructor', () => {
-      expect(new (<any> ActorExtractLinksAll)({ name: 'actor', bus }))
+      expect(new (<any>ActorExtractLinksAll)({ name: 'actor', bus }))
         .toBeInstanceOf(ActorExtractLinksAll);
-      expect(new (<any> ActorExtractLinksAll)({ name: 'actor', bus }))
+      expect(new (<any>ActorExtractLinksAll)({ name: 'actor', bus }))
         .toBeInstanceOf(ActorExtractLinks);
     });
 
     it('should not be able to create new ActorExtractLinksAll objects without \'new\'', () => {
       expect(() => {
-        (<any> ActorExtractLinksAll)();
+        (<any>ActorExtractLinksAll)();
       }).toThrow(`Class constructor ActorExtractLinksAll cannot be invoked without 'new'`);
     });
   });
@@ -75,7 +75,9 @@ describe('ActorExtractLinksAll', () => {
             { url: 'ex:p' },
             { url: 'ex:o5' },
             { url: 'ex:gx' },
-          ],
+          ].map((link) => {
+            return { ...link, metadata: { producedByActor: { name: actor.name }}};
+          }),
         });
     });
   });

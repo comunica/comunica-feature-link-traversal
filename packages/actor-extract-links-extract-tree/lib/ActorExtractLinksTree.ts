@@ -18,7 +18,6 @@ const DF = new DataFactory<RDF.BaseQuad>();
 export class ActorExtractLinksTree extends ActorExtractLinks {
   public static readonly aNodeType = DF.namedNode('https://w3id.org/tree#node');
   public static readonly aRelation = DF.namedNode('https://w3id.org/tree#relation');
-  private static readonly rdfTypeNode = DF.namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type');
   public static readonly aView = DF.namedNode('https://w3id.org/tree#view');
   public static readonly aSubset = DF.namedNode('http://rdfs.org/ns/void#subset');
   public static readonly isPartOf = DF.namedNode('http://purl.org/dc/terms/isPartOf');
@@ -34,7 +33,7 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
   public async run(action: IActionExtractLinks): Promise<IActorExtractLinksOutput> {
     return new Promise((resolve, reject) => {
       const strictModeFlag: boolean | undefined =
-       action.context.get(KeysExtractLinksTree.strictTraversal);
+        action.context.get(KeysExtractLinksTree.strictTraversal);
       const strictMode = strictModeFlag ?? true;
       const metadata = action.metadata;
       const currentNodeUrl = action.url;
@@ -70,7 +69,7 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
           const subjectOfRelation = relationNodeSubject.get(nodeValue);
           if (subjectOfRelation && effectiveTreeDocumentSubject.has(subjectOfRelation)
           ) {
-            links.push({ url: link });
+            links.push({ url: link, metadata: { producedByActor: { name: this.name }}});
           }
         }
 
@@ -100,13 +99,13 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
     if (
       (!strictMode || quad.subject.value === url) &&
       (quad.predicate.equals(ActorExtractLinksTree.aView) ||
-      quad.predicate.equals(ActorExtractLinksTree.aSubset))) {
+        quad.predicate.equals(ActorExtractLinksTree.aSubset))) {
       rootNodeEffectiveSubject.add(quad.object.value);
     }
 
     if (
       (!strictMode || quad.object.value === url) &&
-    quad.predicate.equals(ActorExtractLinksTree.isPartOf)) {
+      quad.predicate.equals(ActorExtractLinksTree.isPartOf)) {
       rootNodeEffectiveSubject.add(quad.subject.value);
     }
 

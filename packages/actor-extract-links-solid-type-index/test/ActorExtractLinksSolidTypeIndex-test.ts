@@ -25,12 +25,12 @@ describe('ActorExtractLinksSolidTypeIndex', () => {
 
   beforeEach(() => {
     bus = new Bus({ name: 'bus' });
-    mediatorDereferenceRdf = <any> {
+    mediatorDereferenceRdf = <any>{
       mediate: jest.fn(async() => ({
         data: new ArrayIterator([], { autoStart: false }),
       })),
     };
-    actorInitQuery = <any> {};
+    actorInitQuery = <any>{};
     input = stream([]);
     context = new ActionContext({
       [KeysInitQuery.query.name]: AF.createBgp([
@@ -65,7 +65,7 @@ describe('ActorExtractLinksSolidTypeIndex', () => {
         actorInitQuery,
         inference: false,
       });
-      (<any> actor).queryEngine = {
+      (<any>actor).queryEngine = {
         queryBindings: jest.fn(async() => ({
           toArray: async() => [
             BF.fromRecord({ instance: DF.namedNode('ex:file1'), class: DF.namedNode('ex:class1') }),
@@ -77,12 +77,12 @@ describe('ActorExtractLinksSolidTypeIndex', () => {
 
     describe('test', () => {
       it('should reject for an empty context', async() => {
-        await expect(actor.test(<any> { context: new ActionContext() })).rejects
+        await expect(actor.test(<any>{ context: new ActionContext() })).rejects
           .toThrow('Actor actor can only work in the context of a query.');
       });
 
       it('should reject for a context without query operation', async() => {
-        await expect(actor.test(<any> {
+        await expect(actor.test(<any>{
           context: new ActionContext({
             [KeysInitQuery.query.name]: {},
           }),
@@ -90,7 +90,7 @@ describe('ActorExtractLinksSolidTypeIndex', () => {
       });
 
       it('should reject for a context without query', async() => {
-        await expect(actor.test(<any> {
+        await expect(actor.test(<any>{
           context: new ActionContext({
             [KeysQueryOperation.operation.name]: {},
           }),
@@ -98,7 +98,7 @@ describe('ActorExtractLinksSolidTypeIndex', () => {
       });
 
       it('should be true for a valid context', async() => {
-        await expect(actor.test(<any> { context })).resolves.toBeTruthy();
+        await expect(actor.test(<any>{ context })).resolves.toBeTruthy();
       });
     });
 
@@ -146,7 +146,12 @@ describe('ActorExtractLinksSolidTypeIndex', () => {
             {
               url: 'ex:file2',
             },
-          ],
+          ].map((link) => {
+            return {
+              ...link,
+              metadata: { producedByActor: { name: actor.name, onlyMatchingTypes: false, inference: false }},
+            };
+          }),
         });
 
       expect(mediatorDereferenceRdf.mediate).toHaveBeenCalledTimes(2);
@@ -171,7 +176,7 @@ describe('ActorExtractLinksSolidTypeIndex', () => {
         mediatorDereferenceRdf,
         actorInitQuery,
       });
-      (<any> actor).queryEngine = {
+      (<any>actor).queryEngine = {
         queryBindings: jest.fn(async() => ({
           toArray: async() => [
             BF.fromRecord({ instance: DF.namedNode('ex:file1'), class: DF.namedNode('ex:class1') }),
@@ -202,7 +207,7 @@ describe('ActorExtractLinksSolidTypeIndex', () => {
         quad('ex:s4', 'ex:p', 'ex:o4', 'ex:g'),
         quad('ex:s5', 'ex:p', 'ex:o5', 'ex:gx'),
       ]);
-      (<any> actor).queryEngine.queryBindings = (query: string) => {
+      (<any>actor).queryEngine.queryBindings = (query: string) => {
         if (query.includes('solid:TypeRegistration')) {
           return {
             toArray: async() => [
@@ -212,7 +217,7 @@ describe('ActorExtractLinksSolidTypeIndex', () => {
           };
         }
         return {
-          toArray: async() => [ ],
+          toArray: async() => [],
         };
       };
       await expect(actor.run({ url: '', metadata: input, requestTime: 0, context })).resolves
@@ -220,6 +225,7 @@ describe('ActorExtractLinksSolidTypeIndex', () => {
           links: [
             {
               url: 'ex:file1',
+              metadata: { producedByActor: { name: actor.name, onlyMatchingTypes: true, inference: true }},
             },
           ],
         });
@@ -235,7 +241,7 @@ describe('ActorExtractLinksSolidTypeIndex', () => {
         quad('ex:s4', 'ex:p', 'ex:o4', 'ex:g'),
         quad('ex:s5', 'ex:p', 'ex:o5', 'ex:gx'),
       ]);
-      (<any> actor).queryEngine.queryBindings = (query: string) => {
+      (<any>actor).queryEngine.queryBindings = (query: string) => {
         if (query.includes('solid:TypeRegistration')) {
           return {
             toArray: async() => [
@@ -245,7 +251,7 @@ describe('ActorExtractLinksSolidTypeIndex', () => {
           };
         }
         return {
-          toArray: async() => [ ],
+          toArray: async() => [],
         };
       };
 
@@ -280,7 +286,7 @@ describe('ActorExtractLinksSolidTypeIndex', () => {
         quad('ex:s4', 'ex:p', 'ex:o4', 'ex:g'),
         quad('ex:s5', 'ex:p', 'ex:o5', 'ex:gx'),
       ]);
-      (<any> actor).queryEngine.queryBindings = (query: string) => {
+      (<any>actor).queryEngine.queryBindings = (query: string) => {
         if (query.includes('solid:TypeRegistration')) {
           return {
             toArray: async() => [
@@ -290,7 +296,7 @@ describe('ActorExtractLinksSolidTypeIndex', () => {
           };
         }
         return {
-          toArray: async() => [ ],
+          toArray: async() => [],
         };
       };
       context = new ActionContext({
@@ -319,7 +325,12 @@ describe('ActorExtractLinksSolidTypeIndex', () => {
             {
               url: 'ex:file2',
             },
-          ],
+          ].map((link) => {
+            return {
+              ...link,
+              metadata: { producedByActor: { name: actor.name, onlyMatchingTypes: true, inference: true }},
+            };
+          }),
         });
 
       expect(mediatorDereferenceRdf.mediate).toHaveBeenCalledTimes(1);
@@ -350,6 +361,7 @@ describe('ActorExtractLinksSolidTypeIndex', () => {
           links: [
             {
               url: 'ex:file1',
+              metadata: { producedByActor: { name: actor.name, onlyMatchingTypes: true, inference: true }},
             },
           ],
         });
@@ -365,7 +377,7 @@ describe('ActorExtractLinksSolidTypeIndex', () => {
         quad('ex:s4', 'ex:p', 'ex:o4', 'ex:g'),
         quad('ex:s5', 'ex:p', 'ex:o5', 'ex:gx'),
       ]);
-      (<any> actor).queryEngine.queryBindings = (query: string) => {
+      (<any>actor).queryEngine.queryBindings = (query: string) => {
         if (query.includes('solid:TypeRegistration')) {
           return {
             toArray: async() => [
@@ -398,6 +410,7 @@ describe('ActorExtractLinksSolidTypeIndex', () => {
           links: [
             {
               url: 'ex:file2',
+              metadata: { producedByActor: { name: actor.name, onlyMatchingTypes: true, inference: true }},
             },
           ],
         });
@@ -412,7 +425,7 @@ describe('ActorExtractLinksSolidTypeIndex', () => {
         quad('ex:s4', 'ex:p', 'ex:o4', 'ex:g'),
         quad('ex:s5', 'ex:p', 'ex:o5', 'ex:gx'),
       ]);
-      (<any> actor).queryEngine.queryBindings = (query: string) => {
+      (<any>actor).queryEngine.queryBindings = (query: string) => {
         if (query.includes('solid:TypeRegistration')) {
           return {
             toArray: async() => [
@@ -453,7 +466,12 @@ describe('ActorExtractLinksSolidTypeIndex', () => {
             {
               url: 'ex:file2',
             },
-          ],
+          ].map((link) => {
+            return {
+              ...link,
+              metadata: { producedByActor: { name: actor.name, onlyMatchingTypes: true, inference: true }},
+            };
+          }),
         });
       expect(mediatorDereferenceRdf.mediate).toHaveBeenCalledTimes(1);
       expect(mediatorDereferenceRdf.mediate).toHaveBeenCalledWith({ url: 'ex:index1', context });
@@ -466,7 +484,7 @@ describe('ActorExtractLinksSolidTypeIndex', () => {
         quad('ex:s4', 'ex:p', 'ex:o4', 'ex:g'),
         quad('ex:s5', 'ex:p', 'ex:o5', 'ex:gx'),
       ]);
-      (<any> actor).queryEngine.queryBindings = (query: string) => {
+      (<any>actor).queryEngine.queryBindings = (query: string) => {
         if (query.includes('solid:TypeRegistration')) {
           return {
             toArray: async() => [
@@ -503,7 +521,12 @@ describe('ActorExtractLinksSolidTypeIndex', () => {
             {
               url: 'ex:file1',
             },
-          ],
+          ].map((link) => {
+            return {
+              ...link,
+              metadata: { producedByActor: { name: actor.name, onlyMatchingTypes: true, inference: true }},
+            };
+          }),
         });
       expect(mediatorDereferenceRdf.mediate).toHaveBeenCalledTimes(1);
       expect(mediatorDereferenceRdf.mediate).toHaveBeenCalledWith({ url: 'ex:index1', context });
@@ -516,7 +539,7 @@ describe('ActorExtractLinksSolidTypeIndex', () => {
         quad('ex:s4', 'ex:p', 'ex:o4', 'ex:g'),
         quad('ex:s5', 'ex:p', 'ex:o5', 'ex:gx'),
       ]);
-      (<any> actor).queryEngine.queryBindings = (query: string) => {
+      (<any>actor).queryEngine.queryBindings = (query: string) => {
         if (query.includes('solid:TypeRegistration')) {
           return {
             toArray: async() => [
@@ -552,6 +575,7 @@ describe('ActorExtractLinksSolidTypeIndex', () => {
           links: [
             {
               url: 'ex:file1',
+              metadata: { producedByActor: { name: actor.name, onlyMatchingTypes: true, inference: true }},
             },
           ],
         });
@@ -577,7 +601,7 @@ describe('ActorExtractLinksSolidTypeIndex', () => {
         mediatorDereferenceRdf,
         actorInitQuery,
       });
-      (<any> actor).queryEngine = {
+      (<any>actor).queryEngine = {
         queryBindings: jest.fn(async() => ({
           toArray: async() => [
             BF.fromRecord({ instance: DF.namedNode('ex:file1'), class: DF.namedNode('ex:class1') }),
@@ -615,7 +639,12 @@ describe('ActorExtractLinksSolidTypeIndex', () => {
             {
               url: 'ex:file2',
             },
-          ],
+          ].map((link) => {
+            return {
+              ...link,
+              metadata: { producedByActor: { name: actor.name, onlyMatchingTypes: true, inference: false }},
+            };
+          }),
         });
       expect(mediatorDereferenceRdf.mediate).toHaveBeenCalledTimes(1);
       expect(mediatorDereferenceRdf.mediate).toHaveBeenCalledWith({ url: 'ex:index1', context });
@@ -648,7 +677,12 @@ describe('ActorExtractLinksSolidTypeIndex', () => {
             {
               url: 'ex:file2',
             },
-          ],
+          ].map((link) => {
+            return {
+              ...link,
+              metadata: { producedByActor: { name: actor.name, onlyMatchingTypes: true, inference: false }},
+            };
+          }),
         });
       expect(mediatorDereferenceRdf.mediate).toHaveBeenCalledTimes(1);
       expect(mediatorDereferenceRdf.mediate).toHaveBeenCalledWith({ url: 'ex:index1', context });

@@ -42,7 +42,10 @@ export class ActorExtractLinksQuadPattern extends ActorExtractLinks {
           if (matchPatternComplete(quad, quadPattern)) {
             for (const quadTermName of filterQuadTermNames(quadPattern, value => value.termType === 'Variable')) {
               if (quad[quadTermName].termType === 'NamedNode') {
-                links.push({ url: quad[quadTermName].value });
+                links.push({
+                  url: quad[quadTermName].value,
+                  metadata: { producedByActor: { name: this.name, onlyVariables: true }},
+                });
               }
             }
           }
@@ -51,7 +54,10 @@ export class ActorExtractLinksQuadPattern extends ActorExtractLinks {
           // eslint-disable-next-line no-lonely-if
           if (matchPatternComplete(quad, quadPattern)) {
             for (const link of getNamedNodes(getTerms(quad))) {
-              links.push({ url: link.value });
+              links.push({
+                url: link.value,
+                metadata: { producedByActor: { name: this.name, onlyVariables: false }},
+              });
             }
           }
         }

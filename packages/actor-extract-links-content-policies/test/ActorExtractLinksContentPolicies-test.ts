@@ -111,10 +111,10 @@ describe('ActorExtractLinksContentPolicies', () => {
       actor = new ActorExtractLinksContentPolicies({
         name: 'actor',
         bus,
-        actorInitQuery: <any> {},
+        actorInitQuery: <any>{},
         traverseConditional: false,
       });
-      (<any> actor).queryEngine = queryEngine;
+      (<any>actor).queryEngine = queryEngine;
       input = stream([
         quad('ex:s1', 'ex:px', 'ex:o1', 'ex:gx'),
         quad('ex:s2', 'ex:p', '"o"', 'ex:g'),
@@ -190,7 +190,12 @@ describe('ActorExtractLinksContentPolicies', () => {
             transform: undefined,
             context: new ActionContext({ [KEY_CONTEXT_WITHPOLICIES.name]: false }),
           },
-        ],
+        ].map((link) => {
+          return {
+            ...link,
+            metadata: { producedByActor: { name: actor.name, traverseConditional: actor.traverseConditional }},
+          };
+        }),
       });
     });
 
@@ -198,10 +203,10 @@ describe('ActorExtractLinksContentPolicies', () => {
       actor = new ActorExtractLinksContentPolicies({
         name: 'actor',
         bus,
-        actorInitQuery: <any> {},
+        actorInitQuery: <any>{},
         traverseConditional: true,
       });
-      (<any> actor).queryEngine = queryEngine;
+      (<any>actor).queryEngine = queryEngine;
       const context = new ActionContext({
         [KEY_CONTEXT_POLICIES.name]: [
           new ContentPolicy(
@@ -229,7 +234,12 @@ describe('ActorExtractLinksContentPolicies', () => {
             transform: undefined,
             context: new ActionContext({ [KEY_CONTEXT_WITHPOLICIES.name]: false }),
           },
-        ],
+        ].map((link) => {
+          return {
+            ...link,
+            metadata: { producedByActor: { name: actor.name, traverseConditional: actor.traverseConditional }},
+          };
+        }),
       });
     });
 
@@ -263,7 +273,12 @@ describe('ActorExtractLinksContentPolicies', () => {
           { url: 'ex:match1', context: new ActionContext({ [KEY_CONTEXT_WITHPOLICIES.name]: false }) },
           { url: 'ex:match3', context: new ActionContext({ [KEY_CONTEXT_WITHPOLICIES.name]: false }) },
           { url: 'ex:match2Bis', context: new ActionContext({ [KEY_CONTEXT_WITHPOLICIES.name]: false }) },
-        ],
+        ].map((link) => {
+          return {
+            ...link,
+            metadata: { producedByActor: { name: actor.name, traverseConditional: actor.traverseConditional }},
+          };
+        }),
       });
     });
 
@@ -313,7 +328,12 @@ describe('ActorExtractLinksContentPolicies', () => {
             transform: expect.anything(),
             context: new ActionContext({ [KEY_CONTEXT_WITHPOLICIES.name]: false }),
           },
-        ],
+        ].map((link) => {
+          return {
+            ...link,
+            metadata: { producedByActor: { name: actor.name, traverseConditional: actor.traverseConditional }},
+          };
+        }),
       });
       expect(result.links[0].transform).toBeInstanceOf(Function);
       expect(result.links[1].transform).toBeInstanceOf(Function);
@@ -359,7 +379,12 @@ describe('ActorExtractLinksContentPolicies', () => {
         links: [
           { url: 'ex:match1', context: new ActionContext({ [KEY_CONTEXT_WITHPOLICIES.name]: true }) },
           { url: 'ex:match3', context: new ActionContext({ [KEY_CONTEXT_WITHPOLICIES.name]: true }) },
-        ],
+        ].map((link) => {
+          return {
+            ...link,
+            metadata: { producedByActor: { name: actor.name, traverseConditional: actor.traverseConditional }},
+          };
+        }),
       });
     });
 
@@ -380,7 +405,12 @@ describe('ActorExtractLinksContentPolicies', () => {
         links: [
           { url: 'ex:match1', context: new ActionContext({ [KEY_CONTEXT_WITHPOLICIES.name]: true }) },
           { url: 'ex:match3', context: new ActionContext({ [KEY_CONTEXT_WITHPOLICIES.name]: true }) },
-        ],
+        ].map((link) => {
+          return {
+            ...link,
+            metadata: { producedByActor: { name: actor.name, traverseConditional: actor.traverseConditional }},
+          };
+        }),
       });
     });
 
@@ -393,7 +423,12 @@ describe('ActorExtractLinksContentPolicies', () => {
           { url: 'ex:match1', context: new ActionContext({ [KEY_CONTEXT_WITHPOLICIES.name]: true }) },
           { url: 'ex:match3', context: new ActionContext({ [KEY_CONTEXT_WITHPOLICIES.name]: true }) },
           { url: 'ex:match2Bis', context: new ActionContext({ [KEY_CONTEXT_WITHPOLICIES.name]: false }) },
-        ],
+        ].map((link) => {
+          return {
+            ...link,
+            metadata: { producedByActor: { name: actor.name, traverseConditional: actor.traverseConditional }},
+          };
+        }),
       });
     });
 
@@ -418,7 +453,12 @@ describe('ActorExtractLinksContentPolicies', () => {
           { url: 'ex:match2Bis', context: new ActionContext({ [KEY_CONTEXT_WITHPOLICIES.name]: false }) },
           { url: 'ex:match1', context: new ActionContext({ [KEY_CONTEXT_WITHPOLICIES.name]: true }) },
           { url: 'ex:match3', context: new ActionContext({ [KEY_CONTEXT_WITHPOLICIES.name]: true }) },
-        ],
+        ].map((link) => {
+          return {
+            ...link,
+            metadata: { producedByActor: { name: actor.name, traverseConditional: actor.traverseConditional }},
+          };
+        }),
       });
     });
 
@@ -432,7 +472,12 @@ describe('ActorExtractLinksContentPolicies', () => {
             { url: 'ex:match1', context: new ActionContext({ [KEY_CONTEXT_WITHPOLICIES.name]: true }) },
             { url: 'ex:match3', context: new ActionContext({ [KEY_CONTEXT_WITHPOLICIES.name]: true }) },
             { url: 'ex:match2Bis', context: new ActionContext({ [KEY_CONTEXT_WITHPOLICIES.name]: false }) },
-          ],
+          ].map((link) => {
+            return {
+              ...link,
+              metadata: { producedByActor: { name: actor.name, traverseConditional: actor.traverseConditional }},
+            };
+          }),
         });
     });
 
@@ -459,7 +504,12 @@ describe('ActorExtractLinksContentPolicies', () => {
           },
           // URL match2Bis will not match the query operation pattern
           // { url: 'ex:match2Bis', context: new ActionContext({ [KEY_CONTEXT_WITHPOLICIES.name]: false }) },
-        ],
+        ].map((link) => {
+          return {
+            ...link,
+            metadata: { producedByActor: { name: actor.name, traverseConditional: actor.traverseConditional }},
+          };
+        }),
       });
     });
 
@@ -483,7 +533,7 @@ describe('ActorExtractLinksContentPolicies', () => {
           new ContentPolicy(
             factory.createBgp([]),
             [{ name: 'varUnknown', withPolicies: false }],
-            factory.createConstruct(<any> undefined, <any> undefined),
+            factory.createConstruct(<any>undefined, <any>undefined),
           ),
         )).toBeTruthy();
       });
@@ -493,7 +543,7 @@ describe('ActorExtractLinksContentPolicies', () => {
           new ContentPolicy(
             factory.createBgp([]),
             [{ name: 'varUnknown', withPolicies: false }],
-            factory.createConstruct(<any> undefined, [
+            factory.createConstruct(<any>undefined, [
               factory.createPattern(
                 DF.namedNode('ex:s1'),
                 DF.namedNode('ex:p1'),
@@ -519,7 +569,7 @@ describe('ActorExtractLinksContentPolicies', () => {
           new ContentPolicy(
             factory.createBgp([]),
             [{ name: 'varUnknown', withPolicies: false }],
-            factory.createConstruct(<any> undefined, [
+            factory.createConstruct(<any>undefined, [
               factory.createPattern(
                 DF.namedNode('ex:s1'),
                 DF.namedNode('ex:p1'),
@@ -545,7 +595,7 @@ describe('ActorExtractLinksContentPolicies', () => {
           new ContentPolicy(
             factory.createBgp([]),
             [{ name: 'varUnknown', withPolicies: false }],
-            factory.createConstruct(<any> undefined, [
+            factory.createConstruct(<any>undefined, [
               factory.createPattern(
                 DF.variable('varS'),
                 DF.namedNode('ex:p1'),

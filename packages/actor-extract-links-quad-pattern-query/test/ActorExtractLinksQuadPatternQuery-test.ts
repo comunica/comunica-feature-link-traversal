@@ -27,9 +27,9 @@ describe('ActorExtractLinksQuadPatternQuery', () => {
     });
 
     it('should be a ActorExtractLinksQuadPatternQuery constructor', () => {
-      expect(new (<any> ActorExtractLinksQuadPatternQuery)({ name: 'actor', bus }))
+      expect(new (<any>ActorExtractLinksQuadPatternQuery)({ name: 'actor', bus }))
         .toBeInstanceOf(ActorExtractLinksQuadPatternQuery);
-      expect(new (<any> ActorExtractLinksQuadPatternQuery)({ name: 'actor', bus }))
+      expect(new (<any>ActorExtractLinksQuadPatternQuery)({ name: 'actor', bus }))
         .toBeInstanceOf(ActorExtractLinks);
     });
 
@@ -87,7 +87,9 @@ describe('ActorExtractLinksQuadPatternQuery', () => {
             { url: 'ex:p' },
             { url: 'ex:o4' },
             { url: 'ex:g' },
-          ],
+          ].map((link) => {
+            return { ...link, metadata: { producedByActor: { name: actor.name, onlyVariables: false }}};
+          }),
         });
     });
 
@@ -119,7 +121,9 @@ describe('ActorExtractLinksQuadPatternQuery', () => {
             { url: 'ex:s2' },
             { url: 'ex:p' },
             { url: 'ex:g' },
-          ],
+          ].map((link) => {
+            return { ...link, metadata: { producedByActor: { name: actor.name, onlyVariables: false }}};
+          }),
         });
     });
 
@@ -146,7 +150,9 @@ describe('ActorExtractLinksQuadPatternQuery', () => {
             { url: 'ex:p' },
             { url: 'ex:o4' },
             { url: 'ex:g' },
-          ],
+          ].map((link) => {
+            return { ...link, metadata: { producedByActor: { name: actor.name, onlyVariables: false }}};
+          }),
         });
     });
 
@@ -168,7 +174,9 @@ describe('ActorExtractLinksQuadPatternQuery', () => {
             { url: 'ex:p' },
             { url: 'ex:o4' },
             { url: 'ex:g' },
-          ],
+          ].map((link) => {
+            return { ...link, metadata: { producedByActor: { name: actor.name, onlyVariables: false }}};
+          }),
         });
     });
 
@@ -194,7 +202,9 @@ describe('ActorExtractLinksQuadPatternQuery', () => {
             { url: 'ex:p' },
             { url: 'ex:o4' },
             { url: 'ex:g' },
-          ],
+          ].map((link) => {
+            return { ...link, metadata: { producedByActor: { name: actor.name, onlyVariables: false }}};
+          }),
         });
     });
   });
@@ -263,7 +273,7 @@ describe('ActorExtractLinksQuadPatternQuery', () => {
       await expect(actor.run({ url: '', metadata: input, requestTime: 0, context })).resolves
         .toEqual({
           links: [
-            { url: 'ex:o6' },
+            { url: 'ex:o6', metadata: { producedByActor: { name: actor.name, onlyVariables: true }}},
           ],
         });
     });

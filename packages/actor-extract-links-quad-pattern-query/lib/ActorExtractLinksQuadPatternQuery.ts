@@ -93,15 +93,21 @@ export class ActorExtractLinksQuadPatternQuery extends ActorExtractLinks {
             }
 
             // For the discovered quad term names, check extract the named nodes in the quad
-            for (const quadTermName of <QuadTermName[]> Object.keys(quadTermNames)) {
+            for (const quadTermName of <QuadTermName[]>Object.keys(quadTermNames)) {
               if (quad[quadTermName].termType === 'NamedNode') {
-                links.push({ url: quad[quadTermName].value });
+                links.push({
+                  url: quad[quadTermName].value,
+                  metadata: { producedByActor: { name: this.name, onlyVariables: this.onlyVariables }},
+                });
               }
             }
           } else {
             // --- If we want to follow links, irrespective of matching with a variable component ---
             for (const link of getNamedNodes(getTerms(quad))) {
-              links.push({ url: link.value });
+              links.push({
+                url: link.value,
+                metadata: { producedByActor: { name: this.name, onlyVariables: this.onlyVariables }},
+              });
             }
           }
         }
