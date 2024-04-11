@@ -54,6 +54,7 @@
     "@comunica/actor-extract-links-all": "^0.3.0",
     "@comunica/actor-extract-links-content-policies": "^0.3.0",
     "@comunica/actor-extract-links-predicates": "^0.3.0",
+    "@comunica/actor-extract-links-headers": "^0.3.0",
     "@comunica/actor-extract-links-quad-pattern": "^0.3.0",
     "@comunica/actor-extract-links-quad-pattern-query": "^0.3.0",
     "@comunica/actor-extract-links-solid-type-index": "^0.3.0",

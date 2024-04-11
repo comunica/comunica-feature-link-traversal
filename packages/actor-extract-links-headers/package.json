@@ -1,6 +1,6 @@
 {
   "name": "@comunica/actor-extract-links-headers",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "A headers extract-links actor",
   "lsd:module": true,
   "license": "MIT",
