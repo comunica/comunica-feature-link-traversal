@@ -25,15 +25,15 @@ describe('ActorExtractLinksQuadPattern', () => {
     });
 
     it('should be a ActorExtractLinksQuadPattern constructor', () => {
-      expect(new (<any> ActorExtractLinksQuadPattern)({ name: 'actor', bus }))
+      expect(new (<any>ActorExtractLinksQuadPattern)({ name: 'actor', bus }))
         .toBeInstanceOf(ActorExtractLinksQuadPattern);
-      expect(new (<any> ActorExtractLinksQuadPattern)({ name: 'actor', bus }))
+      expect(new (<any>ActorExtractLinksQuadPattern)({ name: 'actor', bus }))
         .toBeInstanceOf(ActorExtractLinks);
     });
 
     it('should not be able to create new ActorExtractLinksQuadPattern objects without \'new\'', () => {
       expect(() => {
-        (<any> ActorExtractLinksQuadPattern)();
+        (<any>ActorExtractLinksQuadPattern)();
       }).toThrow(`Class constructor ActorExtractLinksQuadPattern cannot be invoked without 'new'`);
     });
   });
@@ -89,7 +89,9 @@ describe('ActorExtractLinksQuadPattern', () => {
             { url: 'ex:p' },
             { url: 'ex:o4' },
             { url: 'ex:g' },
-          ],
+          ].map((link) => {
+            return { ...link, metadata: { producedByActor: { name: actor.name, onlyVariables: false }}};
+          }),
         });
     });
   });
@@ -125,7 +127,9 @@ describe('ActorExtractLinksQuadPattern', () => {
             { url: 'ex:s2' },
             { url: 'ex:s4' },
             { url: 'ex:o4' },
-          ],
+          ].map((link) => {
+            return { ...link, metadata: { producedByActor: { name: actor.name, onlyVariables: true }}};
+          }),
         });
     });
   });

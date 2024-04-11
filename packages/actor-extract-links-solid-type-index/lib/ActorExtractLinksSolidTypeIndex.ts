@@ -142,7 +142,12 @@ export class ActorExtractLinksSolidTypeIndex extends ActorExtractLinks {
       if (!typeLinks[type]) {
         typeLinks[type] = [];
       }
-      typeLinks[type].push({ url: bindings.get('instance')!.value });
+      typeLinks[type].push({
+        url: bindings.get('instance')!.value,
+        metadata: {
+          producedByActor: { name: this.name, onlyMatchingTypes: this.onlyMatchingTypes, inference: this.inference },
+        },
+      });
     }
     return typeLinks;
   }

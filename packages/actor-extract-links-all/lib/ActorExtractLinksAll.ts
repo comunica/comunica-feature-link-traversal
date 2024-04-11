@@ -19,7 +19,7 @@ export class ActorExtractLinksAll extends ActorExtractLinks {
     return {
       links: await ActorExtractLinks.collectStream(action.metadata, (quad, links) => {
         for (const link of getNamedNodes(getTerms(quad))) {
-          links.push({ url: link.value });
+          links.push({ url: link.value, metadata: { producedByActor: { name: this.name }}});
         }
       }),
     };

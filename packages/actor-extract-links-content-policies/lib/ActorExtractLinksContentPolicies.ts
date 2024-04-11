@@ -127,7 +127,11 @@ export class ActorExtractLinksContentPolicies extends ActorExtractLinks
         for (const variable of contentPolicy.variables) {
           const term = binding.get(variable.name);
           if (term && term.termType === 'NamedNode') {
-            const link: ILink = { url: term.value, transform };
+            const link: ILink = {
+              url: term.value,
+              transform,
+              metadata: { producedByActor: { name: this.name, traverseConditional: this.traverseConditional }},
+            };
 
             // Mark in the context if the linked document's policies should be considered
             link.context = new ActionContext({ [KEY_CONTEXT_WITHPOLICIES.name]: variable.withPolicies });

@@ -15,15 +15,17 @@ describe('ActorExtractLinksTraversePredicates', () => {
   describe('An ActorExtractLinksTraversePredicates instance with check subject', () => {
     let actor: ActorExtractLinksPredicates;
     let input: Readable;
+    let predicateRegexes: string[];
 
     beforeEach(() => {
+      predicateRegexes = [
+        'http://www.w3.org/ns/ldp#contains',
+      ];
       actor = new ActorExtractLinksPredicates({
         name: 'actor',
         bus,
         checkSubject: true,
-        predicateRegexes: [
-          'http://www.w3.org/ns/ldp#contains',
-        ],
+        predicateRegexes,
       });
       input = stream([
         quad('ex:s', 'http://www.w3.org/ns/ldp#contains', 'ex:r1', 'ex:gx'),
@@ -44,7 +46,9 @@ describe('ActorExtractLinksTraversePredicates', () => {
           links: [
             { url: 'ex:r1' },
             { url: 'ex:r2' },
-          ],
+          ].map((link) => {
+            return { ...link, metadata: { producedByActor: { name: actor.name, predicates: predicateRegexes }}};
+          }),
         });
     });
   });
@@ -52,15 +56,17 @@ describe('ActorExtractLinksTraversePredicates', () => {
   describe('An ActorExtractLinksTraversePredicates instance without check subject', () => {
     let actor: ActorExtractLinksPredicates;
     let input: Readable;
+    let predicateRegexes: string[];
 
     beforeEach(() => {
+      predicateRegexes = [
+        'http://www.w3.org/ns/ldp#contains',
+      ];
       actor = new ActorExtractLinksPredicates({
         name: 'actor',
         bus,
         checkSubject: false,
-        predicateRegexes: [
-          'http://www.w3.org/ns/ldp#contains',
-        ],
+        predicateRegexes,
       });
       input = stream([
         quad('ex:s', 'http://www.w3.org/ns/ldp#contains', 'ex:r1', 'ex:gx'),
@@ -77,7 +83,9 @@ describe('ActorExtractLinksTraversePredicates', () => {
             { url: 'ex:r1' },
             { url: 'ex:r2' },
             { url: 'ex:r3' },
-          ],
+          ].map((link) => {
+            return { ...link, metadata: { producedByActor: { name: actor.name, predicates: predicateRegexes }}};
+          }),
         });
     });
   });
