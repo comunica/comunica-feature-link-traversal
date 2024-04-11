@@ -1,4 +1,4 @@
-<!DOCTYPE html><html class="default" lang="en"><head><meta charSet="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>@comunica/actor-rdf-metadata-extract-traverse - v0.3.0 | Comunica Link Traversal</title><meta name="description" content="Documentation for Comunica Link Traversal"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="../assets/style.css"/><link rel="stylesheet" href="../assets/highlight.css"/><script defer src="../assets/main.js"></script><script async src="../assets/search.js" id="tsd-search-script"></script><script async src="../assets/navigation.js" id="tsd-nav-script"></script></head><body><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os"</script><header class="tsd-page-toolbar">
+<!DOCTYPE html><html class="default" lang="en"><head><meta charSet="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>@comunica/actor-extract-links-headers - v0.3.0 | Comunica Link Traversal</title><meta name="description" content="Documentation for Comunica Link Traversal"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="../assets/style.css"/><link rel="stylesheet" href="../assets/highlight.css"/><script defer src="../assets/main.js"></script><script async src="../assets/search.js" id="tsd-search-script"></script><script async src="../assets/navigation.js" id="tsd-nav-script"></script></head><body><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os"</script><header class="tsd-page-toolbar">
 <div class="tsd-toolbar-contents container">
 <div class="table-cell" id="tsd-search" data-base="..">
 <div class="field"><label for="tsd-search-field" class="tsd-widget tsd-toolbar-icon search no-caption"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><use href="#icon-search"></use></svg></label><input type="text" id="tsd-search-field" aria-label="Search"/></div>
@@ -13,38 +13,36 @@
 <div class="tsd-page-title">
 <ul class="tsd-breadcrumb">
 <li><a href="../index.html">Comunica Link Traversal</a></li>
-<li><a href="_comunica_actor_rdf_metadata_extract_traverse.html">@comunica/actor-rdf-metadata-extract-traverse</a></li></ul>
-<h1>Module @comunica/actor-rdf-metadata-extract-traverse - v0.3.0</h1></div>
-<section class="tsd-panel tsd-typography"><a id="md:comunica-traverse-rdf-metadata-extract-actor" class="tsd-anchor"></a><h1><a href="#md:comunica-traverse-rdf-metadata-extract-actor">Comunica Traverse RDF Metadata Extract Actor</a></h1><p><a href="https://www.npmjs.com/package/@comunica/actor-rdf-metadata-extract-traverse"><img src="https://badge.fury.io/js/%40comunica%2Factor-rdf-metadata-extract-traverse.svg" alt="npm version"></a></p>
-<p>An <a href="https://github.com/comunica/comunica/tree/master/packages/bus-rdf-metadata-extract">RDF Metadata Extract</a> actor that
-adds the <code>traverse</code> entry to the metadata object by delegating the metadata stream to the <a href="https://github.com/comunica/comunica-feature-link-traversal/tree/master/packages/bus-extract-links">Extract Links bus</a>.</p>
+<li><a href="_comunica_actor_extract_links_headers.html">@comunica/actor-extract-links-headers</a></li></ul>
+<h1>Module @comunica/actor-extract-links-headers - v0.3.0</h1></div>
+<section class="tsd-panel tsd-typography"><a id="md:comunica-headers-extract-links-actor" class="tsd-anchor"></a><h1><a href="#md:comunica-headers-extract-links-actor">Comunica Headers Extract Links Actor</a></h1><p><a href="https://www.npmjs.com/package/@comunica/actor-extract-links-headers"><img src="https://badge.fury.io/js/%40comunica%2Factor-extract-links-headers.svg" alt="npm version"></a></p>
+<p>An <a href="https://github.com/comunica/comunica/tree/master/packages/bus-extract-links">RDF Metadata Extract</a> actor that
+collects all links headers that match with any of the configured regular expressions.</p>
 <p>This module is part of the <a href="https://github.com/comunica/comunica">Comunica framework</a>,
 and should only be used by <a href="https://comunica.dev/docs/modify/">developers that want to build their own query engine</a>.</p>
 <p><a href="https://comunica.dev/docs/query/">Click here if you just want to query with Comunica</a>.</p>
-<a id="md:install" class="tsd-anchor"></a><h2><a href="#md:install">Install</a></h2><pre><code class="language-bash"><span class="hl-0">$</span><span class="hl-1"> </span><span class="hl-2">yarn</span><span class="hl-1"> </span><span class="hl-2">add</span><span class="hl-1"> </span><span class="hl-2">@comunica/actor-rdf-metadata-extract-traverse</span>
+<a id="md:install" class="tsd-anchor"></a><h2><a href="#md:install">Install</a></h2><pre><code class="language-bash"><span class="hl-0">$</span><span class="hl-1"> </span><span class="hl-2">yarn</span><span class="hl-1"> </span><span class="hl-2">add</span><span class="hl-1"> </span><span class="hl-2">@comunica/actor-extract-links-headers</span>
 </code><button>Copy</button></pre>
-<a id="md:metadata-entries" class="tsd-anchor"></a><h2><a href="#md:metadata-entries">Metadata entries</a></h2><p>This actor adds the following entries to the metadata object.</p>
-<ul>
-<li><code>traverse</code>: Array of URLs to traverse. <em>(if <code>traverseConditional: false</code>)</em></li>
-<li><code>traverseConditional</code>: Array of URLs to conditionally traverse. <em>(if <code>traverseConditional: true</code>)</em></li>
-</ul>
 <a id="md:configure" class="tsd-anchor"></a><h2><a href="#md:configure">Configure</a></h2><p>After installing, this package can be added to your engine&#39;s configuration as follows:</p>
 <pre><code class="language-text">{
   &quot;@context&quot;: [
     ...
-    &quot;https://linkedsoftwaredependencies.org/bundles/npm/@comunica/actor-rdf-metadata-extract-traverse/^1.0.0/components/context.jsonld&quot;
+    &quot;https://linkedsoftwaredependencies.org/bundles/npm/@comunica/actor-extract-links-headers/^1.0.0/components/context.jsonld&quot;
   ],
   &quot;actors&quot;: [
     ...
     {
-      &quot;@id&quot;: &quot;urn:comunica:default:rdf-metadata-extract/actors#traverse&quot;,
-      &quot;@type&quot;: &quot;ActorRdfMetadataExtractTraverse&quot;
+      &quot;@id&quot;: &quot;urn:comunica:default:extract-links/actors#headers&quot;,
+      &quot;@type&quot;: &quot;ActorExtractLinksHeaders&quot;
+      &quot;headersRegexes&quot;: [
+        &quot;rel=\&quot;describedby\&quot;&quot;
+      ]
     }
   ]
 }
 </code><button>Copy</button></pre>
 <a id="md:config-parameters" class="tsd-anchor"></a><h3><a href="#md:config-parameters">Config Parameters</a></h3><ul>
-<li><code>mediatorExtractLinks</code>: Mediator over the <a href="https://github.com/comunica/comunica-feature-link-traversal/tree/master/packages/bus-extract-links">Extract Links bus</a>.</li>
+<li><code>headersRegexes</code>: An array of regular expressions that will be matched with incoming link headers.</li>
 </ul>
 </section>
 <section class="tsd-panel-group tsd-index-group">
@@ -52,11 +50,11 @@ and should only be used by <a href="https://comunica.dev/docs/modify/">developer
 <h3 class="tsd-index-heading uppercase">Index</h3>
 <section class="tsd-index-section">
 <h3 class="tsd-index-heading">Classes</h3>
-<div class="tsd-index-list"><a href="../classes/_comunica_actor_rdf_metadata_extract_traverse.ActorRdfMetadataExtractTraverse.html" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-128"></use></svg><span>Actor<wbr/>Rdf<wbr/>Metadata<wbr/>Extract<wbr/>Traverse</span></a>
+<div class="tsd-index-list"><a href="../classes/_comunica_actor_extract_links_headers.ActorExtractLinksHeaders.html" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-128"></use></svg><span>Actor<wbr/>Extract<wbr/>Links<wbr/>Headers</span></a>
 </div></section>
 <section class="tsd-index-section">
 <h3 class="tsd-index-heading">Interfaces</h3>
-<div class="tsd-index-list"><a href="../interfaces/_comunica_actor_rdf_metadata_extract_traverse.IActorRdfMetadataExtractTraverseArgs.html" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-256"></use></svg><span>IActor<wbr/>Rdf<wbr/>Metadata<wbr/>Extract<wbr/>Traverse<wbr/>Args</span></a>
+<div class="tsd-index-list"><a href="../interfaces/_comunica_actor_extract_links_headers.IActorExtractLinksTraverseHeadersArgs.html" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-256"></use></svg><span>IActor<wbr/>Extract<wbr/>Links<wbr/>Traverse<wbr/>Headers<wbr/>Args</span></a>
 </div></section></section></section></div>
 <div class="col-sidebar">
 <div class="page-menu">
@@ -79,11 +77,10 @@ and should only be used by <a href="https://comunica.dev/docs/modify/">developer
 <ul>
 <li>
 <ul>
-<li><a href="#md:comunica-traverse-rdf-metadata-extract-actor"><span>Comunica <wbr/>Traverse RDF <wbr/>Metadata <wbr/>Extract <wbr/>Actor</span></a></li>
+<li><a href="#md:comunica-headers-extract-links-actor"><span>Comunica <wbr/>Headers <wbr/>Extract <wbr/>Links <wbr/>Actor</span></a></li>
 <li>
 <ul>
 <li><a href="#md:install"><span>Install</span></a></li>
-<li><a href="#md:metadata-entries"><span>Metadata entries</span></a></li>
 <li><a href="#md:configure"><span>Configure</span></a></li>
 <li>
 <ul>
@@ -98,7 +95,7 @@ and should only be used by <a href="https://comunica.dev/docs/modify/">developer
 <li><a href="_comunica_actor_extract_links_all.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>@comunica/actor-extract-links-all - v0.3.0</a></li>
 <li><a href="_comunica_actor_extract_links_content_policies.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>@comunica/actor-extract-links-content-policies - v0.3.0</a></li>
 <li><a href="_comunica_actor_extract_links_tree.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>@comunica/actor-extract-links-tree - v0.3.0</a></li>
-<li><a href="_comunica_actor_extract_links_headers.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>@comunica/actor-extract-links-headers - v0.3.0</a></li>
+<li><a href="_comunica_actor_extract_links_headers.html" class="current"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>@comunica/actor-extract-links-headers - v0.3.0</a></li>
 <li><a href="_comunica_actor_extract_links_predicates.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>@comunica/actor-extract-links-predicates - v0.3.0</a></li>
 <li><a href="_comunica_actor_extract_links_quad_pattern.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>@comunica/actor-extract-links-quad-pattern - v0.3.0</a></li>
 <li><a href="_comunica_actor_extract_links_quad_pattern_query.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>@comunica/actor-extract-links-quad-pattern-query - v0.3.0</a></li>
@@ -107,7 +104,7 @@ and should only be used by <a href="https://comunica.dev/docs/modify/">developer
 <li><a href="_comunica_actor_rdf_join_entries_sort_traversal_zero_knowledge.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>@comunica/actor-rdf-join-entries-sort-traversal-zero-knowledge - v0.3.0</a></li>
 <li><a href="_comunica_actor_rdf_join_inner_multi_adaptive_destroy.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>@comunica/actor-rdf-join-inner-multi-adaptive-destroy - v0.3.0</a></li>
 <li><a href="_comunica_actor_rdf_metadata_extract_shapetrees.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>@comunica/actor-rdf-metadata-extract-shapetrees - v0.3.0</a></li>
-<li><a href="_comunica_actor_rdf_metadata_extract_traverse.html" class="current"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>@comunica/actor-rdf-metadata-extract-traverse - v0.3.0</a></li>
+<li><a href="_comunica_actor_rdf_metadata_extract_traverse.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>@comunica/actor-rdf-metadata-extract-traverse - v0.3.0</a></li>
 <li><a href="_comunica_actor_rdf_resolve_hypermedia_links_queue_wrapper_limit_count.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>@comunica/actor-rdf-resolve-hypermedia-links-queue-wrapper-limit-count - v0.3.0</a></li>
 <li><a href="_comunica_actor_rdf_resolve_hypermedia_links_queue_wrapper_limit_depth.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>@comunica/actor-rdf-resolve-hypermedia-links-queue-wrapper-limit-depth - v0.3.0</a></li>
 <li><a href="_comunica_actor_rdf_resolve_hypermedia_links_traverse.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>@comunica/actor-rdf-resolve-hypermedia-links-traverse - v0.3.0</a></li>
