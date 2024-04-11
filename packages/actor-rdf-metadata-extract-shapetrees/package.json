@@ -1,6 +1,6 @@
 {
   "name": "@comunica/actor-rdf-metadata-extract-shapetrees",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "A shapetrees rdf-metadata-extract actor",
   "lsd:module": true,
   "license": "MIT",

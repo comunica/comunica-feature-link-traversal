@@ -1,6 +1,6 @@
 {
   "name": "@comunica/bus-extract-links",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "A comunica bus for extract-links events.",
   "lsd:module": true,
   "license": "MIT",

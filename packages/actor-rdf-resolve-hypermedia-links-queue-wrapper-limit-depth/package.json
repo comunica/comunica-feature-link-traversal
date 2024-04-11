@@ -1,6 +1,6 @@
 {
   "name": "@comunica/actor-rdf-resolve-hypermedia-links-queue-wrapper-limit-depth",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "A wrapper-limit-depth rdf-resolve-hypermedia-links-queue actor",
   "lsd:module": true,
   "license": "MIT",

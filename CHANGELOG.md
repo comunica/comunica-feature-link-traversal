@@ -1,6 +1,15 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+<a name="v0.4.0"></a>
+## [v0.4.0](https://github.com/comunica/comunica-feature-link-traversal/compare/v0.3.0...v0.4.0) - 2024-04-11
+
+### Added
+* [Add ActorExtractLinksHeaders for following auxiliary resources in Solid](https://github.com/comunica/comunica-feature-link-traversal/commit/66181c0b1d6c9c2fa96c587960b33922c6a3be69)
+
+### Changed
+* [Update dependency @comunica/query-sparql to ^3.0.2](https://github.com/comunica/comunica-feature-link-traversal/commit/ffb72b3178dd05f40d0abaa6c77b3141c5d295ae)
+
 <a name="v0.3.0"></a>
 ## [v0.3.0](https://github.com/comunica/comunica-feature-link-traversal/compare/v0.2.0...v0.3.0) - 2024-03-20
 

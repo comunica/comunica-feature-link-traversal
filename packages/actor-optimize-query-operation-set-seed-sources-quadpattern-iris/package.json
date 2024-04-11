@@ -1,6 +1,6 @@
 {
   "name": "@comunica/actor-optimize-query-operation-set-seed-sources-quadpattern-iris",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "A set-seed-sources-quadpattern-iris optimize-query-operation actor",
   "lsd:module": true,
   "license": "MIT",

@@ -1,6 +1,6 @@
 {
   "name": "@comunica/actor-rdf-resolve-hypermedia-links-traverse-prune-shapetrees",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "A traverse-prune-shapetrees rdf-resolve-hypermedia-links actor",
   "lsd:module": true,
   "license": "MIT",

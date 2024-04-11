@@ -1,6 +1,6 @@
 {
   "name": "@comunica/actor-extract-links-quad-pattern-query",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "A traverse-quad-pattern-query extract-links actor",
   "lsd:module": true,
   "license": "MIT",
@@ -37,7 +37,7 @@
     "build:components": "componentsjs-generator"
   },
   "dependencies": {
-    "@comunica/bus-extract-links": "^0.3.0",
+    "@comunica/bus-extract-links": "^0.4.0",
     "@comunica/context-entries": "^3.0.1",
     "@comunica/core": "^3.0.1",
     "@comunica/types": "^3.0.1",

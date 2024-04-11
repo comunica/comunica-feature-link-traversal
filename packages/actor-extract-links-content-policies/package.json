@@ -1,6 +1,6 @@
 {
   "name": "@comunica/actor-extract-links-content-policies",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "A traverse-content-policies extract-links actor",
   "lsd:module": true,
   "license": "MIT",
@@ -38,7 +38,7 @@
   },
   "dependencies": {
     "@comunica/actor-init-query": "^3.0.1",
-    "@comunica/bus-extract-links": "^0.3.0",
+    "@comunica/bus-extract-links": "^0.4.0",
     "@comunica/bus-query-operation": "^3.0.1",
     "@comunica/context-entries": "^3.0.1",
     "@comunica/core": "^3.0.1",

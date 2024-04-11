@@ -1,6 +1,6 @@
 {
   "name": "@comunica/actor-rdf-join-inner-multi-adaptive-destroy",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "A inner-multi-adaptive-destroy rdf-join actor",
   "lsd:module": true,
   "license": "MIT",
@@ -40,7 +40,7 @@
     "@comunica/bus-query-operation": "^3.0.1",
     "@comunica/bus-rdf-join": "^3.0.1",
     "@comunica/context-entries": "^3.0.1",
-    "@comunica/context-entries-link-traversal": "^0.3.0",
+    "@comunica/context-entries-link-traversal": "^0.4.0",
     "@comunica/mediatortype-join-coefficients": "^3.0.1",
     "@comunica/types": "^3.0.1",
     "asynciterator": "^3.9.0"
