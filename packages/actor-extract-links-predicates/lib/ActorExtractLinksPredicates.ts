@@ -1,6 +1,7 @@
 import type { IActionExtractLinks, IActorExtractLinksOutput } from '@comunica/bus-extract-links';
 import { ActorExtractLinks } from '@comunica/bus-extract-links';
 import type { IActorArgs, IActorTest } from '@comunica/core';
+import { PRODUCED_BY_ACTOR } from '@comunica/types-link-traversal';
 
 /**
  * A comunica Traverse Predicates RDF Metadata Extract Actor.
@@ -30,7 +31,7 @@ export class ActorExtractLinksPredicates extends ActorExtractLinks {
               links.push({
                 url: quad.object.value,
                 metadata: {
-                  producedByActor: {
+                  [PRODUCED_BY_ACTOR]: {
                     name: this.name,
                     predicates: this.stringPredicates,
                     matchingPredicate: quad.predicate.value,

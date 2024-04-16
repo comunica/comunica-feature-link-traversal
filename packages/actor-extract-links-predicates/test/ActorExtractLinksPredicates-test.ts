@@ -1,6 +1,7 @@
 import type { Readable } from 'node:stream';
 import { ActionContext, Bus } from '@comunica/core';
 import { ActorExtractLinksPredicates } from '../lib/ActorExtractLinksPredicates';
+import { PRODUCED_BY_ACTOR } from '@comunica/types-link-traversal';
 
 const quad = require('rdf-quad');
 const stream = require('streamify-array');
@@ -50,7 +51,7 @@ describe('ActorExtractLinksTraversePredicates', () => {
             return {
               ...link,
               metadata: {
-                producedByActor: {
+                [PRODUCED_BY_ACTOR]: {
                   name: actor.name,
                   predicates: predicateRegexes,
                   matchingPredicate: 'http://www.w3.org/ns/ldp#contains',
@@ -97,7 +98,7 @@ describe('ActorExtractLinksTraversePredicates', () => {
             return {
               ...link,
               metadata: {
-                producedByActor: {
+                [PRODUCED_BY_ACTOR]: {
                   name: actor.name,
                   predicates: predicateRegexes,
                   matchingPredicate: 'http://www.w3.org/ns/ldp#contains',

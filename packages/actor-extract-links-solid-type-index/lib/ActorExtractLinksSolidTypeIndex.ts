@@ -8,6 +8,7 @@ import { KeysInitQuery, KeysQueryOperation, KeysQuerySourceIdentify } from '@com
 import { KeysRdfJoin } from '@comunica/context-entries-link-traversal';
 import type { IActorArgs, IActorTest } from '@comunica/core';
 import type { IActionContext } from '@comunica/types';
+import { PRODUCED_BY_ACTOR } from '@comunica/types-link-traversal';
 import type * as RDF from '@rdfjs/types';
 import { storeStream } from 'rdf-store-stream';
 import { termToString } from 'rdf-string';
@@ -145,7 +146,7 @@ export class ActorExtractLinksSolidTypeIndex extends ActorExtractLinks {
       typeLinks[type].push({
         url: bindings.get('instance')!.value,
         metadata: {
-          producedByActor: { name: this.name, onlyMatchingTypes: this.onlyMatchingTypes, inference: this.inference },
+          [PRODUCED_BY_ACTOR]: { name: this.name, onlyMatchingTypes: this.onlyMatchingTypes, inference: this.inference },
         },
       });
     }

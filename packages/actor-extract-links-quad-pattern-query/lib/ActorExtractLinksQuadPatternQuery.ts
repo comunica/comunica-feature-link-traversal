@@ -3,6 +3,7 @@ import { ActorExtractLinks } from '@comunica/bus-extract-links';
 import { KeysInitQuery } from '@comunica/context-entries';
 import type { IActorArgs, IActorTest } from '@comunica/core';
 import type { IActionContext } from '@comunica/types';
+import { PRODUCED_BY_ACTOR } from '@comunica/types-link-traversal';
 import type * as RDF from '@rdfjs/types';
 import { DataFactory } from 'rdf-data-factory';
 import type { QuadTermName } from 'rdf-terms';
@@ -97,7 +98,7 @@ export class ActorExtractLinksQuadPatternQuery extends ActorExtractLinks {
               if (quad[quadTermName].termType === 'NamedNode') {
                 links.push({
                   url: quad[quadTermName].value,
-                  metadata: { producedByActor: { name: this.name, onlyVariables: this.onlyVariables }},
+                  metadata: { [PRODUCED_BY_ACTOR]: { name: this.name, onlyVariables: this.onlyVariables }},
                 });
               }
             }
@@ -106,7 +107,7 @@ export class ActorExtractLinksQuadPatternQuery extends ActorExtractLinks {
             for (const link of getNamedNodes(getTerms(quad))) {
               links.push({
                 url: link.value,
-                metadata: { producedByActor: { name: this.name, onlyVariables: this.onlyVariables }},
+                metadata: { [PRODUCED_BY_ACTOR]: { name: this.name, onlyVariables: this.onlyVariables }},
               });
             }
           }
