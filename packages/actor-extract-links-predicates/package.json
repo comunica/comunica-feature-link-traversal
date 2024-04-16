@@ -39,6 +39,7 @@
   "dependencies": {
     "@comunica/bus-extract-links": "^0.4.0",
     "@comunica/bus-rdf-resolve-hypermedia-links": "^3.0.1",
-    "@comunica/core": "^3.0.1"
+    "@comunica/core": "^3.0.1",
+    "@comunica/types-link-traversal": "^0.4.0"
   }
 }

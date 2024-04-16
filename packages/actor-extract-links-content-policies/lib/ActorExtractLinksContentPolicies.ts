@@ -9,13 +9,13 @@ import { KeysQueryOperation } from '@comunica/context-entries';
 import type { IActorArgs, IActorTest } from '@comunica/core';
 import { ActionContext, ActionContextKey } from '@comunica/core';
 import type { Bindings, IActionContext } from '@comunica/types';
+import { PRODUCED_BY_ACTOR } from '@comunica/types-link-traversal';
 import type * as RDF from '@rdfjs/types';
 import { storeStream } from 'rdf-store-stream';
 import { matchPatternComplete } from 'rdf-terms';
 import type { Algebra } from 'sparqlalgebrajs';
 import type { ContentPolicy } from './ContentPolicy';
 import { SimpleSclParser } from './SimpleSclParser';
-import { PRODUCED_BY_ACTOR } from '@comunica/types-link-traversal';
 
 /**
  * A comunica Traverse Content Policies RDF Metadata Extract Actor.

@@ -146,7 +146,11 @@ export class ActorExtractLinksSolidTypeIndex extends ActorExtractLinks {
       typeLinks[type].push({
         url: bindings.get('instance')!.value,
         metadata: {
-          [PRODUCED_BY_ACTOR]: { name: this.name, onlyMatchingTypes: this.onlyMatchingTypes, inference: this.inference },
+          [PRODUCED_BY_ACTOR]: {
+            name: this.name,
+            onlyMatchingTypes: this.onlyMatchingTypes,
+            inference: this.inference,
+          },
         },
       });
     }

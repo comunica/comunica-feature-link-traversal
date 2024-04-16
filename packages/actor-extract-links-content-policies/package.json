@@ -42,6 +42,7 @@
     "@comunica/bus-query-operation": "^3.0.1",
     "@comunica/context-entries": "^3.0.1",
     "@comunica/core": "^3.0.1",
+    "@comunica/types-link-traversal": "^0.4.0",
     "rdf-data-factory": "^1.1.2",
     "rdf-store-stream": "^2.0.1",
     "rdf-terms": "^1.11.0",

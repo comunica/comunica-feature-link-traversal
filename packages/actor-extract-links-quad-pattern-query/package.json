@@ -41,6 +41,7 @@
     "@comunica/context-entries": "^3.0.1",
     "@comunica/core": "^3.0.1",
     "@comunica/types": "^3.0.1",
+    "@comunica/types-link-traversal": "^0.4.0",
     "@rdfjs/types": "*",
     "rdf-data-factory": "^1.1.2",
     "rdf-terms": "^1.11.0",
