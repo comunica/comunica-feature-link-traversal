@@ -5,7 +5,7 @@ import {
   KEY_CONTEXT_WRAPPED,
   KEY_QUERY_IDENTIFIER,
 } from '../lib/ActorRdfResolveHypermediaLinksQueueWrapperInfoOccupancy';
-import { LinkQueueSaveOnDiskInfo } from '../lib/LinkQueueSaveOnDiskInfo';
+import { LinkQueueLogger } from '../lib/LinkQueueLogger';
 
 describe('ActorRdfResolveHypermediaLinksQueueRdfResolveHypermediaLinkQueueWrapperDebugLinksInformation', () => {
   let bus: any;
@@ -95,7 +95,7 @@ describe('ActorRdfResolveHypermediaLinksQueueRdfResolveHypermediaLinkQueueWrappe
         for (let i = 0; i < 10; ++i) {
           const expectedFilePath = `bar_${i}.json`;
 
-          const expectedLinkQueueWrapper = new LinkQueueSaveOnDiskInfo(linkQueue, expectedFilePath, <any>{ q: true });
+          const expectedLinkQueueWrapper = new LinkQueueLogger(linkQueue, expectedFilePath, <any>{ q: true });
 
           await expect(actor.run(action)).resolves.toStrictEqual({ linkQueue: expectedLinkQueueWrapper });
           expect(action.context.set).toHaveBeenCalledTimes(i + 1);
@@ -123,7 +123,7 @@ describe('ActorRdfResolveHypermediaLinksQueueRdfResolveHypermediaLinkQueueWrappe
         });
         const expectedFilePath = 'bar_Q1.json';
 
-        const expectedLinkQueueWrapper = new LinkQueueSaveOnDiskInfo(linkQueue, expectedFilePath, 'Q1');
+        const expectedLinkQueueWrapper = new LinkQueueLogger(linkQueue, expectedFilePath, 'Q1');
 
         await expect(actor.run(action)).resolves.toStrictEqual({ linkQueue: expectedLinkQueueWrapper });
         expect(action.context.set).toHaveBeenCalledTimes(1);
@@ -151,7 +151,7 @@ describe('ActorRdfResolveHypermediaLinksQueueRdfResolveHypermediaLinkQueueWrappe
         });
         const expectedFilePath = 'bar_Q1.json';
 
-        const expectedLinkQueueWrapper = new LinkQueueSaveOnDiskInfo(linkQueue, expectedFilePath, 'Q1');
+        const expectedLinkQueueWrapper = new LinkQueueLogger(linkQueue, expectedFilePath, 'Q1');
 
         await expect(actor.run(action)).resolves.toStrictEqual({ linkQueue: expectedLinkQueueWrapper });
         expect(action.context.set).toHaveBeenCalledTimes(1);
@@ -177,16 +177,16 @@ describe('ActorRdfResolveHypermediaLinksQueueRdfResolveHypermediaLinkQueueWrappe
           return 'foo';
         });
 
-        const expectedLinkQueueWrapper = new LinkQueueSaveOnDiskInfo(linkQueue, 'boo', 'foo');
+        const expectedLinkQueueWrapper = new LinkQueueLogger(linkQueue, 'boo', 'foo');
         const resp = await actor.run(action);
-        const wrappedQueue: LinkQueueSaveOnDiskInfo = resp.linkQueue;
+        const wrappedQueue: LinkQueueLogger = resp.linkQueue;
 
         expect(wrappedQueue.getHistory()).toStrictEqual(expectedLinkQueueWrapper.getHistory());
         expect(action.context.set).toHaveBeenCalledTimes(1);
         expect(action.context.set).toHaveBeenLastCalledWith(KEY_CONTEXT_WRAPPED, true);
 
         const resp2 = await actor.run(action);
-        const wrappedQueue2: LinkQueueSaveOnDiskInfo = resp2.linkQueue;
+        const wrappedQueue2: LinkQueueLogger = resp2.linkQueue;
         expect(wrappedQueue2.filePath).not.toBe(wrappedQueue.filePath);
         expect(wrappedQueue2.getHistory()).toStrictEqual(expectedLinkQueueWrapper.getHistory());
       });

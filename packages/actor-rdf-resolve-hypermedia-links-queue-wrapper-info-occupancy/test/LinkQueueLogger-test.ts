@@ -1,6 +1,5 @@
-import { writeFileSync } from 'node:fs';
 import { PRODUCED_BY_ACTOR } from '@comunica/types-link-traversal';
-import { LinkQueueSaveOnDiskInfo } from '../lib/LinkQueueSaveOnDiskInfo';
+import { LinkQueueLogger } from '../lib/LinkQueueLogger';
 
 jest.mock('node:fs');
 
@@ -20,7 +19,7 @@ describe('LinkQueueFilterLinks', () => {
         query,
       };
 
-      const wrapper = new LinkQueueSaveOnDiskInfo(linkqueue, filePath, query);
+      const wrapper = new LinkQueueLogger(linkqueue, filePath, query);
 
       expect(wrapper.filePath).toBe(filePath);
       expect(wrapper.getHistory()).toStrictEqual(expectedHistory);
@@ -39,7 +38,7 @@ describe('LinkQueueFilterLinks', () => {
         query,
       };
 
-      const wrapper = new LinkQueueSaveOnDiskInfo(linkqueue, filePath, query);
+      const wrapper = new LinkQueueLogger(linkqueue, filePath, query);
 
       expect(wrapper.filePath).toBe(filePath);
       expect(wrapper.getHistory()).toStrictEqual(expectedHistory);
@@ -58,7 +57,7 @@ describe('LinkQueueFilterLinks', () => {
         query,
       };
 
-      const wrapper = new LinkQueueSaveOnDiskInfo(linkqueue, filePath, query);
+      const wrapper = new LinkQueueLogger(linkqueue, filePath, query);
 
       expect(wrapper.filePath).toBe(filePath);
       expect(wrapper.getHistory()).toStrictEqual(expectedHistory);
@@ -88,7 +87,7 @@ describe('LinkQueueFilterLinks', () => {
 
       jest.spyOn(Date, 'now').mockImplementation().mockReturnValueOnce(1);
 
-      const wrapper = new LinkQueueSaveOnDiskInfo(linkQueue, filePath, query);
+      const wrapper = new LinkQueueLogger(linkQueue, filePath, query);
       const resp = wrapper.push(iri, iri);
 
       expect(resp).toBe(true);
@@ -113,7 +112,7 @@ describe('LinkQueueFilterLinks', () => {
         query,
       };
 
-      const wrapper = new LinkQueueSaveOnDiskInfo(linkQueue, filePath, query);
+      const wrapper = new LinkQueueLogger(linkQueue, filePath, query);
       const resp = wrapper.push(iri, iri);
 
       expect(resp).toBe(false);
@@ -129,7 +128,7 @@ describe('LinkQueueFilterLinks', () => {
         isEmpty: () => false,
       };
       jest.spyOn(Date, 'now').mockImplementation(() => i);
-      const wrapper = new LinkQueueSaveOnDiskInfo(linkQueue, filePath, query);
+      const wrapper = new LinkQueueLogger(linkQueue, filePath, query);
       const iris_pushed: any[] = [];
       for (; i < n; i++) {
         let iri: any = {
@@ -183,7 +182,7 @@ describe('LinkQueueFilterLinks', () => {
       };
       jest.spyOn(Date, 'now').mockImplementation().mockReturnValueOnce(1);
 
-      const wrapper = new LinkQueueSaveOnDiskInfo(linkQueue, filePath, query);
+      const wrapper = new LinkQueueLogger(linkQueue, filePath, query);
       const resp = wrapper.pop();
 
       expect(resp).toStrictEqual(iri);
@@ -205,7 +204,7 @@ describe('LinkQueueFilterLinks', () => {
         query,
       };
 
-      const wrapper = new LinkQueueSaveOnDiskInfo(linkQueue, filePath, query);
+      const wrapper = new LinkQueueLogger(linkQueue, filePath, query);
       const resp = wrapper.pop();
 
       expect(resp).toBeUndefined();
@@ -233,7 +232,7 @@ describe('LinkQueueFilterLinks', () => {
         isEmpty: () => false,
       };
       jest.spyOn(Date, 'now').mockImplementation(() => i);
-      const wrapper = new LinkQueueSaveOnDiskInfo(linkQueue, filePath, query);
+      const wrapper = new LinkQueueLogger(linkQueue, filePath, query);
       const iris_popped: any[] = [];
       for (; i < n; i++) {
         if (i % 4 === 0 && i !== 0) {

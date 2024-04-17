@@ -1,9 +1,0 @@
-{
-  "source": "lib",
-  "destination": "components",
-  "extension": "jsonld",
-  "ignoreComponents": [
-    "LinkQueueSaveOnDiskInfo"
-  ],
-  "logLevel": "info"
-}

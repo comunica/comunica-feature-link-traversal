@@ -3198,6 +3198,15 @@
     object-inspect "^1.12.2"
     process "^0.11.10"
 
+"@comunica/logger-pretty@^3.0.3":
+  version "3.0.3"
+  resolved "https://registry.yarnpkg.com/@comunica/logger-pretty/-/logger-pretty-3.0.3.tgz#8b7417d6a918155b50a99548df3ed1f25f65b642"
+  integrity sha512-yrBQwhuSKtevRyPJdvDa7wFKd+56QpYdl52t5cH9x3vC5fCm+yndLnFJSupKn4GFzGWY0/OheUac0UP9iIwS0w==
+  dependencies:
+    "@comunica/types" "^3.0.3"
+    object-inspect "^1.12.2"
+    process "^0.11.10"
+
 "@comunica/logger-void@^3.0.1":
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/@comunica/logger-void/-/logger-void-3.0.1.tgz#10f3a63cac0238a827abc46ba5e9c0fe3e390f75"
@@ -3673,6 +3682,16 @@
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/@comunica/types/-/types-3.0.1.tgz#75026c7aab2b469a7a42bcd78811ed13a0122c73"
   integrity sha512-f8wPMnLAWhmsaFGLGC6ktmCiI8evvemiDUIt29qZ4FJOZ3lWg3utSnCq0SkDvp7t/DmrR2XxmxQ6W4WE4X9X1w==
+  dependencies:
+    "@rdfjs/types" "*"
+    "@types/yargs" "^17.0.24"
+    asynciterator "^3.9.0"
+    sparqlalgebrajs "^4.3.3"
+
+"@comunica/types@^3.0.3":
+  version "3.0.3"
+  resolved "https://registry.yarnpkg.com/@comunica/types/-/types-3.0.3.tgz#22f7a74f0f382a847db4bd6f03c787a132c307ce"
+  integrity sha512-/fS02XHiCvrfClqC0sw6psv0WXppdGvbJtAieckHGxIoOvYe0REJ0JW21S3OxL8ILDzSXGwB+wwT/DtekprXkg==
   dependencies:
     "@rdfjs/types" "*"
     "@types/yargs" "^17.0.24"
