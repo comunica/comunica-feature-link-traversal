@@ -1,5 +1,6 @@
 import { KeysInitQuery } from '@comunica/context-entries';
 import { Bus, ActionContext } from '@comunica/core';
+import { LoggerPretty } from '@comunica/logger-pretty';
 import {
   ActorRdfResolveHypermediaLinksQueueWrapperInfoOccupancy,
   KEY_CONTEXT_WRAPPED,
@@ -9,7 +10,6 @@ import { LinkQueueLogger } from '../lib/LinkQueueLogger';
 
 describe('ActorRdfResolveHypermediaLinksQueueRdfResolveHypermediaLinkQueueWrapperDebugLinksInformation', () => {
   let bus: any;
-  const filePath = 'bar.json';
 
   describe('ActorRdfResolveHypermediaLinkQueueWrapperDebugLinksInformation instance', () => {
     let actor: any;
@@ -21,7 +21,6 @@ describe('ActorRdfResolveHypermediaLinksQueueRdfResolveHypermediaLinkQueueWrappe
         actor = new ActorRdfResolveHypermediaLinksQueueWrapperInfoOccupancy({
           name: 'actor',
           bus,
-          filePath,
           mediatorRdfResolveHypermediaLinksQueue,
         });
       });
@@ -53,6 +52,7 @@ describe('ActorRdfResolveHypermediaLinksQueueRdfResolveHypermediaLinkQueueWrappe
             get: jest.fn().mockReturnValue('foo'),
           },
         };
+        bus = new Bus({ name: 'bus' });
       });
 
       it('should rejects given the mediator promise is rejected', async() => {
@@ -63,132 +63,79 @@ describe('ActorRdfResolveHypermediaLinksQueueRdfResolveHypermediaLinkQueueWrappe
         actor = new ActorRdfResolveHypermediaLinksQueueWrapperInfoOccupancy({
           name: 'actor',
           bus,
-          filePath,
           mediatorRdfResolveHypermediaLinksQueue: mediator,
         });
 
         await expect(actor.run(action)).rejects.toBeInstanceOf(Error);
       });
 
-      it(`should returns the link queue and 
-      add the context wrapped flag in the context for multiple queries`, async() => {
+      it(`should returns the link queue and add the context wrapped flag in the context given a query with metadata`, async() => {
         const mediator: any = {
           mediate: jest.fn().mockResolvedValue({ linkQueue }),
         };
         actor = new ActorRdfResolveHypermediaLinksQueueWrapperInfoOccupancy({
           name: 'actor',
           bus,
-          filePath,
           mediatorRdfResolveHypermediaLinksQueue: mediator,
         });
+
+        const query = { q: true, metadata: { abc: 'dfg' }};
 
         jest.spyOn(action.context, 'get').mockImplementation((key: any) => {
           if (key.name === KEY_QUERY_IDENTIFIER.name) {
             return undefined;
           }
           if (key.name === KeysInitQuery.query.name) {
-            return { q: true, metadata: { abc: 'dfg' }};
+            return query;
           }
           return undefined;
         });
 
-        for (let i = 0; i < 10; ++i) {
-          const expectedFilePath = `bar_${i}.json`;
+        const logger = new LoggerPretty({ level: 'trace' });
 
-          const expectedLinkQueueWrapper = new LinkQueueLogger(linkQueue, expectedFilePath, <any>{ q: true });
-
-          await expect(actor.run(action)).resolves.toStrictEqual({ linkQueue: expectedLinkQueueWrapper });
-          expect(action.context.set).toHaveBeenCalledTimes(i + 1);
-          expect(action.context.set).toHaveBeenLastCalledWith(KEY_CONTEXT_WRAPPED, true);
-        }
-      });
-
-      it(`should returns the link queue with the right path if a query identifier is defined
-       and add the context wrapped flag in the context`, async() => {
-        const mediator: any = {
-          mediate: jest.fn().mockResolvedValueOnce({ linkQueue }),
-        };
-
-        actor = new ActorRdfResolveHypermediaLinksQueueWrapperInfoOccupancy({
-          name: 'actor',
-          bus,
-          filePath,
-          mediatorRdfResolveHypermediaLinksQueue: mediator,
-        });
-        jest.spyOn(action.context, 'get').mockImplementation((key: any) => {
-          if (key.name === KEY_QUERY_IDENTIFIER.name) {
-            return 'Q1';
+        const queryWithoutMetadata = JSON.parse(JSON.stringify(query, (key, value) => {
+          if (key === 'metadata') {
+            return;
           }
-          return 'foo';
-        });
-        const expectedFilePath = 'bar_Q1.json';
+          return value;
+        }));
 
-        const expectedLinkQueueWrapper = new LinkQueueLogger(linkQueue, expectedFilePath, 'Q1');
+        const expectedLinkQueueWrapper = new LinkQueueLogger(linkQueue, queryWithoutMetadata, logger);
 
         await expect(actor.run(action)).resolves.toStrictEqual({ linkQueue: expectedLinkQueueWrapper });
         expect(action.context.set).toHaveBeenCalledTimes(1);
         expect(action.context.set).toHaveBeenLastCalledWith(KEY_CONTEXT_WRAPPED, true);
       });
 
-      it(`should returns the link queue with the right path if a query identifier is defined
-      even if random identifier is defined and add the context wrapped flag in the context`, async() => {
-        const mediator: any = {
-          mediate: jest.fn().mockResolvedValueOnce({ linkQueue }),
-        };
-
-        actor = new ActorRdfResolveHypermediaLinksQueueWrapperInfoOccupancy({
-          name: 'actor',
-          bus,
-          filePath,
-          mediatorRdfResolveHypermediaLinksQueue: mediator,
-          randomQueryIdentifier: true,
-        });
-        jest.spyOn(action.context, 'get').mockImplementation((key: any) => {
-          if (key.name === KEY_QUERY_IDENTIFIER.name) {
-            return 'Q1';
-          }
-          return 'foo';
-        });
-        const expectedFilePath = 'bar_Q1.json';
-
-        const expectedLinkQueueWrapper = new LinkQueueLogger(linkQueue, expectedFilePath, 'Q1');
-
-        await expect(actor.run(action)).resolves.toStrictEqual({ linkQueue: expectedLinkQueueWrapper });
-        expect(action.context.set).toHaveBeenCalledTimes(1);
-        expect(action.context.set).toHaveBeenLastCalledWith(KEY_CONTEXT_WRAPPED, true);
-      });
-      it(`should returns the link queue with the right path if a random identifier is defined
-       and add the context wrapped flag in the context`, async() => {
+      it(`should returns the link queue and add the context wrapped flag in the context given a query`, async() => {
         const mediator: any = {
           mediate: jest.fn().mockResolvedValue({ linkQueue }),
         };
-
         actor = new ActorRdfResolveHypermediaLinksQueueWrapperInfoOccupancy({
           name: 'actor',
           bus,
-          filePath,
           mediatorRdfResolveHypermediaLinksQueue: mediator,
-          randomQueryIdentifier: true,
         });
+
+        const query = { q: true };
+
         jest.spyOn(action.context, 'get').mockImplementation((key: any) => {
           if (key.name === KEY_QUERY_IDENTIFIER.name) {
             return undefined;
           }
-          return 'foo';
+          if (key.name === KeysInitQuery.query.name) {
+            return query;
+          }
+          return undefined;
         });
 
-        const expectedLinkQueueWrapper = new LinkQueueLogger(linkQueue, 'boo', 'foo');
-        const resp = await actor.run(action);
-        const wrappedQueue: LinkQueueLogger = resp.linkQueue;
+        const logger = new LoggerPretty({ level: 'trace' });
 
-        expect(wrappedQueue.getHistory()).toStrictEqual(expectedLinkQueueWrapper.getHistory());
+        const expectedLinkQueueWrapper = new LinkQueueLogger(linkQueue, query, logger);
+
+        await expect(actor.run(action)).resolves.toStrictEqual({ linkQueue: expectedLinkQueueWrapper });
         expect(action.context.set).toHaveBeenCalledTimes(1);
         expect(action.context.set).toHaveBeenLastCalledWith(KEY_CONTEXT_WRAPPED, true);
-
-        const resp2 = await actor.run(action);
-        const wrappedQueue2: LinkQueueLogger = resp2.linkQueue;
-        expect(wrappedQueue2.filePath).not.toBe(wrappedQueue.filePath);
-        expect(wrappedQueue2.getHistory()).toStrictEqual(expectedLinkQueueWrapper.getHistory());
       });
     });
   });

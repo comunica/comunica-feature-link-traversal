@@ -6,6 +6,7 @@ import { ActorRdfResolveHypermediaLinksQueue } from '@comunica/bus-rdf-resolve-h
 import { KeysInitQuery } from '@comunica/context-entries';
 import type { Actor, IActorArgs, IActorTest, Mediator } from '@comunica/core';
 import { ActionContextKey } from '@comunica/core';
+import { LoggerPretty } from '@comunica/logger-pretty';
 import type { Algebra } from 'sparqlalgebrajs';
 import { LinkQueueLogger } from './LinkQueueLogger';
 
@@ -43,9 +44,11 @@ export class ActorRdfResolveHypermediaLinksQueueWrapperInfoOccupancy
       return value;
     }));
 
+    const logger = new LoggerPretty({ level: 'trace' });
+
     const { linkQueue } = await this.mediatorRdfResolveHypermediaLinksQueue.mediate({ ...action, context });
     return {
-      linkQueue: new LinkQueueLogger(linkQueue, queryWithoutMetadata),
+      linkQueue: new LinkQueueLogger(linkQueue, queryWithoutMetadata, logger),
     };
   }
 }

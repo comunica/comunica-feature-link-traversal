@@ -1,9 +1,8 @@
 import type { ILinkQueue, ILink } from '@comunica/bus-rdf-resolve-hypermedia-links-queue';
 import { LinkQueueWrapper } from '@comunica/bus-rdf-resolve-hypermedia-links-queue';
+import type { Logger } from '@comunica/types';
 import { PRODUCED_BY_ACTOR } from '@comunica/types-link-traversal';
 import type { Algebra } from 'sparqlalgebrajs';
-import { Logger } from '@comunica/types';
-
 
 /**
  * The type of event
@@ -55,8 +54,13 @@ export class LinkQueueLogger extends LinkQueueWrapper {
     super(linkQueue);
     this.logger = logger;
 
-    if (linkQueue.isEmpty()) {
-      this.logger.warn(LinkQueueLogger.LINK_QUEUE_EVENT_NAME, { message: LinkQueueLogger.LINK_QUEUE_DIDNT_STARTED_EMPTY_MESSAGE });
+    if (!linkQueue.isEmpty()) {
+      this.logger.warn(
+        LinkQueueLogger.LINK_QUEUE_EVENT_NAME,
+        {
+          message: LinkQueueLogger.LINK_QUEUE_DIDNT_STARTED_EMPTY_MESSAGE,
+        },
+      );
     }
     this.query = JSON.parse(JSON.stringify(query));
 
