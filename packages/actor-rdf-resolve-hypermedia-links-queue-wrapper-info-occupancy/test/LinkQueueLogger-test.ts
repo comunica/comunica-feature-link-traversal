@@ -1,66 +1,46 @@
 import { PRODUCED_BY_ACTOR } from '@comunica/types-link-traversal';
-import { LinkQueueLogger } from '../lib/LinkQueueLogger';
-
-jest.mock('node:fs');
+import { EventType, LinkQueueLogger } from '../lib/LinkQueueLogger';
+import { translate } from 'sparqlalgebrajs';
+import { url } from 'inspector';
 
 describe('LinkQueueFilterLinks', () => {
-  const filePath = '';
-  const query = 'foo';
+  const query = translate('SELECT * {?s ?p ?o}');
+  const logger: any = {
+    warn: jest.fn(),
+    trace: jest.fn()
+  };
+
   describe('constructor', () => {
+    beforeEach(() => {
+      jest.resetAllMocks();
+    });
+
     it('should construct', () => {
+
       const linkqueue: any = {
-        isEmpty: () => true,
-      };
+        isEmpty: () => {
+          return false;
+        }
+      }
 
-      const expectedHistory = {
-        iris_popped: [],
-        iris_pushed: [],
-        started_empty: true,
-        query,
-      };
-
-      const wrapper = new LinkQueueLogger(linkqueue, filePath, query);
-
-      expect(wrapper.filePath).toBe(filePath);
-      expect(wrapper.getHistory()).toStrictEqual(expectedHistory);
+      expect(new LinkQueueLogger(linkqueue, query, logger)).toBeDefined();
+      expect(logger.warn).not.toHaveBeenCalled();
     });
 
-    it('should construct with a link with filters', () => {
-      const filterMap = new Map([[ 'foo', 'bar' ]]);
+    it('should give a warning if the link queue started not empty', () => {
+
       const linkqueue: any = {
-        filterMap,
-        isEmpty: () => true,
-      };
-      const expectedHistory = {
-        iris_popped: [],
-        iris_pushed: [],
-        started_empty: true,
-        query,
-      };
+        isEmpty: () => {
+          return true;
+        }
+      }
 
-      const wrapper = new LinkQueueLogger(linkqueue, filePath, query);
-
-      expect(wrapper.filePath).toBe(filePath);
-      expect(wrapper.getHistory()).toStrictEqual(expectedHistory);
-    });
-
-    it('should construct with a non empty link with filters', () => {
-      const filterMap = new Map([[ 'foo', 'bar' ]]);
-      const linkqueue: any = {
-        filterMap,
-        isEmpty: () => false,
-      };
-      const expectedHistory = {
-        iris_popped: [],
-        iris_pushed: [],
-        started_empty: false,
-        query,
-      };
-
-      const wrapper = new LinkQueueLogger(linkqueue, filePath, query);
-
-      expect(wrapper.filePath).toBe(filePath);
-      expect(wrapper.getHistory()).toStrictEqual(expectedHistory);
+      expect(new LinkQueueLogger(linkqueue, query, logger)).toBeDefined();
+      expect(logger.warn).toHaveBeenCalledTimes(1);
+      expect(logger.warn)
+        .toHaveBeenCalledWith(LinkQueueLogger.LINK_QUEUE_EVENT_NAME, {
+          message: LinkQueueLogger.LINK_QUEUE_DIDNT_STARTED_EMPTY_MESSAGE
+        });
     });
   });
 
@@ -69,94 +49,203 @@ describe('LinkQueueFilterLinks', () => {
       jest.resetAllMocks();
     });
 
-    it('should push the history to a file if a new link is successfuly pushed', () => {
+    it('should log the event of a new link with reachability annotation pushed to the queue', () => {
+      const reachabilityCriteria = "reachability"
+
       const iri = {
         url: 'foo',
+        metadata: {
+          [PRODUCED_BY_ACTOR]: {
+            name: reachabilityCriteria
+          }
+        }
       };
       const linkQueue: any = {
-        push: (_link: any, _parent: any) => true,
+        push: jest.fn().mockReturnValueOnce(true),
         isEmpty: () => true,
-      };
-
-      const expectedHistory = {
-        iris_popped: [],
-        iris_pushed: [{ url: iri.url, reachability_criteria: null, timestamp: 1 }],
-        started_empty: true,
-        query,
       };
 
       jest.spyOn(Date, 'now').mockImplementation().mockReturnValueOnce(1);
 
-      const wrapper = new LinkQueueLogger(linkQueue, filePath, query);
+      const wrapper = new LinkQueueLogger(linkQueue, query, logger);
       const resp = wrapper.push(iri, iri);
 
       expect(resp).toBe(true);
-      expect(<jest.Mock>writeFileSync).toHaveBeenCalledTimes(1);
-      expect(wrapper.getHistory()).toStrictEqual(expectedHistory);
-      expect(<jest.Mock>writeFileSync).toHaveBeenCalledWith(filePath, JSON.stringify(expectedHistory));
+
+      expect(logger.trace).toHaveBeenCalledTimes(1);
+      const expectedEvent = {
+        type: EventType[EventType.Push],
+        link: {
+          url: 'foo',
+          reachability_criteria: reachabilityCriteria,
+          timestamp: 1,
+          parent: {
+            url: 'foo',
+            reachability_criteria: reachabilityCriteria,
+          }
+        },
+        query: JSON.parse(JSON.stringify(query))
+      }
+
+      expect(logger.trace).toHaveBeenCalledWith(LinkQueueLogger.LINK_QUEUE_EVENT_NAME, expectedEvent);
     });
 
-    it('should not push to the history to a file if a new link not successfuly pushed', () => {
+    it('should log the event of a new link without reachability annotation pushed to the queue', () => {
+      const reachabilityCriteria = '123';
       const iri = {
         url: 'foo',
+        metadata: {
+        }
       };
+
+      const parent = {
+        url: 'bar',
+        metadata: {
+          [PRODUCED_BY_ACTOR]: {
+            name: reachabilityCriteria
+          }
+        }
+      };
+
       const linkQueue: any = {
-        push: (_link: any, _parent: any) => false,
+        push: jest.fn().mockReturnValueOnce(true),
         isEmpty: () => true,
       };
 
-      const expectedHistory = {
-        iris_popped: [],
-        iris_pushed: [],
-        started_empty: true,
-        query,
+      jest.spyOn(Date, 'now').mockImplementation().mockReturnValueOnce(1);
+
+      const wrapper = new LinkQueueLogger(linkQueue, query, logger);
+      const resp = wrapper.push(iri, parent);
+
+      expect(resp).toBe(true);
+
+      expect(logger.trace).toHaveBeenCalledTimes(1);
+      const expectedEvent = {
+        type: EventType[EventType.Push],
+        link: {
+          url: 'foo',
+          timestamp: 1,
+          reachability_criteria: null,
+          parent: {
+            url: 'bar',
+            reachability_criteria: reachabilityCriteria,
+          }
+        },
+        query: JSON.parse(JSON.stringify(query))
       };
 
-      const wrapper = new LinkQueueLogger(linkQueue, filePath, query);
+      expect(logger.trace).toHaveBeenCalledWith(LinkQueueLogger.LINK_QUEUE_EVENT_NAME, expectedEvent);
+    });
+
+    it('should not push to the history to a file if a new link not successfuly pushed', () => {
+      const reachabilityCriteria = "reachability";
+
+      const iri = {
+        url: 'foo',
+        metadata: {
+          [PRODUCED_BY_ACTOR]: {
+            name: reachabilityCriteria
+          }
+        }
+      };
+      const linkQueue: any = {
+        push: jest.fn().mockReturnValueOnce(false),
+        isEmpty: () => true,
+      };
+
+      jest.spyOn(Date, 'now').mockImplementation().mockReturnValueOnce(1);
+
+      const wrapper = new LinkQueueLogger(linkQueue, query, logger);
       const resp = wrapper.push(iri, iri);
 
       expect(resp).toBe(false);
-      expect(<jest.Mock>writeFileSync).not.toHaveBeenCalled();
-      expect(wrapper.getHistory()).toStrictEqual(expectedHistory);
+
+      expect(logger.trace).not.toHaveBeenCalled();
     });
 
     it('should push the history adequatly with multiple push events', () => {
+      const reachabilityCriteria = "reachability";
+
       let i = 0;
       const n = 10;
       const linkQueue: any = {
         push: (_link: any, _parent: any) => i % 2 === 0,
-        isEmpty: () => false,
+        isEmpty: () => true,
       };
       jest.spyOn(Date, 'now').mockImplementation(() => i);
-      const wrapper = new LinkQueueLogger(linkQueue, filePath, query);
-      const iris_pushed: any[] = [];
+      const wrapper = new LinkQueueLogger(linkQueue, query, logger);
+
+      const eventHistory: any[] = [];
+
       for (; i < n; i++) {
-        let iri: any = {
-          url: String(i),
-        };
+        let iri: any = undefined;
+        let parent: any = undefined;
         if (i % 4 === 0 && i !== 0) {
-          iris_pushed.push({ url: String(i), reachability_criteria: 'abc', timestamp: i });
           iri = {
             url: String(i),
-            metadata: { [PRODUCED_BY_ACTOR]: { name: 'abc' }},
+            metadata: {
+              [PRODUCED_BY_ACTOR]: {
+                name: reachabilityCriteria
+              }
+            }
           };
+
+          parent = {
+            url: String(i - 1),
+            metadata: {
+              [PRODUCED_BY_ACTOR]: {
+                name: `${reachabilityCriteria}_${i}`
+              }
+            }
+          }
+          eventHistory.push({
+            type: EventType[EventType.Push],
+            link: {
+              url: String(i),
+              timestamp: i,
+              reachability_criteria: reachabilityCriteria,
+              parent: {
+                url: String(i - 1),
+                reachability_criteria: `${reachabilityCriteria}_${i}`,
+              }
+            },
+            query: JSON.parse(JSON.stringify(query))
+          });
+
         } else if (i % 2 === 0) {
-          iris_pushed.push({ url: String(i), reachability_criteria: null, timestamp: i });
+
+          iri = {
+            url: String(i),
+          };
+
+          parent = iri;
+
+          eventHistory.push({
+            type: EventType[EventType.Push],
+            link: {
+              url: String(i),
+              timestamp: i,
+              reachability_criteria: null,
+              parent: {
+                url: String(i),
+                reachability_criteria: null,
+              }
+            },
+            query: JSON.parse(JSON.stringify(query))
+          });
         }
-        const expectedHistory = {
-          iris_popped: [],
-          iris_pushed,
-          started_empty: false,
-          query,
-        };
 
-        const resp = wrapper.push(iri, iri);
 
+        const resp = wrapper.push(iri, parent);
         expect(resp).toBe(i % 2 === 0);
-        expect(<jest.Mock>writeFileSync).toHaveBeenCalledTimes(Math.floor(i / 2) + 1);
-        expect(wrapper.getHistory()).toStrictEqual(expectedHistory);
-        expect(<jest.Mock>writeFileSync).toHaveBeenCalledWith(filePath, JSON.stringify(expectedHistory));
       }
+
+      expect(logger.trace).toHaveBeenCalledTimes(Math.floor(n / 2));
+      for (let j = 1; j < Math.floor(n / 2); ++j) {
+        expect(logger.trace).toHaveBeenNthCalledWith(j, LinkQueueLogger.LINK_QUEUE_EVENT_NAME, eventHistory[j - 1]);
+
+      }
+
     });
   });
 
@@ -165,54 +254,79 @@ describe('LinkQueueFilterLinks', () => {
       jest.resetAllMocks();
     });
 
-    it('should push the history if a new link is pop', () => {
+    it('should log the event of a new link with reachability annotation popped from the queue', () => {
+      const reachabilityCriteria = "reachability"
+
       const iri = {
         url: 'foo',
+        metadata: {
+          [PRODUCED_BY_ACTOR]: {
+            name: reachabilityCriteria
+          }
+        }
       };
       const linkQueue: any = {
-        pop: (_link: any, _parent: any) => iri,
+        pop: jest.fn().mockReturnValueOnce(iri),
         isEmpty: () => true,
       };
 
-      const expectedHistory = {
-        iris_popped: [{ url: iri.url, reachability_criteria: null, timestamp: 1 }],
-        iris_pushed: [],
-        started_empty: true,
-        query,
-      };
       jest.spyOn(Date, 'now').mockImplementation().mockReturnValueOnce(1);
 
-      const wrapper = new LinkQueueLogger(linkQueue, filePath, query);
+      const wrapper = new LinkQueueLogger(linkQueue, query, logger);
       const resp = wrapper.pop();
 
-      expect(resp).toStrictEqual(iri);
-      expect(<jest.Mock>writeFileSync).toHaveBeenCalledTimes(1);
-      expect(wrapper.getHistory()).toStrictEqual(expectedHistory);
-      expect(<jest.Mock>writeFileSync).toHaveBeenCalledWith(filePath, JSON.stringify(expectedHistory));
+      expect(resp).toBe(iri);
+
+      expect(logger.trace).toHaveBeenCalledTimes(1);
+      const expectedEvent = {
+        type: EventType[EventType.Pop],
+        link: {
+          url: 'foo',
+          reachability_criteria: reachabilityCriteria,
+          timestamp: 1,
+        },
+        query: JSON.parse(JSON.stringify(query))
+      }
+
+      expect(logger.trace).toHaveBeenCalledWith(LinkQueueLogger.LINK_QUEUE_EVENT_NAME, expectedEvent);
     });
 
-    it('should not push the history to a file if pop return undefined', () => {
+
+    it('should log the event of a new link without reachability without annotation popped to the queue', () => {
+      const iri = {
+        url: 'foo',
+      };
+
+
       const linkQueue: any = {
-        pop() {},
-        isEmpty: () => false,
+        pop: jest.fn().mockReturnValueOnce(iri),
+        isEmpty: () => true,
       };
 
-      const expectedHistory = {
-        iris_popped: [],
-        iris_pushed: [],
-        started_empty: false,
-        query,
-      };
+      jest.spyOn(Date, 'now').mockImplementation().mockReturnValueOnce(1);
 
-      const wrapper = new LinkQueueLogger(linkQueue, filePath, query);
+      const wrapper = new LinkQueueLogger(linkQueue, query, logger);
       const resp = wrapper.pop();
 
-      expect(resp).toBeUndefined();
-      expect(<jest.Mock>writeFileSync).not.toHaveBeenCalled();
-      expect(wrapper.getHistory()).toStrictEqual(expectedHistory);
+      expect(resp).toBe(iri);
+
+      expect(logger.trace).toHaveBeenCalledTimes(1);
+      const expectedEvent = {
+        type: EventType[EventType.Pop],
+        link: {
+          url: 'foo',
+          timestamp: 1,
+          reachability_criteria: null
+        },
+        query: JSON.parse(JSON.stringify(query))
+      };
+
+      expect(logger.trace).toHaveBeenCalledWith(LinkQueueLogger.LINK_QUEUE_EVENT_NAME, expectedEvent);
     });
 
-    it('should push the history adequatly with multiple pop events', () => {
+    it('should log the events of multiple links popped out of the queue', () => {
+      const reachabilityCriteria = "reachability";
+
       let i = 0;
       const n = 10;
       const linkQueue: any = {
@@ -222,42 +336,71 @@ describe('LinkQueueFilterLinks', () => {
           if (i % 4 === 0 && i !== 0) {
             link = {
               url: String(i),
-              metadata: { [PRODUCED_BY_ACTOR]: { name: 'abc' }, timestamp: i },
+              metadata: {
+                [PRODUCED_BY_ACTOR]: {
+                  name: reachabilityCriteria
+                },
+              }
             };
           } else if (i % 2 === 0) {
-            link = { url: String(i), timestamp: i };
+            link = { url: String(i) };
           }
           return link;
         },
         isEmpty: () => false,
       };
+
       jest.spyOn(Date, 'now').mockImplementation(() => i);
-      const wrapper = new LinkQueueLogger(linkQueue, filePath, query);
-      const iris_popped: any[] = [];
+      const wrapper = new LinkQueueLogger(linkQueue, query, logger);
+      let expectedLink: any;
+      const eventHistory: any = [];
       for (; i < n; i++) {
         if (i % 4 === 0 && i !== 0) {
-          iris_popped.push({ url: String(i), reachability_criteria: 'abc', timestamp: i });
+          expectedLink = {
+            url: String(i),
+            metadata: {
+              [PRODUCED_BY_ACTOR]: {
+                name: reachabilityCriteria
+              },
+            }
+          };
+          const expectedLinkStatisticLink = {
+            type: EventType[EventType.Pop],
+            link: {
+              url: String(i),
+              timestamp: i,
+              reachability_criteria: reachabilityCriteria,
+            },
+            query: JSON.parse(JSON.stringify(query))
+          };
+          eventHistory.push(expectedLinkStatisticLink);
         } else if (i % 2 === 0) {
-          iris_popped.push({ url: String(i), reachability_criteria: null, timestamp: i });
+          expectedLink = { url: String(i) };
+          const expectedLinkStatisticLink = {
+            type: EventType[EventType.Pop],
+            link: {
+              url: String(i),
+              reachability_criteria: null,
+              timestamp: i,
+            },
+            query: JSON.parse(JSON.stringify(query))
+          };
+          eventHistory.push(expectedLinkStatisticLink);
+        } else {
+          expectedLink = undefined;
         }
-        const expectedHistory = {
-          iris_popped,
-          iris_pushed: [],
-          started_empty: false,
-          query,
-        };
-        let expectedLink: any;
         const resp = wrapper.pop();
-        if (i % 4 === 0 && i !== 0) {
-          expectedLink = { url: String(i), metadata: { [PRODUCED_BY_ACTOR]: { name: 'abc' }, timestamp: i }};
-        } else if (i % 2 === 0) {
-          expectedLink = { url: String(i), timestamp: i };
-        }
         expect(resp).toStrictEqual(expectedLink);
-        expect(<jest.Mock>writeFileSync).toHaveBeenCalledTimes(Math.floor(i / 2) + 1);
-        expect(wrapper.getHistory()).toStrictEqual(expectedHistory);
-        expect(<jest.Mock>writeFileSync).toHaveBeenCalledWith(filePath, JSON.stringify(expectedHistory));
       }
+
+
+
+      expect(logger.trace).toHaveBeenCalledTimes(Math.floor(n / 2));
+      for (let j = 1; j < Math.floor(n / 2); ++j) {
+        expect(logger.trace).toHaveBeenNthCalledWith(j, LinkQueueLogger.LINK_QUEUE_EVENT_NAME, eventHistory[j - 1]);
+
+      }
+
     });
   });
 });

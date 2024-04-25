@@ -1,8 +1,9 @@
 import type { ILinkQueue, ILink } from '@comunica/bus-rdf-resolve-hypermedia-links-queue';
 import { LinkQueueWrapper } from '@comunica/bus-rdf-resolve-hypermedia-links-queue';
-import { LoggerPretty } from '@comunica/logger-pretty';
 import { PRODUCED_BY_ACTOR } from '@comunica/types-link-traversal';
 import type { Algebra } from 'sparqlalgebrajs';
+import { Logger } from '@comunica/types';
+
 
 /**
  * The type of event
@@ -19,7 +20,7 @@ export enum EventType {
 interface ILinkQueueEvent {
   type: EventType;
   link: IURLStatistic;
-  query: Algebra.Operation | string;
+  query: Algebra.Operation;
 }
 /**
  * Optional parameters necessitating special processing
@@ -41,29 +42,31 @@ interface IURLStatistic {
  */
 export class LinkQueueLogger extends LinkQueueWrapper {
   public readonly query: Algebra.Operation;
-  private readonly logger: LoggerPretty;
-  public static readonly LOGGER_NAME = '<Link queue occupancy>';
+  private readonly logger: Logger;
+  public static readonly LINK_QUEUE_EVENT_NAME = '<Link queue occupancy>';
+  public static readonly LINK_QUEUE_DIDNT_STARTED_EMPTY_MESSAGE = 'the link queue didn\'t started empty';
 
   /**
    *
    * @param {ILinkQueue & IOptionalLinkQueueParameters} linkQueue - The link queue with optional public parameters
    * @param {Algebra.Operation} query - The current query
    */
-  public constructor(linkQueue: ILinkQueue & IOptionalLinkQueueParameters, query: Algebra.Operation) {
+  public constructor(linkQueue: ILinkQueue & IOptionalLinkQueueParameters, query: Algebra.Operation, logger: Logger) {
     super(linkQueue);
+    this.logger = logger;
 
+    if (linkQueue.isEmpty()) {
+      this.logger.warn(LinkQueueLogger.LINK_QUEUE_EVENT_NAME, { message: LinkQueueLogger.LINK_QUEUE_DIDNT_STARTED_EMPTY_MESSAGE });
+    }
     this.query = JSON.parse(JSON.stringify(query));
 
-    this.logger = new LoggerPretty({ level: 'trace' });
-
     Object.freeze(this.query);
-    Object.freeze(this.logger);
   }
 
   private static getReachability(link: ILink): string | null {
     const metadata = link.metadata;
     if (metadata !== undefined) {
-      return metadata[PRODUCED_BY_ACTOR].name;
+      return metadata[PRODUCED_BY_ACTOR]?.name ?? null;
     }
     return null;
   }
@@ -73,7 +76,7 @@ export class LinkQueueLogger extends LinkQueueWrapper {
     if (resp) {
       const parentStatisticLink: IURLStatistic = {
         url: parent.url,
-        reachability_criteria: LinkQueueLogger.getReachability(link),
+        reachability_criteria: LinkQueueLogger.getReachability(parent),
       };
       const statisticLink: IURLStatistic = {
         url: link.url,
@@ -114,8 +117,8 @@ export class LinkQueueLogger extends LinkQueueWrapper {
   /**
    * Materialize the history to a file
    */
-  public materialize(event: ILinkQueueEvent): void {
+  private materialize(event: ILinkQueueEvent): void {
     const jsonEvent = { ...event, type: EventType[event.type] };
-    this.logger.trace(LinkQueueLogger.LOGGER_NAME, jsonEvent);
+    this.logger.trace(LinkQueueLogger.LINK_QUEUE_EVENT_NAME, jsonEvent);
   }
 }
