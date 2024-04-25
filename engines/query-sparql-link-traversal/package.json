@@ -44,7 +44,7 @@
     "lib/**/*.js.map"
   ],
   "scripts": {
-    "build": "npm run build:ts",
+    "build": "yarn run build:ts",
     "build:ts": "node \"../../node_modules/typescript/bin/tsc\"",
     "prepare": "comunica-compile-config config/config-default.json > engine-default.js"
   },
