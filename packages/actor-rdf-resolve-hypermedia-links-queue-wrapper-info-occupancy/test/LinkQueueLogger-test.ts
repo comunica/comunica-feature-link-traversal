@@ -84,7 +84,8 @@ describe('LinkQueueFilterLinks', () => {
         query: JSON.parse(JSON.stringify(query)),
       };
 
-      expect(logger.trace).toHaveBeenCalledWith(LinkQueueLogger.LINK_QUEUE_EVENT_NAME, expectedEvent);
+      expect(logger.trace.mock.calls[0][0]).toBe(LinkQueueLogger.LINK_QUEUE_EVENT_NAME);
+      expect(JSON.parse(logger.trace.mock.calls[0][1].data)).toStrictEqual(expectedEvent);
     });
 
     it('should log the event of a new link without reachability annotation pushed to the queue', () => {
@@ -130,7 +131,8 @@ describe('LinkQueueFilterLinks', () => {
         query: JSON.parse(JSON.stringify(query)),
       };
 
-      expect(logger.trace).toHaveBeenCalledWith(LinkQueueLogger.LINK_QUEUE_EVENT_NAME, expectedEvent);
+      expect(logger.trace.mock.calls[0][0]).toBe(LinkQueueLogger.LINK_QUEUE_EVENT_NAME);
+      expect(JSON.parse(logger.trace.mock.calls[0][1].data)).toStrictEqual(expectedEvent);
     });
 
     it('should not push to the history to a file if a new link not successfuly pushed', () => {
@@ -235,7 +237,8 @@ describe('LinkQueueFilterLinks', () => {
 
       expect(logger.trace).toHaveBeenCalledTimes(Math.floor(n / 2));
       for (let j = 1; j < Math.floor(n / 2); ++j) {
-        expect(logger.trace).toHaveBeenNthCalledWith(j, LinkQueueLogger.LINK_QUEUE_EVENT_NAME, eventHistory[j - 1]);
+        expect(logger.trace.mock.calls[j - 1][0]).toBe(LinkQueueLogger.LINK_QUEUE_EVENT_NAME);
+        expect(JSON.parse(logger.trace.mock.calls[j - 1][1].data)).toStrictEqual(eventHistory[j - 1]);
       }
     });
   });
@@ -279,7 +282,22 @@ describe('LinkQueueFilterLinks', () => {
         query: JSON.parse(JSON.stringify(query)),
       };
 
-      expect(logger.trace).toHaveBeenCalledWith(LinkQueueLogger.LINK_QUEUE_EVENT_NAME, expectedEvent);
+      expect(logger.trace.mock.calls[0][0]).toBe(LinkQueueLogger.LINK_QUEUE_EVENT_NAME);
+      expect(JSON.parse(logger.trace.mock.calls[0][1].data)).toStrictEqual(expectedEvent);
+    });
+
+    it('should not log the event if no link are popped', () => {
+      const linkQueue: any = {
+        pop: jest.fn(),
+        isEmpty: () => true,
+      };
+
+      jest.spyOn(Date, 'now').mockImplementation().mockReturnValueOnce(1);
+
+      const wrapper = new LinkQueueLogger(linkQueue, query, logger);
+      wrapper.pop();
+
+      expect(logger.trace).not.toHaveBeenCalled();
     });
 
     it('should log the event of a new link without reachability without annotation popped to the queue', () => {
@@ -310,7 +328,8 @@ describe('LinkQueueFilterLinks', () => {
         query: JSON.parse(JSON.stringify(query)),
       };
 
-      expect(logger.trace).toHaveBeenCalledWith(LinkQueueLogger.LINK_QUEUE_EVENT_NAME, expectedEvent);
+      expect(logger.trace.mock.calls[0][0]).toBe(LinkQueueLogger.LINK_QUEUE_EVENT_NAME);
+      expect(JSON.parse(logger.trace.mock.calls[0][1].data)).toStrictEqual(expectedEvent);
     });
 
     it('should log the events of multiple links popped out of the queue', () => {
@@ -384,7 +403,8 @@ describe('LinkQueueFilterLinks', () => {
 
       expect(logger.trace).toHaveBeenCalledTimes(Math.floor(n / 2));
       for (let j = 1; j < Math.floor(n / 2); ++j) {
-        expect(logger.trace).toHaveBeenNthCalledWith(j, LinkQueueLogger.LINK_QUEUE_EVENT_NAME, eventHistory[j - 1]);
+        expect(logger.trace.mock.calls[j - 1][0]).toBe(LinkQueueLogger.LINK_QUEUE_EVENT_NAME);
+        expect(JSON.parse(logger.trace.mock.calls[j - 1][1].data)).toStrictEqual(eventHistory[j - 1]);
       }
     });
   });

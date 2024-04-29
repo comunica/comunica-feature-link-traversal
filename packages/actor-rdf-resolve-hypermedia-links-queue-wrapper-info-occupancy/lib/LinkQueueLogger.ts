@@ -10,7 +10,6 @@ import type { Algebra } from 'sparqlalgebrajs';
 export enum EventType {
   Push,
   Pop,
-  Init,
 }
 
 /**
@@ -123,6 +122,6 @@ export class LinkQueueLogger extends LinkQueueWrapper {
    */
   private materialize(event: ILinkQueueEvent): void {
     const jsonEvent = { ...event, type: EventType[event.type] };
-    this.logger.trace(LinkQueueLogger.LINK_QUEUE_EVENT_NAME, jsonEvent);
+    this.logger.trace(LinkQueueLogger.LINK_QUEUE_EVENT_NAME, { data: JSON.stringify(jsonEvent) });
   }
 }
