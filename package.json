@@ -1,5 +1,6 @@
 {
   "private": true,
+  "packageManager": "yarn@1.22.22",
   "repository": "https://github.com/comunica/comunica-feature-link-traversal/",
   "workspaces": [
     "engines/*",
@@ -10,21 +11,22 @@
     "build-changed": "lerna run build --since HEAD",
     "test:unit": "jest packages/",
     "test:system": "jest engines/ --coverage=false",
-    "test": "npm run test:unit && npm run test:system -i packages/",
+    "test": "yarn run test:unit && yarn run test:system -i packages/",
     "test-ci:unit": "jest packages/ --ci --maxWorkers=4 --coverage",
     "test-ci:system": "jest engines/ --ci --maxWorkers=4 --coverage=false",
-    "test-ci": "npm run test-ci:unit && npm run test-ci:system",
+    "test-ci": "yarn run test-ci:unit && yarn run test-ci:system",
     "test-browser": "karma start karma.config.js --single-run || true",
     "lint": "eslint . --cache",
     "lint-fix": "eslint . --fix",
     "clean": "tsc --build --clean && rm -rf ./node_modules && rm -rf ./packages/*/node_modules",
     "clean:ts": "tsc --build --clean",
-    "build": "npm run build:ts && npm run build:components",
+    "build": "yarn run build:ts && yarn run build:components",
     "build:ts": "tsc",
     "build:components": "componentsjs-generator engines/* packages/*",
     "build-watch": "nodemon -e ts --ignore '*.d.ts' --exec yarn run build",
     "build-watch:ts": "tsc --watch",
     "build-watch:components": "nodemon -e d.ts --exec yarn run build:components",
+    "prepare": "husky",
     "publish": "yarn run build",
     "publish-release": "lerna publish",
     "publish-bare": "lerna exec -- npm publish --silent",
@@ -36,7 +38,7 @@
   "devDependencies": {
     "@babel/core": "^7.22.20",
     "@babel/preset-env": "^7.22.20",
-    "@comunica/jest": "^3.0.1",
+    "@comunica/jest": "^3.1.0",
     "@pollyjs/adapter-node-http": "^6.0.6",
     "@pollyjs/core": "^6.0.6",
     "@pollyjs/persister-fs": "^6.0.6",
@@ -51,6 +53,7 @@
     "componentsjs-generator": "^4.0.1",
     "cross-fetch": "^4.0.0",
     "eslint": "^8.57.0",
+    "husky": "^9.0.0",
     "immutable": "^4.0.0",
     "jest": "^29.7.0",
     "jest-rdf": "^1.8.0",
@@ -64,7 +67,6 @@
     "lerna": "^8.1.2",
     "manual-git-changelog": "^1.0.2",
     "node-polyfill-webpack-plugin": "^3.0.0",
-    "pre-commit": "^1.2.2",
     "raw-loader": "^4.0.2",
     "rdf-data-factory": "^1.1.2",
     "rdf-quad": "^1.5.0",
@@ -79,10 +81,5 @@
     "typescript": "^5.3.3",
     "webpack": "^5.88.2",
     "webpack-cli": "^5.1.4"
-  },
-  "pre-commit": [
-    "build",
-    "lint",
-    "test:unit"
-  ]
+  }
 }

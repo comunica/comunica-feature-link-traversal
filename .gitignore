@@ -1,4 +1,5 @@
 node_modules
+.husky/_
 .rdf-test-suite-cache
 .idea
 .vscode
@@ -24,4 +25,3 @@ web-clients/builds
 componentsjs-error-state.json
 engines/*/components
 packages/*/components
-

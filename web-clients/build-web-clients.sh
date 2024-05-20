@@ -9,7 +9,7 @@ mkdir -p $cwd/web-clients/builds
 
 # Install web-clients package
 pushd $cwd/web-clients
-npm install
+yarn install
 popd
 
 pushd engines/query-sparql-link-traversal >/dev/null
@@ -27,7 +27,7 @@ for config in ../config-query-sparql-link-traversal/config/*.json; do
 
   # Build web client
   echo -e "\033[1m\033[34mBuilding config $id\033[0m"
-  npm run --prefix $cwd/web-clients generate -- $cwdengine/$config \
+  yarn --cwd $cwd/web-clients run generate $cwdengine/$config \
     -d $cwd/web-clients/builds/$id \
     -s $cwd/web-clients/settings.custom.json \
     -q $cwd/web-clients/queries \

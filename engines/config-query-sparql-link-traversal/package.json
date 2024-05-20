@@ -1,6 +1,6 @@
 {
   "name": "@comunica/config-query-sparql-link-traversal",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "default configuration files for Comunica SPARQL Link Traversal",
   "lsd:module": true,
   "license": "MIT",
@@ -36,12 +36,12 @@
     "lib/**/*.js.map"
   ],
   "scripts": {
-    "build": "npm run build:ts && npm run build:components",
+    "build": "yarn run build:ts && yarn run build:components",
     "build:ts": "node \"../../node_modules/typescript/bin/tsc\"",
     "build:components": "componentsjs-generator"
   },
   "dependencies": {
-    "@comunica/config-query-sparql": "^3.0.1",
-    "@comunica/config-query-sparql-solid": "^3.0.1"
+    "@comunica/config-query-sparql": "^3.1.0",
+    "@comunica/config-query-sparql-solid": "^3.1.0"
   }
 }
