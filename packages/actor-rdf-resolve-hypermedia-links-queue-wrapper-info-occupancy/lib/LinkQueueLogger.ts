@@ -57,7 +57,7 @@ export class LinkQueueLogger extends LinkQueueWrapper {
       this.logger.warn(
         LinkQueueLogger.LINK_QUEUE_EVENT_NAME,
         {
-          message: LinkQueueLogger.LINK_QUEUE_DIDNT_STARTED_EMPTY_MESSAGE,
+          message: LinkQueueLogger.LINK_QUEUE_DIDNT_START_EMPTY_MESSAGE,
         },
       );
     }
