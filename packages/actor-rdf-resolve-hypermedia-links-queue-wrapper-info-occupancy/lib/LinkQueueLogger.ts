@@ -118,7 +118,7 @@ export class LinkQueueLogger extends LinkQueueWrapper {
   }
 
   /**
-   * Materialize the history to a file
+   * Materialize the current event
    */
   private materialize(event: ILinkQueueEvent): void {
     const jsonEvent = { ...event, type: EventType[event.type] };
