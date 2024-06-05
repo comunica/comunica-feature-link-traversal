@@ -31,8 +31,7 @@ After installing, this package can be added to your engine's configuration as fo
     ...
     {
       "@id": "urn:comunica:default:rdf-resolve-hypermedia-links-queue/actors#wrapper-info-occupancy",
-      "@type": "ActorRdfResolveHypermediaLinksQueueWrapperInfoOccupancy",
-      "filePath" : "./info.json"
+      "@type": "ActorRdfResolveHypermediaLinksQueueWrapperInfoOccupancy"
     }
   ]
 }
