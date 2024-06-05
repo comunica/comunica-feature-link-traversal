@@ -4,7 +4,6 @@ import { LoggerPretty } from '@comunica/logger-pretty';
 import {
   ActorRdfResolveHypermediaLinksQueueWrapperInfoOccupancy,
   KEY_CONTEXT_WRAPPED,
-  KEY_QUERY_IDENTIFIER,
 } from '../lib/ActorRdfResolveHypermediaLinksQueueWrapperInfoOccupancy';
 import { LinkQueueLogger } from '../lib/LinkQueueLogger';
 
@@ -82,9 +81,6 @@ describe('ActorRdfResolveHypermediaLinksQueueRdfResolveHypermediaLinkQueueWrappe
         const query = { q: true, metadata: { abc: 'dfg' }};
 
         jest.spyOn(action.context, 'get').mockImplementation((key: any) => {
-          if (key.name === KEY_QUERY_IDENTIFIER.name) {
-            return undefined;
-          }
           if (key.name === KeysInitQuery.query.name) {
             return query;
           }
@@ -120,9 +116,6 @@ describe('ActorRdfResolveHypermediaLinksQueueRdfResolveHypermediaLinkQueueWrappe
         const query = { q: true };
 
         jest.spyOn(action.context, 'get').mockImplementation((key: any) => {
-          if (key.name === KEY_QUERY_IDENTIFIER.name) {
-            return undefined;
-          }
           if (key.name === KeysInitQuery.query.name) {
             return query;
           }

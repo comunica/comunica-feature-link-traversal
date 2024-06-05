@@ -66,10 +66,3 @@ export interface IActorRdfResolveHypermediaLinksQueueWrapperInfoOccupancyArgs
 export const KEY_CONTEXT_WRAPPED = new ActionContextKey<boolean>(
   '@comunica/actor-rdf-resolve-hypermedia-links-queue-wrapper-info-occupance:wrapped',
 );
-
-/**
- * An identifier for the link info file
- */
-export const KEY_QUERY_IDENTIFIER = new ActionContextKey<string>(
-  '@comunica/actor-rdf-resolve-hypermedia-links-queue-wrapper-info-occupance:query-identifier',
-);
