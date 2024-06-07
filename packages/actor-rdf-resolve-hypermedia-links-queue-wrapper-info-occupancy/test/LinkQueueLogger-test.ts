@@ -57,9 +57,11 @@ describe('LinkQueueFilterLinks', () => {
           },
         },
       };
+      const queueSize = 23;
       const linkQueue: any = {
         push: jest.fn().mockReturnValueOnce(true),
         isEmpty: () => true,
+        getSize: () => queueSize,
       };
 
       jest.spyOn(Date, 'now').mockImplementation().mockReturnValueOnce(1);
@@ -82,6 +84,13 @@ describe('LinkQueueFilterLinks', () => {
           },
         },
         query: JSON.parse(JSON.stringify(query)),
+        queueStatistics: {
+          size: queueSize,
+          reachabilityRatio: {
+            pushEvent: { [reachabilityCriteria]: 1 },
+            popEvent: {},
+          },
+        },
       };
 
       expect(logger.trace.mock.calls[0][0]).toBe(LinkQueueLogger.LINK_QUEUE_EVENT_NAME);
@@ -104,9 +113,11 @@ describe('LinkQueueFilterLinks', () => {
         },
       };
 
+      const queueSize = 2;
       const linkQueue: any = {
         push: jest.fn().mockReturnValueOnce(true),
         isEmpty: () => true,
+        getSize: () => queueSize,
       };
 
       jest.spyOn(Date, 'now').mockImplementation().mockReturnValueOnce(1);
@@ -129,6 +140,13 @@ describe('LinkQueueFilterLinks', () => {
           },
         },
         query: JSON.parse(JSON.stringify(query)),
+        queueStatistics: {
+          size: queueSize,
+          reachabilityRatio: {
+            pushEvent: { unknown: 1 },
+            popEvent: {},
+          },
+        },
       };
 
       expect(logger.trace.mock.calls[0][0]).toBe(LinkQueueLogger.LINK_QUEUE_EVENT_NAME);
@@ -169,11 +187,17 @@ describe('LinkQueueFilterLinks', () => {
       const linkQueue: any = {
         push: (_link: any, _parent: any) => i % 2 === 0,
         isEmpty: () => true,
+        getSize: () => i,
       };
       jest.spyOn(Date, 'now').mockImplementation(() => i);
       const wrapper = new LinkQueueLogger(linkQueue, query, logger);
 
       const eventHistory: any[] = [];
+      const reachabilityRatio = {
+        pushEvent: {},
+        popEvent: {},
+      };
+      reachabilityRatio.pushEvent.unknown = 0;
 
       for (; i < n; i++) {
         let iri: any;
@@ -196,6 +220,7 @@ describe('LinkQueueFilterLinks', () => {
               },
             },
           };
+          reachabilityRatio.pushEvent[reachabilityCriteria] = 1;
           eventHistory.push({
             type: EventType[EventType.Push],
             link: {
@@ -208,6 +233,10 @@ describe('LinkQueueFilterLinks', () => {
               },
             },
             query: JSON.parse(JSON.stringify(query)),
+            queueStatistics: {
+              size: i,
+              reachabilityRatio: JSON.parse(JSON.stringify(reachabilityRatio)),
+            },
           });
         } else if (i % 2 === 0) {
           iri = {
@@ -215,7 +244,7 @@ describe('LinkQueueFilterLinks', () => {
           };
 
           parent = iri;
-
+          reachabilityRatio.pushEvent.unknown += 1;
           eventHistory.push({
             type: EventType[EventType.Push],
             link: {
@@ -228,6 +257,10 @@ describe('LinkQueueFilterLinks', () => {
               },
             },
             query: JSON.parse(JSON.stringify(query)),
+            queueStatistics: {
+              size: i,
+              reachabilityRatio: JSON.parse(JSON.stringify(reachabilityRatio)),
+            },
           });
         }
 
@@ -259,9 +292,11 @@ describe('LinkQueueFilterLinks', () => {
           },
         },
       };
+      const queueSize = 23;
       const linkQueue: any = {
         pop: jest.fn().mockReturnValueOnce(iri),
         isEmpty: () => true,
+        getSize: () => queueSize,
       };
 
       jest.spyOn(Date, 'now').mockImplementation().mockReturnValueOnce(1);
@@ -280,6 +315,13 @@ describe('LinkQueueFilterLinks', () => {
           timestamp: 1,
         },
         query: JSON.parse(JSON.stringify(query)),
+        queueStatistics: {
+          size: queueSize,
+          reachabilityRatio: {
+            pushEvent: {},
+            popEvent: { [reachabilityCriteria]: 1 },
+          },
+        },
       };
 
       expect(logger.trace.mock.calls[0][0]).toBe(LinkQueueLogger.LINK_QUEUE_EVENT_NAME);
@@ -305,9 +347,11 @@ describe('LinkQueueFilterLinks', () => {
         url: 'foo',
       };
 
+      const queueSize = 23;
       const linkQueue: any = {
         pop: jest.fn().mockReturnValueOnce(iri),
         isEmpty: () => true,
+        getSize: () => queueSize,
       };
 
       jest.spyOn(Date, 'now').mockImplementation().mockReturnValueOnce(1);
@@ -326,6 +370,13 @@ describe('LinkQueueFilterLinks', () => {
           reachability_criteria: null,
         },
         query: JSON.parse(JSON.stringify(query)),
+        queueStatistics: {
+          size: queueSize,
+          reachabilityRatio: {
+            pushEvent: {},
+            popEvent: { unknown: 1 },
+          },
+        },
       };
 
       expect(logger.trace.mock.calls[0][0]).toBe(LinkQueueLogger.LINK_QUEUE_EVENT_NAME);
@@ -356,12 +407,18 @@ describe('LinkQueueFilterLinks', () => {
           return link;
         },
         isEmpty: () => false,
+        getSize: () => i,
       };
 
       jest.spyOn(Date, 'now').mockImplementation(() => i);
       const wrapper = new LinkQueueLogger(linkQueue, query, logger);
       let expectedLink: any;
       const eventHistory: any = [];
+      const reachabilityRatio = {
+        pushEvent: {},
+        popEvent: {},
+      };
+      reachabilityRatio.popEvent.unknown = 0;
       for (; i < n; i++) {
         if (i % 4 === 0 && i !== 0) {
           expectedLink = {
@@ -372,6 +429,7 @@ describe('LinkQueueFilterLinks', () => {
               },
             },
           };
+          reachabilityRatio.popEvent[reachabilityCriteria] = 1;
           const expectedLinkStatisticLink = {
             type: EventType[EventType.Pop],
             link: {
@@ -380,10 +438,15 @@ describe('LinkQueueFilterLinks', () => {
               reachability_criteria: reachabilityCriteria,
             },
             query: JSON.parse(JSON.stringify(query)),
+            queueStatistics: {
+              size: i,
+              reachabilityRatio: JSON.parse(JSON.stringify(reachabilityRatio)),
+            },
           };
           eventHistory.push(expectedLinkStatisticLink);
         } else if (i % 2 === 0) {
           expectedLink = { url: String(i) };
+          reachabilityRatio.popEvent.unknown += 1;
           const expectedLinkStatisticLink = {
             type: EventType[EventType.Pop],
             link: {
@@ -392,6 +455,10 @@ describe('LinkQueueFilterLinks', () => {
               timestamp: i,
             },
             query: JSON.parse(JSON.stringify(query)),
+            queueStatistics: {
+              size: i,
+              reachabilityRatio: JSON.parse(JSON.stringify(reachabilityRatio)),
+            },
           };
           eventHistory.push(expectedLinkStatisticLink);
         } else {

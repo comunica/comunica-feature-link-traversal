@@ -19,6 +19,21 @@ interface ILinkQueueEvent {
   type: EventType;
   link: IURLStatistic;
   query: Algebra.Operation;
+  queueStatistics: IQueueStatistics;
+}
+/**
+ * Statistic of the link queue
+ */
+interface IQueueStatistics {
+  size: number;
+  reachabilityRatio: IReachabilityRatio;
+}
+/**
+ * Ratio of the reachability criteria of the link in the queue
+ */
+interface IReachabilityRatio {
+  pushEvent: Record<string, number>;
+  popEvent: Record<string, number>;
 }
 /**
  * Optional parameters necessitating special processing
@@ -41,6 +56,11 @@ interface IURLStatistic {
 export class LinkQueueLogger extends LinkQueueWrapper {
   public readonly query: Algebra.Operation;
   private readonly logger: Logger;
+  private readonly reachabilityRatio: IReachabilityRatio = {
+    pushEvent: {},
+    popEvent: {},
+  };
+
   public static readonly LINK_QUEUE_EVENT_NAME = '<Link queue occupancy>';
   public static readonly LINK_QUEUE_DIDNT_START_EMPTY_MESSAGE = 'the link queue didn\'t started empty';
 
@@ -74,6 +94,20 @@ export class LinkQueueLogger extends LinkQueueWrapper {
     return null;
   }
 
+  private appendReachabilityStatistic(statisticLink: IURLStatistic, event: keyof IReachabilityRatio): void {
+    if (statisticLink.reachability_criteria !== null &&
+      this.reachabilityRatio[event][statisticLink.reachability_criteria] !== undefined) {
+      this.reachabilityRatio[event][statisticLink.reachability_criteria] += 1;
+    } else if (statisticLink.reachability_criteria !== null &&
+      this.reachabilityRatio[event][statisticLink.reachability_criteria] === undefined) {
+      this.reachabilityRatio[event][statisticLink.reachability_criteria] = 1;
+    } else if (this.reachabilityRatio[event].unknown === undefined) {
+      this.reachabilityRatio[event].unknown = 1;
+    } else {
+      this.reachabilityRatio[event].unknown += 1;
+    }
+  }
+
   public override push(link: ILink, parent: ILink): boolean {
     const resp: boolean = super.push(link, parent);
     if (resp) {
@@ -87,10 +121,15 @@ export class LinkQueueLogger extends LinkQueueWrapper {
         timestamp: Date.now(),
         parent: parentStatisticLink,
       };
+      this.appendReachabilityStatistic(statisticLink, 'pushEvent');
       const event: ILinkQueueEvent = {
         type: EventType.Push,
         link: statisticLink,
         query: this.query,
+        queueStatistics: {
+          size: this.getSize(),
+          reachabilityRatio: this.reachabilityRatio,
+        },
       };
 
       this.materialize(event);
@@ -106,10 +145,15 @@ export class LinkQueueLogger extends LinkQueueWrapper {
         reachability_criteria: LinkQueueLogger.getReachability(link),
         timestamp: Date.now(),
       };
+      this.appendReachabilityStatistic(statisticLink, 'popEvent');
       const event: ILinkQueueEvent = {
         type: EventType.Pop,
         link: statisticLink,
         query: this.query,
+        queueStatistics: {
+          size: this.getSize(),
+          reachabilityRatio: this.reachabilityRatio,
+        },
       };
 
       this.materialize(event);
