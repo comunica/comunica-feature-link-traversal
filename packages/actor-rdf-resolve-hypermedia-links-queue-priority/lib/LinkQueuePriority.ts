@@ -81,12 +81,8 @@ export class LinkQueuePriority implements ILinkQueue {
   public setPriority(nodeUrl: string, newValue: number): boolean {
     const link = this.urlToLink[nodeUrl];
     if (link) {
-      const change = newValue - link.metadata!.priority;
-
-      if (change === 0) {
-        return false;
-      }
-      return this.modifyPriority(nodeUrl, change);
+      const delta = newValue - link.metadata!.priority;
+      return this.modifyPriority(nodeUrl, delta);
     }
     return false;
   }
