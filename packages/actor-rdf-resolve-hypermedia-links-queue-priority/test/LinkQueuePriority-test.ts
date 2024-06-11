@@ -212,14 +212,14 @@ describe('LinkQueuePriority', () => {
       queue.push({ url: 'a', metadata: { priority: 0 }});
       queue.push({ url: 'b', metadata: { priority: 3 }});
       queue.push({ url: 'c', metadata: { priority: 5 }});
-      expect(() => queue.increasePriority(0, -1)).toThrow(`Can only increase priority of links by non-zero postive number`);
+      expect(() => queue.increasePriority('c', -1)).toThrow(`Can only increase priority of links by non-zero postive number`);
     });
 
     it('error on invalid index', () => {
       queue.push({ url: 'a', metadata: { priority: 0 }});
       queue.push({ url: 'b', metadata: { priority: 3 }});
       queue.push({ url: 'c', metadata: { priority: 5 }});
-      expect(() => queue.increasePriority(4, 3)).toThrow(`Access invalid ILinkPriority in heap: undefined, undefined`);
+      expect(queue.increasePriority('f', 3)).toBeFalsy();
     });
 
     it('increases priority link', () => {
@@ -229,7 +229,7 @@ describe('LinkQueuePriority', () => {
       queue.push({ url: 'd', metadata: { priority: 4 }});
       queue.push({ url: 'e', metadata: { priority: 2 }});
       queue.push({ url: 'f', metadata: { priority: 7 }});
-      queue.increasePriority(2, 5);
+      queue.increasePriority('c', 5);
       expect(queue.links[0]).toEqual({ url: 'c', metadata: { priority: 10, index: 0 }});
     });
     it('maintains max-heap property', () => {
@@ -240,7 +240,7 @@ describe('LinkQueuePriority', () => {
       queue.push({ url: 'e', metadata: { priority: 2 }});
       queue.push({ url: 'f', metadata: { priority: 7 }});
 
-      queue.increasePriority(queue.getSize() - 1, 3);
+      queue.increasePriority('b', 3);
       expect(queue.links).toEqual([
         { url: 'f', metadata: { priority: 7, index: 0 }},
         { url: 'd', metadata: { priority: 4, index: 1 }},
@@ -249,7 +249,7 @@ describe('LinkQueuePriority', () => {
         { url: 'e', metadata: { priority: 2, index: 4 }},
         { url: 'c', metadata: { priority: 5, index: 5 }},
       ]);
-      queue.increasePriority(3, 10);
+      queue.increasePriority('a', 10);
       expect(queue.links).toEqual([
         { url: 'a', metadata: { priority: 10, index: 0 }},
         { url: 'f', metadata: { priority: 7, index: 1 }},
@@ -266,14 +266,14 @@ describe('LinkQueuePriority', () => {
       queue.push({ url: 'a', metadata: { priority: 0 }});
       queue.push({ url: 'b', metadata: { priority: 3 }});
       queue.push({ url: 'c', metadata: { priority: 5 }});
-      expect(() => queue.decreasePriority(0, -1)).toThrow(`Can only decrease priority of links by non-zero postive number`);
+      expect(() => queue.decreasePriority('a', -1)).toThrow(`Can only decrease priority of links by non-zero postive number`);
     });
 
     it('error on invalid index', () => {
       queue.push({ url: 'a', metadata: { priority: 0 }});
       queue.push({ url: 'b', metadata: { priority: 3 }});
       queue.push({ url: 'c', metadata: { priority: 5 }});
-      expect(() => queue.decreasePriority(4, 3)).toThrow(`Access invalid ILinkPriority in heap: undefined, undefined`);
+      expect(queue.decreasePriority('d', 3)).toBeFalsy();
     });
 
     it('decreases priority link', () => {
@@ -283,7 +283,7 @@ describe('LinkQueuePriority', () => {
       queue.push({ url: 'd', metadata: { priority: 4 }});
       queue.push({ url: 'e', metadata: { priority: 2 }});
       queue.push({ url: 'f', metadata: { priority: 7 }});
-      queue.decreasePriority(2, 5);
+      queue.decreasePriority('c', 5);
       expect(queue.links[queue.getSize() - 1])
         .toEqual({ url: 'c', metadata: { priority: 0, index: queue.getSize() - 1 }});
     });
@@ -296,7 +296,7 @@ describe('LinkQueuePriority', () => {
       queue.push({ url: 'e', metadata: { priority: 2 }});
       queue.push({ url: 'f', metadata: { priority: 7 }});
 
-      queue.decreasePriority(queue.getSize() - 1, 1);
+      queue.decreasePriority('b', 1);
       expect(queue.links).toEqual([
         { url: 'f', metadata: { priority: 7, index: 0 }},
         { url: 'd', metadata: { priority: 4, index: 1 }},
@@ -305,7 +305,7 @@ describe('LinkQueuePriority', () => {
         { url: 'e', metadata: { priority: 2, index: 4 }},
         { url: 'b', metadata: { priority: 2, index: 5 }},
       ]);
-      queue.decreasePriority(1, 3);
+      queue.decreasePriority('d', 3);
       expect(queue.links).toEqual([
         { url: 'f', metadata: { priority: 7, index: 0 }},
         { url: 'e', metadata: { priority: 2, index: 1 }},
