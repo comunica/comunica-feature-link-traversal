@@ -47,6 +47,7 @@ interface IOptionalLinkQueueParameters {
 interface IURLStatistic {
   url: string;
   reachability_criteria: string | null;
+  reachability_criteria_dynamic_info?: object;
   timestamp?: number;
   parent?: IURLStatistic;
 }
@@ -86,10 +87,18 @@ export class LinkQueueLogger extends LinkQueueWrapper {
     Object.freeze(this.query);
   }
 
-  private static getReachability(link: ILink): string | null {
+  private static getReachability(link: ILink): [string, object | undefined] | null {
     const metadata = link.metadata;
-    if (metadata !== undefined) {
-      return metadata[PRODUCED_BY_ACTOR]?.name ?? null;
+    if (metadata !== undefined && metadata[PRODUCED_BY_ACTOR] !== undefined) {
+      const { name, ...rest } = metadata[PRODUCED_BY_ACTOR];
+
+      if (name === undefined) {
+        return null;
+      }
+      return [
+        name,
+        Object.keys(rest).length === 0 ? undefined : rest,
+      ];
     }
     return null;
   }
@@ -111,13 +120,24 @@ export class LinkQueueLogger extends LinkQueueWrapper {
   public override push(link: ILink, parent: ILink): boolean {
     const resp: boolean = super.push(link, parent);
     if (resp) {
+      const reachabilityCriteriaParentLink = LinkQueueLogger.getReachability(parent);
+
       const parentStatisticLink: IURLStatistic = {
         url: parent.url,
-        reachability_criteria: LinkQueueLogger.getReachability(parent),
+        reachability_criteria: reachabilityCriteriaParentLink === null ? null : reachabilityCriteriaParentLink[0],
+        reachability_criteria_dynamic_info: reachabilityCriteriaParentLink === null ?
+          undefined :
+          reachabilityCriteriaParentLink[1],
       };
+
+      const reachabilityCriteriaCurrentLink = LinkQueueLogger.getReachability(link);
+
       const statisticLink: IURLStatistic = {
         url: link.url,
-        reachability_criteria: LinkQueueLogger.getReachability(link),
+        reachability_criteria: reachabilityCriteriaCurrentLink === null ? null : reachabilityCriteriaCurrentLink[0],
+        reachability_criteria_dynamic_info: reachabilityCriteriaCurrentLink === null ?
+          undefined :
+          reachabilityCriteriaCurrentLink[1],
         timestamp: Date.now(),
         parent: parentStatisticLink,
       };
@@ -140,9 +160,13 @@ export class LinkQueueLogger extends LinkQueueWrapper {
   public override pop(): ILink | undefined {
     const link = super.pop();
     if (link !== undefined) {
+      const reachabilityCriteriaCurrentLink = LinkQueueLogger.getReachability(link);
       const statisticLink: IURLStatistic = {
         url: link.url,
-        reachability_criteria: LinkQueueLogger.getReachability(link),
+        reachability_criteria: reachabilityCriteriaCurrentLink === null ? null : reachabilityCriteriaCurrentLink[0],
+        reachability_criteria_dynamic_info: reachabilityCriteriaCurrentLink === null ?
+          undefined :
+          reachabilityCriteriaCurrentLink[1],
         timestamp: Date.now(),
       };
       this.appendReachabilityStatistic(statisticLink, 'popEvent');

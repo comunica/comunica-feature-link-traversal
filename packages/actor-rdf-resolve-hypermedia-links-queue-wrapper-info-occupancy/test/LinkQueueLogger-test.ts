@@ -54,6 +54,8 @@ describe('LinkQueueFilterLinks', () => {
         metadata: {
           [PRODUCED_BY_ACTOR]: {
             name: reachabilityCriteria,
+            extra: '',
+            detail: true,
           },
         },
       };
@@ -77,10 +79,18 @@ describe('LinkQueueFilterLinks', () => {
         link: {
           url: 'foo',
           reachability_criteria: reachabilityCriteria,
+          reachability_criteria_dynamic_info: {
+            extra: '',
+            detail: true,
+          },
           timestamp: 1,
           parent: {
             url: 'foo',
             reachability_criteria: reachabilityCriteria,
+            reachability_criteria_dynamic_info: {
+              extra: '',
+              detail: true,
+            },
           },
         },
         query: JSON.parse(JSON.stringify(query)),
@@ -102,6 +112,68 @@ describe('LinkQueueFilterLinks', () => {
       const iri = {
         url: 'foo',
         metadata: {},
+      };
+
+      const parent = {
+        url: 'bar',
+        metadata: {
+          [PRODUCED_BY_ACTOR]: {
+            name: reachabilityCriteria,
+          },
+        },
+      };
+
+      const queueSize = 2;
+      const linkQueue: any = {
+        push: jest.fn().mockReturnValueOnce(true),
+        isEmpty: () => true,
+        getSize: () => queueSize,
+      };
+
+      jest.spyOn(Date, 'now').mockImplementation().mockReturnValueOnce(1);
+
+      const wrapper = new LinkQueueLogger(linkQueue, query, logger);
+      const resp = wrapper.push(iri, parent);
+
+      expect(resp).toBe(true);
+
+      expect(logger.trace).toHaveBeenCalledTimes(1);
+      const expectedEvent = {
+        type: EventType[EventType.Push],
+        link: {
+          url: 'foo',
+          timestamp: 1,
+          reachability_criteria: null,
+          parent: {
+            url: 'bar',
+            reachability_criteria: reachabilityCriteria,
+          },
+        },
+        query: JSON.parse(JSON.stringify(query)),
+        queueStatistics: {
+          size: queueSize,
+          reachabilityRatio: {
+            pushEvent: { unknown: 1 },
+            popEvent: {},
+          },
+        },
+      };
+
+      expect(logger.trace.mock.calls[0][0]).toBe(LinkQueueLogger.LINK_QUEUE_EVENT_NAME);
+      expect(JSON.parse(logger.trace.mock.calls[0][1].data)).toStrictEqual(expectedEvent);
+    });
+
+    it(`should log the event of a new link without reachability annotation 
+      but with linked metadata pushed to the queue`, () => {
+      const reachabilityCriteria = '123';
+      const iri = {
+        url: 'foo',
+        metadata: {
+          [PRODUCED_BY_ACTOR]: {
+            extra: '',
+            detail: true,
+          },
+        },
       };
 
       const parent = {
@@ -289,6 +361,8 @@ describe('LinkQueueFilterLinks', () => {
         metadata: {
           [PRODUCED_BY_ACTOR]: {
             name: reachabilityCriteria,
+            extra: '',
+            detail: true,
           },
         },
       };
@@ -313,6 +387,10 @@ describe('LinkQueueFilterLinks', () => {
           url: 'foo',
           reachability_criteria: reachabilityCriteria,
           timestamp: 1,
+          reachability_criteria_dynamic_info: {
+            extra: '',
+            detail: true,
+          },
         },
         query: JSON.parse(JSON.stringify(query)),
         queueStatistics: {
