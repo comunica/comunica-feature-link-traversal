@@ -75,9 +75,8 @@ export class LinkQueuePriority implements ILinkQueue {
    * @returns boolean indicating if priority was changed successfully
    */
   public updatePriority(nodeUrl: string, newValue: number): boolean {
-    if (this.urlToLink[nodeUrl]) {
-      const link = this.urlToLink[nodeUrl];
-      const idx = link.metadata!.index;
+    const link = this.urlToLink[nodeUrl];
+    if (link) {
       const change = newValue - link.metadata!.priority;
 
       if (change === 0) {
@@ -93,19 +92,19 @@ export class LinkQueuePriority implements ILinkQueue {
    * the given index. Then we reheap our array.
    */
   public increasePriority(nodeUrl: string, increaseBy: number): boolean {
-    if (this.urlToLink[nodeUrl]){
-      const link = this.urlToLink[nodeUrl];
+    const link = this.urlToLink[nodeUrl];
+    if (link) {
       const idx = link.metadata!.index;
-  
+
       if (increaseBy <= 0) {
         throw new Error(`Can only increase priority of links by non-zero postive number`);
       }
 
       this.links[idx].metadata!.priority += increaseBy;
       this.upHeap(idx);
-      return true
+      return true;
     }
-    return false
+    return false;
   }
 
   /**
@@ -114,19 +113,19 @@ export class LinkQueuePriority implements ILinkQueue {
    */
 
   public decreasePriority(nodeUrl: string, decreaseBy: number): boolean {
-    if (this.urlToLink[nodeUrl]){
-      const link = this.urlToLink[nodeUrl];
+    const link = this.urlToLink[nodeUrl];
+    if (link) {
       const idx = link.metadata!.index;
-      
+
       if (decreaseBy <= 0) {
         throw new Error(`Can only decrease priority of links by non-zero postive number`);
       }
 
       this.links[idx].metadata!.priority += -decreaseBy;
       this.downHeap(idx);
-      return true
+      return true;
     }
-    return false
+    return false;
   }
 
   /**
