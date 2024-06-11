@@ -139,7 +139,7 @@ export class LinkQueuePriority implements ILinkQueue {
   }
 
   /**
-   * Bubbles down the element at input index untill max-heap property is satisifed
+   * Bubbles down the element at input index until max-heap property is satisifed
    * @param idx Index of element to down-heap
    */
   public downHeap(idx: number): void {
