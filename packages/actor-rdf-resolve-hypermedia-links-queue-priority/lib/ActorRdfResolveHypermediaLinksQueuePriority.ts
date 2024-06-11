@@ -15,13 +15,12 @@ export class ActorRdfResolveHypermediaLinksQueuePriority extends ActorRdfResolve
     super(args);
   }
 
-  // eslint-disable-next-line  unused-imports/no-unused-vars
-  public async test(action: IActionRdfResolveHypermediaLinksQueue): Promise<IActorTest> {
+  public async test(_action: IActionRdfResolveHypermediaLinksQueue): Promise<IActorTest> {
     return true;
   }
 
-  // eslint-disable-next-line unused-imports/no-unused-vars
-  public async run(action: IActionRdfResolveHypermediaLinksQueue): Promise<IActorRdfResolveHypermediaLinksQueueOutput> {
+  public async run(_action: IActionRdfResolveHypermediaLinksQueue):
+  Promise<IActorRdfResolveHypermediaLinksQueueOutput> {
     return { linkQueue: new LinkQueuePriority() };
   }
 }

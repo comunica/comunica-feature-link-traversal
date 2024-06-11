@@ -133,7 +133,7 @@ describe('LinkQueuePriority', () => {
       expect(queue.links).toEqual([]);
     });
   });
-  describe('updateAllPriority', () => {
+  describe('setAllPriority', () => {
     beforeEach(() => {
       queue.push({ url: 'a', metadata: { priority: 0 }});
       queue.push({ url: 'b', metadata: { priority: 3 }});
@@ -141,7 +141,7 @@ describe('LinkQueuePriority', () => {
     });
 
     it('correctly updates all priorities in record', () => {
-      queue.updateAllPriority({ b: 6, c: -1 });
+      queue.setAllPriority({ b: 6, c: -1 });
       expect(queue.links).toEqual([
         { url: 'b', metadata: { priority: 6, index: 0 }},
         { url: 'a', metadata: { priority: 0, index: 1 }},
@@ -150,7 +150,7 @@ describe('LinkQueuePriority', () => {
       ]);
     });
     it('updates only the priorities in the queue', () => {
-      queue.updateAllPriority({ b: -1, c: -3, notin: 3 });
+      queue.setAllPriority({ b: -1, c: -3, notin: 3 });
       expect(queue.links).toEqual([
         { url: 'a', metadata: { priority: 0, index: 0 }},
         { url: 'c', metadata: { priority: -3, index: 1 }},
@@ -159,7 +159,7 @@ describe('LinkQueuePriority', () => {
     });
   });
 
-  describe('updatePriority', () => {
+  describe('setPriority', () => {
     beforeEach(() => {
       queue.push({ url: 'a', metadata: { priority: 0 }});
       queue.push({ url: 'b', metadata: { priority: 3 }});
@@ -167,7 +167,7 @@ describe('LinkQueuePriority', () => {
     });
 
     it('correctly updates priority to higher value', () => {
-      const success = queue.updatePriority('a', 6);
+      const success = queue.setPriority('a', 6);
       expect(success).toBeTruthy();
       expect(queue.links).toEqual([
         { url: 'a', metadata: { priority: 6, index: 0 }},
@@ -177,7 +177,7 @@ describe('LinkQueuePriority', () => {
     });
 
     it('correctly updates priority to lower value', () => {
-      const success = queue.updatePriority('b', -5);
+      const success = queue.setPriority('b', -5);
       expect(success).toBeTruthy();
       expect(queue.links).toEqual([
         { url: 'c', metadata: { priority: 5, index: 0 }},
@@ -187,7 +187,7 @@ describe('LinkQueuePriority', () => {
     });
 
     it('returns false if link to update is not in the queue', () => {
-      const success = queue.updatePriority('notinqueue', -5);
+      const success = queue.setPriority('notinqueue', -5);
       expect(success).toBeFalsy();
       expect(queue.links).toEqual([
         { url: 'c', metadata: { priority: 5, index: 0 }},
@@ -197,7 +197,7 @@ describe('LinkQueuePriority', () => {
     });
 
     it('returns false if change to priority is zero', () => {
-      const success = queue.updatePriority('b', 3);
+      const success = queue.setPriority('b', 3);
       expect(success).toBeFalsy();
       expect(queue.links).toEqual([
         { url: 'c', metadata: { priority: 5, index: 0 }},
@@ -207,85 +207,39 @@ describe('LinkQueuePriority', () => {
     });
   });
 
-  describe('increasePriority', () => {
-    it('error on negative number', () => {
+  describe('modifyPriority', () => {
+    it('Returns false on invalid URL', () => {
       queue.push({ url: 'a', metadata: { priority: 0 }});
       queue.push({ url: 'b', metadata: { priority: 3 }});
       queue.push({ url: 'c', metadata: { priority: 5 }});
-      expect(() => queue.increasePriority('c', -1)).toThrow(`Can only increase priority of links by non-zero postive number`);
+      expect(queue.modifyPriority('f', 3)).toBeFalsy();
     });
 
-    it('error on invalid index', () => {
+    it('increases priority of a link', () => {
       queue.push({ url: 'a', metadata: { priority: 0 }});
       queue.push({ url: 'b', metadata: { priority: 3 }});
       queue.push({ url: 'c', metadata: { priority: 5 }});
-      expect(queue.increasePriority('f', 3)).toBeFalsy();
-    });
-
-    it('increases priority link', () => {
-      queue.push({ url: 'a', metadata: { priority: 0 }});
-      queue.push({ url: 'b', metadata: { priority: 3 }});
-      queue.push({ url: 'c', metadata: { priority: 5 }});
-      queue.push({ url: 'd', metadata: { priority: 4 }});
-      queue.push({ url: 'e', metadata: { priority: 2 }});
-      queue.push({ url: 'f', metadata: { priority: 7 }});
-      queue.increasePriority('c', 5);
+      queue.modifyPriority('c', 5);
       expect(queue.links[0]).toEqual({ url: 'c', metadata: { priority: 10, index: 0 }});
     });
-    it('maintains max-heap property', () => {
+
+    it('decreases priority of a link', () => {
       queue.push({ url: 'a', metadata: { priority: 0 }});
       queue.push({ url: 'b', metadata: { priority: 3 }});
       queue.push({ url: 'c', metadata: { priority: 5 }});
-      queue.push({ url: 'd', metadata: { priority: 4 }});
-      queue.push({ url: 'e', metadata: { priority: 2 }});
-      queue.push({ url: 'f', metadata: { priority: 7 }});
-
-      queue.increasePriority('b', 3);
+      queue.modifyPriority('a', -4);
       expect(queue.links).toEqual([
-        { url: 'f', metadata: { priority: 7, index: 0 }},
-        { url: 'd', metadata: { priority: 4, index: 1 }},
-        { url: 'b', metadata: { priority: 6, index: 2 }},
-        { url: 'a', metadata: { priority: 0, index: 3 }},
-        { url: 'e', metadata: { priority: 2, index: 4 }},
-        { url: 'c', metadata: { priority: 5, index: 5 }},
-      ]);
-      queue.increasePriority('a', 10);
-      expect(queue.links).toEqual([
-        { url: 'a', metadata: { priority: 10, index: 0 }},
-        { url: 'f', metadata: { priority: 7, index: 1 }},
-        { url: 'b', metadata: { priority: 6, index: 2 }},
-        { url: 'd', metadata: { priority: 4, index: 3 }},
-        { url: 'e', metadata: { priority: 2, index: 4 }},
-        { url: 'c', metadata: { priority: 5, index: 5 }},
+        { url: 'c', metadata: { priority: 5, index: 0 }},
+        { url: 'a', metadata: { priority: -4, index: 1 }},
+        { url: 'b', metadata: { priority: 3, index: 2 }},
       ]);
     });
-  });
 
-  describe('decreasePriority', () => {
-    it('error on negative number', () => {
+    it('returns false on delta = 0', () => {
       queue.push({ url: 'a', metadata: { priority: 0 }});
       queue.push({ url: 'b', metadata: { priority: 3 }});
       queue.push({ url: 'c', metadata: { priority: 5 }});
-      expect(() => queue.decreasePriority('a', -1)).toThrow(`Can only decrease priority of links by non-zero postive number`);
-    });
-
-    it('error on invalid index', () => {
-      queue.push({ url: 'a', metadata: { priority: 0 }});
-      queue.push({ url: 'b', metadata: { priority: 3 }});
-      queue.push({ url: 'c', metadata: { priority: 5 }});
-      expect(queue.decreasePriority('d', 3)).toBeFalsy();
-    });
-
-    it('decreases priority link', () => {
-      queue.push({ url: 'a', metadata: { priority: 0 }});
-      queue.push({ url: 'b', metadata: { priority: 3 }});
-      queue.push({ url: 'c', metadata: { priority: 5 }});
-      queue.push({ url: 'd', metadata: { priority: 4 }});
-      queue.push({ url: 'e', metadata: { priority: 2 }});
-      queue.push({ url: 'f', metadata: { priority: 7 }});
-      queue.decreasePriority('c', 5);
-      expect(queue.links[queue.getSize() - 1])
-        .toEqual({ url: 'c', metadata: { priority: 0, index: queue.getSize() - 1 }});
+      expect(queue.modifyPriority('a', 0)).toBeFalsy();
     });
 
     it('maintains max-heap property', () => {
@@ -296,23 +250,51 @@ describe('LinkQueuePriority', () => {
       queue.push({ url: 'e', metadata: { priority: 2 }});
       queue.push({ url: 'f', metadata: { priority: 7 }});
 
-      queue.decreasePriority('b', 1);
+      queue.modifyPriority('b', 3);
       expect(queue.links).toEqual([
         { url: 'f', metadata: { priority: 7, index: 0 }},
         { url: 'd', metadata: { priority: 4, index: 1 }},
-        { url: 'c', metadata: { priority: 5, index: 2 }},
+        { url: 'b', metadata: { priority: 6, index: 2 }},
         { url: 'a', metadata: { priority: 0, index: 3 }},
         { url: 'e', metadata: { priority: 2, index: 4 }},
-        { url: 'b', metadata: { priority: 2, index: 5 }},
+        { url: 'c', metadata: { priority: 5, index: 5 }},
       ]);
-      queue.decreasePriority('d', 3);
+      queue.modifyPriority('d', -6);
       expect(queue.links).toEqual([
         { url: 'f', metadata: { priority: 7, index: 0 }},
         { url: 'e', metadata: { priority: 2, index: 1 }},
-        { url: 'c', metadata: { priority: 5, index: 2 }},
+        { url: 'b', metadata: { priority: 6, index: 2 }},
         { url: 'a', metadata: { priority: 0, index: 3 }},
-        { url: 'd', metadata: { priority: 1, index: 4 }},
-        { url: 'b', metadata: { priority: 2, index: 5 }},
+        { url: 'd', metadata: { priority: -2, index: 4 }},
+        { url: 'c', metadata: { priority: 5, index: 5 }},
+      ]);
+      queue.modifyPriority('c', 1);
+      expect(queue.links).toEqual([
+        { url: 'f', metadata: { priority: 7, index: 0 }},
+        { url: 'e', metadata: { priority: 2, index: 1 }},
+        { url: 'b', metadata: { priority: 6, index: 2 }},
+        { url: 'a', metadata: { priority: 0, index: 3 }},
+        { url: 'd', metadata: { priority: -2, index: 4 }},
+        { url: 'c', metadata: { priority: 6, index: 5 }},
+      ]);
+      queue.modifyPriority('c', 1);
+      expect(queue.links).toEqual([
+        { url: 'f', metadata: { priority: 7, index: 0 }},
+        { url: 'e', metadata: { priority: 2, index: 1 }},
+        { url: 'c', metadata: { priority: 7, index: 2 }},
+        { url: 'a', metadata: { priority: 0, index: 3 }},
+        { url: 'd', metadata: { priority: -2, index: 4 }},
+        { url: 'b', metadata: { priority: 6, index: 5 }},
+      ]);
+      // Case where we don't swap left but do swap right on downheap
+      queue.modifyPriority('f', -1);
+      expect(queue.links).toEqual([
+        { url: 'c', metadata: { priority: 7, index: 0 }},
+        { url: 'e', metadata: { priority: 2, index: 1 }},
+        { url: 'f', metadata: { priority: 6, index: 2 }},
+        { url: 'a', metadata: { priority: 0, index: 3 }},
+        { url: 'd', metadata: { priority: -2, index: 4 }},
+        { url: 'b', metadata: { priority: 6, index: 5 }},
       ]);
     });
   });

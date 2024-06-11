@@ -20,8 +20,8 @@ export class LinkQueuePriority implements ILinkQueue {
   public push(link: ILink): boolean {
     const idx: number = this.links.length;
 
-    // If we push a link that has no metadata or has metadata but no priority we set priority to 0
-    // and always set index to end of array (and upheap from there)
+    // If we push a link that has no metadata or has metadata but no priority
+    // we set priority to 0 and always set index to end of array (and upheap from there)
     if (!link.metadata || !link.metadata.priority) {
       link.metadata = { priority: 0, index: idx };
     } else {
@@ -40,21 +40,23 @@ export class LinkQueuePriority implements ILinkQueue {
    * down-heaps it.
    * @returns popped element
    */
-  public pop(): ILink {
-    const max = this.links[0];
-    const endArray = this.links.pop();
+  public pop(): ILink | undefined {
+    if (this.getSize() > 0) {
+      const max = this.links[0];
+      const endArray = this.links.pop();
 
-    // If we remove link, remove it from records to reflect new state of queue
-    if (max) {
-      delete this.urlToLink[max.url];
-    }
+      // If we remove link, remove it from records to reflect new state of queue
+      if (max) {
+        delete this.urlToLink[max.url];
+      }
 
-    // Set last element to root and downheap to maintain heap property
-    if (this.links.length > 0) {
-      this.links[0] = endArray!;
-      this.downHeap(0);
+      // Set last element to root and downheap to maintain heap property
+      if (this.links.length > 0) {
+        this.links[0] = endArray!;
+        this.downHeap(0);
+      }
+      return max;
     }
-    return max;
   }
 
   /**
@@ -62,10 +64,10 @@ export class LinkQueuePriority implements ILinkQueue {
    * and m size of the queue. Will only update priorities of urls that are actually in queue.
    * @param urlPriorities A record with url and new priority
    */
-  public updateAllPriority(urlPriorities: Record<string, number>): void {
+  public setAllPriority(urlPriorities: Record<string, number>): void {
     for (const url in urlPriorities) {
       if (this.urlToLink[url]) {
-        this.updatePriority(url, urlPriorities[url]);
+        this.setPriority(url, urlPriorities[url]);
       }
     }
   }
@@ -76,7 +78,7 @@ export class LinkQueuePriority implements ILinkQueue {
    * @param newValue new priority value
    * @returns boolean indicating if priority was changed successfully
    */
-  public updatePriority(nodeUrl: string, newValue: number): boolean {
+  public setPriority(nodeUrl: string, newValue: number): boolean {
     const link = this.urlToLink[nodeUrl];
     if (link) {
       const change = newValue - link.metadata!.priority;
@@ -84,47 +86,30 @@ export class LinkQueuePriority implements ILinkQueue {
       if (change === 0) {
         return false;
       }
-      return change > 0 ? this.increasePriority(nodeUrl, change) : this.decreasePriority(nodeUrl, -change);
+      return this.modifyPriority(nodeUrl, change);
     }
     return false;
   }
 
   /**
-   * Function to decrease priority of element of heap. First we check if link exists,
-   * then increase priority of the link and reheap the array.
+   * Function to change priority of element of heap with certain number.
+   * Based on whether the delta is positive or negative, we upheap or downheap.
    */
-  public increasePriority(nodeUrl: string, increaseBy: number): boolean {
+
+  public modifyPriority(nodeUrl: string, delta: number): boolean {
     const link = this.urlToLink[nodeUrl];
     if (link) {
       const idx = link.metadata!.index;
+      this.links[idx].metadata!.priority += delta;
 
-      if (increaseBy <= 0) {
-        throw new Error(`Can only increase priority of links by non-zero postive number`);
+      if (delta < 0) {
+        this.downHeap(idx);
+        return true;
       }
-
-      this.links[idx].metadata!.priority += increaseBy;
-      this.upHeap(idx);
-      return true;
-    }
-    return false;
-  }
-
-  /**
-   * Function to decrease priority of element of heap. First we check if link exists,
-   * then decrease priority of the link and reheap the array.
-   */
-  public decreasePriority(nodeUrl: string, decreaseBy: number): boolean {
-    const link = this.urlToLink[nodeUrl];
-    if (link) {
-      const idx = link.metadata!.index;
-
-      if (decreaseBy <= 0) {
-        throw new Error(`Can only decrease priority of links by non-zero postive number`);
+      if (delta > 0) {
+        this.upHeap(idx);
+        return true;
       }
-
-      this.links[idx].metadata!.priority += -decreaseBy;
-      this.downHeap(idx);
-      return true;
     }
     return false;
   }
