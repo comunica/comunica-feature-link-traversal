@@ -13,11 +13,13 @@ export class LinkQueuePriority implements ILinkQueue {
    * on link URL
    */
   public readonly urlToLink: Record<string, ILink> = {};
+
   /**
    * Pushes element to heap by appending it to array and up-heaping the new element
    */
   public push(link: ILink): boolean {
     const idx: number = this.links.length;
+
     // If we push a link that has no metadata or has metadata but no priority we set priority to 0
     // and always set index to end of array (and upheap from there)
     if (!link.metadata || !link.metadata.priority) {
@@ -88,8 +90,8 @@ export class LinkQueuePriority implements ILinkQueue {
   }
 
   /**
-   * Function to increase priority of element of heap. First we increase priority using
-   * the given index. Then we reheap our array.
+   * Function to decrease priority of element of heap. First we check if link exists,
+   * then increase priority of the link and reheap the array.
    */
   public increasePriority(nodeUrl: string, increaseBy: number): boolean {
     const link = this.urlToLink[nodeUrl];
@@ -108,10 +110,9 @@ export class LinkQueuePriority implements ILinkQueue {
   }
 
   /**
-   * Function to decrease priority of element of heap. First we decrease priority at the given index.
-   * Then we reheap our array.
+   * Function to decrease priority of element of heap. First we check if link exists,
+   * then decrease priority of the link and reheap the array.
    */
-
   public decreasePriority(nodeUrl: string, decreaseBy: number): boolean {
     const link = this.urlToLink[nodeUrl];
     if (link) {
@@ -226,14 +227,3 @@ export class LinkQueuePriority implements ILinkQueue {
     return this.links[0];
   }
 }
-
-// Export interface ILinkPriority extends ILink{
-//   /**
-//    * Priority associated with link
-//    */
-//   priority: number;
-//   /**
-//    * Index in heap, this is tracked internally
-//    */
-//   index?: number;
-// }
