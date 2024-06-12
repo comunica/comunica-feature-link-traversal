@@ -71,7 +71,7 @@ If you want to develop new features
 or use the (potentially unstable) in-development version,
 you can set up a development environment for Comunica.
 
-Comunica requires [Node.JS](http://nodejs.org/) 8.0 or higher and the [Yarn](https://yarnpkg.com/en/) package manager.
+Comunica requires [Node.JS](http://nodejs.org/) 18.0 or higher and the [Yarn](https://yarnpkg.com/en/) package manager.
 Comunica is tested on OSX, Linux and Windows.
 
 This project can be setup by cloning and installing it as follows:

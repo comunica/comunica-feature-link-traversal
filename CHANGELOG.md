@@ -1,6 +1,13 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+<a name="v0.4.1"></a>
+## [v0.4.1](https://github.com/comunica/comunica-feature-link-traversal/compare/v0.4.0...v0.4.1) - 2024-05-11
+
+### Changed
+* [Update Comunica monorepo packages to ^3.1.0](https://github.com/comunica/comunica-feature-link-traversal/commit/72df20e9698328d8f7b9bf22961be2ea1382d65a)
+* [Add reachability criteria annotation to the metadata of links](https://github.com/comunica/comunica-feature-link-traversal/commit/5e6a9b09a9080ad09212608c65c7574777fda329)
+
 <a name="v0.4.0"></a>
 ## [v0.4.0](https://github.com/comunica/comunica-feature-link-traversal/compare/v0.3.0...v0.4.0) - 2024-04-11
 
