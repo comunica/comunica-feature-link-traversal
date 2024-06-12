@@ -1,120 +1,53 @@
-<!DOCTYPE html><html class="default" lang="en"><head><meta charSet="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>Comunica Link Traversal</title><meta name="description" content="Documentation for Comunica Link Traversal"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="assets/style.css"/><link rel="stylesheet" href="assets/highlight.css"/><script defer src="assets/main.js"></script><script async src="assets/search.js" id="tsd-search-script"></script><script async src="assets/navigation.js" id="tsd-nav-script"></script></head><body><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os"</script><header class="tsd-page-toolbar">
+<!DOCTYPE html><html class="default" lang="en"><head><meta charSet="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>@comunica/actor-rdf-resolve-hypermedia-links-queue-priority - v0.4.1 | Comunica Link Traversal</title><meta name="description" content="Documentation for Comunica Link Traversal"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="../assets/style.css"/><link rel="stylesheet" href="../assets/highlight.css"/><script defer src="../assets/main.js"></script><script async src="../assets/search.js" id="tsd-search-script"></script><script async src="../assets/navigation.js" id="tsd-nav-script"></script></head><body><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os"</script><header class="tsd-page-toolbar">
 <div class="tsd-toolbar-contents container">
-<div class="table-cell" id="tsd-search" data-base=".">
+<div class="table-cell" id="tsd-search" data-base="..">
 <div class="field"><label for="tsd-search-field" class="tsd-widget tsd-toolbar-icon search no-caption"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><use href="#icon-search"></use></svg></label><input type="text" id="tsd-search-field" aria-label="Search"/></div>
 <div class="field">
 <div id="tsd-toolbar-links"></div></div>
 <ul class="results">
 <li class="state loading">Preparing search index...</li>
-<li class="state failure">The search index is not available</li></ul><a href="index.html" class="title">Comunica Link Traversal</a></div>
+<li class="state failure">The search index is not available</li></ul><a href="../index.html" class="title">Comunica Link Traversal</a></div>
 <div class="table-cell" id="tsd-widgets"><a href="#" class="tsd-widget tsd-toolbar-icon menu no-caption" data-toggle="menu" aria-label="Menu"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><use href="#icon-menu"></use></svg></a></div></div></header>
 <div class="container container-main">
 <div class="col-content">
 <div class="tsd-page-title">
-<h2>Comunica Link Traversal</h2></div>
-<div class="tsd-panel tsd-typography"><p align="center">
-  <a href="https://comunica.dev/">
-    <img alt="Comunica" src="https://comunica.dev/img/comunica_red.svg" width="200">
-  </a>
-</p>
-
-<p align="center">
-  <strong>Link Traversal for Comunica</strong>
-</p>
-
-<p align="center">
-<a href="https://github.com/comunica/comunica-feature-link-traversal/actions?query=workflow%3ACI"><img src="https://github.com/comunica/comunica-feature-link-traversal/workflows/CI/badge.svg" alt="Build Status"></a>
-<a href="https://coveralls.io/github/comunica/comunica-feature-link-traversal?branch=master"><img src="https://coveralls.io/repos/github/comunica/comunica-feature-link-traversal/badge.svg?branch=master" alt="Coverage Status"></a>
-<a href="https://gitter.im/comunica/Lobby"><img src="https://badges.gitter.im/comunica.png" alt="Gitter chat"></a>
-</p>
-
-<p><strong><a href="https://comunica.dev/">Learn more about Comunica on our website</a>.</strong></p>
-<p>This is a monorepo that contains packages for allowing <a href="https://github.com/comunica/comunica">Comunica</a> to link traversal-based query execution.
-If you want to <em>use</em> an Link Traversal-enabled Comunica engine, have a look at <a href="https://github.com/comunica/comunica-feature-link-traversal/tree/master/engines/query-sparql-link-traversal">Comunica SPARQL Link Traversal</a>.</p>
-<p>Concretely, link traversal is enabled in the following engines:</p>
-<ul>
-<li>Query engine configurations:<ul>
-<li><a href="https://github.com/comunica/comunica-feature-link-traversal/tree/master/engines/query-sparql-link-traversal">Comunica SPARQL Link Traversal</a>: A Comunica query engine that includes all Link Traversal packages.</li>
-<li><a href="https://github.com/comunica/comunica-feature-link-traversal/tree/master/engines/query-sparql-link-traversal-solid">Comunica SPARQL Link Traversal Solid</a>: A Comunica query engine that includes all Link Traversal and Solid-related packages.</li>
-</ul>
-</li>
-</ul>
-<p>These engines make use of the following packages:</p>
-<ul>
-<li>Seed URL actors:<ul>
-<li><a href="https://github.com/comunica/comunica-feature-link-traversal/tree/master/packages/actor-optimize-query-operation-set-seed-sources-quadpattern-iris">Seed URL preprocessor</a>: Actor that sets sources based on the given query, if no other sources were set.</li>
-</ul>
-</li>
-<li>Join entries sort actors:<ul>
-<li><a href="https://github.com/comunica/comunica-feature-link-traversal/tree/master/packages/actor-rdf-join-entries-sort-traversal-zero-knowledge">Zero-knowledge</a>: Actor that orders join entries based on heuristics for plan selection in link traversal environments.</li>
-</ul>
-</li>
-<li>Link extractors (all require <a href="https://github.com/comunica/comunica-feature-link-traversal/tree/master/packages/actor-rdf-resolve-hypermedia-links-traverse">Traverse RDF Resolve Hypermedia Links Actor</a> and <a href="https://github.com/comunica/comunica-feature-link-traversal/tree/master/packages/actor-rdf-metadata-extract-traverse">Traverse RDF Metadata Extract Actor</a>):<ul>
-<li><a href="https://github.com/comunica/comunica-feature-link-traversal/tree/master/packages/actor-extract-links-all">All links extractor</a>: Actor that extracts all URLs in a document for traversal.</li>
-<li><a href="https://github.com/comunica/comunica-feature-link-traversal/tree/master/packages/actor-extract-links-content-policies">Content policies extractor</a>: Actor that extracts URLs matching content policies in a document for traversal.<ul>
-<li><em>Requires <a href="https://github.com/comunica/comunica-feature-link-traversal/tree/master/packages/actor-rdf-resolve-hypermedia-links-traverse-replace-conditional">Traverse Filter Conditional RDF Resolve Hypermedia Links Actor</a></em></li>
-</ul>
-</li>
-<li><a href="https://github.com/comunica/comunica-feature-link-traversal/tree/master/packages/actor-extract-links-predicates">Predicates extractor</a>: Actor that extracts the object URLs of triples that match with a configured predicate regex for traversal.</li>
-<li><a href="https://github.com/comunica/comunica-feature-link-traversal/tree/master/packages/actor-extract-links-quad-pattern">Quad pattern extractor</a>: Actor that extracts all URLs that match the current quad pattern in a document for traversal.</li>
-<li><a href="https://github.com/comunica/comunica-feature-link-traversal/tree/master/packages/actor-extract-links-quad-pattern-query">Quad pattern query extractor</a>: Actor that extracts all URLs that match any quad pattern in the current query in a document for traversal.</li>
-<li><a href="https://github.com/comunica/comunica-feature-link-traversal/tree/master/packages/actor-extract-links-solid-type-index">Solid type index extractor</a>: Actor that extracts links to types via the <a href="https://github.com/solid/solid/blob/main/proposals/data-discovery.md">Solid type index</a>.</li>
-</ul>
-</li>
-<li>Pruning actors:<ul>
-<li><a href="https://github.com/comunica/comunica-feature-link-traversal/tree/master/packages/actor-rdf-resolve-hypermedia-links-traverse-prune-shapetrees">Traverse Prune ShapeTrees RDF Resolve Hypermedia Links Actor</a>: Actor that prunes links that are guaranteed to not match with the current query based on <a href="https://shapetrees.org/">ShapeTrees</a> metadata.<ul>
-<li><em>Requires <a href="https://github.com/comunica/comunica-feature-link-traversal/tree/master/packages/actor-rdf-metadata-extract-shapetrees">ShapeTrees RDF Metadata Extract Actor</a></em></li>
-</ul>
-</li>
-</ul>
-</li>
-<li>Query termination actors:<ul>
-<li><a href="https://github.com/comunica/comunica-feature-link-traversal/tree/master/packages/actor-rdf-resolve-hypermedia-links-queue-wrapper-limit-count">Link count limit</a>: Actor that imposes a limit of the maximum number of links that can be pushed into the link queue.</li>
-<li><a href="https://github.com/comunica/comunica-feature-link-traversal/tree/master/packages/actor-rdf-resolve-hypermedia-links-queue-wrapper-limit-depth">Link depth limit</a>: Actor that imposes a limit of the depth of link paths that can be pushed into the link queue.</li>
-</ul>
-</li>
-<li>Source annotation actors:<ul>
-<li><a href="https://github.com/comunica/comunica-feature-link-traversal/tree/master/packages/actor-rdf-resolve-hypermedia-links-traverse-annotate-source-graph">Annotate Graph</a>: Annotates triples with their document&#39;s URL via the named graph.</li>
-</ul>
-</li>
-<li>Buses:<ul>
-<li><a href="https://github.com/comunica/comunica-feature-link-traversal/tree/master/packages/bus-extract-links">Extract links</a>: Bus that determines the links to follow from a metadata quad stream.</li>
-</ul>
-</li>
-<li>Mediators:<ul>
-<li><a href="https://github.com/comunica/comunica-feature-link-traversal/tree/master/packages/mediator-combine-array">Combine array</a>: Mediator that concatenates an array of all actor results.</li>
-</ul>
-</li>
-<li>Other:<ul>
-<li><a href="https://github.com/comunica/comunica-feature-link-traversal/tree/master/packages/context-entries-link-traversal">Context entries</a>: Reusable context key definitions for link traversal.</li>
-<li><a href="https://github.com/comunica/comunica-feature-link-traversal/tree/master/packages/types-link-traversal">Types</a>: Reusable Typescript interfaces and types for link traversal.</li>
-</ul>
-</li>
-</ul>
-<p><strong>Warning: All packages in this repo should be considered unstable, and breaking changes may occur at any time.</strong></p>
-<p><a href="https://comunica.dev/research/link_traversal/">Click here to learn more about Link Traversal in Comunica, or to see live examples</a>.</p>
-<a id="md:development-setup" class="tsd-anchor"></a><h2><a href="#md:development-setup">Development Setup</a></h2><p><em>(JSDoc: <a href="https://comunica.github.io/comunica-feature-link-traversal/">https://comunica.github.io/comunica-feature-link-traversal/</a>)</em></p>
-<p>This repository should be used by Comunica module <strong>developers</strong> as it contains multiple Comunica modules that can be composed.
-This repository is managed as a <a href="https://github.com/babel/babel/blob/master/doc/design/monorepo.md">monorepo</a>
-using <a href="https://lernajs.io/">Lerna</a>.</p>
-<p>If you want to develop new features
-or use the (potentially unstable) in-development version,
-you can set up a development environment for Comunica.</p>
-<p>Comunica requires <a href="http://nodejs.org/">Node.JS</a> 18.0 or higher and the <a href="https://yarnpkg.com/en/">Yarn</a> package manager.
-Comunica is tested on OSX, Linux and Windows.</p>
-<p>This project can be setup by cloning and installing it as follows:</p>
-<pre><code class="language-bash"><span class="hl-0">$</span><span class="hl-1"> </span><span class="hl-2">git</span><span class="hl-1"> </span><span class="hl-2">clone</span><span class="hl-1"> </span><span class="hl-2">https://github.com/comunica/comunica.git</span><br/><span class="hl-0">$</span><span class="hl-1"> </span><span class="hl-2">cd</span><span class="hl-1"> </span><span class="hl-2">comunica</span><br/><span class="hl-0">$</span><span class="hl-1"> </span><span class="hl-2">yarn</span><span class="hl-1"> </span><span class="hl-2">install</span>
+<ul class="tsd-breadcrumb">
+<li><a href="../index.html">Comunica Link Traversal</a></li>
+<li><a href="_comunica_actor_rdf_resolve_hypermedia_links_queue_priority.html">@comunica/actor-rdf-resolve-hypermedia-links-queue-priority</a></li></ul>
+<h1>Module @comunica/actor-rdf-resolve-hypermedia-links-queue-priority - v0.4.1</h1></div>
+<section class="tsd-panel tsd-typography"><a id="md:comunica-priority-rdf-resolve-hypermedia-links-queue-actor" class="tsd-anchor"></a><h1><a href="#md:comunica-priority-rdf-resolve-hypermedia-links-queue-actor">Comunica Priority RDF Resolve Hypermedia Links Queue Actor</a></h1><p><a href="https://www.npmjs.com/package/@comunica/actor-rdf-resolve-hypermedia-links-queue-priority"><img src="https://badge.fury.io/js/%40comunica%2Factor-rdf-resolve-hypermedia-links-queue-priority.svg" alt="npm version"></a></p>
+<p>An <a href="https://github.com/comunica/comunica/tree/master/packages/bus-rdf-resolve-hypermedia-links-queue">RDF Resolve Hypermedia Links Queue</a> actor
+that provides a <a href="https://comunica.github.io/comunica/interfaces/_comunica_bus_rdf_resolve_hypermedia_links_queue.ILinkQueue.html"><code>ILinkQueue</code></a>
+following the priority of links in the queue. The priority must be set by an actor outside the queue, for example in a link queue wrapper.</p>
+<p>This module is part of the <a href="https://github.com/comunica/comunica">Comunica framework</a>,
+and should only be used by <a href="https://comunica.dev/docs/modify/">developers that want to build their own query engine</a>.</p>
+<p><a href="https://comunica.dev/docs/query/">Click here if you just want to query with Comunica</a>.</p>
+<a id="md:install" class="tsd-anchor"></a><h2><a href="#md:install">Install</a></h2><pre><code class="language-bash"><span class="hl-0">$</span><span class="hl-1"> </span><span class="hl-2">yarn</span><span class="hl-1"> </span><span class="hl-2">add</span><span class="hl-1"> </span><span class="hl-2">@comunica/actor-rdf-resolve-hypermedia-links-queue-priority</span>
 </code><button>Copy</button></pre>
-<p><strong>Note: <code>npm install</code> is not supported at the moment, as this project makes use of Yarn&#39;s <a href="https://yarnpkg.com/lang/en/docs/workspaces/">workspaces</a> functionality</strong></p>
-<p>This will install the dependencies of all modules, and bootstrap the Lerna monorepo.
-After that, all <a href="https://github.com/comunica/comunica-feature-link-traversal/tree/master/packages">Comunica packages</a> are available in the <code>packages/</code> folder
-and can be used in a development environment, such as querying with <a href="https://github.com/comunica/comunica-feature-link-traversal/tree/master/engines/query-sparql-link-traversal">Comunica SPARQL Link Traversal (<code>engines/query-sparql-link-traversal</code>)</a>.</p>
-<p>Furthermore, this will add <a href="https://www.npmjs.com/package/pre-commit">pre-commit hooks</a>
-to build, lint and test.
-These hooks can temporarily be disabled at your own risk by adding the <code>-n</code> flag to the commit command.</p>
-<a id="md:license" class="tsd-anchor"></a><h2><a href="#md:license">License</a></h2><p>This code is copyrighted by <a href="http://idlab.ugent.be/">Ghent University – imec</a>
-and released under the <a href="http://opensource.org/licenses/MIT">MIT license</a>.</p>
-</div></div>
+<a id="md:configure" class="tsd-anchor"></a><h2><a href="#md:configure">Configure</a></h2><p>After installing, this package can be added to your engine&#39;s configuration as follows:</p>
+<pre><code class="language-text">{
+  &quot;@context&quot;: [
+    ...
+    &quot;https://linkedsoftwaredependencies.org/bundles/npm/@comunica/actor-rdf-resolve-hypermedia-links-queue-priority/^3.0.0/components/context.jsonld&quot;
+  ],
+  &quot;actors&quot;: [
+    ...
+    {
+      &quot;@id&quot;: &quot;urn:comunica:default:rdf-resolve-hypermedia-links-queue/actors#priority&quot;,
+      &quot;@type&quot;: &quot;ActorRdfResolveHypermediaLinksQueuePriority
+    }
+  ]
+}
+</code><button>Copy</button></pre>
+</section>
+<section class="tsd-panel-group tsd-index-group">
+<section class="tsd-panel tsd-index-panel">
+<h3 class="tsd-index-heading uppercase">Index</h3>
+<section class="tsd-index-section">
+<h3 class="tsd-index-heading">Classes</h3>
+<div class="tsd-index-list"><a href="../classes/_comunica_actor_rdf_resolve_hypermedia_links_queue_priority.ActorRdfResolveHypermediaLinksQueuePriority.html" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-128"></use></svg><span>Actor<wbr/>Rdf<wbr/>Resolve<wbr/>Hypermedia<wbr/>Links<wbr/>Queue<wbr/>Priority</span></a>
+<a href="../classes/_comunica_actor_rdf_resolve_hypermedia_links_queue_priority.LinkQueuePriority.html" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-128"></use></svg><span>Link<wbr/>Queue<wbr/>Priority</span></a>
+</div></section></section></section></div>
 <div class="col-sidebar">
 <div class="page-menu">
 <div class="tsd-navigation settings">
@@ -136,34 +69,35 @@ and released under the <a href="http://opensource.org/licenses/MIT">MIT license<
 <ul>
 <li>
 <ul>
-<li><a href="#md:development-setup"><span>Development <wbr/>Setup</span></a></li>
+<li><a href="#md:comunica-priority-rdf-resolve-hypermedia-links-queue-actor"><span>Comunica <wbr/>Priority RDF <wbr/>Resolve <wbr/>Hypermedia <wbr/>Links <wbr/>Queue <wbr/>Actor</span></a></li>
 <li>
 <ul>
-<li><a href="#md:license"><span>License</span></a></li></ul></li></ul></li></ul></div></details></div>
+<li><a href="#md:install"><span>Install</span></a></li>
+<li><a href="#md:configure"><span>Configure</span></a></li></ul></li></ul></li></ul></div></details></div>
 <div class="site-menu">
-<nav class="tsd-navigation"><a href="index.html" class="current"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1"></use></svg><span>Comunica Link Traversal</span></a>
-<ul class="tsd-small-nested-navigation" id="tsd-nav-container" data-base=".">
-<li><a href="modules/_comunica_config_query_sparql_link_traversal.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>@comunica/config-query-sparql-link-traversal - v0.4.1</a></li>
-<li><a href="modules/_comunica_query_sparql_link_traversal.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>@comunica/query-sparql-link-traversal - v0.4.1</a></li>
-<li><a href="modules/_comunica_query_sparql_link_traversal_solid.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>@comunica/query-sparql-link-traversal-solid - v0.4.1</a></li>
-<li><a href="modules/_comunica_actor_context_preprocess_set_defaults_link_traversal.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>@comunica/actor-context-preprocess-set-defaults-link-traversal - v0.4.1</a></li>
-<li><a href="modules/_comunica_actor_extract_links_all.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>@comunica/actor-extract-links-all - v0.4.1</a></li>
-<li><a href="modules/_comunica_actor_extract_links_content_policies.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>@comunica/actor-extract-links-content-policies - v0.4.1</a></li>
-<li><a href="modules/_comunica_actor_extract_links_tree.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>@comunica/actor-extract-links-tree - v0.4.1</a></li>
-<li><a href="modules/_comunica_actor_extract_links_headers.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>@comunica/actor-extract-links-headers - v0.4.1</a></li>
-<li><a href="modules/_comunica_actor_extract_links_predicates.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>@comunica/actor-extract-links-predicates - v0.4.1</a></li>
-<li><a href="modules/_comunica_actor_extract_links_quad_pattern.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>@comunica/actor-extract-links-quad-pattern - v0.4.1</a></li>
-<li><a href="modules/_comunica_actor_extract_links_quad_pattern_query.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>@comunica/actor-extract-links-quad-pattern-query - v0.4.1</a></li>
-<li><a href="modules/_comunica_actor_extract_links_solid_type_index.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>@comunica/actor-extract-links-solid-type-index - v0.4.1</a></li>
-<li><a href="modules/_comunica_actor_optimize_query_operation_set_seed_sources_quadpattern_iris.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>@comunica/actor-optimize-query-operation-set-seed-sources-quadpattern-iris - v0.4.1</a></li>
-<li><a href="modules/_comunica_actor_rdf_join_entries_sort_traversal_zero_knowledge.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>@comunica/actor-rdf-join-entries-sort-traversal-zero-knowledge - v0.4.1</a></li>
-<li><a href="modules/_comunica_actor_rdf_join_inner_multi_adaptive_destroy.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>@comunica/actor-rdf-join-inner-multi-adaptive-destroy - v0.4.1</a></li>
-<li><a href="modules/_comunica_actor_rdf_metadata_extract_shapetrees.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>@comunica/actor-rdf-metadata-extract-shapetrees - v0.4.1</a></li>
-<li><a href="modules/_comunica_actor_rdf_metadata_extract_traverse.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>@comunica/actor-rdf-metadata-extract-traverse - v0.4.1</a></li>
-<li><a href="modules/_comunica_actor_rdf_resolve_hypermedia_links_queue_priority.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>@comunica/actor-rdf-resolve-hypermedia-links-queue-priority - v0.4.1</a></li>
-<li><a href="modules/_comunica_actor_rdf_resolve_hypermedia_links_queue_wrapper_limit_count.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>@comunica/actor-rdf-resolve-hypermedia-links-queue-wrapper-limit-count - v0.4.1</a></li>
-<li><a href="modules/_comunica_actor_rdf_resolve_hypermedia_links_queue_wrapper_limit_depth.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>@comunica/actor-rdf-resolve-hypermedia-links-queue-wrapper-limit-depth - v0.4.1</a></li>
-<li><a href="modules/_comunica_actor_rdf_resolve_hypermedia_links_traverse.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>@comunica/actor-rdf-resolve-hypermedia-links-traverse - v0.4.1</a></li>
+<nav class="tsd-navigation"><a href="../index.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1"></use></svg><span>Comunica Link Traversal</span></a>
+<ul class="tsd-small-nested-navigation" id="tsd-nav-container" data-base="..">
+<li><a href="_comunica_config_query_sparql_link_traversal.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>@comunica/config-query-sparql-link-traversal - v0.4.1</a></li>
+<li><a href="_comunica_query_sparql_link_traversal.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>@comunica/query-sparql-link-traversal - v0.4.1</a></li>
+<li><a href="_comunica_query_sparql_link_traversal_solid.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>@comunica/query-sparql-link-traversal-solid - v0.4.1</a></li>
+<li><a href="_comunica_actor_context_preprocess_set_defaults_link_traversal.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>@comunica/actor-context-preprocess-set-defaults-link-traversal - v0.4.1</a></li>
+<li><a href="_comunica_actor_extract_links_all.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>@comunica/actor-extract-links-all - v0.4.1</a></li>
+<li><a href="_comunica_actor_extract_links_content_policies.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>@comunica/actor-extract-links-content-policies - v0.4.1</a></li>
+<li><a href="_comunica_actor_extract_links_tree.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>@comunica/actor-extract-links-tree - v0.4.1</a></li>
+<li><a href="_comunica_actor_extract_links_headers.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>@comunica/actor-extract-links-headers - v0.4.1</a></li>
+<li><a href="_comunica_actor_extract_links_predicates.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>@comunica/actor-extract-links-predicates - v0.4.1</a></li>
+<li><a href="_comunica_actor_extract_links_quad_pattern.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>@comunica/actor-extract-links-quad-pattern - v0.4.1</a></li>
+<li><a href="_comunica_actor_extract_links_quad_pattern_query.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>@comunica/actor-extract-links-quad-pattern-query - v0.4.1</a></li>
+<li><a href="_comunica_actor_extract_links_solid_type_index.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>@comunica/actor-extract-links-solid-type-index - v0.4.1</a></li>
+<li><a href="_comunica_actor_optimize_query_operation_set_seed_sources_quadpattern_iris.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>@comunica/actor-optimize-query-operation-set-seed-sources-quadpattern-iris - v0.4.1</a></li>
+<li><a href="_comunica_actor_rdf_join_entries_sort_traversal_zero_knowledge.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>@comunica/actor-rdf-join-entries-sort-traversal-zero-knowledge - v0.4.1</a></li>
+<li><a href="_comunica_actor_rdf_join_inner_multi_adaptive_destroy.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>@comunica/actor-rdf-join-inner-multi-adaptive-destroy - v0.4.1</a></li>
+<li><a href="_comunica_actor_rdf_metadata_extract_shapetrees.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>@comunica/actor-rdf-metadata-extract-shapetrees - v0.4.1</a></li>
+<li><a href="_comunica_actor_rdf_metadata_extract_traverse.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>@comunica/actor-rdf-metadata-extract-traverse - v0.4.1</a></li>
+<li><a href="_comunica_actor_rdf_resolve_hypermedia_links_queue_priority.html" class="current"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>@comunica/actor-rdf-resolve-hypermedia-links-queue-priority - v0.4.1</a></li>
+<li><a href="_comunica_actor_rdf_resolve_hypermedia_links_queue_wrapper_limit_count.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>@comunica/actor-rdf-resolve-hypermedia-links-queue-wrapper-limit-count - v0.4.1</a></li>
+<li><a href="_comunica_actor_rdf_resolve_hypermedia_links_queue_wrapper_limit_depth.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>@comunica/actor-rdf-resolve-hypermedia-links-queue-wrapper-limit-depth - v0.4.1</a></li>
+<li><a href="_comunica_actor_rdf_resolve_hypermedia_links_traverse.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>@comunica/actor-rdf-resolve-hypermedia-links-traverse - v0.4.1</a></li>
 <li>Loading...</li></ul></nav></div></div></div>
 <div class="tsd-generator">
 <p>Generated using <a href="https://typedoc.org/" rel="noopener" target="_blank">TypeDoc</a></p></div>
