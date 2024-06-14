@@ -5,53 +5,6 @@ import { PRODUCED_BY_ACTOR } from '@comunica/types-link-traversal';
 import type { Algebra } from 'sparqlalgebrajs';
 
 /**
- * The type of event
- */
-export enum EventType {
-  Push,
-  Pop,
-}
-
-/**
- * A link queue event
- */
-interface ILinkQueueEvent {
-  type: EventType;
-  link: IURLStatistic;
-  query: Algebra.Operation;
-  queueStatistics: IQueueStatistics;
-}
-/**
- * Statistic of the link queue
- */
-interface IQueueStatistics {
-  size: number;
-  reachabilityRatio: IReachabilityRatio;
-}
-/**
- * Ratio of the reachability criteria of the links in the queue
- */
-interface IReachabilityRatio {
-  pushEvent: Record<string, number>;
-  popEvent: Record<string, number>;
-}
-/**
- * Optional parameters necessitating special processing
- */
-interface IOptionalLinkQueueParameters {
-}
-
-/**
- * Information about an URL
- */
-interface IURLStatistic {
-  url: string;
-  reachability_criteria: string | null;
-  reachability_criteria_dynamic_info?: object;
-  timestamp?: number;
-  parent?: IURLStatistic;
-}
-/**
  * A link queue that log information about event happening in the queue
  */
 export class LinkQueueLogger extends LinkQueueWrapper {
@@ -205,4 +158,52 @@ export class LinkQueueLogger extends LinkQueueWrapper {
     const jsonEvent = { ...event, type: EventType[event.type] };
     this.logger.trace(LinkQueueLogger.LINK_QUEUE_EVENT_NAME, { data: JSON.stringify(jsonEvent) });
   }
+}
+
+/**
+ * The type of event
+ */
+export enum EventType {
+  Push,
+  Pop,
+}
+
+/**
+ * A link queue event
+ */
+interface ILinkQueueEvent {
+  type: EventType;
+  link: IURLStatistic;
+  query: Algebra.Operation;
+  queueStatistics: IQueueStatistics;
+}
+/**
+ * Statistic of the link queue
+ */
+interface IQueueStatistics {
+  size: number;
+  reachabilityRatio: IReachabilityRatio;
+}
+/**
+ * Ratio of the reachability criteria of the links in the queue
+ */
+interface IReachabilityRatio {
+  pushEvent: Record<string, number>;
+  popEvent: Record<string, number>;
+}
+/**
+ * Optional parameters necessitating special processing
+ */
+interface IOptionalLinkQueueParameters {
+}
+
+/**
+ * Information about an URL
+ */
+interface IURLStatistic {
+  url: string;
+  reachability_criteria: string | null;
+  reachability_criteria_dynamic_info?: object;
+  timestamp?: number;
+  parent?: IURLStatistic;
 }
