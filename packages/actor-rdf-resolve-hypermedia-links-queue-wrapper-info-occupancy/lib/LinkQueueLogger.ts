@@ -67,8 +67,9 @@ export class LinkQueueLogger extends LinkQueueWrapper {
 
   /**
    *
-   * @param {ILinkQueue & IOptionalLinkQueueParameters} linkQueue - The link queue with optional public parameters
+   * @param {ILinkQueue & IOptionalLinkQueueParameters} linkQueue - The link queue with optional parameters
    * @param {Algebra.Operation} query - The current query
+   * @param {Logger} logger - The logger when the event are outputted
    */
   public constructor(linkQueue: ILinkQueue & IOptionalLinkQueueParameters, query: Algebra.Operation, logger: Logger) {
     super(linkQueue);
@@ -87,6 +88,12 @@ export class LinkQueueLogger extends LinkQueueWrapper {
     Object.freeze(this.query);
   }
 
+  /**
+   * Helper function to get the reachability criteria of a link
+   * @param {ILink} link - Current link
+   * @returns {[string, object | undefined] | null}
+   * The reachability criteria with extra information about it if available
+   */
   private static getReachability(link: ILink): [string, object | undefined] | null {
     const metadata = link.metadata;
     if (metadata !== undefined && metadata[PRODUCED_BY_ACTOR] !== undefined) {
@@ -103,6 +110,11 @@ export class LinkQueueLogger extends LinkQueueWrapper {
     return null;
   }
 
+  /**
+   * Append the reachability criterion ratios
+   * @param {IURLStatistic} statisticLink - current link
+   * @param {IReachabilityRatio} event - The current event
+   */
   private appendReachabilityStatistic(statisticLink: IURLStatistic, event: keyof IReachabilityRatio): void {
     if (statisticLink.reachability_criteria !== null &&
       this.reachabilityRatio[event][statisticLink.reachability_criteria] !== undefined) {
@@ -186,7 +198,8 @@ export class LinkQueueLogger extends LinkQueueWrapper {
   }
 
   /**
-   * Materialize the current event
+   * Materialize the current event into the logger
+   * @param {ILinkQueueEvent} event - Current event
    */
   private materialize(event: ILinkQueueEvent): void {
     const jsonEvent = { ...event, type: EventType[event.type] };
