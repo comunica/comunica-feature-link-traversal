@@ -69,7 +69,7 @@ export class LinkQueueLogger extends LinkQueueWrapper {
    *
    * @param {ILinkQueue & IOptionalLinkQueueParameters} linkQueue - The link queue with optional parameters
    * @param {Algebra.Operation} query - The current query
-   * @param {Logger} logger - The logger when the event are outputted
+   * @param {Logger} logger - The logger where the events are output
    */
   public constructor(linkQueue: ILinkQueue & IOptionalLinkQueueParameters, query: Algebra.Operation, logger: Logger) {
     super(linkQueue);
