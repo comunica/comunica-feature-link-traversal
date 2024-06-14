@@ -64,5 +64,5 @@ export interface IActorRdfResolveHypermediaLinksQueueWrapperInfoOccupancyArgs
 }
 
 export const KEY_CONTEXT_WRAPPED = new ActionContextKey<boolean>(
-  '@comunica/actor-rdf-resolve-hypermedia-links-queue-wrapper-info-occupance:wrapped',
+  '@comunica/actor-rdf-resolve-hypermedia-links-queue-wrapper-info-occupancy:wrapped',
 );
