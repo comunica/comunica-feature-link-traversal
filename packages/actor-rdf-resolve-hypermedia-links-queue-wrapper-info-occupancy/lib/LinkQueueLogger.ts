@@ -29,7 +29,7 @@ interface IQueueStatistics {
   reachabilityRatio: IReachabilityRatio;
 }
 /**
- * Ratio of the reachability criteria of the link in the queue
+ * Ratio of the reachability criteria of the links in the queue
  */
 interface IReachabilityRatio {
   pushEvent: Record<string, number>;
