@@ -63,7 +63,7 @@ export class LinkQueueLogger extends LinkQueueWrapper {
   };
 
   public static readonly LINK_QUEUE_EVENT_NAME = '<Link queue occupancy>';
-  public static readonly LINK_QUEUE_DIDNT_START_EMPTY_MESSAGE = 'the link queue didn\'t started empty';
+  public static readonly LINK_QUEUE_DIDNT_START_EMPTY_MESSAGE = 'the link queue didn\'t start empty';
 
   /**
    *
