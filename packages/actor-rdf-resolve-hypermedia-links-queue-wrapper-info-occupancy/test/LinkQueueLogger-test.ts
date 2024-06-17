@@ -1,5 +1,6 @@
-import { PRODUCED_BY_ACTOR } from '@comunica/types-link-traversal';
 import { EventType, LinkQueueLogger } from '../lib/LinkQueueLogger';
+
+const PRODUCED_BY_ACTOR = 'producedByActor';
 
 describe('LinkQueueFilterLinks', () => {
   const query = 'SELECT * {?s ?p ?o}';

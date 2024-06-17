@@ -1,7 +1,6 @@
 import type { ILinkQueue, ILink } from '@comunica/bus-rdf-resolve-hypermedia-links-queue';
 import { LinkQueueWrapper } from '@comunica/bus-rdf-resolve-hypermedia-links-queue';
 import type { Logger } from '@comunica/types';
-import { PRODUCED_BY_ACTOR } from '@comunica/types-link-traversal';
 
 /**
  * A link queue that log information about event happening in the queue
@@ -183,3 +182,5 @@ interface IProduceByActor {
   name: string;
   metadata?: object;
 }
+
+const PRODUCED_BY_ACTOR = 'producedByActor';
