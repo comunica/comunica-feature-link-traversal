@@ -7,7 +7,7 @@ import { KeysInitQuery } from '@comunica/context-entries';
 import type { Actor, IActorArgs, IActorTest, Mediator } from '@comunica/core';
 import { ActionContextKey } from '@comunica/core';
 import { LoggerPretty } from '@comunica/logger-pretty';
-import type { Algebra } from 'sparqlalgebrajs';
+import { type Algebra, toSparql } from 'sparqlalgebrajs';
 import { LinkQueueLogger } from './LinkQueueLogger';
 
 /**
@@ -36,19 +36,11 @@ export class ActorRdfResolveHypermediaLinksQueueWrapperInfoOccupancy
   public async run(action: IActionRdfResolveHypermediaLinksQueue): Promise<IActorRdfResolveHypermediaLinksQueueOutput> {
     const context = action.context.set(KEY_CONTEXT_WRAPPED, true);
     const query: Algebra.Operation = action.context.get(KeysInitQuery.query)!;
-    // The metadata cannot be serialized
-    const queryWithoutMetadata = JSON.parse(JSON.stringify(query, (key, value) => {
-      if (key === 'metadata') {
-        return;
-      }
-      return value;
-    }));
-
     const logger = new LoggerPretty({ level: 'trace' });
 
     const { linkQueue } = await this.mediatorRdfResolveHypermediaLinksQueue.mediate({ ...action, context });
     return {
-      linkQueue: new LinkQueueLogger(linkQueue, queryWithoutMetadata, logger),
+      linkQueue: new LinkQueueLogger(linkQueue, toSparql(query), logger),
     };
   }
 }

@@ -1,6 +1,7 @@
 import { KeysInitQuery } from '@comunica/context-entries';
 import { Bus, ActionContext } from '@comunica/core';
 import { LoggerPretty } from '@comunica/logger-pretty';
+import { translate, toSparql } from 'sparqlalgebrajs';
 import {
   ActorRdfResolveHypermediaLinksQueueWrapperInfoOccupancy,
   KEY_CONTEXT_WRAPPED,
@@ -78,25 +79,24 @@ describe('ActorRdfResolveHypermediaLinksQueueRdfResolveHypermediaLinkQueueWrappe
           mediatorRdfResolveHypermediaLinksQueue: mediator,
         });
 
-        const query = { q: true, metadata: { abc: 'dfg' }};
+        const query = toSparql(translate(`SELECT ?personId ?firstName ?lastName WHERE {
+        <http://localhost:3000/pods/00000000000000000150/comments/Mexico#68719564521> <http://localhost:3000/www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/id> ?messageId.
+        <http://localhost:3000/pods/00000000000000000150/comments/Mexico#68719564521> <http://localhost:3000/www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/hasCreator> ?creator.
+        ?creator <http://localhost:3000/www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/id> ?personId.
+        ?creator <http://localhost:3000/www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/firstName> ?firstName.
+        ?creator <http://localhost:3000/www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/lastName> ?lastName.
+        }`));
 
         jest.spyOn(action.context, 'get').mockImplementation((key: any) => {
           if (key.name === KeysInitQuery.query.name) {
-            return query;
+            return translate(query);
           }
           return undefined;
         });
 
         const logger = new LoggerPretty({ level: 'trace' });
 
-        const queryWithoutMetadata = JSON.parse(JSON.stringify(query, (key, value) => {
-          if (key === 'metadata') {
-            return;
-          }
-          return value;
-        }));
-
-        const expectedLinkQueueWrapper = new LinkQueueLogger(linkQueue, queryWithoutMetadata, logger);
+        const expectedLinkQueueWrapper = new LinkQueueLogger(linkQueue, query, logger);
 
         await expect(actor.run(action)).resolves.toStrictEqual({ linkQueue: expectedLinkQueueWrapper });
         expect(action.context.set).toHaveBeenCalledTimes(1);
@@ -113,11 +113,17 @@ describe('ActorRdfResolveHypermediaLinksQueueRdfResolveHypermediaLinkQueueWrappe
           mediatorRdfResolveHypermediaLinksQueue: mediator,
         });
 
-        const query = { q: true };
+        const query = toSparql(translate(`SELECT ?personId ?firstName ?lastName WHERE {
+          <http://localhost:3000/pods/00000000000000000150/comments/Mexico#68719564521> <http://localhost:3000/www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/id> ?messageId.
+          <http://localhost:3000/pods/00000000000000000150/comments/Mexico#68719564521> <http://localhost:3000/www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/hasCreator> ?creator.
+          ?creator <http://localhost:3000/www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/id> ?personId.
+          ?creator <http://localhost:3000/www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/firstName> ?firstName.
+          ?creator <http://localhost:3000/www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/lastName> ?lastName.
+          }`));
 
         jest.spyOn(action.context, 'get').mockImplementation((key: any) => {
           if (key.name === KeysInitQuery.query.name) {
-            return query;
+            return translate(query);
           }
           return undefined;
         });

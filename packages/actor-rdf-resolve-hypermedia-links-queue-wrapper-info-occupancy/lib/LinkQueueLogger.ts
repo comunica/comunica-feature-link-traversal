@@ -2,15 +2,14 @@ import type { ILinkQueue, ILink } from '@comunica/bus-rdf-resolve-hypermedia-lin
 import { LinkQueueWrapper } from '@comunica/bus-rdf-resolve-hypermedia-links-queue';
 import type { Logger } from '@comunica/types';
 import { PRODUCED_BY_ACTOR } from '@comunica/types-link-traversal';
-import type { Algebra } from 'sparqlalgebrajs';
 
 /**
  * A link queue that log information about event happening in the queue
  */
 export class LinkQueueLogger extends LinkQueueWrapper {
-  public readonly query: Algebra.Operation;
+  public readonly query: string;
   private readonly logger: Logger;
-  private readonly reachabilityRatio: IReachabilityRatio = {
+  private readonly linkProductionRatio: ILinkProductionActorRatio = {
     pushEvent: {},
     popEvent: {},
   };
@@ -20,11 +19,11 @@ export class LinkQueueLogger extends LinkQueueWrapper {
 
   /**
    *
-   * @param {ILinkQueue & IOptionalLinkQueueParameters} linkQueue - The link queue with optional parameters
+   * @param {ILinkQueue} linkQueue - The link queue
    * @param {Algebra.Operation} query - The current query
    * @param {Logger} logger - The logger where the events are output
    */
-  public constructor(linkQueue: ILinkQueue & IOptionalLinkQueueParameters, query: Algebra.Operation, logger: Logger) {
+  public constructor(linkQueue: ILinkQueue, query: string, logger: Logger) {
     super(linkQueue);
     this.logger = logger;
 
@@ -36,7 +35,7 @@ export class LinkQueueLogger extends LinkQueueWrapper {
         },
       );
     }
-    this.query = JSON.parse(JSON.stringify(query));
+    this.query = query;
 
     Object.freeze(this.query);
   }
@@ -44,10 +43,9 @@ export class LinkQueueLogger extends LinkQueueWrapper {
   /**
    * Helper function to get the reachability criteria of a link
    * @param {ILink} link - Current link
-   * @returns {[string, object | undefined] | null}
-   * The reachability criteria with extra information about it if available
+   * @returns {IProduceByActor | null } The reachability criteria with extra information about it if available
    */
-  private static getReachability(link: ILink): [string, object | undefined] | null {
+  private static getActorProductorInformation(link: ILink): IProduceByActor | null {
     const metadata = link.metadata;
     if (metadata !== undefined && metadata[PRODUCED_BY_ACTOR] !== undefined) {
       const { name, ...rest } = metadata[PRODUCED_BY_ACTOR];
@@ -55,68 +53,64 @@ export class LinkQueueLogger extends LinkQueueWrapper {
       if (name === undefined) {
         return null;
       }
-      return [
+      return {
         name,
-        Object.keys(rest).length === 0 ? undefined : rest,
-      ];
+        metadata: Object.keys(rest).length === 0 ? undefined : rest,
+      };
     }
     return null;
   }
 
   /**
-   * Append the reachability criterion ratios
-   * @param {IURLStatistic} statisticLink - current link
-   * @param {IReachabilityRatio} event - The current event
+   * Update the link production ratio
+   * @param {IURLStatistic} link - current link
+   * @param {keyof ILinkProductionActorRatio} event - link queue event
    */
-  private appendReachabilityStatistic(statisticLink: IURLStatistic, event: keyof IReachabilityRatio): void {
-    if (statisticLink.reachability_criteria !== null &&
-      this.reachabilityRatio[event][statisticLink.reachability_criteria] !== undefined) {
-      this.reachabilityRatio[event][statisticLink.reachability_criteria] += 1;
-    } else if (statisticLink.reachability_criteria !== null &&
-      this.reachabilityRatio[event][statisticLink.reachability_criteria] === undefined) {
-      this.reachabilityRatio[event][statisticLink.reachability_criteria] = 1;
-    } else if (this.reachabilityRatio[event].unknown === undefined) {
-      this.reachabilityRatio[event].unknown = 1;
+  private updateLinkProductionRatio(link: IURLStatistic, event: keyof ILinkProductionActorRatio): void {
+    if (link.producedByActor !== null &&
+      this.linkProductionRatio[event][link.producedByActor?.name] !== undefined) {
+      this.linkProductionRatio[event][link.producedByActor?.name] += 1;
+    } else if (link.producedByActor !== null &&
+      this.linkProductionRatio[event][link.producedByActor?.name] === undefined) {
+      this.linkProductionRatio[event][link.producedByActor?.name] = 1;
+    } else if (this.linkProductionRatio[event].unknown === undefined) {
+      this.linkProductionRatio[event].unknown = 1;
     } else {
-      this.reachabilityRatio[event].unknown += 1;
+      this.linkProductionRatio[event].unknown += 1;
     }
+  }
+
+  /**
+   * Create the information of a link queue event
+   * @param {ILink} link - current link
+   * @param {EventType} eventType - the type of event
+   * @param {ILink|undefined} parent - the parent of the link
+   * @returns {ILinkQueueEvent} current event of the link queue
+   */
+  private createLinkQueueEvent(link: ILink, eventType: EventType, parent?: ILink): ILinkQueueEvent {
+    const linkInfo: IURLStatistic = {
+      url: link.url,
+      producedByActor: LinkQueueLogger.getActorProductorInformation(link),
+      timestamp: performance.now(),
+      parent: parent?.url,
+    };
+    this.updateLinkProductionRatio(linkInfo, eventType === EventType.Pop ? 'popEvent' : 'pushEvent');
+
+    return {
+      type: eventType,
+      link: linkInfo,
+      query: this.query,
+      queue: {
+        size: this.getSize(),
+        ...this.linkProductionRatio,
+      },
+    };
   }
 
   public override push(link: ILink, parent: ILink): boolean {
     const resp: boolean = super.push(link, parent);
     if (resp) {
-      const reachabilityCriteriaParentLink = LinkQueueLogger.getReachability(parent);
-
-      const parentStatisticLink: IURLStatistic = {
-        url: parent.url,
-        reachability_criteria: reachabilityCriteriaParentLink === null ? null : reachabilityCriteriaParentLink[0],
-        reachability_criteria_dynamic_info: reachabilityCriteriaParentLink === null ?
-          undefined :
-          reachabilityCriteriaParentLink[1],
-      };
-
-      const reachabilityCriteriaCurrentLink = LinkQueueLogger.getReachability(link);
-
-      const statisticLink: IURLStatistic = {
-        url: link.url,
-        reachability_criteria: reachabilityCriteriaCurrentLink === null ? null : reachabilityCriteriaCurrentLink[0],
-        reachability_criteria_dynamic_info: reachabilityCriteriaCurrentLink === null ?
-          undefined :
-          reachabilityCriteriaCurrentLink[1],
-        timestamp: Date.now(),
-        parent: parentStatisticLink,
-      };
-      this.appendReachabilityStatistic(statisticLink, 'pushEvent');
-      const event: ILinkQueueEvent = {
-        type: EventType.Push,
-        link: statisticLink,
-        query: this.query,
-        queueStatistics: {
-          size: this.getSize(),
-          reachabilityRatio: this.reachabilityRatio,
-        },
-      };
-
+      const event: ILinkQueueEvent = this.createLinkQueueEvent(link, EventType.Push, parent);
       this.materialize(event);
     }
     return resp;
@@ -125,26 +119,7 @@ export class LinkQueueLogger extends LinkQueueWrapper {
   public override pop(): ILink | undefined {
     const link = super.pop();
     if (link !== undefined) {
-      const reachabilityCriteriaCurrentLink = LinkQueueLogger.getReachability(link);
-      const statisticLink: IURLStatistic = {
-        url: link.url,
-        reachability_criteria: reachabilityCriteriaCurrentLink === null ? null : reachabilityCriteriaCurrentLink[0],
-        reachability_criteria_dynamic_info: reachabilityCriteriaCurrentLink === null ?
-          undefined :
-          reachabilityCriteriaCurrentLink[1],
-        timestamp: Date.now(),
-      };
-      this.appendReachabilityStatistic(statisticLink, 'popEvent');
-      const event: ILinkQueueEvent = {
-        type: EventType.Pop,
-        link: statisticLink,
-        query: this.query,
-        queueStatistics: {
-          size: this.getSize(),
-          reachabilityRatio: this.reachabilityRatio,
-        },
-      };
-
+      const event: ILinkQueueEvent = this.createLinkQueueEvent(link, EventType.Pop);
       this.materialize(event);
     }
     return link;
@@ -174,27 +149,22 @@ export enum EventType {
 interface ILinkQueueEvent {
   type: EventType;
   link: IURLStatistic;
-  query: Algebra.Operation;
-  queueStatistics: IQueueStatistics;
+  query: string;
+  queue: IQueueStatistics;
 }
 /**
  * Statistic of the link queue
  */
-interface IQueueStatistics {
+interface IQueueStatistics extends ILinkProductionActorRatio {
   size: number;
-  reachabilityRatio: IReachabilityRatio;
 }
 /**
- * Ratio of the reachability criteria of the links in the queue
+ * Ratio of the actor producing links in relation to the push and pop events.
+ * The key of the index is the name of the actor and the value is the number of occurance.
  */
-interface IReachabilityRatio {
+interface ILinkProductionActorRatio {
   pushEvent: Record<string, number>;
   popEvent: Record<string, number>;
-}
-/**
- * Optional parameters necessitating special processing
- */
-interface IOptionalLinkQueueParameters {
 }
 
 /**
@@ -202,8 +172,14 @@ interface IOptionalLinkQueueParameters {
  */
 interface IURLStatistic {
   url: string;
-  reachability_criteria: string | null;
-  reachability_criteria_dynamic_info?: object;
+  producedByActor: IProduceByActor | null;
   timestamp?: number;
-  parent?: IURLStatistic;
+  parent?: string;
+}
+/**
+ * Information about the actor that produce the link
+ */
+interface IProduceByActor {
+  name: string;
+  metadata?: object;
 }
