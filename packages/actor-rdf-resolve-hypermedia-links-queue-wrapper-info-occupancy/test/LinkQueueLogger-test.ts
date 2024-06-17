@@ -66,7 +66,7 @@ describe('LinkQueueFilterLinks', () => {
         getSize: () => queueSize,
       };
 
-      jest.spyOn(performance, 'now').mockImplementation().mockReturnValueOnce(1);
+      jest.spyOn(Date, 'now').mockImplementation().mockReturnValueOnce(1);
 
       const wrapper = new LinkQueueLogger(linkQueue, query, logger);
       const resp = wrapper.push(iri, iri);
@@ -123,7 +123,7 @@ describe('LinkQueueFilterLinks', () => {
         getSize: () => queueSize,
       };
 
-      jest.spyOn(performance, 'now').mockImplementation().mockReturnValueOnce(1);
+      jest.spyOn(Date, 'now').mockImplementation().mockReturnValueOnce(1);
 
       const wrapper = new LinkQueueLogger(linkQueue, query, logger);
       const resp = wrapper.push(iri, parent);
@@ -181,7 +181,7 @@ describe('LinkQueueFilterLinks', () => {
         getSize: () => queueSize,
       };
 
-      jest.spyOn(performance, 'now').mockImplementation().mockReturnValueOnce(1);
+      jest.spyOn(Date, 'now').mockImplementation().mockReturnValueOnce(1);
 
       const wrapper = new LinkQueueLogger(linkQueue, query, logger);
       const resp = wrapper.push(iri, parent);
@@ -245,7 +245,7 @@ describe('LinkQueueFilterLinks', () => {
         isEmpty: () => true,
         getSize: () => i,
       };
-      jest.spyOn(performance, 'now').mockImplementation(() => i);
+      jest.spyOn(Date, 'now').mockImplementation(() => i);
       const wrapper = new LinkQueueLogger(linkQueue, query, logger);
 
       const eventHistory: any[] = [];
@@ -353,7 +353,7 @@ describe('LinkQueueFilterLinks', () => {
         getSize: () => queueSize,
       };
 
-      jest.spyOn(performance, 'now').mockImplementation().mockReturnValueOnce(1);
+      jest.spyOn(Date, 'now').mockImplementation().mockReturnValueOnce(1);
 
       const wrapper = new LinkQueueLogger(linkQueue, query, logger);
       const resp = wrapper.pop();
@@ -412,7 +412,7 @@ describe('LinkQueueFilterLinks', () => {
         getSize: () => queueSize,
       };
 
-      jest.spyOn(performance, 'now').mockImplementation().mockReturnValueOnce(1);
+      jest.spyOn(Date, 'now').mockImplementation().mockReturnValueOnce(1);
 
       const wrapper = new LinkQueueLogger(linkQueue, query, logger);
       const resp = wrapper.pop();
@@ -466,7 +466,7 @@ describe('LinkQueueFilterLinks', () => {
         getSize: () => i,
       };
 
-      jest.spyOn(performance, 'now').mockImplementation(() => i);
+      jest.spyOn(Date, 'now').mockImplementation(() => i);
       const wrapper = new LinkQueueLogger(linkQueue, query, logger);
       let expectedLink: any;
       const eventHistory: any = [];
