@@ -42,6 +42,7 @@
     "@comunica/core": "^3.0.1",
     "@comunica/logger-pretty": "^3.0.3",
     "@comunica/types-link-traversal": "^0.4.0",
+    "sparqlalgebrajs": "^4.3.5",
     "uuid": "^9.0.1"
   }
 }
