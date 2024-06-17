@@ -93,7 +93,7 @@ export class LinkQueueLogger extends LinkQueueWrapper {
       timestamp: performance.now(),
       parent: parent?.url,
     };
-    this.updateLinkProductionRatio(linkInfo, eventType === EventType.Pop ? 'popEvent' : 'pushEvent');
+    this.updateLinkProductionRatio(linkInfo, eventType === EventType.POP ? 'popEvent' : 'pushEvent');
 
     return {
       type: eventType,
@@ -109,7 +109,7 @@ export class LinkQueueLogger extends LinkQueueWrapper {
   public override push(link: ILink, parent: ILink): boolean {
     const resp: boolean = super.push(link, parent);
     if (resp) {
-      const event: ILinkQueueEvent = this.createLinkQueueEvent(link, EventType.Push, parent);
+      const event: ILinkQueueEvent = this.createLinkQueueEvent(link, EventType.PUSH, parent);
       this.materialize(event);
     }
     return resp;
@@ -118,7 +118,7 @@ export class LinkQueueLogger extends LinkQueueWrapper {
   public override pop(): ILink | undefined {
     const link = super.pop();
     if (link !== undefined) {
-      const event: ILinkQueueEvent = this.createLinkQueueEvent(link, EventType.Pop);
+      const event: ILinkQueueEvent = this.createLinkQueueEvent(link, EventType.POP);
       this.materialize(event);
     }
     return link;
@@ -138,8 +138,8 @@ export class LinkQueueLogger extends LinkQueueWrapper {
  * The type of event
  */
 export enum EventType {
-  Push,
-  Pop,
+  PUSH,
+  POP,
 }
 
 /**
