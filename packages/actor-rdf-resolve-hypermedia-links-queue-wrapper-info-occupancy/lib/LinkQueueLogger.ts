@@ -25,18 +25,7 @@ export class LinkQueueLogger extends LinkQueueWrapper {
   public constructor(linkQueue: ILinkQueue, query: string, logger: Logger) {
     super(linkQueue);
     this.logger = logger;
-
-    if (!linkQueue.isEmpty()) {
-      this.logger.warn(
-        LinkQueueLogger.LINK_QUEUE_EVENT_NAME,
-        {
-          message: LinkQueueLogger.LINK_QUEUE_DIDNT_START_EMPTY_MESSAGE,
-        },
-      );
-    }
     this.query = query;
-
-    Object.freeze(this.query);
   }
 
   /**

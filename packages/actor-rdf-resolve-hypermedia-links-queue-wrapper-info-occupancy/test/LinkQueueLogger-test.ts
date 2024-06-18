@@ -22,22 +22,6 @@ describe('LinkQueueFilterLinks', () => {
       };
 
       expect(new LinkQueueLogger(linkqueue, query, logger)).toBeDefined();
-      expect(logger.warn).toHaveBeenCalledTimes(1);
-      expect(logger.warn)
-        .toHaveBeenCalledWith(LinkQueueLogger.LINK_QUEUE_EVENT_NAME, {
-          message: LinkQueueLogger.LINK_QUEUE_DIDNT_START_EMPTY_MESSAGE,
-        });
-    });
-
-    it('should give a warning if the link queue started not empty', () => {
-      const linkqueue: any = {
-        isEmpty: () => {
-          return true;
-        },
-      };
-
-      expect(new LinkQueueLogger(linkqueue, query, logger)).toBeDefined();
-      expect(logger.warn).not.toHaveBeenCalled();
     });
   });
 
