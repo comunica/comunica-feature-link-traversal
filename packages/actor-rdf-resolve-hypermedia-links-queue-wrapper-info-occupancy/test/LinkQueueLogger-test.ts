@@ -128,7 +128,6 @@ describe('LinkQueueFilterLinks', () => {
         link: {
           url: 'foo',
           timestamp: 1,
-          producedByActor: null,
           parent: 'bar',
         },
         query,
@@ -186,7 +185,7 @@ describe('LinkQueueFilterLinks', () => {
         link: {
           url: 'foo',
           timestamp: 1,
-          producedByActor: null,
+
           parent: 'bar',
         },
         query,
@@ -297,7 +296,7 @@ describe('LinkQueueFilterLinks', () => {
             link: {
               url: String(i),
               timestamp: i,
-              producedByActor: null,
+
               parent: String(i),
             },
             query,
@@ -417,7 +416,6 @@ describe('LinkQueueFilterLinks', () => {
         link: {
           url: 'foo',
           timestamp: 1,
-          producedByActor: null,
         },
         query,
         queue: {
@@ -501,7 +499,7 @@ describe('LinkQueueFilterLinks', () => {
             type: 'popEvent',
             link: {
               url: String(i),
-              producedByActor: null,
+
               timestamp: i,
             },
             query,

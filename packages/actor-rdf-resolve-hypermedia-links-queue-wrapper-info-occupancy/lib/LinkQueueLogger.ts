@@ -28,22 +28,19 @@ export class LinkQueueLogger extends LinkQueueWrapper {
   /**
    * Helper function to get the reachability criteria of a link
    * @param {ILink} link - Current link
-   * @returns {IProducedByActor | null } The reachability criteria with extra information about it if available
+   * @returns {IProducedByActor | undefined } The reachability criteria with extra information about it if available
    */
-  private static getActorProductorInformation(link: ILink): IProducedByActor | null {
+  private static getActorProductorInformation(link: ILink): IProducedByActor | undefined {
     const metadata = link.metadata;
     if (metadata && metadata[PRODUCED_BY_ACTOR]) {
       const { name, ...rest } = metadata[PRODUCED_BY_ACTOR];
-
-      if (!name) {
-        return null;
+      if (name) {
+        return {
+          name,
+          metadata: Object.keys(rest).length === 0 ? undefined : rest,
+        };
       }
-      return {
-        name,
-        metadata: Object.keys(rest).length === 0 ? undefined : rest,
-      };
     }
-    return null;
   }
 
   /**
@@ -147,7 +144,7 @@ interface ILinkProductionActorRatio {
  */
 interface IUrlStatistic {
   url: string;
-  producedByActor: IProducedByActor | null;
+  producedByActor?: IProducedByActor;
   timestamp?: number;
   parent?: string;
 }
