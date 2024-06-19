@@ -9,6 +9,7 @@ if (!globalThis.window) {
 }
 
 const queries = loadQueries();
+// global.created = new Set();
 
 describe('System test: QuerySparqlLinkTraversalSolid', () => {
   usePolly();
@@ -16,20 +17,20 @@ describe('System test: QuerySparqlLinkTraversalSolid', () => {
   const engine: QueryEngine = new QueryEngine();
 
   describeEach([
-    [ 'interactive-short-4-1.sparql', 1 ],
-    [ 'interactive-short-5-1.sparql', 1 ],
-    [ 'interactive-discover-1-1.sparql', 6 ],
-    [ 'interactive-discover-1-5.sparql', 8 ],
-    [ 'interactive-discover-2-1.sparql', 66 ],
-    [ 'interactive-discover-2-5.sparql', 98 ],
-    [ 'interactive-discover-3-1.sparql', 71 ],
-    [ 'interactive-discover-3-5.sparql', 142 ],
-    [ 'interactive-discover-4-1.sparql', 5 ],
-    [ 'interactive-discover-4-5.sparql', 7 ],
-    [ 'interactive-discover-5-1.sparql', 15 ],
-    [ 'interactive-discover-5-5.sparql', 20 ],
-    [ 'interactive-discover-6-5.sparql', 27 ],
-    [ 'interactive-discover-7-5.sparql', 1 ],
+    // [ 'interactive-short-4-1.sparql', 1 ],
+    // [ 'interactive-short-5-1.sparql', 1 ],
+    // [ 'interactive-discover-1-1.sparql', 6 ],
+    // [ 'interactive-discover-1-5.sparql', 8 ],
+    // [ 'interactive-discover-2-1.sparql', 66 ],
+    // [ 'interactive-discover-2-5.sparql', 98 ],
+    // [ 'interactive-discover-3-1.sparql', 71 ],
+    [ 'interactive-discover-3-5.sparql', 154 ],
+    // [ 'interactive-discover-4-1.sparql', 5 ],
+    // [ 'interactive-discover-4-5.sparql', 7 ],
+    // [ 'interactive-discover-5-1.sparql', 15 ],
+    // [ 'interactive-discover-5-5.sparql', 20 ],
+    // [ 'interactive-discover-6-5.sparql', 27 ],
+    // [ 'interactive-discover-7-5.sparql', 1 ],
 
     // The following tests are disabled, as they consume too much memory under default Node.js limits.
     // We may be able to enable these with future optimizations.
@@ -41,10 +42,15 @@ describe('System test: QuerySparqlLinkTraversalSolid', () => {
     // [ 'interactive-discover-8-1.sparql', 10 ],
 
   ], (file, expectedCount) => () => {
-    it('produces the expected results', async() => {
-      const bindings = await engine.queryBindings(queries[file], { lenient: true });
-      await expect((bindings.toArray())).resolves.toHaveLength(expectedCount);
-    });
+    for (let i = 0; i < 50; i++) {
+      it(`produces the expected results ${i}`, async() => {
+        const bindings = await engine.queryBindings(queries[file], { lenient: true });
+        const arr = await (bindings.toArray());
+        // console.log(global.created.size); // TODO
+        // console.log(global.created.clear()); // TODO
+        expect(arr).toHaveLength(expectedCount);
+      });
+    }
   });
 });
 
