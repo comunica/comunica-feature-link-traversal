@@ -55,7 +55,7 @@ export class LinkQueueLogger extends LinkQueueWrapper {
    */
   private updateLinkProductionRatio(link: IUrlStatistic, event: keyof ILinkProductionActorRatio): void {
     if (link.producedByActor &&
-      this.linkProductionRatio[event][link.producedByActor?.name] !== undefined) {
+      this.linkProductionRatio[event][link.producedByActor?.name]) {
       this.linkProductionRatio[event][link.producedByActor?.name] += 1;
     } else if (link.producedByActor &&
       this.linkProductionRatio[event][link.producedByActor?.name] === undefined) {
