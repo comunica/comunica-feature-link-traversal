@@ -76,7 +76,7 @@ export class LinkQueueLogger extends LinkQueueWrapper {
     const linkInfo: IUrlStatistic = {
       url: link.url,
       producedByActor: LinkQueueLogger.getActorProductorInformation(link),
-      timestamp: Date.now(),
+      timestamp: performance.now(),
       parent: parent?.url,
     };
     this.updateLinkProductionRatio(linkInfo, eventType === EventType.POP ? 'popEvents' : 'pushEvents');
