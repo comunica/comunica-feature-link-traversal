@@ -57,11 +57,9 @@ export class LinkQueueLogger extends LinkQueueWrapper {
     if (link.producedByActor &&
       this.linkProductionRatio[event][link.producedByActor?.name]) {
       this.linkProductionRatio[event][link.producedByActor?.name] += 1;
-    } else if (link.producedByActor &&
-      this.linkProductionRatio[event][link.producedByActor?.name] === undefined) {
-      this.linkProductionRatio[event][link.producedByActor?.name] = 1;
-    } else if (this.linkProductionRatio[event].unknown === undefined) {
-      this.linkProductionRatio[event].unknown = 1;
+    } else if (
+      this.linkProductionRatio[event][link.producedByActor?.name ?? 'unknown'] === undefined) {
+      this.linkProductionRatio[event][link.producedByActor?.name ?? 'unknown'] = 1;
     } else {
       this.linkProductionRatio[event].unknown += 1;
     }
