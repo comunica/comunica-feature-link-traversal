@@ -8,6 +8,7 @@ globalThis.performance = <any>{ now: jest.fn() };
 jest.spyOn(globalThis.performance, 'now').mockImplementation();
 
 const PRODUCED_BY_ACTOR = 'producedByActor';
+const LINK_QUEUE_EVENT_NAME = 'Link queue changed';
 
 describe('LinkQueueFilterLinks', () => {
   const query = 'SELECT * {?s ?p ?o}';
@@ -66,7 +67,7 @@ describe('LinkQueueFilterLinks', () => {
 
       expect(logger.trace).toHaveBeenCalledTimes(1);
       const expectedEvent = {
-        type: 'PUSH',
+        type: 'pushEvent',
         link: {
           url: 'foo',
           producedByActor: {
@@ -87,7 +88,7 @@ describe('LinkQueueFilterLinks', () => {
         },
       };
 
-      expect(logger.trace.mock.calls[0][0]).toBe(LinkQueueLogger.LINK_QUEUE_EVENT_NAME);
+      expect(logger.trace.mock.calls[0][0]).toBe(LINK_QUEUE_EVENT_NAME);
       expect(JSON.parse(logger.trace.mock.calls[0][1].data)).toStrictEqual(expectedEvent);
     });
 
@@ -123,7 +124,7 @@ describe('LinkQueueFilterLinks', () => {
 
       expect(logger.trace).toHaveBeenCalledTimes(1);
       const expectedEvent = {
-        type: 'PUSH',
+        type: 'pushEvent',
         link: {
           url: 'foo',
           timestamp: 1,
@@ -139,7 +140,7 @@ describe('LinkQueueFilterLinks', () => {
         },
       };
 
-      expect(logger.trace.mock.calls[0][0]).toBe(LinkQueueLogger.LINK_QUEUE_EVENT_NAME);
+      expect(logger.trace.mock.calls[0][0]).toBe(LINK_QUEUE_EVENT_NAME);
       expect(JSON.parse(logger.trace.mock.calls[0][1].data)).toStrictEqual(expectedEvent);
     });
 
@@ -181,7 +182,7 @@ describe('LinkQueueFilterLinks', () => {
 
       expect(logger.trace).toHaveBeenCalledTimes(1);
       const expectedEvent = {
-        type: 'PUSH',
+        type: 'pushEvent',
         link: {
           url: 'foo',
           timestamp: 1,
@@ -196,7 +197,7 @@ describe('LinkQueueFilterLinks', () => {
         },
       };
 
-      expect(logger.trace.mock.calls[0][0]).toBe(LinkQueueLogger.LINK_QUEUE_EVENT_NAME);
+      expect(logger.trace.mock.calls[0][0]).toBe(LINK_QUEUE_EVENT_NAME);
       expect(JSON.parse(logger.trace.mock.calls[0][1].data)).toStrictEqual(expectedEvent);
     });
 
@@ -269,7 +270,7 @@ describe('LinkQueueFilterLinks', () => {
           };
           reachabilityRatio.pushEvents[reachabilityCriteria] = 1;
           eventHistory.push({
-            type: 'PUSH',
+            type: 'pushEvent',
             link: {
               url: String(i),
               timestamp: i,
@@ -292,7 +293,7 @@ describe('LinkQueueFilterLinks', () => {
           parent = iri;
           reachabilityRatio.pushEvents.unknown += 1;
           eventHistory.push({
-            type: 'PUSH',
+            type: 'pushEvent',
             link: {
               url: String(i),
               timestamp: i,
@@ -313,7 +314,7 @@ describe('LinkQueueFilterLinks', () => {
 
       expect(logger.trace).toHaveBeenCalledTimes(Math.floor(n / 2));
       for (let j = 1; j < Math.floor(n / 2); ++j) {
-        expect(logger.trace.mock.calls[j - 1][0]).toBe(LinkQueueLogger.LINK_QUEUE_EVENT_NAME);
+        expect(logger.trace.mock.calls[j - 1][0]).toBe(LINK_QUEUE_EVENT_NAME);
         expect(JSON.parse(logger.trace.mock.calls[j - 1][1].data)).toStrictEqual(eventHistory[j - 1]);
       }
     });
@@ -353,7 +354,7 @@ describe('LinkQueueFilterLinks', () => {
 
       expect(logger.trace).toHaveBeenCalledTimes(1);
       const expectedEvent = {
-        type: 'POP',
+        type: 'popEvent',
         link: {
           url: 'foo',
           producedByActor: {
@@ -373,7 +374,7 @@ describe('LinkQueueFilterLinks', () => {
         },
       };
 
-      expect(logger.trace.mock.calls[0][0]).toBe(LinkQueueLogger.LINK_QUEUE_EVENT_NAME);
+      expect(logger.trace.mock.calls[0][0]).toBe(LINK_QUEUE_EVENT_NAME);
       expect(JSON.parse(logger.trace.mock.calls[0][1].data)).toStrictEqual(expectedEvent);
     });
 
@@ -412,7 +413,7 @@ describe('LinkQueueFilterLinks', () => {
 
       expect(logger.trace).toHaveBeenCalledTimes(1);
       const expectedEvent = {
-        type: 'POP',
+        type: 'popEvent',
         link: {
           url: 'foo',
           timestamp: 1,
@@ -426,7 +427,7 @@ describe('LinkQueueFilterLinks', () => {
         },
       };
 
-      expect(logger.trace.mock.calls[0][0]).toBe(LinkQueueLogger.LINK_QUEUE_EVENT_NAME);
+      expect(logger.trace.mock.calls[0][0]).toBe(LINK_QUEUE_EVENT_NAME);
       expect(JSON.parse(logger.trace.mock.calls[0][1].data)).toStrictEqual(expectedEvent);
     });
 
@@ -478,7 +479,7 @@ describe('LinkQueueFilterLinks', () => {
           };
           reachabilityRatio.popEvents[reachabilityCriteria] = 1;
           const expectedLinkStatisticLink = {
-            type: 'POP',
+            type: 'popEvent',
             link: {
               url: String(i),
               timestamp: i,
@@ -497,7 +498,7 @@ describe('LinkQueueFilterLinks', () => {
           expectedLink = { url: String(i) };
           reachabilityRatio.popEvents.unknown += 1;
           const expectedLinkStatisticLink = {
-            type: 'POP',
+            type: 'popEvent',
             link: {
               url: String(i),
               producedByActor: null,
@@ -519,7 +520,7 @@ describe('LinkQueueFilterLinks', () => {
 
       expect(logger.trace).toHaveBeenCalledTimes(Math.floor(n / 2));
       for (let j = 1; j < Math.floor(n / 2); ++j) {
-        expect(logger.trace.mock.calls[j - 1][0]).toBe(LinkQueueLogger.LINK_QUEUE_EVENT_NAME);
+        expect(logger.trace.mock.calls[j - 1][0]).toBe(LINK_QUEUE_EVENT_NAME);
         expect(JSON.parse(logger.trace.mock.calls[j - 1][1].data)).toStrictEqual(eventHistory[j - 1]);
       }
     });

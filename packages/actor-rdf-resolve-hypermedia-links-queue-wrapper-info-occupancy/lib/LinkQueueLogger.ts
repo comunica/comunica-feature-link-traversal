@@ -13,8 +13,6 @@ export class LinkQueueLogger extends LinkQueueWrapper {
     popEvents: {},
   };
 
-  public static readonly LINK_QUEUE_EVENT_NAME = 'Link queue changed';
-
   /**
    *
    * @param {ILinkQueue} linkQueue - The link queue
@@ -34,10 +32,10 @@ export class LinkQueueLogger extends LinkQueueWrapper {
    */
   private static getActorProductorInformation(link: ILink): IProducedByActor | null {
     const metadata = link.metadata;
-    if (metadata !== undefined && metadata[PRODUCED_BY_ACTOR] !== undefined) {
+    if (metadata && metadata[PRODUCED_BY_ACTOR]) {
       const { name, ...rest } = metadata[PRODUCED_BY_ACTOR];
 
-      if (name === undefined) {
+      if (!name) {
         return null;
       }
       return {
@@ -55,13 +53,13 @@ export class LinkQueueLogger extends LinkQueueWrapper {
    */
   private updateLinkProductionRatio(link: IUrlStatistic, event: keyof ILinkProductionActorRatio): void {
     if (link.producedByActor &&
-      this.linkProductionRatio[event][link.producedByActor?.name]) {
-      this.linkProductionRatio[event][link.producedByActor?.name] += 1;
+      this.linkProductionRatio[event][link.producedByActor.name]) {
+      this.linkProductionRatio[event][link.producedByActor.name] += 1;
     } else if (
-      this.linkProductionRatio[event][link.producedByActor?.name ?? 'unknown'] === undefined) {
-      this.linkProductionRatio[event][link.producedByActor?.name ?? 'unknown'] = 1;
-    } else {
+      this.linkProductionRatio[event][link.producedByActor?.name ?? 'unknown']) {
       this.linkProductionRatio[event].unknown += 1;
+    } else {
+      this.linkProductionRatio[event][link.producedByActor?.name ?? 'unknown'] = 1;
     }
   }
 
@@ -72,14 +70,14 @@ export class LinkQueueLogger extends LinkQueueWrapper {
    * @param {ILink|undefined} parent - the parent of the link
    * @returns {ILinkQueueEvent} current event of the link queue
    */
-  private createLinkQueueEvent(link: ILink, eventType: 'PUSH' | 'POP', parent?: ILink): ILinkQueueEvent {
+  private createLinkQueueEvent(link: ILink, eventType: 'pushEvent' | 'popEvent', parent?: ILink): ILinkQueueEvent {
     const linkInfo: IUrlStatistic = {
       url: link.url,
       producedByActor: LinkQueueLogger.getActorProductorInformation(link),
       timestamp: performance.now(),
       parent: parent?.url,
     };
-    this.updateLinkProductionRatio(linkInfo, eventType === 'POP' ? 'popEvents' : 'pushEvents');
+    this.updateLinkProductionRatio(linkInfo, eventType === 'popEvent' ? 'popEvents' : 'pushEvents');
 
     return {
       type: eventType,
@@ -95,7 +93,7 @@ export class LinkQueueLogger extends LinkQueueWrapper {
   public override push(link: ILink, parent: ILink): boolean {
     const resp: boolean = super.push(link, parent);
     if (resp) {
-      const event: ILinkQueueEvent = this.createLinkQueueEvent(link, 'PUSH', parent);
+      const event: ILinkQueueEvent = this.createLinkQueueEvent(link, 'pushEvent', parent);
       this.materialize(event);
     }
     return resp;
@@ -104,7 +102,7 @@ export class LinkQueueLogger extends LinkQueueWrapper {
   public override pop(): ILink | undefined {
     const link = super.pop();
     if (link !== undefined) {
-      const event: ILinkQueueEvent = this.createLinkQueueEvent(link, 'POP');
+      const event: ILinkQueueEvent = this.createLinkQueueEvent(link, 'popEvent');
       this.materialize(event);
     }
     return link;
@@ -116,7 +114,7 @@ export class LinkQueueLogger extends LinkQueueWrapper {
    */
   private materialize(event: ILinkQueueEvent): void {
     const jsonEvent = { ...event, type: event.type };
-    this.logger.trace(LinkQueueLogger.LINK_QUEUE_EVENT_NAME, { data: JSON.stringify(jsonEvent) });
+    this.logger.trace('Link queue changed', { data: JSON.stringify(jsonEvent) });
   }
 }
 
@@ -124,7 +122,7 @@ export class LinkQueueLogger extends LinkQueueWrapper {
  * A link queue event
  */
 interface ILinkQueueEvent {
-  type: 'PUSH' | 'POP';
+  type: 'pushEvent' | 'popEvent';
   link: IUrlStatistic;
   query: string;
   queue: IQueueStatistics;
