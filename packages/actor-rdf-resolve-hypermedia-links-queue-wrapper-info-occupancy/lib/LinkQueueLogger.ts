@@ -72,14 +72,14 @@ export class LinkQueueLogger extends LinkQueueWrapper {
    * @param {ILink|undefined} parent - the parent of the link
    * @returns {ILinkQueueEvent} current event of the link queue
    */
-  private createLinkQueueEvent(link: ILink, eventType: EventType, parent?: ILink): ILinkQueueEvent {
+  private createLinkQueueEvent(link: ILink, eventType: 'PUSH' | 'POP', parent?: ILink): ILinkQueueEvent {
     const linkInfo: IUrlStatistic = {
       url: link.url,
       producedByActor: LinkQueueLogger.getActorProductorInformation(link),
       timestamp: performance.now(),
       parent: parent?.url,
     };
-    this.updateLinkProductionRatio(linkInfo, eventType === EventType.POP ? 'popEvents' : 'pushEvents');
+    this.updateLinkProductionRatio(linkInfo, eventType === 'POP' ? 'popEvents' : 'pushEvents');
 
     return {
       type: eventType,
@@ -95,7 +95,7 @@ export class LinkQueueLogger extends LinkQueueWrapper {
   public override push(link: ILink, parent: ILink): boolean {
     const resp: boolean = super.push(link, parent);
     if (resp) {
-      const event: ILinkQueueEvent = this.createLinkQueueEvent(link, EventType.PUSH, parent);
+      const event: ILinkQueueEvent = this.createLinkQueueEvent(link, 'PUSH', parent);
       this.materialize(event);
     }
     return resp;
@@ -104,7 +104,7 @@ export class LinkQueueLogger extends LinkQueueWrapper {
   public override pop(): ILink | undefined {
     const link = super.pop();
     if (link !== undefined) {
-      const event: ILinkQueueEvent = this.createLinkQueueEvent(link, EventType.POP);
+      const event: ILinkQueueEvent = this.createLinkQueueEvent(link, 'POP');
       this.materialize(event);
     }
     return link;
@@ -115,24 +115,16 @@ export class LinkQueueLogger extends LinkQueueWrapper {
    * @param {ILinkQueueEvent} event - Current event
    */
   private materialize(event: ILinkQueueEvent): void {
-    const jsonEvent = { ...event, type: EventType[event.type] };
+    const jsonEvent = { ...event, type: event.type };
     this.logger.trace(LinkQueueLogger.LINK_QUEUE_EVENT_NAME, { data: JSON.stringify(jsonEvent) });
   }
-}
-
-/**
- * The type of event
- */
-export enum EventType {
-  PUSH,
-  POP,
 }
 
 /**
  * A link queue event
  */
 interface ILinkQueueEvent {
-  type: EventType;
+  type: 'PUSH' | 'POP';
   link: IUrlStatistic;
   query: string;
   queue: IQueueStatistics;

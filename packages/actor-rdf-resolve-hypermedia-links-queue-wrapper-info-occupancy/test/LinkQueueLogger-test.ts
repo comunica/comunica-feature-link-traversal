@@ -1,4 +1,4 @@
-import { EventType, LinkQueueLogger } from '../lib/LinkQueueLogger';
+import { LinkQueueLogger } from '../lib/LinkQueueLogger';
 
 Object.defineProperty(globalThis, 'performance', {
   writable: true,
@@ -66,7 +66,7 @@ describe('LinkQueueFilterLinks', () => {
 
       expect(logger.trace).toHaveBeenCalledTimes(1);
       const expectedEvent = {
-        type: EventType[EventType.PUSH],
+        type: 'PUSH',
         link: {
           url: 'foo',
           producedByActor: {
@@ -123,7 +123,7 @@ describe('LinkQueueFilterLinks', () => {
 
       expect(logger.trace).toHaveBeenCalledTimes(1);
       const expectedEvent = {
-        type: EventType[EventType.PUSH],
+        type: 'PUSH',
         link: {
           url: 'foo',
           timestamp: 1,
@@ -181,7 +181,7 @@ describe('LinkQueueFilterLinks', () => {
 
       expect(logger.trace).toHaveBeenCalledTimes(1);
       const expectedEvent = {
-        type: EventType[EventType.PUSH],
+        type: 'PUSH',
         link: {
           url: 'foo',
           timestamp: 1,
@@ -269,7 +269,7 @@ describe('LinkQueueFilterLinks', () => {
           };
           reachabilityRatio.pushEvents[reachabilityCriteria] = 1;
           eventHistory.push({
-            type: EventType[EventType.PUSH],
+            type: 'PUSH',
             link: {
               url: String(i),
               timestamp: i,
@@ -292,7 +292,7 @@ describe('LinkQueueFilterLinks', () => {
           parent = iri;
           reachabilityRatio.pushEvents.unknown += 1;
           eventHistory.push({
-            type: EventType[EventType.PUSH],
+            type: 'PUSH',
             link: {
               url: String(i),
               timestamp: i,
@@ -353,7 +353,7 @@ describe('LinkQueueFilterLinks', () => {
 
       expect(logger.trace).toHaveBeenCalledTimes(1);
       const expectedEvent = {
-        type: EventType[EventType.POP],
+        type: 'POP',
         link: {
           url: 'foo',
           producedByActor: {
@@ -412,7 +412,7 @@ describe('LinkQueueFilterLinks', () => {
 
       expect(logger.trace).toHaveBeenCalledTimes(1);
       const expectedEvent = {
-        type: EventType[EventType.POP],
+        type: 'POP',
         link: {
           url: 'foo',
           timestamp: 1,
@@ -478,7 +478,7 @@ describe('LinkQueueFilterLinks', () => {
           };
           reachabilityRatio.popEvents[reachabilityCriteria] = 1;
           const expectedLinkStatisticLink = {
-            type: EventType[EventType.POP],
+            type: 'POP',
             link: {
               url: String(i),
               timestamp: i,
@@ -497,7 +497,7 @@ describe('LinkQueueFilterLinks', () => {
           expectedLink = { url: String(i) };
           reachabilityRatio.popEvents.unknown += 1;
           const expectedLinkStatisticLink = {
-            type: EventType[EventType.POP],
+            type: 'POP',
             link: {
               url: String(i),
               producedByActor: null,
