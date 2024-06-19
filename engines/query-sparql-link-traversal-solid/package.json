@@ -73,6 +73,7 @@
     "@comunica/context-entries": "^3.1.0",
     "@comunica/context-entries-link-traversal": "^0.4.1",
     "@comunica/core": "^3.1.0",
+    "@comunica/mediatortype-time": "^3.1.0",
     "@comunica/query-sparql-link-traversal": "^0.4.1",
     "@comunica/query-sparql-solid": "^3.1.0",
     "@comunica/runner-cli": "^3.1.0"
