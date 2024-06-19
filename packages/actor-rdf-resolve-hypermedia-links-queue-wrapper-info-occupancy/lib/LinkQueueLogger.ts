@@ -147,7 +147,7 @@ interface IQueueStatistics extends ILinkProductionActorRatio {
 }
 /**
  * Ratio of the actor producing links in relation to the push and pop events.
- * The key of the index is the name of the actor and the value is the number of occurance.
+ * The key of the index is the name of the actor and the value is the number of occurences.
  */
 interface ILinkProductionActorRatio {
   pushEvents: Record<string, number>;
