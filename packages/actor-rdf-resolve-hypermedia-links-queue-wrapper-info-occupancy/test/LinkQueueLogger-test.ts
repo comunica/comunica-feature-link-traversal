@@ -75,8 +75,8 @@ describe('LinkQueueFilterLinks', () => {
         query,
         queue: {
           size: queueSize,
-          pushEvent: { [reachabilityCriteria]: 1 },
-          popEvent: {},
+          pushEvents: { [reachabilityCriteria]: 1 },
+          popEvents: {},
         },
       };
 
@@ -126,8 +126,8 @@ describe('LinkQueueFilterLinks', () => {
         query,
         queue: {
           size: queueSize,
-          pushEvent: { unknown: 1 },
-          popEvent: {},
+          pushEvents: { unknown: 1 },
+          popEvents: {},
 
         },
       };
@@ -184,8 +184,8 @@ describe('LinkQueueFilterLinks', () => {
         query,
         queue: {
           size: queueSize,
-          pushEvent: { unknown: 1 },
-          popEvent: {},
+          pushEvents: { unknown: 1 },
+          popEvents: {},
         },
       };
 
@@ -234,10 +234,10 @@ describe('LinkQueueFilterLinks', () => {
 
       const eventHistory: any[] = [];
       const reachabilityRatio = {
-        pushEvent: {},
-        popEvent: {},
+        pushEvents: {},
+        popEvents: {},
       };
-      reachabilityRatio.pushEvent.unknown = 0;
+      reachabilityRatio.pushEvents.unknown = 0;
 
       for (; i < n; i++) {
         let iri: any;
@@ -260,7 +260,7 @@ describe('LinkQueueFilterLinks', () => {
               },
             },
           };
-          reachabilityRatio.pushEvent[reachabilityCriteria] = 1;
+          reachabilityRatio.pushEvents[reachabilityCriteria] = 1;
           eventHistory.push({
             type: EventType[EventType.PUSH],
             link: {
@@ -283,7 +283,7 @@ describe('LinkQueueFilterLinks', () => {
           };
 
           parent = iri;
-          reachabilityRatio.pushEvent.unknown += 1;
+          reachabilityRatio.pushEvents.unknown += 1;
           eventHistory.push({
             type: EventType[EventType.PUSH],
             link: {
@@ -361,8 +361,8 @@ describe('LinkQueueFilterLinks', () => {
         query,
         queue: {
           size: queueSize,
-          pushEvent: {},
-          popEvent: { [reachabilityCriteria]: 1 },
+          pushEvents: {},
+          popEvents: { [reachabilityCriteria]: 1 },
         },
       };
 
@@ -414,8 +414,8 @@ describe('LinkQueueFilterLinks', () => {
         query,
         queue: {
           size: queueSize,
-          pushEvent: {},
-          popEvent: { unknown: 1 },
+          pushEvents: {},
+          popEvents: { unknown: 1 },
         },
       };
 
@@ -455,10 +455,10 @@ describe('LinkQueueFilterLinks', () => {
       let expectedLink: any;
       const eventHistory: any = [];
       const reachabilityRatio = {
-        pushEvent: {},
-        popEvent: {},
+        pushEvents: {},
+        popEvents: {},
       };
-      reachabilityRatio.popEvent.unknown = 0;
+      reachabilityRatio.popEvents.unknown = 0;
       for (; i < n; i++) {
         if (i % 4 === 0 && i !== 0) {
           expectedLink = {
@@ -469,7 +469,7 @@ describe('LinkQueueFilterLinks', () => {
               },
             },
           };
-          reachabilityRatio.popEvent[reachabilityCriteria] = 1;
+          reachabilityRatio.popEvents[reachabilityCriteria] = 1;
           const expectedLinkStatisticLink = {
             type: EventType[EventType.POP],
             link: {
@@ -488,7 +488,7 @@ describe('LinkQueueFilterLinks', () => {
           eventHistory.push(expectedLinkStatisticLink);
         } else if (i % 2 === 0) {
           expectedLink = { url: String(i) };
-          reachabilityRatio.popEvent.unknown += 1;
+          reachabilityRatio.popEvents.unknown += 1;
           const expectedLinkStatisticLink = {
             type: EventType[EventType.POP],
             link: {

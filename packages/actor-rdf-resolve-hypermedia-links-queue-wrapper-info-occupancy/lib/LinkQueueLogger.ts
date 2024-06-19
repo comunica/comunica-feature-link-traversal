@@ -9,12 +9,11 @@ export class LinkQueueLogger extends LinkQueueWrapper {
   public readonly query: string;
   private readonly logger: Logger;
   private readonly linkProductionRatio: ILinkProductionActorRatio = {
-    pushEvent: {},
-    popEvent: {},
+    pushEvents: {},
+    popEvents: {},
   };
 
-  public static readonly LINK_QUEUE_EVENT_NAME = '<Link queue occupancy>';
-  public static readonly LINK_QUEUE_DIDNT_START_EMPTY_MESSAGE = 'the link queue didn\'t start empty';
+  public static readonly LINK_QUEUE_EVENT_NAME = 'Link queue changed';
 
   /**
    *
@@ -31,9 +30,9 @@ export class LinkQueueLogger extends LinkQueueWrapper {
   /**
    * Helper function to get the reachability criteria of a link
    * @param {ILink} link - Current link
-   * @returns {IProduceByActor | null } The reachability criteria with extra information about it if available
+   * @returns {IProducedByActor | null } The reachability criteria with extra information about it if available
    */
-  private static getActorProductorInformation(link: ILink): IProduceByActor | null {
+  private static getActorProductorInformation(link: ILink): IProducedByActor | null {
     const metadata = link.metadata;
     if (metadata !== undefined && metadata[PRODUCED_BY_ACTOR] !== undefined) {
       const { name, ...rest } = metadata[PRODUCED_BY_ACTOR];
@@ -51,10 +50,10 @@ export class LinkQueueLogger extends LinkQueueWrapper {
 
   /**
    * Update the link production ratio
-   * @param {IURLStatistic} link - current link
+   * @param {IUrlStatistic} link - current link
    * @param {keyof ILinkProductionActorRatio} event - link queue event
    */
-  private updateLinkProductionRatio(link: IURLStatistic, event: keyof ILinkProductionActorRatio): void {
+  private updateLinkProductionRatio(link: IUrlStatistic, event: keyof ILinkProductionActorRatio): void {
     if (link.producedByActor !== null &&
       this.linkProductionRatio[event][link.producedByActor?.name] !== undefined) {
       this.linkProductionRatio[event][link.producedByActor?.name] += 1;
@@ -76,13 +75,13 @@ export class LinkQueueLogger extends LinkQueueWrapper {
    * @returns {ILinkQueueEvent} current event of the link queue
    */
   private createLinkQueueEvent(link: ILink, eventType: EventType, parent?: ILink): ILinkQueueEvent {
-    const linkInfo: IURLStatistic = {
+    const linkInfo: IUrlStatistic = {
       url: link.url,
       producedByActor: LinkQueueLogger.getActorProductorInformation(link),
       timestamp: Date.now(),
       parent: parent?.url,
     };
-    this.updateLinkProductionRatio(linkInfo, eventType === EventType.POP ? 'popEvent' : 'pushEvent');
+    this.updateLinkProductionRatio(linkInfo, eventType === EventType.POP ? 'popEvents' : 'pushEvents');
 
     return {
       type: eventType,
@@ -136,7 +135,7 @@ export enum EventType {
  */
 interface ILinkQueueEvent {
   type: EventType;
-  link: IURLStatistic;
+  link: IUrlStatistic;
   query: string;
   queue: IQueueStatistics;
 }
@@ -151,23 +150,23 @@ interface IQueueStatistics extends ILinkProductionActorRatio {
  * The key of the index is the name of the actor and the value is the number of occurance.
  */
 interface ILinkProductionActorRatio {
-  pushEvent: Record<string, number>;
-  popEvent: Record<string, number>;
+  pushEvents: Record<string, number>;
+  popEvents: Record<string, number>;
 }
 
 /**
  * Information about an URL
  */
-interface IURLStatistic {
+interface IUrlStatistic {
   url: string;
-  producedByActor: IProduceByActor | null;
+  producedByActor: IProducedByActor | null;
   timestamp?: number;
   parent?: string;
 }
 /**
  * Information about the actor that produce the link
  */
-interface IProduceByActor {
+interface IProducedByActor {
   name: string;
   metadata?: object;
 }
