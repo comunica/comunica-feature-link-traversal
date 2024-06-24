@@ -6,7 +6,8 @@ import { ActorRdfResolveHypermediaLinksQueue } from '@comunica/bus-rdf-resolve-h
 import { KeysInitQuery } from '@comunica/context-entries';
 import type { Actor, IActorArgs, IActorTest, Mediator } from '@comunica/core';
 import { ActionContextKey } from '@comunica/core';
-import { LoggerPretty } from '@comunica/logger-pretty';
+import type { ILoggerBunyanArgs, BunyanStreamProvider } from '@comunica/logger-bunyan';
+import { LoggerBunyan, BunyanStreamProviderStdout } from '@comunica/logger-bunyan';
 import { type Algebra, toSparql } from 'sparqlalgebrajs';
 import { LinkQueueLogger } from './LinkQueueLogger';
 
@@ -36,7 +37,13 @@ export class ActorRdfResolveHypermediaLinksQueueWrapperInfoOccupancy
   public async run(action: IActionRdfResolveHypermediaLinksQueue): Promise<IActorRdfResolveHypermediaLinksQueueOutput> {
     const context = action.context.set(KEY_CONTEXT_WRAPPED, true);
     const query: Algebra.Operation = action.context.get(KeysInitQuery.query)!;
-    const logger = new LoggerPretty({ level: 'trace' });
+    const streamProvider: BunyanStreamProvider = new BunyanStreamProviderStdout({ level: 'trace' });
+    const loggerParams: ILoggerBunyanArgs = {
+      name: 'comunica',
+      level: 'trace',
+      streamProviders: [ streamProvider ],
+    };
+    const logger = new LoggerBunyan(loggerParams);
 
     const { linkQueue } = await this.mediatorRdfResolveHypermediaLinksQueue.mediate({ ...action, context });
     return {

@@ -1,6 +1,7 @@
 import { KeysInitQuery } from '@comunica/context-entries';
 import { Bus, ActionContext } from '@comunica/core';
-import { LoggerPretty } from '@comunica/logger-pretty';
+import type { BunyanStreamProvider, ILoggerBunyanArgs } from '@comunica/logger-bunyan';
+import { BunyanStreamProviderStdout, LoggerBunyan } from '@comunica/logger-bunyan';
 import { translate, toSparql } from 'sparqlalgebrajs';
 import {
   ActorRdfResolveHypermediaLinksQueueWrapperInfoOccupancy,
@@ -94,7 +95,13 @@ describe('ActorRdfResolveHypermediaLinksQueueRdfResolveHypermediaLinkQueueWrappe
           return undefined;
         });
 
-        const logger = new LoggerPretty({ level: 'trace' });
+        const streamProvider: BunyanStreamProvider = new BunyanStreamProviderStdout({ level: 'trace' });
+        const loggerParams: ILoggerBunyanArgs = {
+          name: 'comunica',
+          level: 'trace',
+          streamProviders: [ streamProvider ],
+        };
+        const logger = new LoggerBunyan(loggerParams);
 
         const expectedLinkQueueWrapper = new LinkQueueLogger(linkQueue, query, logger);
 
@@ -128,7 +135,13 @@ describe('ActorRdfResolveHypermediaLinksQueueRdfResolveHypermediaLinkQueueWrappe
           return undefined;
         });
 
-        const logger = new LoggerPretty({ level: 'trace' });
+        const streamProvider: BunyanStreamProvider = new BunyanStreamProviderStdout({ level: 'trace' });
+        const loggerParams: ILoggerBunyanArgs = {
+          name: 'comunica',
+          level: 'trace',
+          streamProviders: [ streamProvider ],
+        };
+        const logger = new LoggerBunyan(loggerParams);
 
         const expectedLinkQueueWrapper = new LinkQueueLogger(linkQueue, query, logger);
 

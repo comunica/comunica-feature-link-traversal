@@ -111,7 +111,7 @@ export class LinkQueueLogger extends LinkQueueWrapper {
    */
   private materialize(event: ILinkQueueEvent): void {
     const jsonEvent = { ...event, type: event.type };
-    this.logger.trace('Link queue changed', { data: JSON.stringify(jsonEvent) });
+    this.logger.trace('Link queue changed', { data: jsonEvent });
   }
 }
 

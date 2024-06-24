@@ -89,7 +89,7 @@ describe('LinkQueueFilterLinks', () => {
       };
 
       expect(logger.trace.mock.calls[0][0]).toBe(LINK_QUEUE_EVENT_NAME);
-      expect(JSON.parse(logger.trace.mock.calls[0][1].data)).toStrictEqual(expectedEvent);
+      expect(logger.trace.mock.calls[0][1].data).toStrictEqual(expectedEvent);
     });
 
     it('should log the event of a new link without reachability annotation pushed to the queue', () => {
@@ -129,6 +129,7 @@ describe('LinkQueueFilterLinks', () => {
           url: 'foo',
           timestamp: 1,
           parent: 'bar',
+          [PRODUCED_BY_ACTOR]: undefined,
         },
         query,
         queue: {
@@ -140,7 +141,7 @@ describe('LinkQueueFilterLinks', () => {
       };
 
       expect(logger.trace.mock.calls[0][0]).toBe(LINK_QUEUE_EVENT_NAME);
-      expect(JSON.parse(logger.trace.mock.calls[0][1].data)).toStrictEqual(expectedEvent);
+      expect(logger.trace.mock.calls[0][1].data).toStrictEqual(expectedEvent);
     });
 
     it(`should log the event of a new link without reachability annotation 
@@ -185,7 +186,7 @@ describe('LinkQueueFilterLinks', () => {
         link: {
           url: 'foo',
           timestamp: 1,
-
+          [PRODUCED_BY_ACTOR]: undefined,
           parent: 'bar',
         },
         query,
@@ -197,7 +198,7 @@ describe('LinkQueueFilterLinks', () => {
       };
 
       expect(logger.trace.mock.calls[0][0]).toBe(LINK_QUEUE_EVENT_NAME);
-      expect(JSON.parse(logger.trace.mock.calls[0][1].data)).toStrictEqual(expectedEvent);
+      expect(logger.trace.mock.calls[0][1].data).toStrictEqual(expectedEvent);
     });
 
     it('should not push to the history to a file if a new link not successfuly pushed', () => {
@@ -239,16 +240,14 @@ describe('LinkQueueFilterLinks', () => {
       jest.spyOn(performance, 'now').mockImplementation(() => i);
       const wrapper = new LinkQueueLogger(linkQueue, query, logger);
 
-      const eventHistory: any[] = [];
       const reachabilityRatio = {
         pushEvents: {},
         popEvents: {},
       };
-      reachabilityRatio.pushEvents.unknown = 0;
-
       for (; i < n; i++) {
         let iri: any;
         let parent: any;
+        let currentEvent: any = {};
         if (i % 4 === 0 && i !== 0) {
           iri = {
             url: String(i),
@@ -267,13 +266,18 @@ describe('LinkQueueFilterLinks', () => {
               },
             },
           };
-          reachabilityRatio.pushEvents[reachabilityCriteria] = 1;
-          eventHistory.push({
+          if (reachabilityRatio.pushEvents[reachabilityCriteria]) {
+            reachabilityRatio.pushEvents[reachabilityCriteria] += 1;
+          } else {
+            reachabilityRatio.pushEvents[reachabilityCriteria] = 1;
+          }
+          currentEvent = {
             type: 'pushEvent',
             link: {
               url: String(i),
               timestamp: i,
               producedByActor: {
+                metadata: undefined,
                 name: reachabilityCriteria,
               },
               parent: String(i - 1),
@@ -283,20 +287,24 @@ describe('LinkQueueFilterLinks', () => {
               size: i,
               ...JSON.parse(JSON.stringify(reachabilityRatio)),
             },
-          });
+          };
         } else if (i % 2 === 0) {
           iri = {
             url: String(i),
           };
 
           parent = iri;
-          reachabilityRatio.pushEvents.unknown += 1;
-          eventHistory.push({
+          if (reachabilityRatio.pushEvents.unknown) {
+            reachabilityRatio.pushEvents.unknown += 1;
+          } else {
+            reachabilityRatio.pushEvents.unknown = 1;
+          }
+          currentEvent = {
             type: 'pushEvent',
             link: {
               url: String(i),
               timestamp: i,
-
+              [PRODUCED_BY_ACTOR]: undefined,
               parent: String(i),
             },
             query,
@@ -304,18 +312,21 @@ describe('LinkQueueFilterLinks', () => {
               size: i,
               ...JSON.parse(JSON.stringify(reachabilityRatio)),
             },
-          });
+          };
         }
 
         const resp = wrapper.push(iri, parent);
         expect(resp).toBe(i % 2 === 0);
+
+        if (i % 2 === 0) {
+          // eslint-disable-next-line jest/no-conditional-expect
+          expect(logger.trace.mock.calls.at(-1)[0]).toBe(LINK_QUEUE_EVENT_NAME);
+          // eslint-disable-next-line jest/no-conditional-expect
+          expect(logger.trace.mock.calls.at(-1)[1].data).toStrictEqual(currentEvent);
+        }
       }
 
       expect(logger.trace).toHaveBeenCalledTimes(Math.floor(n / 2));
-      for (let j = 1; j < Math.floor(n / 2); ++j) {
-        expect(logger.trace.mock.calls[j - 1][0]).toBe(LINK_QUEUE_EVENT_NAME);
-        expect(JSON.parse(logger.trace.mock.calls[j - 1][1].data)).toStrictEqual(eventHistory[j - 1]);
-      }
     });
   });
 
@@ -355,6 +366,7 @@ describe('LinkQueueFilterLinks', () => {
       const expectedEvent = {
         type: 'popEvent',
         link: {
+          parent: undefined,
           url: 'foo',
           producedByActor: {
             name: reachabilityCriteria,
@@ -374,7 +386,7 @@ describe('LinkQueueFilterLinks', () => {
       };
 
       expect(logger.trace.mock.calls[0][0]).toBe(LINK_QUEUE_EVENT_NAME);
-      expect(JSON.parse(logger.trace.mock.calls[0][1].data)).toStrictEqual(expectedEvent);
+      expect(logger.trace.mock.calls[0][1].data).toStrictEqual(expectedEvent);
     });
 
     it('should not log the event if no link are popped', () => {
@@ -416,6 +428,8 @@ describe('LinkQueueFilterLinks', () => {
         link: {
           url: 'foo',
           timestamp: 1,
+          parent: undefined,
+          [PRODUCED_BY_ACTOR]: undefined,
         },
         query,
         queue: {
@@ -426,7 +440,7 @@ describe('LinkQueueFilterLinks', () => {
       };
 
       expect(logger.trace.mock.calls[0][0]).toBe(LINK_QUEUE_EVENT_NAME);
-      expect(JSON.parse(logger.trace.mock.calls[0][1].data)).toStrictEqual(expectedEvent);
+      expect(logger.trace.mock.calls[0][1].data).toStrictEqual(expectedEvent);
     });
 
     it('should log the events of multiple links popped out of the queue', () => {
@@ -459,13 +473,12 @@ describe('LinkQueueFilterLinks', () => {
       jest.spyOn(performance, 'now').mockImplementation(() => i);
       const wrapper = new LinkQueueLogger(linkQueue, query, logger);
       let expectedLink: any;
-      const eventHistory: any = [];
       const reachabilityRatio = {
         pushEvents: {},
         popEvents: {},
       };
-      reachabilityRatio.popEvents.unknown = 0;
       for (; i < n; i++) {
+        let currentEvent: any = {};
         if (i % 4 === 0 && i !== 0) {
           expectedLink = {
             url: String(i),
@@ -475,15 +488,21 @@ describe('LinkQueueFilterLinks', () => {
               },
             },
           };
-          reachabilityRatio.popEvents[reachabilityCriteria] = 1;
-          const expectedLinkStatisticLink = {
+          if (reachabilityRatio.popEvents[reachabilityCriteria]) {
+            reachabilityRatio.popEvents[reachabilityCriteria] += 1;
+          } else {
+            reachabilityRatio.popEvents[reachabilityCriteria] = 1;
+          }
+          currentEvent = {
             type: 'popEvent',
             link: {
               url: String(i),
               timestamp: i,
               producedByActor: {
                 name: reachabilityCriteria,
+                metadata: undefined,
               },
+              parent: undefined,
             },
             query,
             queue: {
@@ -491,15 +510,19 @@ describe('LinkQueueFilterLinks', () => {
               ...JSON.parse(JSON.stringify(reachabilityRatio)),
             },
           };
-          eventHistory.push(expectedLinkStatisticLink);
         } else if (i % 2 === 0) {
           expectedLink = { url: String(i) };
-          reachabilityRatio.popEvents.unknown += 1;
-          const expectedLinkStatisticLink = {
+          if (reachabilityRatio.popEvents.unknown) {
+            reachabilityRatio.popEvents.unknown += 1;
+          } else {
+            reachabilityRatio.popEvents.unknown = 1;
+          }
+          currentEvent = {
             type: 'popEvent',
             link: {
               url: String(i),
-
+              [PRODUCED_BY_ACTOR]: undefined,
+              parent: undefined,
               timestamp: i,
             },
             query,
@@ -508,18 +531,18 @@ describe('LinkQueueFilterLinks', () => {
               ...JSON.parse(JSON.stringify(reachabilityRatio)),
             },
           };
-          eventHistory.push(expectedLinkStatisticLink);
         } else {
           expectedLink = undefined;
         }
         const resp = wrapper.pop();
         expect(resp).toStrictEqual(expectedLink);
-      }
 
-      expect(logger.trace).toHaveBeenCalledTimes(Math.floor(n / 2));
-      for (let j = 1; j < Math.floor(n / 2); ++j) {
-        expect(logger.trace.mock.calls[j - 1][0]).toBe(LINK_QUEUE_EVENT_NAME);
-        expect(JSON.parse(logger.trace.mock.calls[j - 1][1].data)).toStrictEqual(eventHistory[j - 1]);
+        if (i % 2 === 0) {
+          // eslint-disable-next-line jest/no-conditional-expect
+          expect(logger.trace.mock.calls.at(-1)[0]).toBe(LINK_QUEUE_EVENT_NAME);
+          // eslint-disable-next-line jest/no-conditional-expect
+          expect(logger.trace.mock.calls.at(-1)[1].data).toStrictEqual(currentEvent);
+        }
       }
     });
   });
