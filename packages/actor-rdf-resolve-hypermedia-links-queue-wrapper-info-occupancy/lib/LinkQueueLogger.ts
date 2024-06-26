@@ -22,7 +22,7 @@ export class LinkQueueLogger extends LinkQueueWrapper {
   public constructor(linkQueue: ILinkQueue, query: string, logger: Logger) {
     super(linkQueue);
     this.logger = logger;
-    this.query = query;
+    this.query = query.replace(/(\r\n|\n|\r)/gm, " ");
   }
 
   /**
