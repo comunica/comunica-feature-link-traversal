@@ -149,7 +149,7 @@ interface IUrlStatistic {
   parent?: string;
 }
 /**
- * Information about the actor that produce the link
+ * Information about the actor that produces the link
  */
 interface IProducedByActor {
   name: string;
