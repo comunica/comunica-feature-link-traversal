@@ -22,7 +22,7 @@ export class LinkQueueLogger extends LinkQueueWrapper {
   public constructor(linkQueue: ILinkQueue, query: string, logger: Logger) {
     super(linkQueue);
     this.logger = logger;
-    this.query = query.replace(/(\r\n|\n|\r)/gm, " ");
+    this.query = query;
   }
 
   /**
@@ -67,17 +67,17 @@ export class LinkQueueLogger extends LinkQueueWrapper {
    * @param {ILink|undefined} parent - the parent of the link
    * @returns {ILinkQueueEvent} current event of the link queue
    */
-  private createLinkQueueEvent(link: ILink, eventType: 'pushEvent' | 'popEvent', parent?: ILink): ILinkQueueEvent {
+  private createLinkQueueEvent(link: ILink, eventType: 'pushEvents' | 'popEvents', parent?: ILink): ILinkQueueEvent {
     const linkInfo: IUrlStatistic = {
       url: link.url,
       producedByActor: LinkQueueLogger.getActorProductorInformation(link),
       timestamp: performance.now(),
       parent: parent?.url,
     };
-    this.updateLinkProductionRatio(linkInfo, eventType === 'popEvent' ? 'popEvents' : 'pushEvents');
+    this.updateLinkProductionRatio(linkInfo, eventType);
 
     return {
-      type: eventType,
+      type: eventType.slice(0, Math.max(0, eventType.length - 1)),
       link: linkInfo,
       query: this.query,
       queue: {
@@ -90,8 +90,7 @@ export class LinkQueueLogger extends LinkQueueWrapper {
   public override push(link: ILink, parent: ILink): boolean {
     const resp: boolean = super.push(link, parent);
     if (resp) {
-      const event: ILinkQueueEvent = this.createLinkQueueEvent(link, 'pushEvent', parent);
-      this.materialize(event);
+      this.emitEvent(this.createLinkQueueEvent(link, 'pushEvents', parent));
     }
     return resp;
   }
@@ -99,19 +98,17 @@ export class LinkQueueLogger extends LinkQueueWrapper {
   public override pop(): ILink | undefined {
     const link = super.pop();
     if (link !== undefined) {
-      const event: ILinkQueueEvent = this.createLinkQueueEvent(link, 'popEvent');
-      this.materialize(event);
+      this.emitEvent(this.createLinkQueueEvent(link, 'popEvents'));
     }
     return link;
   }
 
   /**
-   * Materialize the current event into the logger
+   * Emit the current event into the logger
    * @param {ILinkQueueEvent} event - Current event
    */
-  private materialize(event: ILinkQueueEvent): void {
-    const jsonEvent = { ...event, type: event.type };
-    this.logger.trace('Link queue changed', { data: jsonEvent });
+  private emitEvent(event: ILinkQueueEvent): void {
+    this.logger.trace('Link queue changed', { data: { ...event, type: event.type }});
   }
 }
 
@@ -119,7 +116,7 @@ export class LinkQueueLogger extends LinkQueueWrapper {
  * A link queue event
  */
 interface ILinkQueueEvent {
-  type: 'pushEvent' | 'popEvent';
+  type: string;
   link: IUrlStatistic;
   query: string;
   queue: IQueueStatistics;
