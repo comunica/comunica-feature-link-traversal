@@ -30,17 +30,18 @@ export class ActorRdfResolveHypermediaLinksQueueWrapperInfoOccupancy
     if (action.context.get(KEY_CONTEXT_WRAPPED)) {
       throw new Error('Unable to wrap link queues multiple times');
     }
+
+    if (!action.context.get(KeysCore.log)) {
+      throw new Error('A logger is required when reporting link queue occupancy');
+    }
+
     return true;
   }
 
   public async run(action: IActionRdfResolveHypermediaLinksQueue): Promise<IActorRdfResolveHypermediaLinksQueueOutput> {
     const context = action.context.set(KEY_CONTEXT_WRAPPED, true);
     const query: Algebra.Operation = action.context.get(KeysInitQuery.query)!;
-    const logger: Logger | undefined = action.context.get(KeysCore.log);
-
-    if (logger === undefined) {
-      throw new Error('cannot report link queue information if no logger is defined');
-    }
+    const logger: Logger = action.context.get(KeysCore.log)!;
 
     const { linkQueue } = await this.mediatorRdfResolveHypermediaLinksQueue.mediate({ ...action, context });
     return {
