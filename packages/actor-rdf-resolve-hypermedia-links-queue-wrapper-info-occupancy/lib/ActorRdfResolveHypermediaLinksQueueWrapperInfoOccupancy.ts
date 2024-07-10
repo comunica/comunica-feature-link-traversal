@@ -6,10 +6,9 @@ import { ActorRdfResolveHypermediaLinksQueue } from '@comunica/bus-rdf-resolve-h
 import { KeysInitQuery, KeysCore } from '@comunica/context-entries';
 import type { Actor, IActorArgs, IActorTest, Mediator } from '@comunica/core';
 import { ActionContextKey } from '@comunica/core';
+import type { Logger } from '@comunica/types';
 import { type Algebra, toSparql } from 'sparqlalgebrajs';
 import { LinkQueueLogger } from './LinkQueueLogger';
-import type { Logger } from '@comunica/types';
-
 
 /**
  * A comunica Wrapper Info Occupancy RDF Resolve Hypermedia Links Queue Actor.
@@ -37,10 +36,10 @@ export class ActorRdfResolveHypermediaLinksQueueWrapperInfoOccupancy
   public async run(action: IActionRdfResolveHypermediaLinksQueue): Promise<IActorRdfResolveHypermediaLinksQueueOutput> {
     const context = action.context.set(KEY_CONTEXT_WRAPPED, true);
     const query: Algebra.Operation = action.context.get(KeysInitQuery.query)!;
-    const logger:Logger|undefined = action.context.get(KeysCore.log);
+    const logger: Logger | undefined = action.context.get(KeysCore.log);
 
-    if(logger===undefined){
-      throw new Error("cannot report link queue information if no logger is defined")
+    if (logger === undefined) {
+      throw new Error('cannot report link queue information if no logger is defined');
     }
 
     const { linkQueue } = await this.mediatorRdfResolveHypermediaLinksQueue.mediate({ ...action, context });
