@@ -9,8 +9,8 @@ export class LinkQueueLogger extends LinkQueueWrapper {
   public readonly query: string;
   private readonly logger: Logger;
   private readonly linkProductionRatio: ILinkProductionActorRatio = {
-    pushEvents: {},
-    popEvents: {},
+    push: {},
+    pop: {},
   };
 
   /**
@@ -67,7 +67,7 @@ export class LinkQueueLogger extends LinkQueueWrapper {
    * @param {ILink|undefined} parent - the parent of the link
    * @returns {ILinkQueueEvent} current event of the link queue
    */
-  private createLinkQueueEvent(link: ILink, eventType: 'pushEvents' | 'popEvents', parent?: ILink): ILinkQueueEvent {
+  private createLinkQueueEvent(link: ILink, eventType: 'push' | 'pop', parent?: ILink): ILinkQueueEvent {
     const linkInfo: IUrlStatistic = {
       url: link.url,
       producedByActor: LinkQueueLogger.getActorProductorInformation(link),
@@ -77,7 +77,7 @@ export class LinkQueueLogger extends LinkQueueWrapper {
     this.updateLinkProductionRatio(linkInfo, eventType);
 
     return {
-      type: eventType.slice(0, Math.max(0, eventType.length - 1)),
+      type: eventType,
       link: linkInfo,
       query: this.query,
       queue: {
@@ -90,7 +90,7 @@ export class LinkQueueLogger extends LinkQueueWrapper {
   public override push(link: ILink, parent: ILink): boolean {
     const resp: boolean = super.push(link, parent);
     if (resp) {
-      this.emitEvent(this.createLinkQueueEvent(link, 'pushEvents', parent));
+      this.emitEvent(this.createLinkQueueEvent(link, 'push', parent));
     }
     return resp;
   }
@@ -98,7 +98,7 @@ export class LinkQueueLogger extends LinkQueueWrapper {
   public override pop(): ILink | undefined {
     const link = super.pop();
     if (link !== undefined) {
-      this.emitEvent(this.createLinkQueueEvent(link, 'popEvents'));
+      this.emitEvent(this.createLinkQueueEvent(link, 'pop'));
     }
     return link;
   }
@@ -116,7 +116,7 @@ export class LinkQueueLogger extends LinkQueueWrapper {
  * A link queue event
  */
 interface ILinkQueueEvent {
-  type: string;
+  type: 'push' | 'pop';
   link: IUrlStatistic;
   query: string;
   queue: IQueueStatistics;
@@ -132,8 +132,8 @@ interface IQueueStatistics extends ILinkProductionActorRatio {
  * The key of the index is the name of the actor and the value is the number of occurences.
  */
 interface ILinkProductionActorRatio {
-  pushEvents: Record<string, number>;
-  popEvents: Record<string, number>;
+  push: Record<string, number>;
+  pop: Record<string, number>;
 }
 
 /**

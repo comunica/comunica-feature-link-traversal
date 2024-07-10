@@ -67,7 +67,7 @@ describe('LinkQueueFilterLinks', () => {
 
       expect(logger.trace).toHaveBeenCalledTimes(1);
       const expectedEvent = {
-        type: 'pushEvent',
+        type: 'push',
         link: {
           url: 'foo',
           producedByActor: {
@@ -83,8 +83,8 @@ describe('LinkQueueFilterLinks', () => {
         query,
         queue: {
           size: queueSize,
-          pushEvents: { [reachabilityCriteria]: 1 },
-          popEvents: {},
+          push: { [reachabilityCriteria]: 1 },
+          pop: {},
         },
       };
 
@@ -124,7 +124,7 @@ describe('LinkQueueFilterLinks', () => {
 
       expect(logger.trace).toHaveBeenCalledTimes(1);
       const expectedEvent = {
-        type: 'pushEvent',
+        type: 'push',
         link: {
           url: 'foo',
           timestamp: 1,
@@ -134,8 +134,8 @@ describe('LinkQueueFilterLinks', () => {
         query,
         queue: {
           size: queueSize,
-          pushEvents: { unknown: 1 },
-          popEvents: {},
+          push: { unknown: 1 },
+          pop: {},
 
         },
       };
@@ -182,7 +182,7 @@ describe('LinkQueueFilterLinks', () => {
 
       expect(logger.trace).toHaveBeenCalledTimes(1);
       const expectedEvent = {
-        type: 'pushEvent',
+        type: 'push',
         link: {
           url: 'foo',
           timestamp: 1,
@@ -192,8 +192,8 @@ describe('LinkQueueFilterLinks', () => {
         query,
         queue: {
           size: queueSize,
-          pushEvents: { unknown: 1 },
-          popEvents: {},
+          push: { unknown: 1 },
+          pop: {},
         },
       };
 
@@ -241,8 +241,8 @@ describe('LinkQueueFilterLinks', () => {
       const wrapper = new LinkQueueLogger(linkQueue, query, logger);
 
       const reachabilityRatio = {
-        pushEvents: {},
-        popEvents: {},
+        push: {},
+        pop: {},
       };
       for (; i < n; i++) {
         let iri: any;
@@ -266,13 +266,13 @@ describe('LinkQueueFilterLinks', () => {
               },
             },
           };
-          if (reachabilityRatio.pushEvents[reachabilityCriteria]) {
-            reachabilityRatio.pushEvents[reachabilityCriteria] += 1;
+          if (reachabilityRatio.push[reachabilityCriteria]) {
+            reachabilityRatio.push[reachabilityCriteria] += 1;
           } else {
-            reachabilityRatio.pushEvents[reachabilityCriteria] = 1;
+            reachabilityRatio.push[reachabilityCriteria] = 1;
           }
           currentEvent = {
-            type: 'pushEvent',
+            type: 'push',
             link: {
               url: String(i),
               timestamp: i,
@@ -294,13 +294,13 @@ describe('LinkQueueFilterLinks', () => {
           };
 
           parent = iri;
-          if (reachabilityRatio.pushEvents.unknown) {
-            reachabilityRatio.pushEvents.unknown += 1;
+          if (reachabilityRatio.push.unknown) {
+            reachabilityRatio.push.unknown += 1;
           } else {
-            reachabilityRatio.pushEvents.unknown = 1;
+            reachabilityRatio.push.unknown = 1;
           }
           currentEvent = {
-            type: 'pushEvent',
+            type: 'push',
             link: {
               url: String(i),
               timestamp: i,
@@ -364,7 +364,7 @@ describe('LinkQueueFilterLinks', () => {
 
       expect(logger.trace).toHaveBeenCalledTimes(1);
       const expectedEvent = {
-        type: 'popEvent',
+        type: 'pop',
         link: {
           parent: undefined,
           url: 'foo',
@@ -380,8 +380,8 @@ describe('LinkQueueFilterLinks', () => {
         query,
         queue: {
           size: queueSize,
-          pushEvents: {},
-          popEvents: { [reachabilityCriteria]: 1 },
+          push: {},
+          pop: { [reachabilityCriteria]: 1 },
         },
       };
 
@@ -424,7 +424,7 @@ describe('LinkQueueFilterLinks', () => {
 
       expect(logger.trace).toHaveBeenCalledTimes(1);
       const expectedEvent = {
-        type: 'popEvent',
+        type: 'pop',
         link: {
           url: 'foo',
           timestamp: 1,
@@ -434,8 +434,8 @@ describe('LinkQueueFilterLinks', () => {
         query,
         queue: {
           size: queueSize,
-          pushEvents: {},
-          popEvents: { unknown: 1 },
+          push: {},
+          pop: { unknown: 1 },
         },
       };
 
@@ -474,8 +474,8 @@ describe('LinkQueueFilterLinks', () => {
       const wrapper = new LinkQueueLogger(linkQueue, query, logger);
       let expectedLink: any;
       const reachabilityRatio = {
-        pushEvents: {},
-        popEvents: {},
+        push: {},
+        pop: {},
       };
       for (; i < n; i++) {
         let currentEvent: any = {};
@@ -488,13 +488,13 @@ describe('LinkQueueFilterLinks', () => {
               },
             },
           };
-          if (reachabilityRatio.popEvents[reachabilityCriteria]) {
-            reachabilityRatio.popEvents[reachabilityCriteria] += 1;
+          if (reachabilityRatio.pop[reachabilityCriteria]) {
+            reachabilityRatio.pop[reachabilityCriteria] += 1;
           } else {
-            reachabilityRatio.popEvents[reachabilityCriteria] = 1;
+            reachabilityRatio.pop[reachabilityCriteria] = 1;
           }
           currentEvent = {
-            type: 'popEvent',
+            type: 'pop',
             link: {
               url: String(i),
               timestamp: i,
@@ -512,13 +512,13 @@ describe('LinkQueueFilterLinks', () => {
           };
         } else if (i % 2 === 0) {
           expectedLink = { url: String(i) };
-          if (reachabilityRatio.popEvents.unknown) {
-            reachabilityRatio.popEvents.unknown += 1;
+          if (reachabilityRatio.pop.unknown) {
+            reachabilityRatio.pop.unknown += 1;
           } else {
-            reachabilityRatio.popEvents.unknown = 1;
+            reachabilityRatio.pop.unknown = 1;
           }
           currentEvent = {
-            type: 'popEvent',
+            type: 'pop',
             link: {
               url: String(i),
               [PRODUCED_BY_ACTOR]: undefined,
