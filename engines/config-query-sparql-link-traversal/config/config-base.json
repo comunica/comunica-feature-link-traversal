@@ -10,6 +10,8 @@
     "ccqslt:config/extract-links/mediators.json",
     "ccqs:config/hash-bindings/actors.json",
     "ccqs:config/hash-bindings/mediators.json",
+    "ccqs:config/hash-quads/actors.json",
+    "ccqs:config/hash-quads/mediators.json",
     "ccqs:config/http/actors.json",
     "ccqs:config/http/mediators.json",
     "ccqs:config/http-invalidate/actors.json",
