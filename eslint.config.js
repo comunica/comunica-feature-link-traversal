@@ -81,6 +81,7 @@ module.exports = config([
       '.github/**',
       '**/web-clients/**',
       '**/bintest/**',
+      'lerna.json',
     ],
   },
   {
