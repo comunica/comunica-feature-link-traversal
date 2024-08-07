@@ -37,10 +37,10 @@
     "build:components": "componentsjs-generator"
   },
   "dependencies": {
-    "@comunica/bus-rdf-resolve-hypermedia-links-queue": "^3.0.1",
-    "@comunica/context-entries": "^3.0.1",
-    "@comunica/core": "^3.0.1",
-    "@comunica/logger-bunyan": "^3.0.3",
+    "@comunica/bus-rdf-resolve-hypermedia-links-queue": "^3.2.1",
+    "@comunica/context-entries": "^3.2.1",
+    "@comunica/core": "^3.2.1",
+    "@comunica/logger-bunyan": "^3.2.1",
     "@comunica/types-link-traversal": "^0.4.0",
     "sparqlalgebrajs": "^4.3.5",
     "uuid": "^9.0.1"
