@@ -7,11 +7,11 @@
   "homepage": "https://comunica.dev/",
   "repository": {
     "type": "git",
-    "url": "https://github.com/comunica/comunica.git",
+    "url": "https://github.com/comunica/comunica-feature-link-traversal.git",
     "directory": "packages/actor-optimize-query-operation-set-seed-sources-quadpattern-iris"
   },
   "bugs": {
-    "url": "https://github.com/comunica/comunica/issues"
+    "url": "https://github.com/comunica/comunica-feature-link-traversal/issues"
   },
   "keywords": [
     "comunica",

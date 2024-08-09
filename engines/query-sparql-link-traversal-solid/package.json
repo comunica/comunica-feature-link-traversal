@@ -5,9 +5,13 @@
   "lsd:module": true,
   "license": "MIT",
   "homepage": "https://comunica.dev/",
-  "repository": "https://github.com/comunica/comunica-feature-link-traversal/tree/master/packages/query-sparql-link-traversal-solid",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/comunica/comunica-feature-link-traversal.git",
+    "directory": "engines/query-sparql-link-traversal-solid"
+  },
   "bugs": {
-    "url": "https://github.com/comunica/comunica-feature-solid/issues"
+    "url": "https://github.com/comunica/comunica-feature-link-traversal/issues"
   },
   "keywords": [
     "comunica",
