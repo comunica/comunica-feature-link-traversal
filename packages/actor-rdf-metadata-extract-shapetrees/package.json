@@ -44,7 +44,7 @@
     "@comunica/context-entries": "^3.2.1",
     "@comunica/core": "^3.2.1",
     "@shexjs/parser": "1.0.0-alpha.28",
-    "@shexjs/visitor": "1.0.0-alpha.25",
+    "@shexjs/visitor": "1.0.0-alpha.27",
     "@types/parse-link-header": "^2.0.1",
     "@types/shexj": "^2.1.4",
     "parse-link-header": "^2.0.0",
