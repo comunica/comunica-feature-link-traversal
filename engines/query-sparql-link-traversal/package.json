@@ -71,7 +71,7 @@
     "@comunica/actor-rdf-resolve-hypermedia-links-traverse-replace-conditional": "^0.5.0",
     "@comunica/config-query-sparql-link-traversal": "^0.5.0",
     "@comunica/mediator-combine-array": "^0.5.0",
-    "@comunica/query-sparql": "^3.2.2",
+    "@comunica/query-sparql": "^3.2.3",
     "@comunica/runner-cli": "^3.2.1"
   },
   "browser": {
