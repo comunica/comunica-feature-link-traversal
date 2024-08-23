@@ -3654,25 +3654,7 @@
     "@comunica/types" "^3.2.1"
     sparqlalgebrajs "^4.3.7"
 
-"@comunica/bus-query-operation@^3.2.1":
-  version "3.2.1"
-  resolved "https://registry.yarnpkg.com/@comunica/bus-query-operation/-/bus-query-operation-3.2.1.tgz#b0e60a226f340f80174cc50a77442e5df4a1ebb1"
-  integrity sha512-aOUSXjWPgPfJ1dOFEXvze9dQdrrKKP1Y5R1PSKa+bubudmGcNkhCkoDeDC072DgMwQ4bV0APY5QPtSRC0CGFbg==
-  dependencies:
-    "@comunica/bindings-factory" "^3.2.1"
-    "@comunica/context-entries" "^3.2.1"
-    "@comunica/core" "^3.2.1"
-    "@comunica/data-factory" "^3.1.0"
-    "@comunica/metadata" "^3.2.1"
-    "@comunica/types" "^3.2.1"
-    "@rdfjs/types" "*"
-    asynciterator "^3.9.0"
-    rdf-data-factory "^1.1.2"
-    rdf-string "^1.6.1"
-    rdf-terms "^1.11.0"
-    sparqlalgebrajs "^4.3.7"
-
-"@comunica/bus-query-operation@^3.2.2":
+"@comunica/bus-query-operation@^3.2.1", "@comunica/bus-query-operation@^3.2.2":
   version "3.2.2"
   resolved "https://registry.yarnpkg.com/@comunica/bus-query-operation/-/bus-query-operation-3.2.2.tgz#2bccb75b52ccb2c2a455f57e44f482d3fb4bea89"
   integrity sha512-7QKq8aZmHj/JYzLJpI/mwy0sXt8TOUcNH2WdME8Qg8BnpQE/xJ52gAVo1PMRX4Wzp3XOneFBh+cbX/JfY2fipw==
@@ -3726,24 +3708,7 @@
     "@comunica/types" "^3.2.1"
     "@rdfjs/types" "*"
 
-"@comunica/bus-query-source-identify@^3.2.1":
-  version "3.2.1"
-  resolved "https://registry.yarnpkg.com/@comunica/bus-query-source-identify/-/bus-query-source-identify-3.2.1.tgz#d904c96a7e5dd630b44d6253fe8fb47436473610"
-  integrity sha512-3pRVKeeADwXbeDQPK2lxWuXXM7HAxf4lDaOq5uPQ1LGqiM1i59JDv3sHy3xvl/NaqfcFKpYDEXsCTinZvGm1Sw==
-  dependencies:
-    "@comunica/bindings-factory" "^3.2.1"
-    "@comunica/bus-query-operation" "^3.2.1"
-    "@comunica/core" "^3.2.1"
-    "@comunica/metadata" "^3.2.1"
-    "@comunica/types" "^3.2.1"
-    "@rdfjs/types" "*"
-    asynciterator "^3.9.0"
-    rdf-data-factory "^1.1.2"
-    rdf-string "^1.6.3"
-    rdf-terms "^1.11.0"
-    sparqlalgebrajs "^4.3.7"
-
-"@comunica/bus-query-source-identify@^3.2.2":
+"@comunica/bus-query-source-identify@^3.2.1", "@comunica/bus-query-source-identify@^3.2.2":
   version "3.2.2"
   resolved "https://registry.yarnpkg.com/@comunica/bus-query-source-identify/-/bus-query-source-identify-3.2.2.tgz#02e906aebc0f50d12622fafa220bdf42f01c2f4d"
   integrity sha512-K7JmN+3aqMdslB3M6NHTLeMz/InXRqgbl5gV6W7+PvCkzSK5b5HPNFhQnrMxYWAGl7WwLabf+8cTywnZKTU3Aw==
@@ -5921,7 +5886,7 @@
   resolved "https://registry.yarnpkg.com/@types/qs/-/qs-6.9.15.tgz#adde8a060ec9c305a82de1babc1056e73bd64dce"
   integrity sha512-uXHQKES6DQKKCLh441Xv/dwxOq1TVS3JPUMlEqoEglvlhR6Mxnlew/Xq/LRVHpLyk7iK3zODe1qYHIMltO7XGg==
 
-"@types/readable-stream@^2.3.11", "@types/readable-stream@^2.3.13", "@types/readable-stream@^2.3.15":
+"@types/readable-stream@^2.3.11", "@types/readable-stream@^2.3.13":
   version "2.3.15"
   resolved "https://registry.yarnpkg.com/@types/readable-stream/-/readable-stream-2.3.15.tgz#3d79c9ceb1b6a57d5f6e6976f489b9b5384321ae"
   integrity sha512-oM5JSKQCcICF1wvGgmecmHldZ48OZamtMxcGGVICOJA8o8cahXC1zEVAif8iwoc5j8etxFaRFnf095+CDsuoFQ==
@@ -5933,6 +5898,14 @@
   version "4.0.14"
   resolved "https://registry.yarnpkg.com/@types/readable-stream/-/readable-stream-4.0.14.tgz#5a76a00e1e3dd6ff921ea2b3fac7485c5a492c19"
   integrity sha512-xZn/AuUbCMShGsqH/ehZtGDwQtbx00M9rZ2ENLe4tOjFZ/JFeWMhEZkk2fEe1jAUqqEAURIkFJ7Az/go8mM1/w==
+  dependencies:
+    "@types/node" "*"
+    safe-buffer "~5.1.1"
+
+"@types/readable-stream@^4.0.15":
+  version "4.0.15"
+  resolved "https://registry.yarnpkg.com/@types/readable-stream/-/readable-stream-4.0.15.tgz#e6ec26fe5b02f578c60baf1fa9452e90957d2bfb"
+  integrity sha512-oAZ3kw+kJFkEqyh7xORZOku1YAKvsFTogRY8kVl4vHpEKiDkfnSA/My8haRE7fvmix5Zyy+1pwzOi7yycGLBJw==
   dependencies:
     "@types/node" "*"
     safe-buffer "~5.1.1"
@@ -13183,13 +13156,13 @@ rdf-stores@^1.0.0:
     rdf-terms "^1.9.1"
 
 rdf-streaming-store@^1.1.4:
-  version "1.1.4"
-  resolved "https://registry.yarnpkg.com/rdf-streaming-store/-/rdf-streaming-store-1.1.4.tgz#2a68bca9fb5e0ea6ce240f13873518308b2530a4"
-  integrity sha512-Bq98GHHvmdJRTxZBH5TKYuWLAHEXiLTd/F6OeuLtWC6tQydxp7smMnYyoRtztc9p+jBsA9z9HmzQsGfEE2mj4w==
+  version "1.1.5"
+  resolved "https://registry.yarnpkg.com/rdf-streaming-store/-/rdf-streaming-store-1.1.5.tgz#64f1cbb570ebdd532b9f3e7742d62f106e97cb5b"
+  integrity sha512-Rfd3qo1otF/Jfau/lAFX8J1ZPorN0eaHoIkAlenIIcdZjq9AoIP85rEa4Sn+yMZOqNU1Kc4cCPUv5CFHhpAT2Q==
   dependencies:
     "@rdfjs/types" "*"
     "@types/n3" "^1.10.4"
-    "@types/readable-stream" "^2.3.15"
+    "@types/readable-stream" "^4.0.15"
     n3 "^1.16.3"
     rdf-string "^1.6.2"
     rdf-terms "^1.9.1"
