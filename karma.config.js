@@ -60,7 +60,9 @@ module.exports = function(config) {
         ],
       },
       plugins: [
-        new NodePolyfillPlugin(),
+        new NodePolyfillPlugin({
+          additionalAliases: [ 'process' ],
+        }),
         new webpack.DefinePlugin({
           'process.stdout.isTTY': false,
         }),
