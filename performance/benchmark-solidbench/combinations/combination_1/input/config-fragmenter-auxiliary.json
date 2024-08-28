@@ -1,0 +1,61 @@
+{
+  "@context": "https://linkedsoftwaredependencies.org/bundles/npm/rdf-dataset-fragmenter/^2.0.0/components/context.jsonld",
+  "@id": "urn:rdf-dataset-fragmenter:default",
+  "@type": "Fragmenter",
+  "quadSource": {
+    "@id": "urn:rdf-dataset-fragmenter:source:default",
+    "@type": "QuadSourceComposite",
+    "sources": [
+	  {
+	    "@type": "QuadSourceFile",
+	    "filePath": "out-enhanced/social_network_auxiliary.ttl"
+	  }
+    ]
+  },
+  "transformers": [
+    {
+      "@type": "QuadTransformerReplaceIri",
+      "searchRegex": "^http://www.ldbc.eu",
+      "replacementString": "http://solidbench-server:3000/www.ldbc.eu"
+    },
+    {
+      "@type": "QuadTransformerReplaceIri",
+      "searchRegex": "^http://dbpedia.org",
+      "replacementString": "http://solidbench-server:3000/dbpedia.org"
+    },
+    {
+      "@type": "QuadTransformerReplaceIri",
+      "searchRegex": "^http://www.w3.org/2002/07/owl",
+      "replacementString": "http://solidbench-server:3000/www.w3.org/2002/07/owl"
+    },
+    {
+      "@type": "QuadTransformerReplaceIri",
+      "searchRegex": "^http://solidbench-server:3000/www.ldbc.eu/ldbc_socialnet/1.0/data/pers([0-9]*)$",
+      "replacementString": "http://solidbench-server:3000/pods/$1/profile/card#me"
+    },
+    {
+      "@type": "QuadTransformerRemapResourceIdentifier",
+      "newIdentifierSeparator": "../noise/",
+      "typeRegex": "vocabulary/Noise$",
+      "identifierPredicateRegex": "vocabulary/noise$",
+      "targetPredicateRegex": "vocabulary/hasCreator$"
+    }
+  ],
+  "fragmentationStrategy": {
+    "@type": "FragmentationStrategyComposite",
+    "strategies": [
+      { "@type": "FragmentationStrategySubject" }
+    ]
+  },
+  "quadSink": {
+    "@id": "urn:rdf-dataset-fragmenter:sink:default",
+    "@type": "QuadSinkFile",
+    "log": true,
+    "outputFormat": "application/n-quads",
+    "fileExtension": ".nq",
+    "iriToPath": {
+      "http://": "out-fragments/http/",
+      "https://": "out-fragments/https/"
+    }
+  }
+}

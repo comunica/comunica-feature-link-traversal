@@ -1,0 +1,29 @@
+{
+  "@context": "https://linkedsoftwaredependencies.org/bundles/npm/ldbc-snb-enhancer/^2.0.0/components/context.jsonld",
+  "@id": "urn:ldbc-snb-enhancer:default",
+  "@type": "Enhancer",
+  "personsPath": "out-snb/social_network/social_network_person_0_0.ttl",
+  "activitiesPath": "out-snb/social_network/social_network_activity_0_0.ttl",
+  "staticPath": "out-snb/social_network/social_network_static_0_0.ttl",
+  "destinationPathData": "out-enhanced/social_network_auxiliary.ttl",
+  "logger": {
+    "@type": "LoggerStdout"
+  },
+  "dataSelector": {
+    "@type": "DataSelectorRandom",
+    "seed": 12345
+  },
+  "parameterEmitterPosts": {
+    "@type": "ParameterEmitterCsv",
+    "destinationPath": "out-enhanced/parameters-posts.csv"
+  },
+  "handlers": [
+    {
+      "@type": "EnhancementHandlerPersonNoise",
+      "chance": 10
+    },
+    {
+      "@type": "EnhancementHandlerVocabulary"
+    }
+  ]
+}

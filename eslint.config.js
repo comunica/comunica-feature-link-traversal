@@ -82,6 +82,7 @@ module.exports = config([
       '**/web-clients/**',
       '**/bintest/**',
       'lerna.json',
+      'performance/**',
     ],
   },
   {

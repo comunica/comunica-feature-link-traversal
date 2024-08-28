@@ -1,0 +1,25 @@
+{
+  "name": "benchmark-solidbench",
+  "version": "0.5.0",
+  "private": true,
+  "scripts": {
+    "jbr": "cross-env NODE_OPTIONS=--max-old-space-size=8192 jbr",
+    "validate": "jbr validate",
+    "fetch-assets": "curl -s -L https://github.com/comunica/comunica-performance-assets/raw/master/solidbench-01.tar.gz?download= | tar --exclude=\".*\" -xz",
+    "set-host": "hostile set 127.0.0.1 solidbench-server",
+    "remove-host": "hostile remove solidbench-server",
+    "performance": "docker pull comunica/query-sparql-link-traversal-solid:latest && jbr prepare && jbr run && psbr tex query combinations/combination_*/output --svg --logY --overrideCombinationLabels Current,Previous",
+    "performance:ci": "yarn install --ignore-engines && npm run fetch-assets && sudo npm run set-host && jbr prepare -c 0 && jbr run -c 0 && sudo npm run remove-host"
+  },
+  "dependencies": {
+    "@jbr-experiment/solidbench": "^5.3.1",
+    "@jbr-hook/cli": "^5.2.0",
+    "@jbr-hook/sparql-endpoint-comunica": "^5.2.0",
+    "cross-env": "^7.0.3",
+    "hostile": "^1.4.0",
+    "jbr": "^5.2.0"
+  },
+  "resolutions": {
+    "componentsjs": "6.0.1"
+  }
+}
