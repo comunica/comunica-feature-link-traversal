@@ -1,0 +1,644 @@
+{
+  "@context": [
+    "https://linkedsoftwaredependencies.org/bundles/npm/ldbc-snb-validation-generator/^1.0.0/components/context.jsonld",
+    "https://linkedsoftwaredependencies.org/bundles/npm/sparql-query-parameter-instantiator/^2.0.0/components/context.jsonld"
+  ],
+  "@id": "urn:ldbc-snb-validation-generator:default",
+  "@type": "ValidationGenerator",
+  "parameterSource": {
+    "@type": "ParametersSourceLdbcValidation",
+    "path": "out-validate-params/validation_params-sf1-without-updates.csv"
+  },
+  "destination": {
+    "@type": "QueryResultDestinationDirectory",
+    "path": "out-validate"
+  },
+  "queryHandlers": [
+    {
+      "@type": "SparqlQueryHandler",
+      "identifier": "com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery1",
+      "templateFilePath": {
+        "@id": "urn:variables:query-templates:interactive-complex-1.sparql",
+        "@type": "Variable"
+      },
+      "variables": [
+        {
+          "@type": "VariableTemplateNamedNode",
+          "name": "rootPerson",
+          "valueTransformers": [
+            {
+              "@id": "urn:sparql-query-parameter-instantiator:valueTransformerPersonIdToIri",
+              "@type": "ValueTransformerReplaceIri",
+              "searchRegex": "^(.*)$",
+              "replacementString": "http://solidbench-server:3000/pods/$1/profile/card#me"
+            }
+          ]
+        },
+        {
+          "@type": "VariableTemplateLiteral",
+          "name": "firstName"
+        }
+      ],
+      "results": [
+        {
+          "@type": "VariableTemplateLiteral",
+          "name": "friendId"
+        },
+        {
+          "@type": "VariableTemplateLiteral",
+          "name": "friendLastName"
+        },
+        {
+          "@type": "VariableTemplateLiteral",
+          "name": "distanceFromPerson"
+        },
+        {
+          "@type": "VariableTemplateTimestamp",
+          "name": "friendBirthday"
+        },
+        {
+          "@type": "VariableTemplateLiteral",
+          "name": "friendCreationDate"
+        },
+        {
+          "@type": "VariableTemplateLiteral",
+          "name": "friendGender"
+        },
+        {
+          "@type": "VariableTemplateLiteral",
+          "name": "friendBrowserUsed"
+        },
+        {
+          "@type": "VariableTemplateLiteral",
+          "name": "friendLocationIp"
+        },
+        {
+          "@type": "VariableTemplateList",
+          "name": "friendEmails",
+          "separator": ", ",
+          "innerTemplate": {
+            "@type": "VariableTemplateLiteral",
+            "name": "friendEmail"
+          }
+        },
+        {
+          "@type": "VariableTemplateList",
+          "name": "friendLanguages",
+          "separator": ", ",
+          "innerTemplate": {
+            "@type": "VariableTemplateLiteral",
+            "name": "friendLanguage"
+          }
+        },
+        {
+          "@type": "VariableTemplateLiteral",
+          "name": "friendCityName"
+        },
+        {
+          "@type": "VariableTemplateList",
+          "name": "friendUniversities",
+          "separator": ", ",
+          "innerTemplate": {
+            "@type": "VariableTemplateList",
+            "name": "friendUniversity",
+            "separator": " ",
+            "innerTemplate": {
+              "@type": "VariableTemplateLiteral",
+              "name": "friendUniversityDetail"
+            }
+          }
+        },
+        {
+          "@type": "VariableTemplateList",
+          "name": "friendCompanies",
+          "separator": ", ",
+          "innerTemplate": {
+            "@type": "VariableTemplateList",
+            "name": "friendCompany",
+            "separator": " ",
+            "innerTemplate": {
+              "@type": "VariableTemplateLiteral",
+              "name": "friendCompanyDetail"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "@type": "SparqlQueryHandler",
+      "identifier": "com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery2",
+      "templateFilePath": {
+        "@id": "urn:variables:query-templates:interactive-complex-2.sparql",
+        "@type": "Variable"
+      },
+      "variables": [
+        {
+          "@type": "VariableTemplateNamedNode",
+          "name": "rootPerson",
+          "valueTransformers": [
+            {
+              "@id": "urn:sparql-query-parameter-instantiator:valueTransformerPersonIdToIri"
+            }
+          ]
+        },
+        {
+          "@type": "VariableTemplateTimestamp",
+          "name": "maxDate"
+        }
+      ],
+      "results": [
+        {
+          "@type": "VariableTemplateLiteral",
+          "name": "personId"
+        },
+        {
+          "@type": "VariableTemplateLiteral",
+          "name": "personFirstName"
+        },
+        {
+          "@type": "VariableTemplateLiteral",
+          "name": "personLastName"
+        },
+        {
+          "@type": "VariableTemplateLiteral",
+          "name": "messageId"
+        },
+        {
+          "@type": "VariableTemplateLiteral",
+          "name": "messageContent"
+        },
+        {
+          "@type": "VariableTemplateTimestamp",
+          "name": "messageCreationDate"
+        }
+      ]
+    },
+    {
+      "@type": "SparqlQueryHandler",
+      "identifier": "com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery3",
+      "templateFilePath": {
+        "@id": "urn:variables:query-templates:interactive-complex-3.sparql",
+        "@type": "Variable"
+      },
+      "variables": [
+        {
+          "@type": "VariableTemplateNamedNode",
+          "name": "rootPerson",
+          "valueTransformers": [
+            {
+              "@id": "urn:sparql-query-parameter-instantiator:valueTransformerPersonIdToIri"
+            }
+          ]
+        },
+        {
+          "@type": "VariableTemplateLiteral",
+          "name": "countryXName"
+        },
+        {
+          "@type": "VariableTemplateLiteral",
+          "name": "countryYName"
+        },
+        {
+          "@type": "VariableTemplateTimestamp",
+          "name": "startDate"
+        },
+        {
+          "@type": "VariableTemplateLiteral",
+          "name": "durationDays"
+        }
+      ],
+      "results": [
+        {
+          "@type": "VariableTemplateLiteral",
+          "name": "personId"
+        },
+        {
+          "@type": "VariableTemplateLiteral",
+          "name": "personFirstName"
+        },
+        {
+          "@type": "VariableTemplateLiteral",
+          "name": "personLastName"
+        },
+        {
+          "@type": "VariableTemplateLiteral",
+          "name": "xCount"
+        },
+        {
+          "@type": "VariableTemplateLiteral",
+          "name": "yCount"
+        },
+        {
+          "@type": "VariableTemplateLiteral",
+          "name": "count"
+        }
+      ]
+    },
+    {
+      "@type": "SparqlQueryHandler",
+      "identifier": "com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery4",
+      "templateFilePath": {
+        "@id": "urn:variables:query-templates:interactive-complex-4.sparql",
+        "@type": "Variable"
+      },
+      "variables": [
+        {
+          "@type": "VariableTemplateNamedNode",
+          "name": "rootPerson",
+          "valueTransformers": [
+            {
+              "@id": "urn:sparql-query-parameter-instantiator:valueTransformerPersonIdToIri"
+            }
+          ]
+        },
+        {
+          "@type": "VariableTemplateTimestamp",
+          "name": "startDate"
+        },
+        {
+          "@type": "VariableTemplateLiteral",
+          "name": "durationDays"
+        }
+      ],
+      "results": [
+        {
+          "@type": "VariableTemplateLiteral",
+          "name": "tagName"
+        },
+        {
+          "@type": "VariableTemplateLiteral",
+          "name": "postCount"
+        }
+      ]
+    },
+    {
+      "@type": "SparqlQueryHandler",
+      "identifier": "com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery5",
+      "templateFilePath": {
+        "@id": "urn:variables:query-templates:interactive-complex-5.sparql",
+        "@type": "Variable"
+      },
+      "variables": [
+        {
+          "@type": "VariableTemplateNamedNode",
+          "name": "rootPerson",
+          "valueTransformers": [
+            {
+              "@id": "urn:sparql-query-parameter-instantiator:valueTransformerPersonIdToIri"
+            }
+          ]
+        },
+        {
+          "@type": "VariableTemplateTimestamp",
+          "name": "minDate"
+        }
+      ],
+      "results": [
+        {
+          "@type": "VariableTemplateLiteral",
+          "name": "forumTitle"
+        },
+        {
+          "@type": "VariableTemplateLiteral",
+          "name": "postCount"
+        }
+      ]
+    },
+    {
+      "@type": "SparqlQueryHandler",
+      "identifier": "com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery6",
+      "templateFilePath": {
+        "@id": "urn:variables:query-templates:interactive-complex-6.sparql",
+        "@type": "Variable"
+      },
+      "variables": [
+        {
+          "@type": "VariableTemplateNamedNode",
+          "name": "rootPerson",
+          "valueTransformers": [
+            {
+              "@id": "urn:sparql-query-parameter-instantiator:valueTransformerPersonIdToIri"
+            }
+          ]
+        },
+        {
+          "@type": "VariableTemplateLiteral",
+          "name": "tagName"
+        }
+      ],
+      "results": [
+        {
+          "@type": "VariableTemplateLiteral",
+          "name": "tagName"
+        },
+        {
+          "@type": "VariableTemplateLiteral",
+          "name": "postCount"
+        }
+      ]
+    },
+    {
+      "@type": "SparqlQueryHandler",
+      "identifier": "com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery7",
+      "templateFilePath": {
+        "@id": "urn:variables:query-templates:interactive-complex-7.sparql",
+        "@type": "Variable"
+      },
+      "variables": [
+        {
+          "@type": "VariableTemplateNamedNode",
+          "name": "rootPerson",
+          "valueTransformers": [
+            {
+              "@id": "urn:sparql-query-parameter-instantiator:valueTransformerPersonIdToIri"
+            }
+          ]
+        }
+      ],
+      "results": [
+        {
+          "@type": "VariableTemplateLiteral",
+          "name": "personId"
+        },
+        {
+          "@type": "VariableTemplateLiteral",
+          "name": "personFirstName"
+        },
+        {
+          "@type": "VariableTemplateLiteral",
+          "name": "personLastName"
+        },
+        {
+          "@type": "VariableTemplateTimestamp",
+          "name": "likeCreationDate"
+        },
+        {
+          "@type": "VariableTemplateLiteral",
+          "name": "messageId"
+        },
+        {
+          "@type": "VariableTemplateLiteral",
+          "name": "messageContent"
+        },
+        {
+          "@type": "VariableTemplateLiteral",
+          "name": "minutesLatency"
+        },
+        {
+          "@type": "VariableTemplateLiteral",
+          "name": "isNew"
+        }
+      ]
+    },
+    {
+      "@type": "SparqlQueryHandler",
+      "identifier": "com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery8",
+      "templateFilePath": {
+        "@id": "urn:variables:query-templates:interactive-complex-8.sparql",
+        "@type": "Variable"
+      },
+      "variables": [
+        {
+          "@type": "VariableTemplateNamedNode",
+          "name": "rootPerson",
+          "valueTransformers": [
+            {
+              "@id": "urn:sparql-query-parameter-instantiator:valueTransformerPersonIdToIri"
+            }
+          ]
+        }
+      ],
+      "results": [
+        {
+          "@type": "VariableTemplateLiteral",
+          "name": "personId"
+        },
+        {
+          "@type": "VariableTemplateLiteral",
+          "name": "personFirstName"
+        },
+        {
+          "@type": "VariableTemplateLiteral",
+          "name": "personLastName"
+        },
+        {
+          "@type": "VariableTemplateTimestamp",
+          "name": "commentCreationDate"
+        },
+        {
+          "@type": "VariableTemplateLiteral",
+          "name": "commentId"
+        },
+        {
+          "@type": "VariableTemplateLiteral",
+          "name": "commentContent"
+        }
+      ]
+    },
+    {
+      "@type": "SparqlQueryHandler",
+      "identifier": "com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery9",
+      "templateFilePath": {
+        "@id": "urn:variables:query-templates:interactive-complex-9.sparql",
+        "@type": "Variable"
+      },
+      "variables": [
+        {
+          "@type": "VariableTemplateNamedNode",
+          "name": "rootPerson",
+          "valueTransformers": [
+            {
+              "@id": "urn:sparql-query-parameter-instantiator:valueTransformerPersonIdToIri"
+            }
+          ]
+        },
+        {
+          "@type": "VariableTemplateTimestamp",
+          "name": "maxDate"
+        }
+      ],
+      "results": [
+        {
+          "@type": "VariableTemplateLiteral",
+          "name": "personId"
+        },
+        {
+          "@type": "VariableTemplateLiteral",
+          "name": "personFirstName"
+        },
+        {
+          "@type": "VariableTemplateLiteral",
+          "name": "personLastName"
+        },
+        {
+          "@type": "VariableTemplateLiteral",
+          "name": "messageId"
+        },
+        {
+          "@type": "VariableTemplateLiteral",
+          "name": "messageContent"
+        },
+        {
+          "@type": "VariableTemplateTimestamp",
+          "name": "messageCreationDate"
+        }
+      ]
+    },
+    {
+      "@type": "SparqlQueryHandler",
+      "identifier": "com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery10",
+      "templateFilePath": {
+        "@id": "urn:variables:query-templates:interactive-complex-10.sparql",
+        "@type": "Variable"
+      },
+      "variables": [
+        {
+          "@type": "VariableTemplateNamedNode",
+          "name": "rootPerson",
+          "valueTransformers": [
+            {
+              "@id": "urn:sparql-query-parameter-instantiator:valueTransformerPersonIdToIri"
+            }
+          ]
+        },
+        {
+          "@type": "VariableTemplateLiteral",
+          "name": "month"
+        }
+      ],
+      "results": [
+        {
+          "@type": "VariableTemplateLiteral",
+          "name": "personId"
+        },
+        {
+          "@type": "VariableTemplateLiteral",
+          "name": "personFirstName"
+        },
+        {
+          "@type": "VariableTemplateLiteral",
+          "name": "personLastName"
+        },
+        {
+          "@type": "VariableTemplateLiteral",
+          "name": "commonInterestScore"
+        },
+        {
+          "@type": "VariableTemplateLiteral",
+          "name": "personGender"
+        },
+        {
+          "@type": "VariableTemplateLiteral",
+          "name": "personCityName"
+        }
+      ]
+    },
+    {
+      "@type": "SparqlQueryHandler",
+      "identifier": "com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery11",
+      "templateFilePath": {
+        "@id": "urn:variables:query-templates:interactive-complex-11.sparql",
+        "@type": "Variable"
+      },
+      "variables": [
+        {
+          "@type": "VariableTemplateNamedNode",
+          "name": "rootPerson",
+          "valueTransformers": [
+            {
+              "@id": "urn:sparql-query-parameter-instantiator:valueTransformerPersonIdToIri"
+            }
+          ]
+        },
+        {
+          "@type": "VariableTemplateLiteral",
+          "name": "countryName"
+        },
+        {
+          "@type": "VariableTemplateLiteral",
+          "name": "workFromYear"
+        }
+      ],
+      "results": [
+        {
+          "@type": "VariableTemplateLiteral",
+          "name": "personId"
+        },
+        {
+          "@type": "VariableTemplateLiteral",
+          "name": "personFirstName"
+        },
+        {
+          "@type": "VariableTemplateLiteral",
+          "name": "personLastName"
+        },
+        {
+          "@type": "VariableTemplateLiteral",
+          "name": "organizationName"
+        },
+        {
+          "@type": "VariableTemplateLiteral",
+          "name": "organizationWorkFromYear"
+        }
+      ]
+    },
+    {
+      "@type": "SparqlQueryHandler",
+      "identifier": "com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery12",
+      "templateFilePath": {
+        "@id": "urn:variables:query-templates:interactive-complex-12.sparql",
+        "@type": "Variable"
+      },
+      "variables": [
+        {
+          "@type": "VariableTemplateNamedNode",
+          "name": "rootPerson",
+          "valueTransformers": [
+            {
+              "@id": "urn:sparql-query-parameter-instantiator:valueTransformerPersonIdToIri"
+            }
+          ]
+        },
+        {
+          "@type": "VariableTemplateLiteral",
+          "name": "tagClassName"
+        }
+      ],
+      "results": [
+        {
+          "@type": "VariableTemplateLiteral",
+          "name": "personId"
+        },
+        {
+          "@type": "VariableTemplateLiteral",
+          "name": "personFirstName"
+        },
+        {
+          "@type": "VariableTemplateLiteral",
+          "name": "personLastName"
+        },
+        {
+          "@type": "VariableTemplateList",
+          "name": "tagNames",
+          "separator": ", ",
+          "innerTemplate": {
+            "@type": "VariableTemplateLiteral",
+            "name": "tagName"
+          }
+        },
+        {
+          "@type": "VariableTemplateLiteral",
+          "name": "replyCount"
+        }
+      ]
+    },
+    {
+      "@type": "VoidQueryHandler",
+      "identifier": "com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery13"
+    },
+    {
+      "@type": "VoidQueryHandler",
+      "identifier": "com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery14"
+    }
+  ]
+}

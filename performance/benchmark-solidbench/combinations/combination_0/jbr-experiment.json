@@ -1,0 +1,35 @@
+{
+  "@context": [
+    "https://linkedsoftwaredependencies.org/bundles/npm/jbr/^5.0.0/components/context.jsonld",
+    "https://linkedsoftwaredependencies.org/bundles/npm/@jbr-experiment/solidbench/^5.0.0/components/context.jsonld",
+    "https://linkedsoftwaredependencies.org/bundles/npm/@jbr-hook/sparql-endpoint-comunica/^5.0.0/components/context.jsonld",
+    "https://linkedsoftwaredependencies.org/bundles/npm/@jbr-hook/cli/^5.0.0/components/context.jsonld"
+  ],
+  "@id": "urn:jbr:benchmark-solidbench:combination_0",
+  "@type": "ExperimentSolidBench",
+  "scale": "0.1",
+  "configGenerateAux": "input/config-enhancer.json",
+  "configFragment": "input/config-fragmenter.json",
+  "configFragmentAux": "input/config-fragmenter-auxiliary.json",
+  "configQueries": "input/config-queries.json",
+  "configServer": "input/config-server.json",
+  "validationParamsUrl": "https://cloud.ilabt.imec.be/index.php/s/bBZZKb7cP95WgcD/download/validation_params.zip",
+  "configValidation": "input/config-validation.json",
+  "hadoopMemory": "4G",
+  "dockerfileServer": "input/dockerfiles/Dockerfile-server",
+  "endpointUrl": "http://localhost:3001/sparql",
+  "serverPort": 3000,
+  "serverLogLevel": "info",
+  "serverBaseUrl": "http://solidbench-server:3000/",
+  "serverResourceConstraints": {
+    "@type": "StaticDockerResourceConstraints",
+    "cpu_percentage": 100
+  },
+  "queryRunnerReplication": 1,
+  "queryRunnerWarmupRounds": 1,
+  "queryRunnerRequestDelay": 100,
+  "queryRunnerEndpointAvailabilityCheckTimeout": 500,
+  "queryRunnerUrlParams": { "context": "{ \"lenient\": true }" },
+  "queryTimeoutFallback": 20000,
+  "hookSparqlEndpoint": {"@id": "urn:jbr:benchmark-solidbench:combination_0:hookSparqlEndpoint","@type": "HookCli","entrypoint": [  "node",  "../../engines/query-sparql-link-traversal-solid/bin/http.js", "-c", "input/context-client.json",  "-p",  "3001",  "-t",  "10", "--idp", "void", "-i", "-w", "1", "--contextOverride"],"statsFilePath": "output/stats.csv"  }
+}

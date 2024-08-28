@@ -1,0 +1,13 @@
+FROM solidproject/community-server:5.0.0-alpha.0
+
+ARG CONFIG_SERVER
+ARG LOG_LEVEL
+ARG BASE_URL
+
+ADD $CONFIG_SERVER /tmp/config.json
+
+ENV LOG_LEVEL=$LOG_LEVEL
+ENV BASE_URL=$BASE_URL
+
+ENTRYPOINT []
+CMD [ "/bin/sh", "-c", "node bin/server.js -c /tmp/config.json -b ${BASE_URL} -l ${LOG_LEVEL} -f /data" ]
