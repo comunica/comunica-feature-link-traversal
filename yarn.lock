@@ -3865,7 +3865,7 @@
     "@rdfjs/types" "*"
     asynciterator "^3.9.0"
 
-"@comunica/config-query-sparql-solid@^3.1.1":
+"@comunica/config-query-sparql-solid@^3.1.1", "@comunica/config-query-sparql-solid@~3.1.1":
   version "3.1.1"
   resolved "https://registry.yarnpkg.com/@comunica/config-query-sparql-solid/-/config-query-sparql-solid-3.1.1.tgz#b375bcae63f985c9c2e4090eb11bc2cbf25c0aca"
   integrity sha512-ziPpuN7lGuI3GmNeK4kgJoQOchCOUzcZv4OYdHWewTH2RQhxiuq/BHWkD0PviceS576YobJny/1zcIfdLq+8+g==
@@ -3877,7 +3877,7 @@
   resolved "https://registry.yarnpkg.com/@comunica/config-query-sparql/-/config-query-sparql-2.7.0.tgz#1030ee76d5532bc6a09a6c8af26a06c7311a5861"
   integrity sha512-rMnFgT7cz9+0z7wV4OzIMY5qM9/Z0mTGrR8y2JokoHyyTcBGOSajFmy61XCSLMCsLLG8qDXsJ4ClCCky3TGfqA==
 
-"@comunica/config-query-sparql@^3.2.1":
+"@comunica/config-query-sparql@^3.2.1", "@comunica/config-query-sparql@~3.2.1":
   version "3.2.1"
   resolved "https://registry.yarnpkg.com/@comunica/config-query-sparql/-/config-query-sparql-3.2.1.tgz#c11701fd833471026501cab7e1d5aaf322897084"
   integrity sha512-vj26k52tsQzASAdwz2d5iYN5OSK7K1rRA7WM1aFGUHNFRrZaL942wtXkN1EKljEpn9CDWbMz4JL+REwi3XcWJA==
@@ -4105,7 +4105,7 @@
     minimist "^1.2.7"
     process "^0.11.10"
 
-"@comunica/query-sparql-solid@^3.1.1":
+"@comunica/query-sparql-solid@~3.1.1":
   version "3.1.1"
   resolved "https://registry.yarnpkg.com/@comunica/query-sparql-solid/-/query-sparql-solid-3.1.1.tgz#0a40779b0cb9267b5ee4b82d8b792d49dd881e01"
   integrity sha512-yAgm7LiqNP/eBkH/kX4s2JEOTaC+Aq/0Z3kAb/wTuU7qtqVZhg07fbPu+m7pjsDsqeEXQ2KhcG1jtZ4juDXLVw==
@@ -4262,7 +4262,7 @@
     "@rubensworks/solid-client-authn-isomorphic" "^2.0.0"
     solid-node-interactive-auth "^1.0.2"
 
-"@comunica/query-sparql@^3.2.3":
+"@comunica/query-sparql@~3.2.3":
   version "3.2.3"
   resolved "https://registry.yarnpkg.com/@comunica/query-sparql/-/query-sparql-3.2.3.tgz#f01f0ceba6230414e927881d2b4739ddd6d6b450"
   integrity sha512-uRCHZUKUbGQFv90md7f0WzXLlk+Wict7Wa4EZg7VTeHAkgsY9fyL7oLVXUQxJ/rlbw0yldxF89S/PUSNYoCF7g==
@@ -5472,12 +5472,7 @@
     hierarchy-closure "^1.2.2"
     sync-request "^6.1.0"
 
-"@shexjs/visitor@1.0.0-alpha.25":
-  version "1.0.0-alpha.25"
-  resolved "https://registry.yarnpkg.com/@shexjs/visitor/-/visitor-1.0.0-alpha.25.tgz#1c0e79be34c876f65309e870d11e95f4b794b18d"
-  integrity sha512-DbqXXbzbzjJm2mjld7cSORgmJRyBr/RsXirDaNcRrQfZKXp+TJea8jHjY6PuHubs6SVA3Xj/SwTPGz6o5z8+WA==
-
-"@shexjs/visitor@^1.0.0-alpha.27":
+"@shexjs/visitor@1.0.0-alpha.27", "@shexjs/visitor@^1.0.0-alpha.27":
   version "1.0.0-alpha.27"
   resolved "https://registry.yarnpkg.com/@shexjs/visitor/-/visitor-1.0.0-alpha.27.tgz#c0263237a036d3f5fbf70058a8b233a1cefbf6de"
   integrity sha512-9s67A+f0ZZNw/SNxqoi1483CqUca8dbnHM6WDWsRH4+eXlQpQqwOZDxA8uKEaWeX4VcDrDwzWpr0WvK6EyDWIQ==
