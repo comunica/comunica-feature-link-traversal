@@ -3865,7 +3865,7 @@
     "@rdfjs/types" "*"
     asynciterator "^3.9.0"
 
-"@comunica/config-query-sparql-solid@^3.1.1":
+"@comunica/config-query-sparql-solid@^3.1.1", "@comunica/config-query-sparql-solid@~3.1.1":
   version "3.1.1"
   resolved "https://registry.yarnpkg.com/@comunica/config-query-sparql-solid/-/config-query-sparql-solid-3.1.1.tgz#b375bcae63f985c9c2e4090eb11bc2cbf25c0aca"
   integrity sha512-ziPpuN7lGuI3GmNeK4kgJoQOchCOUzcZv4OYdHWewTH2RQhxiuq/BHWkD0PviceS576YobJny/1zcIfdLq+8+g==
@@ -3877,7 +3877,7 @@
   resolved "https://registry.yarnpkg.com/@comunica/config-query-sparql/-/config-query-sparql-2.7.0.tgz#1030ee76d5532bc6a09a6c8af26a06c7311a5861"
   integrity sha512-rMnFgT7cz9+0z7wV4OzIMY5qM9/Z0mTGrR8y2JokoHyyTcBGOSajFmy61XCSLMCsLLG8qDXsJ4ClCCky3TGfqA==
 
-"@comunica/config-query-sparql@^3.2.1":
+"@comunica/config-query-sparql@^3.2.1", "@comunica/config-query-sparql@~3.2.1":
   version "3.2.1"
   resolved "https://registry.yarnpkg.com/@comunica/config-query-sparql/-/config-query-sparql-3.2.1.tgz#c11701fd833471026501cab7e1d5aaf322897084"
   integrity sha512-vj26k52tsQzASAdwz2d5iYN5OSK7K1rRA7WM1aFGUHNFRrZaL942wtXkN1EKljEpn9CDWbMz4JL+REwi3XcWJA==
@@ -4105,7 +4105,7 @@
     minimist "^1.2.7"
     process "^0.11.10"
 
-"@comunica/query-sparql-solid@^3.1.1":
+"@comunica/query-sparql-solid@~3.1.1":
   version "3.1.1"
   resolved "https://registry.yarnpkg.com/@comunica/query-sparql-solid/-/query-sparql-solid-3.1.1.tgz#0a40779b0cb9267b5ee4b82d8b792d49dd881e01"
   integrity sha512-yAgm7LiqNP/eBkH/kX4s2JEOTaC+Aq/0Z3kAb/wTuU7qtqVZhg07fbPu+m7pjsDsqeEXQ2KhcG1jtZ4juDXLVw==
@@ -4262,7 +4262,7 @@
     "@rubensworks/solid-client-authn-isomorphic" "^2.0.0"
     solid-node-interactive-auth "^1.0.2"
 
-"@comunica/query-sparql@^3.2.3":
+"@comunica/query-sparql@~3.2.3":
   version "3.2.3"
   resolved "https://registry.yarnpkg.com/@comunica/query-sparql/-/query-sparql-3.2.3.tgz#f01f0ceba6230414e927881d2b4739ddd6d6b450"
   integrity sha512-uRCHZUKUbGQFv90md7f0WzXLlk+Wict7Wa4EZg7VTeHAkgsY9fyL7oLVXUQxJ/rlbw0yldxF89S/PUSNYoCF7g==
@@ -6701,6 +6701,11 @@ arrayify-stream@^2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/arrayify-stream/-/arrayify-stream-2.0.1.tgz#1981e419a7aa7ddc6b6a7b46ef86e10785425f81"
   integrity sha512-z8fB6PtmnewQpFB53piS2d1KlUi3BPMICH2h7leCOUXpQcwvZ4GbHHSpdKoUrgLMR6b4Qan/uDe1St3Ao3yIHg==
+
+arrayify-stream@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/arrayify-stream/-/arrayify-stream-3.0.0.tgz#b65eef30ab1d34d45b23d4897d310d1431a82d44"
+  integrity sha512-h2/Pb4+zcBZkRvzlhSVQf+Vo2oDaPCPYp6nyYlabAtP7YudhmUtOMROdCKFGbVQX+Bpwfdrm7fP4vqBGT6qrDA==
 
 arrify@^1.0.1:
   version "1.0.1"
