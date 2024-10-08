@@ -37,11 +37,11 @@
     "build:components": "componentsjs-generator"
   },
   "dependencies": {
-    "@comunica/actor-init-query": "^3.2.1",
+    "@comunica/actor-init-query": "^3.3.0",
     "@comunica/bus-extract-links": "^0.5.0",
-    "@comunica/bus-query-operation": "^3.2.2",
-    "@comunica/context-entries": "^3.2.1",
-    "@comunica/core": "^3.2.1",
+    "@comunica/bus-query-operation": "^3.3.0",
+    "@comunica/context-entries": "^3.3.0",
+    "@comunica/core": "^3.3.0",
     "rdf-data-factory": "^1.1.2",
     "rdf-store-stream": "^2.0.1",
     "rdf-terms": "^1.11.0",
