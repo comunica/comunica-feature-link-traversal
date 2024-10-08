@@ -1,17 +1,17 @@
 {
   "name": "@comunica/types-link-traversal",
-  "version": "0.4.1",
+  "version": "0.5.0",
   "description": "Typings module for Comunica Link Traversal",
   "lsd:module": true,
   "license": "MIT",
   "homepage": "https://comunica.dev/",
   "repository": {
     "type": "git",
-    "url": "https://github.com/comunica/comunica.git",
+    "url": "https://github.com/comunica/comunica-feature-link-traversal.git",
     "directory": "packages/types-link-traversal"
   },
   "bugs": {
-    "url": "https://github.com/comunica/comunica/issues"
+    "url": "https://github.com/comunica/comunica-feature-link-traversal/issues"
   },
   "keywords": [
     "comunica",

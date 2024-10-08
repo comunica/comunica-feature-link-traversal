@@ -1,40 +1,64 @@
 name: "CI"
 on: [push, pull_request]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
 
   test:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest]
+        os: [ubuntu-latest, macos-latest, windows-latest]
         node-version:
           - 18.x
           - 20.x
+          - 22.x
     steps:
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
       - name: Ensure line endings are consistent
         run: git config --global core.autocrlf input
       - name: Check out repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Load cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: |
             **/node_modules
           key: ${{ runner.os }}-test-modules-v1-${{ hashFiles('**/yarn.lock') }}
       - name: Install dependencies
-        run: yarn install --frozen-lockfile
+        run: yarn install --frozen-lockfile --ignore-engines
       - name: Build project
         run: yarn run build
-      - name: Run tests
-        run: export NODE_OPTIONS="--max_old_space_size=4096" && yarn run test-ci
+      - name: Build project -- esModuleInterop true
+        run: yarn run build:ts --esModuleInterop true
+      - name: Run unit tests (ubuntu, mac)
+        if: ${{ (matrix.os == 'ubuntu-latest') || (matrix.os == 'macos-latest') }}
+        run: export NODE_OPTIONS="--max_old_space_size=4096" && yarn run test-ci:unit
+      - name: Run unit tests (windows)
+        if: ${{ matrix.os == 'windows-latest' }}
+        run: set NODE_OPTIONS=--max-old-space-size=4096 && yarn run test-ci:unit
+      - name: Run system tests
+        if: ${{ matrix.os == 'ubuntu-latest' }}
+        uses: nick-fields/retry@v3
+        with:
+          timeout_minutes: 2
+          max_attempts: 3
+          command: export NODE_OPTIONS="--max_old_space_size=4096" && yarn run test-ci:system
       - name: Run browser tests
-        run: yarn run test-browser
+        if: ${{ matrix.os == 'ubuntu-latest' }}
+        uses: nick-fields/retry@v3
+        with:
+          timeout_minutes: 3
+          max_attempts: 3
+          command: yarn run test-browser
       - name: Submit coverage results
-        uses: coverallsapp/github-action@master
+        uses: coverallsapp/github-action@v2
         with:
           github-token: ${{ secrets.github_token }}
           flag-name: run-${{ matrix.node-version }}
@@ -45,7 +69,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Consolidate test coverage from different jobs
-        uses: coverallsapp/github-action@master
+        uses: coverallsapp/github-action@v2
         with:
           github-token: ${{ secrets.github_token }}
           parallel-finished: true
@@ -54,18 +78,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Use Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: '18.x'
+          node-version: 18.x
       - name: Check out repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Load cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: '**/node_modules'
           key: ${{ runner.os }}-lint-modules-v1-${{ hashFiles('**/yarn.lock') }}
       - name: Install dependencies
-        run: yarn install --frozen-lockfile
+        run: yarn install --frozen-lockfile --ignore-engines
       - name: Run linter
         run: yarn run lint
 
@@ -76,18 +100,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Use Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: '18.x'
+          node-version: 18.x
       - name: Check out repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Load cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: '**/node_modules'
           key: ${{ runner.os }}-docker-modules-v1-${{ hashFiles('**/yarn.lock') }}
       - name: Install dependencies
-        run: yarn install --frozen-lockfile
+        run: yarn install --frozen-lockfile --ignore-engines
       - name: Install Lerna Docker
         run: sh -c "`curl -fsSl https://raw.githubusercontent.com/rubensworks/lerna-docker/master/install.sh`"
       - name: Build Docker images
@@ -99,27 +123,116 @@ jobs:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
 
+  performance:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        benchmark:
+          - solidbench
+    needs:
+      - test
+      - lint
+    if: startsWith(github.ref, 'refs/heads/master') || startsWith(github.ref, 'refs/tags/') || startsWith(github.ref, 'refs/heads/feature') || startsWith(github.ref, 'refs/heads/next')
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile --ignore-engines
+      - name: Run benchmarks
+        run: cd performance/benchmark-${{ matrix.benchmark }}/ && yarn run performance:ci
+      - uses: actions/upload-artifact@v4
+        with:
+          name: performance-benchmark-${{ matrix.benchmark }}
+          path: performance/benchmark-${{ matrix.benchmark }}/combinations/combination_0/output/
+      - name: Print raw output
+        run: cat performance/benchmark-${{ matrix.benchmark }}/combinations/combination_0/output/query-times.csv
+
+  performance-consolidate:
+    needs:
+      - performance
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/heads/master') || startsWith(github.ref, 'refs/tags/') || startsWith(github.ref, 'refs/heads/feature') || startsWith(github.ref, 'refs/heads/next')
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18.x
+      - uses: actions/download-artifact@v4
+        with:
+          name: performance-benchmark-solidbench
+          path: performance/benchmark-solidbench/combinations/combination_0/output/
+      - name: Process benchmark detailed results
+        run: npx -p @rubensworks/process-sparql-benchmark-results psbr csv ghbench performance/benchmark-solidbench/combinations/combination_0/output/ --overrideCombinationLabels SolidBench --total false --detailed true --name ghbench-detail.json
+      - name: Process benchmark total results
+        run: npx -p @rubensworks/process-sparql-benchmark-results psbr csv ghbench performance/benchmark-solidbench/combinations/combination_0/output/ --overrideCombinationLabels SolidBench --total true --detailed false --name ghbench-total.json
+      - name: Determine benchmark detailed results target directory name
+        run: echo "BENCHMARK_DATA_DIR_PATH_DETAIL=comunica-feature-link-traversal/${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}/benchmarks-detail" >> $GITHUB_ENV
+      - name: Determine benchmarks total results target directory name
+        run: echo "BENCHMARK_DATA_DIR_PATH_TOTAL=comunica-feature-link-traversal/${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}/benchmarks-total" >> $GITHUB_ENV
+      - name: Finalize benchmarks detailed results
+        uses: benchmark-action/github-action-benchmark@v1
+        with:
+          name: Benchmarks detailed results
+          tool: 'customSmallerIsBetter'
+          output-file-path: ghbench-detail.json
+          github-token: ${{ secrets.PAT }}
+          auto-push: true
+          alert-comment-cc-users: '@rubensworks'
+          gh-repository: 'github.com/comunica/comunica-performance-results'
+          gh-pages-branch: 'master'
+          benchmark-data-dir-path: ${{ env.BENCHMARK_DATA_DIR_PATH_DETAIL }}
+      - name: Cleanup benchmark-action data
+        run: rm -rf ./benchmark-data-repository
+      - name: Finalize benchmarks total results
+        uses: benchmark-action/github-action-benchmark@v1
+        with:
+          name: Benchmarks total results
+          tool: 'customSmallerIsBetter'
+          output-file-path: ghbench-total.json
+          github-token: ${{ secrets.PAT }}
+          auto-push: true
+          alert-threshold: '150%'
+          comment-always: true
+          comment-on-alert: true
+          alert-comment-cc-users: '@rubensworks'
+          summary-always: true
+          gh-repository: 'github.com/comunica/comunica-performance-results'
+          gh-pages-branch: 'master'
+          benchmark-data-dir-path: ${{ env.BENCHMARK_DATA_DIR_PATH_TOTAL }}
+      - name: Prepare comment on commit with link to performance results
+        run: echo -e "Performance benchmarks succeeded! 🚀\n\n\[[Summarized results](https://comunica.github.io/comunica-performance-results/comunica-feature-link-traversal/${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}/benchmarks-total/)\] \[[Detailed results](https://comunica.github.io/comunica-performance-results/comunica-feature-link-traversal/${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}/benchmarks-detail/)\]" > ./commit-comment-body.txt
+      - name: Comment on commit with link to performance results
+        uses: peter-evans/commit-comment@v3
+        with:
+          body-path: ./commit-comment-body.txt
+
   docs:
     runs-on: ubuntu-latest
     steps:
       - name: Use Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: '18.x'
+          node-version: 18.x
       - name: Check out repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Load cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: '**/node_modules'
           key: ${{ runner.os }}-docs-modules-v1-${{ hashFiles('**/yarn.lock') }}
       - name: Install dependencies
-        run: yarn install --frozen-lockfile
+        run: yarn install --frozen-lockfile --ignore-engines
       - name: Build docs
         run: yarn run doc
       - name: Deploy TSDoc to GitHub Pages
         if: startsWith(github.ref, 'refs/heads/master')
-        uses: JamesIves/github-pages-deploy-action@v4.4.1
+        uses: JamesIves/github-pages-deploy-action@v4
         with:
           branch: gh-pages
           folder: documentation
@@ -132,18 +245,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Use Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: '18.x'
+          node-version: 18.x
       - name: Check out repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Load cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: '**/node_modules'
           key: ${{ runner.os }}-webclients-modules-v1-${{ hashFiles('**/yarn.lock') }}
       - name: Install dependencies
-        run: yarn install --frozen-lockfile
+        run: yarn install --frozen-lockfile --ignore-engines
       - name: Build web clients
         run: ./web-clients/build-web-clients.sh
       - name: Deploy web clients

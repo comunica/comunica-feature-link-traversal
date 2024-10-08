@@ -1,0 +1,78 @@
+{
+  "@context": "https://linkedsoftwaredependencies.org/bundles/npm/@solid/community-server/^5.0.0/components/context.jsonld",
+  "import": [
+    "css:config/app/main/default.json",
+
+    "css:config/app/setup/disabled.json",
+    "css:config/app/variables/default.json",
+    "css:config/http/handler/default.json",
+    "css:config/http/middleware/websockets.json",
+    "css:config/http/server-factory/websockets.json",
+    "css:config/http/static/default.json",
+    "css:config/identity/access/public.json",
+    "css:config/identity/email/default.json",
+    "css:config/identity/handler/default.json",
+    "css:config/identity/ownership/token.json",
+    "css:config/identity/pod/static.json",
+    "css:config/identity/registration/enabled.json",
+    "css:config/ldp/authentication/dpop-bearer.json",
+    "css:config/ldp/authorization/allow-all.json",
+    "css:config/ldp/handler/default.json",
+    "css:config/ldp/metadata-parser/default.json",
+    "css:config/ldp/metadata-writer/default.json",
+    "css:config/ldp/modes/default.json",
+    "css:config/storage/backend/file.json",
+    "css:config/storage/key-value/memory.json",
+    "css:config/storage/middleware/default.json",
+    "css:config/util/auxiliary/no-acl.json",
+
+    "css:config/util/index/default.json",
+    "css:config/util/logging/winston.json",
+    "css:config/util/representation-conversion/default.json",
+    "css:config/util/resource-locker/memory.json",
+    "css:config/util/variables/default.json"
+  ],
+  "comment": "Adapted from \"css:config/file-no-setup.json\"",
+  "@graph": [
+    {
+      "comment": "A single-pod server that stores its resources on disk."
+    },
+
+    { "comment": "Adapted from \"css:config/app/init/initialize-root.json\", with things removed" },
+    {
+      "import": [
+        "css:config/app/init/initializers/logger.json",
+        "css:config/app/init/initializers/server.json"
+      ],
+      "comment": "These initializers will be all be executed sequentially when starting the server.",
+      "@id": "urn:solid-server:default:Initializer",
+      "@type": "SequenceHandler",
+      "handlers": [
+        { "@id": "urn:solid-server:default:LoggerInitializer" },
+        { "@id": "urn:solid-server:default:ServerInitializer" }
+      ]
+    },
+
+    { "comment": "Adapted from \"css:config/util/identifiers/suffix.json\", with FixedContentTypeMapper" },
+    {
+      "@id": "urn:solid-server:default:IdentifierStrategy",
+      "@type": "SingleRootIdentifierStrategy",
+      "baseUrl": { "@id": "urn:solid-server:default:variable:baseUrl" }
+    },
+    {
+      "comment": "Only required when pod creation is enabled.",
+      "@id": "urn:solid-server:default:IdentifierGenerator",
+      "@type": "SuffixIdentifierGenerator",
+      "base": { "@id": "urn:solid-server:default:variable:baseUrl" }
+    },
+    {
+      "comment": "Only required when using a file-based backend.",
+      "@id": "urn:solid-server:default:FileIdentifierMapper",
+      "@type": "FixedContentTypeMapper",
+      "base": { "@id": "urn:solid-server:default:variable:baseUrl" },
+      "rootFilepath": { "@id": "urn:solid-server:default:variable:rootFilePath" },
+      "contentType": "application/n-quads",
+      "pathSuffix": ".nq"
+    }
+  ]
+}

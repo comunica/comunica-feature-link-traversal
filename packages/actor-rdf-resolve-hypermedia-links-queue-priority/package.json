@@ -1,17 +1,17 @@
 {
   "name": "@comunica/actor-rdf-resolve-hypermedia-links-queue-priority",
-  "version": "0.4.1",
+  "version": "0.5.0",
   "description": "A priority rdf-resolve-hypermedia-links-queue actor",
   "lsd:module": true,
   "license": "MIT",
   "homepage": "https://comunica.dev/",
   "repository": {
     "type": "git",
-    "url": "https://github.com/comunica/comunica.git",
+    "url": "https://github.com/comunica/comunica-feature-link-traversal.git",
     "directory": "packages/actor-rdf-resolve-hypermedia-links-queue-priority"
   },
   "bugs": {
-    "url": "https://github.com/comunica/comunica/issues"
+    "url": "https://github.com/comunica/comunica-feature-link-traversal/issues"
   },
   "keywords": [
     "comunica",
@@ -37,8 +37,8 @@
     "build:components": "componentsjs-generator"
   },
   "dependencies": {
-    "@comunica/bus-rdf-resolve-hypermedia-links": "^3.1.0",
-    "@comunica/bus-rdf-resolve-hypermedia-links-queue": "^3.1.0",
-    "@comunica/core": "^3.1.0"
+    "@comunica/bus-rdf-resolve-hypermedia-links": "^3.2.1",
+    "@comunica/bus-rdf-resolve-hypermedia-links-queue": "^3.2.1",
+    "@comunica/core": "^3.2.1"
   }
 }

@@ -1,0 +1,133 @@
+{
+  "@context": "https://linkedsoftwaredependencies.org/bundles/npm/sparql-query-parameter-instantiator/^2.0.0/components/context.jsonld",
+  "@id": "urn:sparql-query-parameter-instantiator:default",
+  "@type": "QueryInstantiator",
+  "count": 5,
+  "providers": [
+    {
+      "@type": "QueryTemplateProvider",
+      "templateFilePath": {
+        "@id": "urn:variables:query-templates:interactive-discover-1.sparql",
+        "@type": "Variable"
+      },
+      "destinationFilePath": "out-queries/interactive-discover-1.sparql",
+      "variables": [
+        {
+          "@type": "VariableTemplateNamedNode",
+          "name": "person",
+          "substitutionProvider": {
+            "@id": "urn:sparql-query-parameter-instantiator:substitutionProviderPerson",
+            "@type": "SubstitutionProviderCsv",
+            "csvFilePath": "out-fragments/parameters-persons.csv",
+            "columnName": "subject"
+          }
+        }
+      ]
+    },
+    {
+      "@type": "QueryTemplateProvider",
+      "templateFilePath": {
+        "@id": "urn:variables:query-templates:interactive-discover-2.sparql",
+        "@type": "Variable"
+      },
+      "destinationFilePath": "out-queries/interactive-discover-2.sparql",
+      "variables": [
+        {
+          "@type": "VariableTemplateNamedNode",
+          "name": "person",
+          "substitutionProvider": { "@id": "urn:sparql-query-parameter-instantiator:substitutionProviderPerson" }
+        }
+      ]
+    },
+    {
+      "@type": "QueryTemplateProvider",
+      "templateFilePath": {
+        "@id": "urn:variables:query-templates:interactive-discover-3.sparql",
+        "@type": "Variable"
+      },
+      "destinationFilePath": "out-queries/interactive-discover-3.sparql",
+      "variables": [
+        {
+          "@type": "VariableTemplateNamedNode",
+          "name": "person",
+          "substitutionProvider": { "@id": "urn:sparql-query-parameter-instantiator:substitutionProviderPerson" }
+        }
+      ]
+    },
+    {
+      "@type": "QueryTemplateProvider",
+      "templateFilePath": {
+        "@id": "urn:variables:query-templates:interactive-discover-4.sparql",
+        "@type": "Variable"
+      },
+      "destinationFilePath": "out-queries/interactive-discover-4.sparql",
+      "variables": [
+        {
+          "@type": "VariableTemplateNamedNode",
+          "name": "person",
+          "substitutionProvider": { "@id": "urn:sparql-query-parameter-instantiator:substitutionProviderPerson" }
+        }
+      ]
+    },
+    {
+      "@type": "QueryTemplateProvider",
+      "templateFilePath": {
+        "@id": "urn:variables:query-templates:interactive-discover-5.sparql",
+        "@type": "Variable"
+      },
+      "destinationFilePath": "out-queries/interactive-discover-5.sparql",
+      "variables": [
+        {
+          "@type": "VariableTemplateNamedNode",
+          "name": "person",
+          "substitutionProvider": { "@id": "urn:sparql-query-parameter-instantiator:substitutionProviderPerson" }
+        }
+      ]
+    },
+    {
+      "@type": "QueryTemplateProvider",
+      "templateFilePath": {
+        "@id": "urn:variables:query-templates:interactive-discover-6.sparql",
+        "@type": "Variable"
+      },
+      "destinationFilePath": "out-queries/interactive-discover-6.sparql",
+      "variables": [
+        {
+          "@type": "VariableTemplateNamedNode",
+          "name": "person",
+          "substitutionProvider": { "@id": "urn:sparql-query-parameter-instantiator:substitutionProviderPerson" }
+        }
+      ]
+    },
+    {
+      "@type": "QueryTemplateProvider",
+      "templateFilePath": {
+        "@id": "urn:variables:query-templates:interactive-discover-7.sparql",
+        "@type": "Variable"
+      },
+      "destinationFilePath": "out-queries/interactive-discover-7.sparql",
+      "variables": [
+        {
+          "@type": "VariableTemplateNamedNode",
+          "name": "person",
+          "substitutionProvider": { "@id": "urn:sparql-query-parameter-instantiator:substitutionProviderPerson" }
+        }
+      ]
+    },
+    {
+      "@type": "QueryTemplateProvider",
+      "templateFilePath": {
+        "@id": "urn:variables:query-templates:interactive-discover-8.sparql",
+        "@type": "Variable"
+      },
+      "destinationFilePath": "out-queries/interactive-discover-8.sparql",
+      "variables": [
+        {
+          "@type": "VariableTemplateNamedNode",
+          "name": "person",
+          "substitutionProvider": { "@id": "urn:sparql-query-parameter-instantiator:substitutionProviderPerson" }
+        }
+      ]
+    }
+  ]
+}

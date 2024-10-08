@@ -1,17 +1,17 @@
 {
   "name": "@comunica/actor-rdf-join-inner-multi-adaptive-destroy",
-  "version": "0.4.1",
+  "version": "0.5.0",
   "description": "A inner-multi-adaptive-destroy rdf-join actor",
   "lsd:module": true,
   "license": "MIT",
   "homepage": "https://comunica.dev/",
   "repository": {
     "type": "git",
-    "url": "https://github.com/comunica/comunica.git",
+    "url": "https://github.com/comunica/comunica-feature-link-traversal.git",
     "directory": "packages/actor-rdf-join-inner-multi-adaptive-destroy"
   },
   "bugs": {
-    "url": "https://github.com/comunica/comunica/issues"
+    "url": "https://github.com/comunica/comunica-feature-link-traversal/issues"
   },
   "keywords": [
     "comunica",
@@ -37,12 +37,12 @@
     "build:components": "componentsjs-generator"
   },
   "dependencies": {
-    "@comunica/bus-query-operation": "^3.1.2",
-    "@comunica/bus-rdf-join": "^3.1.2",
-    "@comunica/context-entries": "^3.1.0",
-    "@comunica/context-entries-link-traversal": "^0.4.1",
-    "@comunica/mediatortype-join-coefficients": "^3.1.0",
-    "@comunica/types": "^3.1.0",
+    "@comunica/bus-query-operation": "^3.2.2",
+    "@comunica/bus-rdf-join": "^3.2.1",
+    "@comunica/context-entries": "^3.2.1",
+    "@comunica/context-entries-link-traversal": "^0.5.0",
+    "@comunica/mediatortype-join-coefficients": "^3.2.1",
+    "@comunica/types": "^3.2.1",
     "asynciterator": "^3.9.0"
   }
 }

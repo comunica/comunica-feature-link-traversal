@@ -1,0 +1,48 @@
+{
+  "name": "@comunica/actor-rdf-resolve-hypermedia-links-queue-wrapper-info-occupancy",
+  "version": "0.5.0",
+  "description": "A wrapper-info-occupancy rdf-resolve-hypermedia-links-queue actor",
+  "lsd:module": true,
+  "license": "MIT",
+  "homepage": "https://comunica.dev/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/comunica/comunica-feature-link-traversal.git",
+    "directory": "packages/actor-rdf-resolve-hypermedia-links-queue-wrapper-info-occupancy"
+  },
+  "bugs": {
+    "url": "https://github.com/comunica/comunica-feature-link-traversal/issues"
+  },
+  "keywords": [
+    "comunica",
+    "actor",
+    "rdf-resolve-hypermedia-links-queue",
+    "wrapper-info-occupancy"
+  ],
+  "sideEffects": false,
+  "main": "lib/index.js",
+  "typings": "lib/index",
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "components",
+    "lib/**/*.d.ts",
+    "lib/**/*.js",
+    "lib/**/*.js.map"
+  ],
+  "scripts": {
+    "build": "npm run build:ts && npm run build:components",
+    "build:ts": "node \"../../node_modules/typescript/bin/tsc\"",
+    "build:components": "componentsjs-generator"
+  },
+  "dependencies": {
+    "@comunica/bus-rdf-resolve-hypermedia-links-queue": "^3.2.1",
+    "@comunica/context-entries": "^3.2.1",
+    "@comunica/core": "^3.2.1",
+    "@comunica/logger-bunyan": "^3.2.1",
+    "@comunica/types-link-traversal": "^0.5.0",
+    "sparqlalgebrajs": "^4.3.5",
+    "uuid": "^9.0.1"
+  }
+}
