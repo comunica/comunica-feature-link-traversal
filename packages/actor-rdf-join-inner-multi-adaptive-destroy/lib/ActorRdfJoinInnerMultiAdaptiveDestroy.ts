@@ -1,16 +1,19 @@
-import { ClosableTransformIterator } from '@comunica/bus-query-operation';
+import {
+  ActorRdfJoin,
+} from '@comunica/bus-rdf-join';
 import type {
   IActionRdfJoin,
   IActorRdfJoinArgs,
   MediatorRdfJoin,
   IActorRdfJoinOutputInner,
-} from '@comunica/bus-rdf-join';
-import {
-  ActorRdfJoin,
+  IActorRdfJoinTestSideData,
 } from '@comunica/bus-rdf-join';
 import { KeysRdfJoin } from '@comunica/context-entries-link-traversal';
+import type { TestResult } from '@comunica/core';
+import { failTest, passTestWithSideData } from '@comunica/core';
 import type { IMediatorTypeJoinCoefficients } from '@comunica/mediatortype-join-coefficients';
-import type { IQueryOperationResultBindings, MetadataBindings, IJoinEntry } from '@comunica/types';
+import type { IQueryOperationResultBindings, IJoinEntry } from '@comunica/types';
+import { ClosableTransformIterator } from '@comunica/utils-iterator';
 import { BindingsStreamAdaptiveDestroy } from './BindingsStreamAdaptiveDestroy';
 
 /**
@@ -27,15 +30,20 @@ export class ActorRdfJoinInnerMultiAdaptiveDestroy extends ActorRdfJoin {
     });
   }
 
-  public override async test(action: IActionRdfJoin): Promise<IMediatorTypeJoinCoefficients> {
+  public override async test(
+    action: IActionRdfJoin,
+  ): Promise<TestResult<IMediatorTypeJoinCoefficients, IActorRdfJoinTestSideData>> {
     if (action.context.get(KeysRdfJoin.skipAdaptiveJoin)) {
-      throw new Error(`Actor ${this.name} could not run because adaptive join processing is disabled.`);
+      return failTest(`Actor ${this.name} could not run because adaptive join processing is disabled.`);
     }
     return super.test(action);
   }
 
-  public override async run(action: IActionRdfJoin): Promise<IQueryOperationResultBindings> {
-    return super.run(action);
+  public override async run(
+    action: IActionRdfJoin,
+    sideData: IActorRdfJoinTestSideData,
+  ): Promise<IQueryOperationResultBindings> {
+    return super.run(action, sideData);
   }
 
   protected cloneEntries(entries: IJoinEntry[], allowClosingOriginals: boolean): IJoinEntry[] {
@@ -89,15 +97,15 @@ export class ActorRdfJoinInnerMultiAdaptiveDestroy extends ActorRdfJoin {
 
   protected override async getJoinCoefficients(
     _action: IActionRdfJoin,
-    _metadatas: MetadataBindings[],
-  ): Promise<IMediatorTypeJoinCoefficients> {
+    sideData: IActorRdfJoinTestSideData,
+  ): Promise<TestResult<IMediatorTypeJoinCoefficients, IActorRdfJoinTestSideData>> {
     // Dummy join coefficients to make sure we always run first
-    return {
+    return passTestWithSideData({
       iterations: 0,
       persistedItems: 0,
       blockingItems: 0,
       requestTime: 0,
-    };
+    }, sideData);
   }
 }
 

@@ -5,6 +5,7 @@ import type { IActionContext } from '@comunica/types';
 import {
   ActorRdfResolveHypermediaLinksTraversePruneShapetrees,
 } from '../lib/ActorRdfResolveHypermediaLinksTraversePruneShapetrees';
+import '@comunica/utils-jest';
 
 describe('ActorRdfResolveHypermediaLinksTraversePruneShapetrees', () => {
   let bus: any;
@@ -34,23 +35,23 @@ describe('ActorRdfResolveHypermediaLinksTraversePruneShapetrees', () => {
 
     describe('test', () => {
       it('should fail with empty metadata', async() => {
-        await expect(actor.test({ metadata: {}, context })).rejects
-          .toThrow(new Error('Actor actor requires a \'traverse\' metadata entry.'));
+        await expect(actor.test({ metadata: {}, context })).resolves
+          .toFailTest('Actor actor requires a \'traverse\' metadata entry.');
       });
 
       it('should fail without shapetrees in metadata', async() => {
         await expect(actor.test({ metadata: { traverse: true }, context }))
-          .rejects.toThrow(`Actor actor requires a 'shapetrees' metadata entry.`);
+          .resolves.toFailTest(`Actor actor requires a 'shapetrees' metadata entry.`);
       });
 
       it('should fail without traverse in metadata', async() => {
         await expect(actor.test({ metadata: { shapetrees: true }, context }))
-          .rejects.toThrow(`Actor actor requires a 'traverse' metadata entry.`);
+          .resolves.toFailTest(`Actor actor requires a 'traverse' metadata entry.`);
       });
 
       it('should pass with traverse and shapetrees in metadata', async() => {
         await expect(actor.test({ metadata: { traverse: true, shapetrees: true }, context }))
-          .resolves.toBe(true);
+          .resolves.toPassTestVoid();
       });
     });
 

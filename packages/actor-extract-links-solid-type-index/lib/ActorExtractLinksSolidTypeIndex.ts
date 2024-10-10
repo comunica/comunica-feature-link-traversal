@@ -3,11 +3,11 @@ import type { ActorInitQueryBase } from '@comunica/actor-init-query';
 import type { MediatorDereferenceRdf } from '@comunica/bus-dereference-rdf';
 import type { IActionExtractLinks, IActorExtractLinksOutput } from '@comunica/bus-extract-links';
 import { ActorExtractLinks } from '@comunica/bus-extract-links';
-import type { ILink } from '@comunica/bus-rdf-resolve-hypermedia-links';
 import { KeysInitQuery, KeysQueryOperation, KeysQuerySourceIdentify } from '@comunica/context-entries';
 import { KeysRdfJoin } from '@comunica/context-entries-link-traversal';
-import type { IActorArgs, IActorTest } from '@comunica/core';
-import type { IActionContext } from '@comunica/types';
+import type { IActorArgs, IActorTest, TestResult } from '@comunica/core';
+import { failTest, passTestVoid } from '@comunica/core';
+import type { ILink, IActionContext } from '@comunica/types';
 import type * as RDF from '@rdfjs/types';
 import { storeStream } from 'rdf-store-stream';
 import { termToString } from 'rdf-string';
@@ -31,14 +31,14 @@ export class ActorExtractLinksSolidTypeIndex extends ActorExtractLinks {
     this.queryEngine = new QueryEngineBase(args.actorInitQuery);
   }
 
-  public async test(action: IActionExtractLinks): Promise<IActorTest> {
+  public async test(action: IActionExtractLinks): Promise<TestResult<IActorTest>> {
     if (!action.context.get(KeysInitQuery.query)) {
-      throw new Error(`Actor ${this.name} can only work in the context of a query.`);
+      return failTest(`Actor ${this.name} can only work in the context of a query.`);
     }
     if (!action.context.get(KeysQueryOperation.operation)) {
-      throw new Error(`Actor ${this.name} can only work in the context of a query operation.`);
+      return failTest(`Actor ${this.name} can only work in the context of a query operation.`);
     }
-    return true;
+    return passTestVoid();
   }
 
   public async run(action: IActionExtractLinks): Promise<IActorExtractLinksOutput> {
@@ -71,7 +71,7 @@ export class ActorExtractLinksSolidTypeIndex extends ActorExtractLinks {
         links: await this.getLinksMatchingQuery(
           typeLinks,
           action.context.get(KeysInitQuery.query)!,
-          action.context.get(KeysQueryOperation.operation)!,
+          <Algebra.Pattern> action.context.get(KeysQueryOperation.operation)!,
         ),
       };
     }
@@ -214,7 +214,7 @@ export class ActorExtractLinksSolidTypeIndex extends ActorExtractLinks {
   public async getLinksMatchingQuery(
     typeLinks: Record<string, ILink[]>,
     query: Algebra.Operation,
-    pattern: Algebra.Operation,
+    pattern: Algebra.Pattern,
   ): Promise<ILink[]> {
     // Collect all subjects, and all subjects in the original query that refer to a specific type.
     const allSubjects: Set<string> = new Set();

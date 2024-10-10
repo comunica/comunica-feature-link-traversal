@@ -1,19 +1,20 @@
 import type { Readable } from 'node:stream';
 import type { ActorInitQuery } from '@comunica/actor-init-query';
-import { BindingsFactory } from '@comunica/bindings-factory';
 import type { MediatorDereferenceRdf } from '@comunica/bus-dereference-rdf';
 import { KeysInitQuery, KeysQueryOperation } from '@comunica/context-entries';
 import { ActionContext, Bus } from '@comunica/core';
+import { BindingsFactory } from '@comunica/utils-bindings-factory';
 import { ArrayIterator } from 'asynciterator';
 import { DataFactory } from 'rdf-data-factory';
 import { Factory as AlgebraFactory } from 'sparqlalgebrajs';
 import { ActorExtractLinksSolidTypeIndex } from '../lib/ActorExtractLinksSolidTypeIndex';
+import '@comunica/utils-jest';
 
 const quad = require('rdf-quad');
 const stream = require('streamify-array');
 
 const DF = new DataFactory();
-const BF = new BindingsFactory();
+const BF = new BindingsFactory(DF);
 const AF = new AlgebraFactory();
 
 describe('ActorExtractLinksSolidTypeIndex', () => {
@@ -77,8 +78,8 @@ describe('ActorExtractLinksSolidTypeIndex', () => {
 
     describe('test', () => {
       it('should reject for an empty context', async() => {
-        await expect(actor.test(<any>{ context: new ActionContext() })).rejects
-          .toThrow('Actor actor can only work in the context of a query.');
+        await expect(actor.test(<any>{ context: new ActionContext() })).resolves
+          .toFailTest('Actor actor can only work in the context of a query.');
       });
 
       it('should reject for a context without query operation', async() => {
@@ -86,7 +87,7 @@ describe('ActorExtractLinksSolidTypeIndex', () => {
           context: new ActionContext({
             [KeysInitQuery.query.name]: {},
           }),
-        })).rejects.toThrow('Actor actor can only work in the context of a query operation.');
+        })).resolves.toFailTest('Actor actor can only work in the context of a query operation.');
       });
 
       it('should reject for a context without query', async() => {
@@ -94,11 +95,11 @@ describe('ActorExtractLinksSolidTypeIndex', () => {
           context: new ActionContext({
             [KeysQueryOperation.operation.name]: {},
           }),
-        })).rejects.toThrow('Actor actor can only work in the context of a query.');
+        })).resolves.toFailTest('Actor actor can only work in the context of a query.');
       });
 
       it('should be true for a valid context', async() => {
-        await expect(actor.test(<any>{ context })).resolves.toBeTruthy();
+        await expect(actor.test(<any>{ context })).resolves.toPassTestVoid();
       });
     });
 

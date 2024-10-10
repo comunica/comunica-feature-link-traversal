@@ -1,22 +1,22 @@
-import { BindingsFactory } from '@comunica/bindings-factory';
 import type { MediatorRdfJoin } from '@comunica/bus-rdf-join';
 import type {
   MediatorRdfJoinSelectivity,
 } from '@comunica/bus-rdf-join-selectivity';
 import { KeysRdfJoin } from '@comunica/context-entries-link-traversal';
 import { ActionContext, Bus } from '@comunica/core';
-import { MetadataValidationState } from '@comunica/metadata';
 import type { IActionContext, IJoinEntry } from '@comunica/types';
+import { BindingsFactory } from '@comunica/utils-bindings-factory';
+import { MetadataValidationState } from '@comunica/utils-metadata';
 import type * as RDF from '@rdfjs/types';
 import { ArrayIterator } from 'asynciterator';
 import { DataFactory } from 'rdf-data-factory';
 import { ActorRdfJoinInnerMultiAdaptiveDestroy } from '../lib/ActorRdfJoinInnerMultiAdaptiveDestroy';
-import '@comunica/jest';
+import '@comunica/utils-jest';
 
 jest.useFakeTimers();
 
-const BF = new BindingsFactory();
 const DF = new DataFactory();
+const BF = new BindingsFactory(DF);
 
 describe('ActorRdfJoinInnerMultiAdaptiveDestroy', () => {
   let bus: any;
@@ -45,8 +45,16 @@ describe('ActorRdfJoinInnerMultiAdaptiveDestroy', () => {
               cardinality: { type: 'estimate', value: 4 },
               pageSize: 100,
               requestTime: 10,
-              canContainUndefs: false,
-              variables: [ DF.variable('a'), DF.variable('b') ],
+              variables: [
+                {
+                  variable: DF.variable('a'),
+                  canBeUndef: false,
+                },
+                {
+                  variable: DF.variable('b'),
+                  canBeUndef: false,
+                },
+              ],
             },
           ),
           type: 'bindings',
@@ -71,8 +79,16 @@ describe('ActorRdfJoinInnerMultiAdaptiveDestroy', () => {
               cardinality: { type: 'estimate', value: 5 },
               pageSize: 100,
               requestTime: 20,
-              canContainUndefs: false,
-              variables: [ DF.variable('a'), DF.variable('c') ],
+              variables: [
+                {
+                  variable: DF.variable('a'),
+                  canBeUndef: false,
+                },
+                {
+                  variable: DF.variable('c'),
+                  canBeUndef: false,
+                },
+              ],
             },
           ),
           type: 'bindings',
@@ -122,7 +138,7 @@ describe('ActorRdfJoinInnerMultiAdaptiveDestroy', () => {
         context,
         type: 'inner',
         entries,
-      })).resolves.toEqual({
+      })).resolves.toPassTest({
         blockingItems: 0,
         iterations: 0,
         persistedItems: 0,
@@ -135,7 +151,7 @@ describe('ActorRdfJoinInnerMultiAdaptiveDestroy', () => {
         context: context.set(KeysRdfJoin.skipAdaptiveJoin, true),
         type: 'inner',
         entries,
-      })).rejects.toThrow('Actor actor could not run because adaptive join processing is disabled.');
+      })).resolves.toFailTest('Actor actor could not run because adaptive join processing is disabled.');
     });
 
     it('should run without reaching the timeout', async() => {

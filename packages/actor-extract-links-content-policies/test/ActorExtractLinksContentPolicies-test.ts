@@ -1,7 +1,7 @@
 import type { Readable } from 'node:stream';
-import { BindingsFactory } from '@comunica/bindings-factory';
 import { KeysQueryOperation } from '@comunica/context-entries';
 import { ActionContext, Bus } from '@comunica/core';
+import { BindingsFactory } from '@comunica/utils-bindings-factory';
 import arrayifyStream from 'arrayify-stream';
 import { ArrayIterator } from 'asynciterator';
 import { DataFactory } from 'rdf-data-factory';
@@ -12,6 +12,7 @@ import {
   KEY_CONTEXT_POLICIES,
   KEY_CONTEXT_WITHPOLICIES,
 } from '..';
+import '@comunica/utils-jest';
 
 const quad = require('rdf-quad');
 const stream = require('streamify-array');
@@ -126,7 +127,7 @@ describe('ActorExtractLinksContentPolicies', () => {
 
     it('should test', async() => {
       await expect(actor.test({ url: '', metadata: input, requestTime: 0, context: new ActionContext() }))
-        .resolves.toBe(true);
+        .resolves.toPassTestVoid();
     });
 
     it('should run without context', async() => {

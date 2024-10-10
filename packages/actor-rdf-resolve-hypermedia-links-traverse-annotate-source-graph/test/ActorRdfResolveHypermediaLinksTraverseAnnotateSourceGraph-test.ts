@@ -9,6 +9,7 @@ import { DataFactory } from 'rdf-data-factory';
 import {
   ActorRdfResolveHypermediaLinksTraverseAnnotateSourceGraph,
 } from '../lib/ActorRdfResolveHypermediaLinksTraverseAnnotateSourceGraph';
+import '@comunica/utils-jest';
 
 const streamifyArray = require('streamify-array');
 
@@ -50,19 +51,19 @@ describe('ActorRdfResolveHypermediaLinksTraverseAnnotateSourceGraph', () => {
 
     describe('test', () => {
       it('should pass on annotateSources graph in the context', async() => {
-        await expect(actor.test({ context, metadata: {}})).resolves.toBeTruthy();
+        await expect(actor.test({ context, metadata: {}})).resolves.toPassTestVoid();
       });
 
       it('should not pass on annotateSources non-graph in the context', async() => {
         context = context.set(KeysRdfResolveHypermediaLinks.annotateSources, 'non-graph');
-        await expect(actor.test({ context, metadata: {}})).rejects
-          .toThrow(`Actor actor can only work when graph annotation is enabled.`);
+        await expect(actor.test({ context, metadata: {}})).resolves
+          .toFailTest(`Actor actor can only work when graph annotation is enabled.`);
       });
 
       it('should not pass on no annotateSources in the context', async() => {
         context = context.delete(KeysRdfResolveHypermediaLinks.annotateSources);
-        await expect(actor.test({ context, metadata: {}})).rejects
-          .toThrow(`Context entry @comunica/bus-rdf-resolve-hypermedia-links:annotateSources is required but not available`);
+        await expect(actor.test({ context, metadata: {}})).resolves
+          .toFailTest(`Actor actor can only work when graph annotation is enabled.`);
       });
     });
 

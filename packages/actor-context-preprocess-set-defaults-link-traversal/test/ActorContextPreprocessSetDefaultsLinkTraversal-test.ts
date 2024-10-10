@@ -1,6 +1,7 @@
 import { KeysQuerySourceIdentify } from '@comunica/context-entries';
 import { ActionContext, Bus } from '@comunica/core';
 import { ActorContextPreprocessSetDefaultsLinkTraversal } from '../lib/ActorContextPreprocessSetDefaultsLinkTraversal';
+import '@comunica/utils-jest';
 
 describe('ActorContextPreprocessSetDefaultsLinkTraversal', () => {
   let bus: any;
@@ -17,7 +18,7 @@ describe('ActorContextPreprocessSetDefaultsLinkTraversal', () => {
     });
 
     it('should test', async() => {
-      await expect(actor.test({ context: new ActionContext() })).resolves.toBeTruthy();
+      await expect(actor.test({ context: new ActionContext() })).resolves.toPassTestVoid();
     });
 
     describe('run', () => {

@@ -8,6 +8,7 @@ import { KEY_CONTEXT_WRAPPED, LinkQueueLimitDepth } from '..';
 import {
   ActorRdfResolveHypermediaLinksQueueWrapperLimitDepth,
 } from '../lib/ActorRdfResolveHypermediaLinksQueueWrapperLimitDepth';
+import '@comunica/utils-jest';
 
 describe('ActorRdfResolveHypermediaLinksQueueWrapperLimitDepth', () => {
   let bus: any;
@@ -35,7 +36,7 @@ IActorRdfResolveHypermediaLinksQueueOutput
     });
 
     it('should test', async() => {
-      await expect(actor.test({ firstUrl: 'first', context: new ActionContext() })).resolves.toBeTruthy();
+      await expect(actor.test({ firstUrl: 'first', context: new ActionContext() })).resolves.toPassTestVoid();
     });
 
     it('should not test when called recursively', async() => {
@@ -44,7 +45,7 @@ IActorRdfResolveHypermediaLinksQueueOutput
         context: new ActionContext({
           [KEY_CONTEXT_WRAPPED.name]: true,
         }),
-      })).rejects.toThrow('Unable to wrap link queues multiple times');
+      })).resolves.toFailTest('Unable to wrap link queues multiple times');
     });
 
     it('should run', async() => {

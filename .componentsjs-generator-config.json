@@ -11,7 +11,8 @@
     "ShapeTree",
     "ContentPolicy",
     "BindingsStreamAdaptiveDestroy",
-    "MetadataValidationState"
+    "MetadataValidationState",
+    "ILink"
   ],
   "modulePrefix": {}
 }

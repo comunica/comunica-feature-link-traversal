@@ -1,15 +1,15 @@
-import { BindingsFactory } from '@comunica/bindings-factory';
 import type { BindingsStream } from '@comunica/types';
+import { BindingsFactory } from '@comunica/utils-bindings-factory';
 import type * as RDF from '@rdfjs/types';
 import { ArrayIterator, BufferedIterator } from 'asynciterator';
 import { DataFactory } from 'rdf-data-factory';
 import { BindingsStreamAdaptiveDestroy } from '../lib';
-import '@comunica/jest';
+import '@comunica/utils-jest';
 
 jest.useFakeTimers();
 
-const BF = new BindingsFactory();
 const DF = new DataFactory();
+const BF = new BindingsFactory(DF);
 
 describe('BindingsStreamAdaptiveDestroy', () => {
   it('produces the first iterator if the timeout is not reached', async() => {

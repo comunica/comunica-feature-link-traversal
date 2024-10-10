@@ -6,6 +6,7 @@ import {
   KEY_CONTEXT_WRAPPED,
 } from '../lib/ActorRdfResolveHypermediaLinksQueueWrapperInfoOccupancy';
 import { LinkQueueLogger } from '../lib/LinkQueueLogger';
+import '@comunica/utils-jest';
 
 describe('ActorRdfResolveHypermediaLinksQueueRdfResolveHypermediaLinkQueueWrapperDebugLinksInformation', () => {
   let bus: any;
@@ -29,7 +30,7 @@ describe('ActorRdfResolveHypermediaLinksQueueRdfResolveHypermediaLinkQueueWrappe
           [KEY_CONTEXT_WRAPPED.name]: false,
           [KeysCore.log.name]: jest.fn(),
         });
-        await expect(actor.test({ firstUrl: 'first', context })).resolves.toBe(true);
+        await expect(actor.test({ firstUrl: 'first', context })).resolves.toPassTestVoid();
       });
 
       it('should not test when there is no logger', async() => {
@@ -37,7 +38,7 @@ describe('ActorRdfResolveHypermediaLinksQueueRdfResolveHypermediaLinkQueueWrappe
           [KEY_CONTEXT_WRAPPED.name]: false,
         });
         await expect(actor.test({ firstUrl: 'first', context }))
-          .rejects.toThrow('A logger is required when reporting link queue occupancy');
+          .resolves.toFailTest('A logger is required when reporting link queue occupancy');
       });
 
       it('should not test when called recursively', async() => {
@@ -46,7 +47,7 @@ describe('ActorRdfResolveHypermediaLinksQueueRdfResolveHypermediaLinkQueueWrappe
           context: new ActionContext({
             [KEY_CONTEXT_WRAPPED.name]: true,
           }),
-        })).rejects.toThrow('Unable to wrap link queues multiple times');
+        })).resolves.toFailTest('Unable to wrap link queues multiple times');
       });
     });
 

@@ -1,6 +1,7 @@
 import type { Readable } from 'node:stream';
 import { ActionContext, Bus } from '@comunica/core';
 import { ActorExtractLinksHeaders } from '../lib/ActorExtractLinksHeaders';
+import '@comunica/utils-jest';
 
 const quad = require('rdf-quad');
 const stream = require('streamify-array');
@@ -35,7 +36,7 @@ describe('ActorExtractLinksHeaders', () => {
 
     it('should test ', async() => {
       await expect(actor.test({ url: 'http://pod.example.com/storage/resource', metadata: inputMetadata, headers: input, requestTime: 0, context: new ActionContext() }))
-        .resolves.toBe(true);
+        .resolves.toPassTestVoid();
     });
 
     it('should run on headers and return all describedby values', async() => {

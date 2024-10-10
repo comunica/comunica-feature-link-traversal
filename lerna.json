@@ -17,5 +17,6 @@
   "version": "0.5.0",
   "loglevel": "success",
   "registry": "https://registry.npmjs.org/",
-  "npmClient": "yarn"
+  "npmClient": "yarn",
+  "lerna-script-tasks": "./node_modules/@comunica/utils-monorepo/lib/depCheck.js"
 }

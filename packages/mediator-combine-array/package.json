@@ -4,6 +4,10 @@
   "description": "A combine-array mediator",
   "lsd:module": true,
   "license": "MIT",
+  "funding": {
+    "type": "opencollective",
+    "url": "https://opencollective.com/comunica-association"
+  },
   "homepage": "https://comunica.dev/",
   "repository": {
     "type": "git",
@@ -35,6 +39,6 @@
     "build:components": "componentsjs-generator"
   },
   "dependencies": {
-    "@comunica/core": "^3.2.1"
+    "@comunica/core": "4.0.1-alpha.48.0"
   }
 }

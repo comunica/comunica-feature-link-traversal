@@ -4,10 +4,11 @@ import type {
   IActorRdfResolveHypermediaLinksOutput,
   IActorRdfResolveHypermediaLinksArgs,
   MediatorRdfResolveHypermediaLinks,
-  ILink,
 } from '@comunica/bus-rdf-resolve-hypermedia-links';
 import { ActorRdfResolveHypermediaLinks } from '@comunica/bus-rdf-resolve-hypermedia-links';
-import type { IActorTest } from '@comunica/core';
+import type { IActorTest, TestResult } from '@comunica/core';
+import { failTest, passTestVoid } from '@comunica/core';
+import type { ILink } from '@comunica/types';
 
 /**
  * A comunica Traverse Prune Shapetrees RDF Resolve Hypermedia Links Actor.
@@ -19,14 +20,14 @@ export class ActorRdfResolveHypermediaLinksTraversePruneShapetrees extends Actor
     super(args);
   }
 
-  public async test(action: IActionRdfResolveHypermediaLinks): Promise<IActorTest> {
+  public async test(action: IActionRdfResolveHypermediaLinks): Promise<TestResult<IActorTest>> {
     if (!action.metadata.traverse) {
-      throw new Error(`Actor ${this.name} requires a 'traverse' metadata entry.`);
+      return failTest(`Actor ${this.name} requires a 'traverse' metadata entry.`);
     }
     if (!action.metadata.shapetrees) {
-      throw new Error(`Actor ${this.name} requires a 'shapetrees' metadata entry.`);
+      return failTest(`Actor ${this.name} requires a 'shapetrees' metadata entry.`);
     }
-    return true;
+    return passTestVoid();
   }
 
   public async run(action: IActionRdfResolveHypermediaLinks): Promise<IActorRdfResolveHypermediaLinksOutput> {

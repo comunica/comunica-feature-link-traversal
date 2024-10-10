@@ -1,34 +1,31 @@
+import { ActorRdfResolveHypermediaLinks } from '@comunica/bus-rdf-resolve-hypermedia-links';
 import type {
   IActionRdfResolveHypermediaLinks,
   IActorRdfResolveHypermediaLinksOutput,
-  ILink,
+  MediatorRdfResolveHypermediaLinks,
 } from '@comunica/bus-rdf-resolve-hypermedia-links';
-import { ActorRdfResolveHypermediaLinks } from '@comunica/bus-rdf-resolve-hypermedia-links';
-import type { Actor, IActorArgs, IActorTest, Mediator } from '@comunica/core';
+import type { IActorArgs, IActorTest, TestResult } from '@comunica/core';
+import { failTest, passTestVoid } from '@comunica/core';
+import type { ILink } from '@comunica/types';
 
 /**
  * A comunica Traverse Replace Conditional RDF Resolve Hypermedia Links Actor.
  */
 export class ActorRdfResolveHypermediaLinksTraverseReplaceConditional extends ActorRdfResolveHypermediaLinks {
-  private readonly mediatorRdfResolveHypermediaLinks: Mediator<
-  Actor<IActionRdfResolveHypermediaLinks, IActorTest, IActorRdfResolveHypermediaLinksOutput>,
-  IActionRdfResolveHypermediaLinks,
-IActorTest,
-IActorRdfResolveHypermediaLinksOutput
->;
+  private readonly mediatorRdfResolveHypermediaLinks: MediatorRdfResolveHypermediaLinks;
 
   public constructor(args: IActorRdfResolveHypermediaLinksTraverseReplaceConditionalArgs) {
     super(args);
   }
 
-  public async test(action: IActionRdfResolveHypermediaLinks): Promise<IActorTest> {
+  public async test(action: IActionRdfResolveHypermediaLinks): Promise<TestResult<IActorTest>> {
     if (!action.metadata.traverse) {
-      throw new Error(`Actor ${this.name} requires a 'traverse' metadata entry.`);
+      return failTest(`Actor ${this.name} requires a 'traverse' metadata entry.`);
     }
     if (!action.metadata.traverseConditional) {
-      throw new Error(`Actor ${this.name} requires a 'traverseConditional' metadata entry.`);
+      return failTest(`Actor ${this.name} requires a 'traverseConditional' metadata entry.`);
     }
-    return true;
+    return passTestVoid();
   }
 
   public async run(action: IActionRdfResolveHypermediaLinks): Promise<IActorRdfResolveHypermediaLinksOutput> {
@@ -62,10 +59,5 @@ IActionRdfResolveHypermediaLinks,
 IActorTest,
 IActorRdfResolveHypermediaLinksOutput
 > {
-  mediatorRdfResolveHypermediaLinks: Mediator<
-  Actor<IActionRdfResolveHypermediaLinks, IActorTest, IActorRdfResolveHypermediaLinksOutput>,
-  IActionRdfResolveHypermediaLinks,
-IActorTest,
-IActorRdfResolveHypermediaLinksOutput
->;
+  mediatorRdfResolveHypermediaLinks: MediatorRdfResolveHypermediaLinks;
 }

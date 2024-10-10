@@ -4,8 +4,8 @@ import type {
 } from '@comunica/bus-rdf-resolve-hypermedia-links-queue';
 import { ActorRdfResolveHypermediaLinksQueue } from '@comunica/bus-rdf-resolve-hypermedia-links-queue';
 import { KeysInitQuery, KeysCore } from '@comunica/context-entries';
-import type { Actor, IActorArgs, IActorTest, Mediator } from '@comunica/core';
-import { ActionContextKey } from '@comunica/core';
+import type { Actor, IActorArgs, IActorTest, Mediator, TestResult } from '@comunica/core';
+import { ActionContextKey, failTest, passTestVoid } from '@comunica/core';
 import type { Logger } from '@comunica/types';
 import { type Algebra, toSparql } from 'sparqlalgebrajs';
 import { LinkQueueLogger } from './LinkQueueLogger';
@@ -26,16 +26,14 @@ export class ActorRdfResolveHypermediaLinksQueueWrapperInfoOccupancy
     super(args);
   }
 
-  public async test(action: IActionRdfResolveHypermediaLinksQueue): Promise<IActorTest> {
+  public async test(action: IActionRdfResolveHypermediaLinksQueue): Promise<TestResult<IActorTest>> {
     if (action.context.get(KEY_CONTEXT_WRAPPED)) {
-      throw new Error('Unable to wrap link queues multiple times');
+      return failTest('Unable to wrap link queues multiple times');
     }
-
     if (!action.context.get(KeysCore.log)) {
-      throw new Error('A logger is required when reporting link queue occupancy');
+      return failTest('A logger is required when reporting link queue occupancy');
     }
-
-    return true;
+    return passTestVoid();
   }
 
   public async run(action: IActionRdfResolveHypermediaLinksQueue): Promise<IActorRdfResolveHypermediaLinksQueueOutput> {

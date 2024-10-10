@@ -5,8 +5,8 @@ import type {
 import { ActorOptimizeQueryOperation } from '@comunica/bus-optimize-query-operation';
 import type { MediatorQuerySourceIdentify } from '@comunica/bus-query-source-identify';
 import { KeysQueryOperation, KeysQuerySourceIdentify } from '@comunica/context-entries';
-import type { IActorArgs, IActorTest } from '@comunica/core';
-import { ActionContext } from '@comunica/core';
+import type { IActorArgs, IActorTest, TestResult } from '@comunica/core';
+import { ActionContext, passTestVoid } from '@comunica/core';
 import type { IQuerySourceWrapper } from '@comunica/types';
 import { Algebra, Util } from 'sparqlalgebrajs';
 
@@ -25,8 +25,8 @@ export class ActorOptimizeQueryOperationSetSeedSourcesQuadpatternIris extends Ac
     super(args);
   }
 
-  public async test(_action: IActionOptimizeQueryOperation): Promise<IActorTest> {
-    return true;
+  public async test(_action: IActionOptimizeQueryOperation): Promise<TestResult<IActorTest>> {
+    return passTestVoid();
   }
 
   public async run(action: IActionOptimizeQueryOperation): Promise<IActorOptimizeQueryOperationOutput> {

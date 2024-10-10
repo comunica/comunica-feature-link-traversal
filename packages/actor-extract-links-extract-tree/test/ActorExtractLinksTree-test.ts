@@ -1,8 +1,9 @@
 import { KeysExtractLinksTree } from '@comunica/context-entries-link-traversal';
 import { ActionContext, Bus } from '@comunica/core';
+import type * as RDF from '@rdfjs/types';
 import { DataFactory } from 'rdf-data-factory';
-import type * as RDF from 'rdf-js';
 import { ActorExtractLinksTree } from '../lib/ActorExtractLinksTree';
+import '@comunica/utils-jest';
 
 const stream = require('streamify-array');
 
@@ -259,10 +260,7 @@ describe('ActorExtractLinksExtractLinksTree', () => {
         DF.quad(DF.namedNode(treeUrl), DF.namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'), DF.namedNode('https://w3id.org/tree#node'), DF.namedNode('ex:gx')),
       ]);
       const action = { url: '', metadata: input, requestTime: 0, context: new ActionContext() };
-
-      const result = await actor.test(action);
-
-      expect(result).toBe(true);
+      await expect(actor.test(action)).resolves.toPassTestVoid();
     });
 
     it('should test when not given a TREE', async() => {
@@ -271,10 +269,7 @@ describe('ActorExtractLinksExtractLinksTree', () => {
         DF.quad(DF.namedNode(treeUrl), DF.namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'), DF.namedNode('root:node'), DF.namedNode('ex:gx')),
       ]);
       const action = { url: '', metadata: input, requestTime: 0, context: new ActionContext() };
-
-      const result = await actor.test(action);
-
-      expect(result).toBe(true);
+      await expect(actor.test(action)).resolves.toPassTestVoid();
     });
   });
 });

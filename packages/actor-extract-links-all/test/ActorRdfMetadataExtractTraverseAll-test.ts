@@ -2,6 +2,7 @@ import type { Readable } from 'node:stream';
 import { ActorExtractLinks } from '@comunica/bus-extract-links';
 import { ActionContext, Bus } from '@comunica/core';
 import { ActorExtractLinksAll } from '../lib/ActorExtractLinksAll';
+import '@comunica/utils-jest';
 
 const quad = require('rdf-quad');
 const stream = require('streamify-array');
@@ -49,7 +50,7 @@ describe('ActorExtractLinksAll', () => {
 
     it('should test ', async() => {
       await expect(actor.test({ url: '', metadata: input, requestTime: 0, context: new ActionContext() }))
-        .resolves.toBe(true);
+        .resolves.toPassTestVoid();
     });
 
     it('should run on a stream and return all urls', async() => {

@@ -1,10 +1,11 @@
+import { ActorRdfResolveHypermediaLinksQueue } from '@comunica/bus-rdf-resolve-hypermedia-links-queue';
 import type {
   IActionRdfResolveHypermediaLinksQueue,
   IActorRdfResolveHypermediaLinksQueueOutput,
+  MediatorRdfResolveHypermediaLinksQueue,
 } from '@comunica/bus-rdf-resolve-hypermedia-links-queue';
-import { ActorRdfResolveHypermediaLinksQueue } from '@comunica/bus-rdf-resolve-hypermedia-links-queue';
-import type { Actor, IActorArgs, IActorTest, Mediator } from '@comunica/core';
-import { ActionContextKey } from '@comunica/core';
+import type { IActorArgs, IActorTest, TestResult } from '@comunica/core';
+import { ActionContextKey, failTest, passTestVoid } from '@comunica/core';
 import { LinkQueueLimitCount } from './LinkQueueLimitCount';
 
 /**
@@ -12,22 +13,17 @@ import { LinkQueueLimitCount } from './LinkQueueLimitCount';
  */
 export class ActorRdfResolveHypermediaLinksQueueWrapperLimitCount extends ActorRdfResolveHypermediaLinksQueue {
   private readonly limit: number;
-  private readonly mediatorRdfResolveHypermediaLinksQueue: Mediator<
-  Actor<IActionRdfResolveHypermediaLinksQueue, IActorTest, IActorRdfResolveHypermediaLinksQueueOutput>,
-  IActionRdfResolveHypermediaLinksQueue,
-IActorTest,
-IActorRdfResolveHypermediaLinksQueueOutput
->;
+  private readonly mediatorRdfResolveHypermediaLinksQueue: MediatorRdfResolveHypermediaLinksQueue;
 
   public constructor(args: IActorRdfResolveHypermediaLinksQueueWrapperLimitCountArgs) {
     super(args);
   }
 
-  public async test(action: IActionRdfResolveHypermediaLinksQueue): Promise<IActorTest> {
+  public async test(action: IActionRdfResolveHypermediaLinksQueue): Promise<TestResult<IActorTest>> {
     if (action.context.get(KEY_CONTEXT_WRAPPED)) {
-      throw new Error('Unable to wrap link queues multiple times');
+      return failTest('Unable to wrap link queues multiple times');
     }
-    return true;
+    return passTestVoid();
   }
 
   public async run(action: IActionRdfResolveHypermediaLinksQueue): Promise<IActorRdfResolveHypermediaLinksQueueOutput> {
@@ -40,12 +36,7 @@ IActorRdfResolveHypermediaLinksQueueOutput
 export interface IActorRdfResolveHypermediaLinksQueueWrapperLimitCountArgs
   extends IActorArgs<IActionRdfResolveHypermediaLinksQueue, IActorTest, IActorRdfResolveHypermediaLinksQueueOutput> {
   limit: number;
-  mediatorRdfResolveHypermediaLinksQueue: Mediator<
-  Actor<IActionRdfResolveHypermediaLinksQueue, IActorTest, IActorRdfResolveHypermediaLinksQueueOutput>,
-  IActionRdfResolveHypermediaLinksQueue,
-IActorTest,
-IActorRdfResolveHypermediaLinksQueueOutput
->;
+  mediatorRdfResolveHypermediaLinksQueue: MediatorRdfResolveHypermediaLinksQueue;
 }
 
 export const KEY_CONTEXT_WRAPPED = new ActionContextKey<boolean>(

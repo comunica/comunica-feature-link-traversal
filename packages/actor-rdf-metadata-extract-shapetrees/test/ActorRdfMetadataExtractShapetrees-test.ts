@@ -1,18 +1,19 @@
 import type { ActorInitQuery } from '@comunica/actor-init-query';
-import { BindingsFactory } from '@comunica/bindings-factory';
 import type { MediatorDereferenceRdf } from '@comunica/bus-dereference-rdf';
 import type { MediatorHttp } from '@comunica/bus-http';
 import { KeysInitQuery, KeysQueryOperation } from '@comunica/context-entries';
 import { ActionContext, Bus } from '@comunica/core';
+import { BindingsFactory } from '@comunica/utils-bindings-factory';
 import { ArrayIterator } from 'asynciterator';
 import { DataFactory } from 'rdf-data-factory';
 import type * as ShEx from 'shexj';
 import { Factory as AlgebraFactory } from 'sparqlalgebrajs';
 import { ActorRdfMetadataExtractShapetrees } from '../lib/ActorRdfMetadataExtractShapetrees';
 import { ShapeTree } from '../lib/ShapeTree';
+import '@comunica/utils-jest';
 
 const DF = new DataFactory();
-const BF = new BindingsFactory();
+const BF = new BindingsFactory(DF);
 const AF = new AlgebraFactory();
 const shexParser = require('@shexjs/parser');
 
@@ -83,8 +84,8 @@ describe('ActorRdfMetadataExtractShapetrees', () => {
 
     describe('test', () => {
       it('should reject for an empty context', async() => {
-        await expect(actor.test(<any> { context: new ActionContext() })).rejects
-          .toThrow('Actor actor can only work in the context of a query.');
+        await expect(actor.test(<any> { context: new ActionContext() })).resolves
+          .toFailTest('Actor actor can only work in the context of a query.');
       });
 
       it('should reject for a context without query operation', async() => {
@@ -92,7 +93,7 @@ describe('ActorRdfMetadataExtractShapetrees', () => {
           context: new ActionContext({
             [KeysInitQuery.query.name]: {},
           }),
-        })).rejects.toThrow('Actor actor can only work in the context of a query operation.');
+        })).resolves.toFailTest('Actor actor can only work in the context of a query operation.');
       });
 
       it('should reject for a context without query', async() => {
@@ -100,11 +101,11 @@ describe('ActorRdfMetadataExtractShapetrees', () => {
           context: new ActionContext({
             [KeysQueryOperation.operation.name]: {},
           }),
-        })).rejects.toThrow('Actor actor can only work in the context of a query.');
+        })).resolves.toFailTest('Actor actor can only work in the context of a query.');
       });
 
       it('should be true for a valid context', async() => {
-        await expect(actor.test(<any> { context })).resolves.toBeTruthy();
+        await expect(actor.test(<any> { context })).resolves.toPassTestVoid();
       });
     });
 

@@ -1,7 +1,8 @@
 import type { IActionExtractLinks, IActorExtractLinksOutput } from '@comunica/bus-extract-links';
 import { ActorExtractLinks } from '@comunica/bus-extract-links';
 import { KeysQueryOperation } from '@comunica/context-entries';
-import type { IActorArgs, IActorTest } from '@comunica/core';
+import type { IActorArgs, IActorTest, TestResult } from '@comunica/core';
+import { failTest, passTestVoid } from '@comunica/core';
 import type { IActionContext } from '@comunica/types';
 import { filterQuadTermNames, getNamedNodes, getTerms, matchPatternComplete } from 'rdf-terms';
 import type { Algebra } from 'sparqlalgebrajs';
@@ -24,11 +25,11 @@ export class ActorExtractLinksQuadPattern extends ActorExtractLinks {
     return currentQueryOperation;
   }
 
-  public async test(action: IActionExtractLinks): Promise<IActorTest> {
+  public async test(action: IActionExtractLinks): Promise<TestResult<IActorTest>> {
     if (!ActorExtractLinksQuadPattern.getCurrentQuadPattern(action.context)) {
-      throw new Error(`Actor ${this.name} can only work in the context of a quad pattern.`);
+      return failTest(`Actor ${this.name} can only work in the context of a quad pattern.`);
     }
-    return true;
+    return passTestVoid();
   }
 
   public async run(action: IActionExtractLinks): Promise<IActorExtractLinksOutput> {

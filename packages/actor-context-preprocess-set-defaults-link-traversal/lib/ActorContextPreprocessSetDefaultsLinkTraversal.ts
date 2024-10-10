@@ -1,7 +1,8 @@
 import type { IActorContextPreprocessOutput, IActorContextPreprocessArgs } from '@comunica/bus-context-preprocess';
 import { ActorContextPreprocess } from '@comunica/bus-context-preprocess';
 import { KeysQuerySourceIdentify } from '@comunica/context-entries';
-import type { IAction, IActorTest } from '@comunica/core';
+import type { IAction, IActorTest, TestResult } from '@comunica/core';
+import { passTestVoid } from '@comunica/core';
 
 /**
  * A comunica Set Defaults Link Traversal Context Preprocess Actor.
@@ -11,8 +12,8 @@ export class ActorContextPreprocessSetDefaultsLinkTraversal extends ActorContext
     super(args);
   }
 
-  public async test(_action: IAction): Promise<IActorTest> {
-    return true;
+  public async test(_action: IAction): Promise<TestResult<IActorTest>> {
+    return passTestVoid();
   }
 
   public async run(action: IAction): Promise<IActorContextPreprocessOutput> {

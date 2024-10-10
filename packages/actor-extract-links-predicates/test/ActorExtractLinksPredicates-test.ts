@@ -1,6 +1,7 @@
 import type { Readable } from 'node:stream';
 import { ActionContext, Bus } from '@comunica/core';
 import { ActorExtractLinksPredicates } from '../lib/ActorExtractLinksPredicates';
+import '@comunica/utils-jest';
 
 const quad = require('rdf-quad');
 const stream = require('streamify-array');
@@ -37,7 +38,7 @@ describe('ActorExtractLinksTraversePredicates', () => {
 
     it('should test ', async() => {
       await expect(actor.test({ url: 'ex:s', metadata: input, requestTime: 0, context: new ActionContext() }))
-        .resolves.toBe(true);
+        .resolves.toPassTestVoid();
     });
 
     it('should run on a stream and return all ldp:contains values', async() => {

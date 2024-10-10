@@ -4,6 +4,7 @@ import type { IActionContext } from '@comunica/types';
 import {
   ActorRdfResolveHypermediaLinksTraverseReplaceConditional,
 } from '../lib/ActorRdfResolveHypermediaLinksTraverseReplaceConditional';
+import '@comunica/utils-jest';
 
 describe('ActorRdfResolveHypermediaLinksTraverseReplaceConditional', () => {
   let bus: any;
@@ -50,23 +51,23 @@ describe('ActorRdfResolveHypermediaLinksTraverseReplaceConditional', () => {
     });
 
     it('should fail to test with empty metadata', async() => {
-      await expect(actor.test({ metadata: {}, context })).rejects
-        .toThrow(new Error('Actor actor requires a \'traverse\' metadata entry.'));
+      await expect(actor.test({ metadata: {}, context })).resolves
+        .toFailTest('Actor actor requires a \'traverse\' metadata entry.');
     });
 
     it('should fail to test without traverseConditional in metadata', async() => {
       await expect(actor.test({ metadata: { traverse: true }, context }))
-        .rejects.toThrow(`Actor actor requires a 'traverseConditional' metadata entry.`);
+        .resolves.toFailTest(`Actor actor requires a 'traverseConditional' metadata entry.`);
     });
 
     it('should fail to test without traverse in metadata', async() => {
       await expect(actor.test({ metadata: { traverseConditional: true }, context }))
-        .rejects.toThrow(`Actor actor requires a 'traverse' metadata entry.`);
+        .resolves.toFailTest(`Actor actor requires a 'traverse' metadata entry.`);
     });
 
     it('should test with traverse and traverseConditional in metadata', async() => {
       await expect(actor.test({ metadata: { traverse: true, traverseConditional: true }, context }))
-        .resolves.toBe(true);
+        .resolves.toPassTestVoid();
     });
 
     it('should run with empty data', async() => {

@@ -1,5 +1,5 @@
-import type { IAction, IActorOutput, IActorTest } from '@comunica/core';
-import { ActionContext, Actor, Bus, Mediator } from '@comunica/core';
+import type { IAction, IActorOutput, IActorTest, TestResult } from '@comunica/core';
+import { ActionContext, Actor, Bus, failTest, Mediator, passTest } from '@comunica/core';
 import { MediatorCombineArray } from '..';
 
 describe('MediatorCombineArray', () => {
@@ -116,8 +116,8 @@ class DummyActor extends Actor<IAction, IDummyTest, IDummyTest> {
     this.data2 = data2;
   }
 
-  public async test(action: IAction): Promise<IDummyTest> {
-    return { field1: this.data1, field2: this.data2, otherField: 'ignored' };
+  public async test(): Promise<TestResult<IDummyTest>> {
+    return passTest({ field1: this.data1, field2: this.data2, otherField: 'ignored' });
   }
 
   public async run(action: IAction): Promise<IDummyTest> {
@@ -133,8 +133,8 @@ class DummyThrowActor extends DummyActor {
     super(id, {}, {}, bus);
   }
 
-  public override async test(action: IAction): Promise<IDummyTest> {
-    throw new Error('Dummy Error');
+  public override async test(): Promise<TestResult<IDummyTest>> {
+    return failTest('Dummy Error');
   }
 }
 

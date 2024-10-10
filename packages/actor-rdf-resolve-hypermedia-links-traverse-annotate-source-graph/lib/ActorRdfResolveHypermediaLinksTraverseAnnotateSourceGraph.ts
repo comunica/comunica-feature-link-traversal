@@ -6,11 +6,12 @@ import {
 import type {
   IActionRdfResolveHypermediaLinks,
   IActorRdfResolveHypermediaLinksOutput,
-  ILink,
   MediatorRdfResolveHypermediaLinks,
 } from '@comunica/bus-rdf-resolve-hypermedia-links';
 import { KeysRdfResolveHypermediaLinks } from '@comunica/context-entries-link-traversal';
-import type { IActorArgs, IActorTest } from '@comunica/core';
+import type { IActorArgs, IActorTest, TestResult } from '@comunica/core';
+import { failTest, passTestVoid } from '@comunica/core';
+import type { ILink } from '@comunica/types';
 import type * as RDF from '@rdfjs/types';
 import { DataFactory } from 'rdf-data-factory';
 import { Transform } from 'readable-stream';
@@ -27,11 +28,11 @@ export class ActorRdfResolveHypermediaLinksTraverseAnnotateSourceGraph extends A
     super(args);
   }
 
-  public async test(action: IActionRdfResolveHypermediaLinks): Promise<IActorTest> {
-    if (action.context.getSafe(KeysRdfResolveHypermediaLinks.annotateSources) !== 'graph') {
-      throw new Error(`Actor ${this.name} can only work when graph annotation is enabled.`);
+  public async test(action: IActionRdfResolveHypermediaLinks): Promise<TestResult<IActorTest>> {
+    if (action.context.get(KeysRdfResolveHypermediaLinks.annotateSources) !== 'graph') {
+      return failTest(`Actor ${this.name} can only work when graph annotation is enabled.`);
     }
-    return true;
+    return passTestVoid();
   }
 
   public async run(action: IActionRdfResolveHypermediaLinks): Promise<IActorRdfResolveHypermediaLinksOutput> {

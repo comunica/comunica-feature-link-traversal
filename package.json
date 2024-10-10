@@ -19,6 +19,10 @@
     "lint-fix": "eslint . --fix",
     "clean": "tsc --build --clean && rm -rf ./node_modules && rm -rf ./packages/*/node_modules",
     "clean:ts": "tsc --build --clean",
+    "depcheck": "lerna-script depcheckTask",
+    "depcheck:fix": "lerna-script depfixTask",
+    "ncu:all": "lerna-script updateTask",
+    "ncu:major:all": "lerna-script updateTaskMajor",
     "build": "yarn run build:ts && yarn run build:components",
     "build:ts": "tsc",
     "build:components": "componentsjs-generator engines/* packages/*",
@@ -29,16 +33,17 @@
     "publish": "yarn run build",
     "publish-release": "lerna publish",
     "publish-bare": "lerna exec -- npm publish --silent",
-    "publish-canary": "yarn run build && lerna version prerelease --preid alpha.$(.github/get-next-alpha-version.sh) --exact --ignore-scripts --force-publish --no-push --no-git-tag-version --yes && git update-index --assume-unchanged $(git ls-files | tr '\\n' ' ') && lerna publish from-package --no-git-reset --pre-dist-tag next --force-publish --no-push --no-git-tag-version --yes && git update-index --no-assume-unchanged $(git ls-files | tr '\\n' ' ') && git checkout .",
-    "doc": "./.github/typedoc-json.sh create && typedoc && ./.github/typedoc-json.sh remove",
+    "publish-canary": "yarn run build && lerna version prerelease --preid alpha.$(node_modules/@comunica/utils-monorepo/sh/get-next-alpha-version.sh @comunica/query-sparql-link-traversal) --exact --ignore-scripts --force-publish --no-push --no-git-tag-version --yes && git update-index --assume-unchanged $(git ls-files | tr '\\n' ' ') && lerna publish from-package --no-git-reset --pre-dist-tag next --force-publish --no-push --no-git-tag-version --yes && git update-index --no-assume-unchanged $(git ls-files | tr '\\n' ' ') && git checkout .",
+    "doc": "node_modules/@comunica/utils-monorepo/sh/typedoc-json.sh create && typedoc && node_modules/@comunica/utils-monorepo/sh/typedoc-json.sh remove",
     "postinstall": "yarn run build && lerna run prepare",
     "version": "manual-git-changelog onversion"
   },
   "devDependencies": {
     "@babel/core": "^7.22.20",
     "@babel/preset-env": "^7.22.20",
-    "@comunica/jest": "^3.2.1",
-    "@comunica/packager": "^3.1.0",
+    "@comunica/packager": "4.0.1-alpha.48.0",
+    "@comunica/utils-jest": "4.0.1-alpha.48.0",
+    "@comunica/utils-monorepo": "4.0.1-alpha.48.0",
     "@pollyjs/adapter-node-http": "^6.0.6",
     "@pollyjs/core": "^6.0.6",
     "@pollyjs/persister-fs": "^6.0.6",
@@ -51,8 +56,9 @@
     "arrayify-stream": "^2.0.1",
     "asynciterator": "^3.8.1",
     "babel-loader": "^9.1.3",
-    "componentsjs-generator": "^4.0.1",
+    "componentsjs-generator": "^4.2.0",
     "cross-fetch": "^4.0.0",
+    "depcheck": "^1.4.3",
     "eslint": "^8.57.0",
     "husky": "^9.0.0",
     "immutable": "^4.0.0",
@@ -66,8 +72,10 @@
     "karma-sourcemap-loader": "^0.4.0",
     "karma-webpack": "^5.0.0",
     "lerna": "^8.1.2",
+    "lerna-script": "^1.4.0",
     "manual-git-changelog": "^1.0.2",
     "node-polyfill-webpack-plugin": "^4.0.0",
+    "npm-check-updates": "^17.0.0",
     "raw-loader": "^4.0.2",
     "rdf-data-factory": "^1.1.2",
     "rdf-quad": "^1.5.0",
@@ -82,5 +90,8 @@
     "typescript": "^5.3.3",
     "webpack": "^5.88.2",
     "webpack-cli": "^5.1.4"
+  },
+  "resolutions": {
+    "@comunica/mediatortype-time": "4.0.1-alpha.48.0"
   }
 }

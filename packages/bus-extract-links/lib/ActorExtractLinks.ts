@@ -1,6 +1,6 @@
-import type { ILink } from '@comunica/bus-rdf-resolve-hypermedia-links';
 import type { IActorArgs, IActorOutput, IActorTest, Mediate, IAction } from '@comunica/core';
 import { Actor } from '@comunica/core';
+import type { ILink } from '@comunica/types';
 import type * as RDF from '@rdfjs/types';
 
 /**
@@ -14,11 +14,12 @@ import type * as RDF from '@rdfjs/types';
  * @see IActionExtractLinks
  * @see IActorExtractLinksOutput
  */
-export abstract class ActorExtractLinks extends Actor<IActionExtractLinks, IActorTest, IActorExtractLinksOutput> {
+export abstract class ActorExtractLinks<TS = undefined>
+  extends Actor<IActionExtractLinks, IActorTest, IActorExtractLinksOutput, TS> {
   /**
    * @param args - @defaultNested {<default_bus> a <cc:components/Bus.jsonld#Bus>} bus
    */
-  public constructor(args: IActorExtractLinksArgs) {
+  public constructor(args: IActorExtractLinksArgs<TS>) {
     super(args);
   }
 
@@ -80,10 +81,11 @@ export interface IActorExtractLinksOutput extends IActorOutput {
   linksConditional?: ILink[];
 }
 
-export type IActorExtractLinksArgs = IActorArgs<
+export type IActorExtractLinksArgs<TS = undefined> = IActorArgs<
 IActionExtractLinks,
 IActorTest,
-IActorExtractLinksOutput
+IActorExtractLinksOutput,
+TS
 >;
 
 export type MediatorExtractLinks = Mediate<

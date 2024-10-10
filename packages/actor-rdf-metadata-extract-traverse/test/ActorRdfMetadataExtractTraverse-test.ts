@@ -1,6 +1,7 @@
 import type { MediatorExtractLinks } from '@comunica/bus-extract-links';
 import { Bus } from '@comunica/core';
 import { ActorRdfMetadataExtractTraverse } from '../lib/ActorRdfMetadataExtractTraverse';
+import '@comunica/utils-jest';
 
 describe('ActorRdfMetadataExtractTraverse', () => {
   let bus: any;
@@ -24,7 +25,7 @@ describe('ActorRdfMetadataExtractTraverse', () => {
     });
 
     it('should test', async() => {
-      await expect(actor.test(<any> {})).resolves.toBe(true);
+      await expect(actor.test(<any> {})).resolves.toPassTestVoid();
     });
 
     it('should run', async() => {

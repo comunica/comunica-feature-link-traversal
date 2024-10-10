@@ -5,6 +5,7 @@ import { translate } from 'sparqlalgebrajs';
 import {
   ActorOptimizeQueryOperationSetSeedSourcesQuadpatternIris,
 } from '../lib/ActorOptimizeQueryOperationSetSeedSourcesQuadpatternIris';
+import '@comunica/utils-jest';
 
 describe('ActorOptimizeQueryOperationSetSeedSourcesQuadpatternIris', () => {
   let bus: any;
@@ -37,7 +38,7 @@ describe('ActorOptimizeQueryOperationSetSeedSourcesQuadpatternIris', () => {
 
     it('should test', async() => {
       await expect(actor.test({ operation: <any> 'bla', context: new ActionContext({}) }))
-        .resolves.toBe(true);
+        .resolves.toPassTestVoid();
     });
 
     it('should run on empty context', async() => {

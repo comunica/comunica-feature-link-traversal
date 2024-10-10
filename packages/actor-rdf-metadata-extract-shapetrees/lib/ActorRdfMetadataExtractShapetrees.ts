@@ -5,8 +5,8 @@ import type { MediatorHttp } from '@comunica/bus-http';
 import type { IActionRdfMetadataExtract, IActorRdfMetadataExtractOutput } from '@comunica/bus-rdf-metadata-extract';
 import { ActorRdfMetadataExtract } from '@comunica/bus-rdf-metadata-extract';
 import { KeysInitQuery, KeysQueryOperation } from '@comunica/context-entries';
-import type { IActorArgs, IActorTest } from '@comunica/core';
-import { ActionContext } from '@comunica/core';
+import type { IActorArgs, IActorTest, TestResult } from '@comunica/core';
+import { ActionContext, failTest, passTestVoid } from '@comunica/core';
 import type { IActionContext } from '@comunica/types';
 import type * as RDF from '@rdfjs/types';
 import parseLink from 'parse-link-header';
@@ -37,14 +37,14 @@ export class ActorRdfMetadataExtractShapetrees extends ActorRdfMetadataExtract {
     this.queryEngine = new QueryEngineBase(args.actorInitQuery);
   }
 
-  public async test(action: IActionRdfMetadataExtract): Promise<IActorTest> {
+  public async test(action: IActionRdfMetadataExtract): Promise<TestResult<IActorTest>> {
     if (!action.context.get(KeysInitQuery.query)) {
-      throw new Error(`Actor ${this.name} can only work in the context of a query.`);
+      return failTest(`Actor ${this.name} can only work in the context of a query.`);
     }
     if (!action.context.get(KeysQueryOperation.operation)) {
-      throw new Error(`Actor ${this.name} can only work in the context of a query operation.`);
+      return failTest(`Actor ${this.name} can only work in the context of a query operation.`);
     }
-    return true;
+    return passTestVoid();
   }
 
   public async run(action: IActionRdfMetadataExtract): Promise<IActorRdfMetadataExtractOutput> {
@@ -60,7 +60,7 @@ export class ActorRdfMetadataExtractShapetrees extends ActorRdfMetadataExtract {
           if (this.shapeTreeMatchesQuery(
             shapeTree,
             action.context.get(KeysInitQuery.query)!,
-            action.context.get(KeysQueryOperation.operation)!,
+            <Algebra.Pattern> action.context.get(KeysQueryOperation.operation)!,
           )) {
             applicable.push(shapeTree);
           } else {
@@ -228,7 +228,7 @@ export class ActorRdfMetadataExtractShapetrees extends ActorRdfMetadataExtract {
   public shapeTreeMatchesQuery(
     shapeTree: ShapeTree,
     query: Algebra.Operation,
-    pattern: Algebra.Operation,
+    pattern: Algebra.Pattern,
   ): boolean {
     // Collect all predicates in the shape
     // TODO: improve shape-query matching, by e.g. also matching rdf:type

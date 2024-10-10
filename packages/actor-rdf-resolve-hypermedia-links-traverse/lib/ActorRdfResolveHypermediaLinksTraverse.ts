@@ -1,11 +1,12 @@
 import type {
   IActionRdfResolveHypermediaLinks,
   IActorRdfResolveHypermediaLinksOutput,
-  ILink,
 } from '@comunica/bus-rdf-resolve-hypermedia-links';
 import { ActorRdfResolveHypermediaLinks } from '@comunica/bus-rdf-resolve-hypermedia-links';
 import { KeysHttpProxy, KeysQuerySourceIdentify } from '@comunica/context-entries';
-import type { IActorArgs, IActorTest } from '@comunica/core';
+import type { IActorArgs, IActorTest, TestResult } from '@comunica/core';
+import { failTest, passTestVoid } from '@comunica/core';
+import type { ILink } from '@comunica/types';
 
 /**
  * A comunica Traverse RDF Resolve Hypermedia Links Actor.
@@ -21,15 +22,15 @@ export class ActorRdfResolveHypermediaLinksTraverse extends ActorRdfResolveHyper
     this.upgradeInsecureRequests = args.upgradeInsecureRequests;
   }
 
-  public async test(action: IActionRdfResolveHypermediaLinks): Promise<IActorTest> {
+  public async test(action: IActionRdfResolveHypermediaLinks): Promise<TestResult<IActorTest>> {
     if (!action.metadata.traverse) {
-      throw new Error(`Actor ${this.name} requires a 'traverse' metadata entry.`);
+      return failTest(`Actor ${this.name} requires a 'traverse' metadata entry.`);
     }
     if (action.context.has(KeysQuerySourceIdentify.traverse) &&
       !action.context.get(KeysQuerySourceIdentify.traverse)) {
-      throw new Error(`Link traversal has been disabled via the context.`);
+      return failTest(`Link traversal has been disabled via the context.`);
     }
-    return true;
+    return passTestVoid();
   }
 
   public async run(action: IActionRdfResolveHypermediaLinks): Promise<IActorRdfResolveHypermediaLinksOutput> {

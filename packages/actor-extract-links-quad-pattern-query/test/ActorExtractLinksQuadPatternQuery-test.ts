@@ -7,6 +7,7 @@ import { Factory } from 'sparqlalgebrajs';
 import {
   ActorExtractLinksQuadPatternQuery,
 } from '../lib/ActorExtractLinksQuadPatternQuery';
+import '@comunica/utils-jest';
 
 const quad = require('rdf-quad');
 const stream = require('streamify-array');
@@ -68,12 +69,12 @@ describe('ActorExtractLinksQuadPatternQuery', () => {
 
     it('should fail to test without query operation in context', async() => {
       context = new ActionContext({});
-      await expect(actor.test({ url: '', metadata: input, requestTime: 0, context })).rejects
-        .toThrow(new Error('Actor actor can only work in the context of a query.'));
+      await expect(actor.test({ url: '', metadata: input, requestTime: 0, context })).resolves
+        .toFailTest('Actor actor can only work in the context of a query.');
     });
 
     it('should test with quad pattern query operation in context', async() => {
-      await expect(actor.test({ url: '', metadata: input, requestTime: 0, context })).resolves.toBe(true);
+      await expect(actor.test({ url: '', metadata: input, requestTime: 0, context })).resolves.toPassTestVoid();
     });
 
     it('should run on a stream and return urls matching a query with single pattern', async() => {

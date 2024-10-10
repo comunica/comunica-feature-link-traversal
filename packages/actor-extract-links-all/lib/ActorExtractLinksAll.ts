@@ -1,6 +1,7 @@
 import type { IActionExtractLinks, IActorExtractLinksOutput } from '@comunica/bus-extract-links';
 import { ActorExtractLinks } from '@comunica/bus-extract-links';
-import type { IActorArgs, IActorTest } from '@comunica/core';
+import type { IActorArgs, IActorTest, TestResult } from '@comunica/core';
+import { passTestVoid } from '@comunica/core';
 import { getNamedNodes, getTerms } from 'rdf-terms';
 
 /**
@@ -11,8 +12,8 @@ export class ActorExtractLinksAll extends ActorExtractLinks {
     super(args);
   }
 
-  public async test(_action: IActionExtractLinks): Promise<IActorTest> {
-    return true;
+  public async test(_action: IActionExtractLinks): Promise<TestResult<IActorTest>> {
+    return passTestVoid();
   }
 
   public async run(action: IActionExtractLinks): Promise<IActorExtractLinksOutput> {

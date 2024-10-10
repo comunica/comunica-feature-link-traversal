@@ -5,6 +5,7 @@ import { ActionContext, Bus } from '@comunica/core';
 import { DataFactory } from 'rdf-data-factory';
 import { Factory } from 'sparqlalgebrajs';
 import { ActorExtractLinksQuadPattern } from '../lib/ActorExtractLinksQuadPattern';
+import '@comunica/utils-jest';
 
 const quad = require('rdf-quad');
 const stream = require('streamify-array');
@@ -64,18 +65,18 @@ describe('ActorExtractLinksQuadPattern', () => {
 
     it('should fail to test without query operation in context', async() => {
       context = new ActionContext({});
-      await expect(actor.test({ url: '', metadata: input, requestTime: 0, context })).rejects
-        .toThrow(new Error('Actor actor can only work in the context of a quad pattern.'));
+      await expect(actor.test({ url: '', metadata: input, requestTime: 0, context })).resolves
+        .toFailTest('Actor actor can only work in the context of a quad pattern.');
     });
 
     it('should fail to test with query operation of wrong type in context', async() => {
       context = new ActionContext({ [KeysQueryOperation.operation.name]: FACTORY.createBgp([]) });
-      await expect(actor.test({ url: '', metadata: input, requestTime: 0, context })).rejects
-        .toThrow(new Error('Actor actor can only work in the context of a quad pattern.'));
+      await expect(actor.test({ url: '', metadata: input, requestTime: 0, context })).resolves
+        .toFailTest('Actor actor can only work in the context of a quad pattern.');
     });
 
     it('should test with quad pattern query operation in context', async() => {
-      await expect(actor.test({ url: '', metadata: input, requestTime: 0, context })).resolves.toBe(true);
+      await expect(actor.test({ url: '', metadata: input, requestTime: 0, context })).resolves.toPassTestVoid();
     });
 
     it('should run on a stream and return urls matching the pattern', async() => {

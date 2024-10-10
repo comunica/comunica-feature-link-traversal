@@ -1,7 +1,8 @@
 import type { IActionExtractLinks, IActorExtractLinksOutput } from '@comunica/bus-extract-links';
 import { ActorExtractLinks } from '@comunica/bus-extract-links';
-import type { ILink } from '@comunica/bus-rdf-resolve-hypermedia-links';
-import type { IActorArgs, IActorTest } from '@comunica/core';
+import type { IActorArgs, IActorTest, TestResult } from '@comunica/core';
+import { passTestVoid } from '@comunica/core';
+import type { ILink } from '@comunica/types';
 
 /**
  * A comunica Traverse Predicates RDF Link Header Actor.
@@ -15,8 +16,8 @@ export class ActorExtractLinksHeaders extends ActorExtractLinks {
     this.headers = args.headersRegexes.map(stringRegex => new RegExp(stringRegex, 'u'));
   }
 
-  public async test(_action: IActionExtractLinks): Promise<IActorTest> {
-    return true;
+  public async test(_action: IActionExtractLinks): Promise<TestResult<IActorTest>> {
+    return passTestVoid();
   }
 
   public async run(action: IActionExtractLinks): Promise<IActorExtractLinksOutput> {

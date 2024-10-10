@@ -4,9 +4,10 @@ import type {
   IActorExtractLinksArgs,
 } from '@comunica/bus-extract-links';
 import { ActorExtractLinks } from '@comunica/bus-extract-links';
-import type { ILink } from '@comunica/bus-rdf-resolve-hypermedia-links';
 import { KeysExtractLinksTree } from '@comunica/context-entries-link-traversal';
-import type { IActorTest } from '@comunica/core';
+import type { IActorTest, TestResult } from '@comunica/core';
+import { passTestVoid } from '@comunica/core';
+import type { ILink } from '@comunica/types';
 import type * as RDF from '@rdfjs/types';
 import { DataFactory } from 'rdf-data-factory';
 
@@ -26,8 +27,8 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
     super(args);
   }
 
-  public async test(_action: IActionExtractLinks): Promise<IActorTest> {
-    return true;
+  public async test(_action: IActionExtractLinks): Promise<TestResult<IActorTest>> {
+    return passTestVoid();
   }
 
   public async run(action: IActionExtractLinks): Promise<IActorExtractLinksOutput> {

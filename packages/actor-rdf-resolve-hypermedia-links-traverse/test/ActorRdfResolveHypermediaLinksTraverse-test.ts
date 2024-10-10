@@ -2,6 +2,7 @@ import { ActorRdfResolveHypermediaLinks } from '@comunica/bus-rdf-resolve-hyperm
 import { KeysQuerySourceIdentify } from '@comunica/context-entries';
 import { ActionContext, Bus } from '@comunica/core';
 import { ActorRdfResolveHypermediaLinksTraverse } from '../lib/ActorRdfResolveHypermediaLinksTraverse';
+import '@comunica/utils-jest';
 
 describe('ActorRdfResolveHypermediaLinksTraverse', () => {
   let bus: any;
@@ -37,20 +38,20 @@ describe('ActorRdfResolveHypermediaLinksTraverse', () => {
     });
 
     it('should fail to test with empty metadata', async() => {
-      await expect(actor.test({ context: new ActionContext(), metadata: {}})).rejects
-        .toThrow(new Error('Actor actor requires a \'traverse\' metadata entry.'));
+      await expect(actor.test({ context: new ActionContext(), metadata: {}})).resolves
+        .toFailTest('Actor actor requires a \'traverse\' metadata entry.');
     });
 
     it('should test with traverse in metadata', async() => {
       await expect(actor.test({ context: new ActionContext(), metadata: { traverse: true }}))
-        .resolves.toBe(true);
+        .resolves.toPassTestVoid();
     });
 
     it('should fail to test when traverse is disable in the context', async() => {
       await expect(actor.test({ context: new ActionContext({
         [KeysQuerySourceIdentify.traverse.name]: false,
-      }), metadata: { traverse: true }})).rejects
-        .toThrow(new Error('Link traversal has been disabled via the context.'));
+      }), metadata: { traverse: true }})).resolves
+        .toFailTest('Link traversal has been disabled via the context.');
     });
 
     it('should run', async() => {
