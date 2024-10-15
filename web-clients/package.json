@@ -2,7 +2,7 @@
   "name": "web-client-generator-local",
   "private": true,
   "dependencies": {
-    "@comunica/web-client-generator": "^2.0.0"
+    "@comunica/web-client-generator": "^3.0.2"
   },
   "scripts": {
     "generate": "comunica-web-client-generator"
