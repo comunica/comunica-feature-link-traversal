@@ -9,7 +9,7 @@ import type { IActorArgs, IActorTest, TestResult } from '@comunica/core';
 import { ActionContext, failTest, passTestVoid } from '@comunica/core';
 import type { IActionContext } from '@comunica/types';
 import type * as RDF from '@rdfjs/types';
-import parseLink from 'parse-link-header';
+import { parse } from 'http-link-header';
 import { storeStream } from 'rdf-store-stream';
 import { resolve } from 'relative-to-absolute-iri';
 import type * as ShEx from 'shexj';
@@ -86,14 +86,19 @@ export class ActorRdfMetadataExtractShapetrees extends ActorRdfMetadataExtract {
    */
   public discoverShapeTreeLocator(headers?: Headers): string | undefined {
     if (headers) {
-      const links = parseLink(headers.get('link'));
-      if (links) {
+      const linkHeader = headers.get('link');
+      if (linkHeader) {
+        let links;
+        try {
+          links = parse(linkHeader);
+        } catch {
+          return undefined;
+        }
         // TODO: remove old rel type
-        // eslint-disable-next-line ts/prefer-nullish-coalescing
-        const shapeTree = links[ActorRdfMetadataExtractShapetrees.IRI_SHAPETREE] ||
-          links[ActorRdfMetadataExtractShapetrees.IRI_SHAPETREE_OLD];
+        const shapeTree = links.get('rel', ActorRdfMetadataExtractShapetrees.IRI_SHAPETREE)[0] ||
+          links.get('rel', ActorRdfMetadataExtractShapetrees.IRI_SHAPETREE_OLD)[0];
         if (shapeTree) {
-          return shapeTree.url;
+          return shapeTree.uri;
         }
       }
     }
