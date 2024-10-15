@@ -28,7 +28,11 @@
     "ccqslt:config/query-process/actors.json",
     "ccqs:config/query-result-serialize/actors.json",
     "ccqs:config/query-result-serialize/mediators.json",
-    "ccqslt:config/query-source-identify/actors.json",
+
+    "ccqslt:config/query-source-identify/actors/hypermedia-no-aggregate.json",
+    "ccqs:config/query-source-identify/actors/rdfjs.json",
+    "ccqs:config/query-source-identify/actors/serialized.json",
+
     "ccqs:config/query-source-identify/mediators.json",
     "ccqslt:config/query-source-identify-hypermedia/actors-annotate-source.json",
     "ccqs:config/query-source-identify-hypermedia/mediators.json",
