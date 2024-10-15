@@ -1,6 +1,6 @@
 {
   "name": "@comunica/config-query-sparql-link-traversal",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "description": "default configuration files for Comunica SPARQL Link Traversal",
   "lsd:module": true,
   "license": "MIT",

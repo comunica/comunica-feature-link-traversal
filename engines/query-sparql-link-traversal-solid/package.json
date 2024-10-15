@@ -1,6 +1,6 @@
 {
   "name": "@comunica/query-sparql-link-traversal-solid",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "description": "A Comunica engine for link traversal-based query evaluation over Solid data pods",
   "lsd:module": true,
   "license": "MIT",
@@ -296,7 +296,7 @@
     "@comunica/bus-http-invalidate": "^4.0.1",
     "@comunica/bus-query-operation": "^4.0.1",
     "@comunica/config-query-sparql": "~4.0.1",
-    "@comunica/config-query-sparql-link-traversal": "^0.6.0",
+    "@comunica/config-query-sparql-link-traversal": "^0.6.1",
     "@comunica/context-entries": "^4.0.1",
     "@comunica/context-entries-link-traversal": "^0.6.0",
     "@comunica/core": "^4.0.1",
