@@ -13957,7 +13957,7 @@ ignore@^5.0.4, ignore@^5.0.5, ignore@^5.2.0, ignore@^5.2.4:
   resolved "https://registry.yarnpkg.com/ignore/-/ignore-5.3.1.tgz#5073e554cd42c5b33b394375f538b8593e34d4ef"
   integrity sha512-5Fytz/IraMjqpwfd34ke28PTVMjZjJG2MPn5t7OE4eUCUNf8BAa7b5WUS9/Qvr6mwOQS7Mk6vdsMno5he+T8Xw==
 
-immutable@^4.0.0, immutable@^4.1.0:
+immutable@^4.1.0:
   version "4.3.6"
   resolved "https://registry.yarnpkg.com/immutable/-/immutable-4.3.6.tgz#6a05f7858213238e587fb83586ffa3b4b27f0447"
   integrity sha512-Ju0+lEMyzMVZarkTn/gqRpdqd5dOPaz1mCZ0SH3JV6iFw81PldE/PEB1hWVEA288HPt4WXW8O7AWxB10M+03QQ==
@@ -13966,6 +13966,11 @@ immutable@^4.3.7:
   version "4.3.7"
   resolved "https://registry.yarnpkg.com/immutable/-/immutable-4.3.7.tgz#c70145fc90d89fb02021e65c84eb0226e4e5a381"
   integrity sha512-1hqclzwYwjRDFLjcFxOM5AYkkG0rpFPpr1RLPMEuGczoS7YA8gLhy8SWXYRAA/XwfEHpfo3cw5JGioS32fnMRw==
+
+immutable@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/immutable/-/immutable-5.0.0.tgz#33d76138ae6e007328842fa7483f1070ba0abc24"
+  integrity sha512-6ooCHBvtm9B06fFLW2p0VjKVryK20YgWN04Pju2Tq/L6UP4K/vMj4AzsJs9WQy1wiN80oXl3hSS8unYjqA7vOQ==
 
 import-fresh@^2.0.0:
   version "2.0.0"
