@@ -57,7 +57,7 @@ describe('LinkQueuePriority', () => {
         { url: 'a', metadata: { priority: 0, index: 0, key: 'value' }},
       ]);
     });
-    it('retains metadta when zero priority is given', () => {
+    it('retains metadata when zero priority is given', () => {
       queue.push({ url: 'a', metadata: { key: 'value', priority: 0 }});
       expect(queue.links).toEqual([
         { url: 'a', metadata: { priority: 0, index: 0, key: 'value' }},
