@@ -22,11 +22,13 @@ export class LinkQueuePriority implements ILinkQueue {
 
     // If we push a link that has no metadata or has metadata but no priority
     // we set priority to 0 and always set index to end of array (and upheap from there)
-    if (!link.metadata || !link.metadata.priority) {
-      link.metadata = { priority: 0, index: idx };
-    } else {
+    if (link.metadata) {
+      link.metadata.priority ??= 0;
       link.metadata.index = idx;
+    } else {
+      link.metadata = { priority: 0, index: idx };
     }
+
     this.links.push(link);
 
     // Add to Records to allow fast updates in priority

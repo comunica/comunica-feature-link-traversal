@@ -51,6 +51,18 @@ describe('LinkQueuePriority', () => {
         { url: 'b', metadata: { priority: 0, index: 1 }},
       ]);
     });
+    it('retains metadata when no priority is given', () => {
+      queue.push({ url: 'a', metadata: { key: 'value' }});
+      expect(queue.links).toEqual([
+        { url: 'a', metadata: { priority: 0, index: 0, key: 'value' }},
+      ]);
+    });
+    it('retains metadata when zero priority is given', () => {
+      queue.push({ url: 'a', metadata: { key: 'value', priority: 0 }});
+      expect(queue.links).toEqual([
+        { url: 'a', metadata: { priority: 0, index: 0, key: 'value' }},
+      ]);
+    });
     it('instantiates metadata object if no metadata is given', () => {
       queue.push({ url: 'a' });
       queue.push({ url: 'b' });
