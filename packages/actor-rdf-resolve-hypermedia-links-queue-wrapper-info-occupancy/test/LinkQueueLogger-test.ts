@@ -240,7 +240,7 @@ describe('LinkQueueFilterLinks', () => {
       jest.spyOn(performance, 'now').mockImplementation(() => i);
       const wrapper = new LinkQueueLogger(linkQueue, query, logger);
 
-      const reachabilityRatio = {
+      const reachabilityRatio: Record<string, Record<string, number>> = {
         push: {},
         pop: {},
       };
@@ -473,7 +473,7 @@ describe('LinkQueueFilterLinks', () => {
       jest.spyOn(performance, 'now').mockImplementation(() => i);
       const wrapper = new LinkQueueLogger(linkQueue, query, logger);
       let expectedLink: any;
-      const reachabilityRatio = {
+      const reachabilityRatio: Record<string, Record<string, number>> = {
         push: {},
         pop: {},
       };

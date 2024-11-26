@@ -97,7 +97,7 @@ describe('ActorRdfResolveHypermediaLinksTraverseAnnotateSourceGraph', () => {
           links: [
             {
               url: 'ex:link1',
-              transform: input => (<Readable> input).pipe(new Transform({
+              transform: (input: Readable) => input.pipe(new Transform({
                 objectMode: true,
                 transform(chunk: any, encoding: string, callback: TransformCallback) {
                   callback(undefined, chunk);

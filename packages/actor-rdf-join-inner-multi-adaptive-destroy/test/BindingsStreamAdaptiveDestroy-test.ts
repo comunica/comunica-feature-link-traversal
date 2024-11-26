@@ -15,7 +15,7 @@ describe('BindingsStreamAdaptiveDestroy', () => {
   it('produces the first iterator if the timeout is not reached', async() => {
     const delayedSource = jest.fn();
     const it = new BindingsStreamAdaptiveDestroy(
-      new ArrayIterator([
+      <BindingsStream> <unknown> new ArrayIterator([
         BF.fromRecord({ a: DF.namedNode('ex:a1') }),
         BF.fromRecord({ a: DF.namedNode('ex:a2') }),
       ]),
@@ -32,7 +32,7 @@ describe('BindingsStreamAdaptiveDestroy', () => {
 
   it('consumes part of the second iterator if the timeout is reached', async() => {
     const delayedSource = jest.fn(async() => {
-      return new ArrayIterator([
+      return <BindingsStream> <unknown> new ArrayIterator([
         BF.fromRecord({ a: DF.namedNode('ex:a1') }),
         BF.fromRecord({ a: DF.namedNode('ex:a2') }),
       ], { autoStart: false });
