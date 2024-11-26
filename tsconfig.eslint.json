@@ -2,7 +2,9 @@
   "extends": "./tsconfig.json",
   "include": [
     "engines/**/*.ts",
-    "packages/**/*.ts"
+    "packages/**/*.ts",
+    "karma.conf.ts",
+    "karma.setup.ts"
   ],
   "exclude": [
     "**/node_modules"
