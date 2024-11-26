@@ -295,7 +295,6 @@
     "@comunica/bus-function-factory": "^4.0.2",
     "@comunica/bus-http-invalidate": "^4.0.2",
     "@comunica/bus-query-operation": "^4.0.2",
-    "@comunica/config-query-sparql": "~4.0.1",
     "@comunica/config-query-sparql-link-traversal": "^0.6.1",
     "@comunica/context-entries": "^4.0.2",
     "@comunica/context-entries-link-traversal": "^0.6.0",
