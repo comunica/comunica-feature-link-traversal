@@ -159,7 +159,7 @@ describe('ActorRdfJoinInnerMultiAdaptiveDestroy', () => {
         context,
         type: 'inner',
         entries,
-      });
+      }, { metadatas: []});
 
       const destroy0 = jest.spyOn(entries[0].output.bindingsStream, 'destroy');
       const destroy1 = jest.spyOn(entries[0].output.bindingsStream, 'destroy');
@@ -187,7 +187,7 @@ describe('ActorRdfJoinInnerMultiAdaptiveDestroy', () => {
         context,
         type: 'inner',
         entries,
-      });
+      }, { metadatas: []});
       const destroy0 = jest.spyOn(entries[0].output.bindingsStream, 'destroy');
       const destroy1 = jest.spyOn(entries[0].output.bindingsStream, 'destroy');
 
