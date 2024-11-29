@@ -1,1 +1,1 @@
-export * from './AnnotateSourcesType';
+export * from './Types';

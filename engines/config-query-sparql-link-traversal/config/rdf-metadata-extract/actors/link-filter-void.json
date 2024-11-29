@@ -1,0 +1,14 @@
+{
+  "@context": [
+    "https://linkedsoftwaredependencies.org/bundles/npm/@comunica/runner/^4.0.0/components/context.jsonld",
+    "https://linkedsoftwaredependencies.org/bundles/npm/@comunica/actor-rdf-metadata-extract-link-filter-void/^0.0.0/components/context.jsonld"
+  ],
+  "@id": "urn:comunica:default:Runner",
+  "@type": "Runner",
+  "actors": [
+    {
+      "@id": "urn:comunica:default:rdf-metadata-extract/actors#link-filter-void",
+      "@type": "ActorRdfMetadataExtractLinkFilterVoid"
+    }
+  ]
+}
