@@ -44,6 +44,7 @@
     "@comunica/packager": "4.0.1",
     "@comunica/utils-jest": "4.0.2",
     "@comunica/utils-monorepo": "4.0.1",
+    "@playwright/test": "^1.49.0",
     "@pollyjs/adapter-node-http": "^6.0.6",
     "@pollyjs/core": "^6.0.6",
     "@pollyjs/persister-fs": "^6.0.6",
