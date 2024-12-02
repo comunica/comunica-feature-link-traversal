@@ -1,6 +1,7 @@
 import type { MediatorQuerySourceIdentify } from '@comunica/bus-query-source-identify';
-import { KeysQueryOperation, KeysQuerySourceIdentify } from '@comunica/context-entries';
+import { KeysQueryOperation, KeysQuerySourceIdentify, KeysStatistics } from '@comunica/context-entries';
 import { Bus, ActionContext } from '@comunica/core';
+import { StatisticLinkDiscovery } from '@comunica/statistic-link-discovery';
 import { translate } from 'sparqlalgebrajs';
 import {
   ActorOptimizeQueryOperationSetSeedSourcesQuadpatternIris,
@@ -275,6 +276,28 @@ describe('ActorOptimizeQueryOperationSetSeedSourcesQuadpatternIris', () => {
           ],
         }),
       });
+    });
+    it('should run discovery statistic if available', async() => {
+      jest.useFakeTimers();
+      jest.setSystemTime(new Date('2021-01-01T00:00:00Z').getTime());
+
+      const operation = translate(`SELECT * {  ?s ?p <ex:o>  }`, { quads: false });
+      const discovery = new StatisticLinkDiscovery();
+      const emitSpy = jest.spyOn(discovery, 'emit');
+      await actor.run({
+        operation,
+        context: new ActionContext({
+          [KeysStatistics.discoveredLinks.name]: discovery,
+        }),
+      });
+      expect(emitSpy).toHaveBeenCalledWith(
+        {
+          edge: [ 'root', 'ex:o' ],
+          metadataChild: [{ discoverOrder: 0, discoveredTimestamp: 0, seed: true }],
+          metadataParent: undefined,
+        },
+      );
+      jest.useRealTimers();
     });
   });
 });
