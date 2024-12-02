@@ -43,9 +43,11 @@ export class ActorOptimizeQueryOperationSetSeedSourcesQuadpatternIris extends Ac
             const traversalTracker: IStatisticBase<IDiscoverEventData> | undefined =
               action.context.get(KeysStatistics.discoveredLinks);
             if (traversalTracker) {
-              traversalTracker.updateStatistic({ url: source, metadata: { seed: true }}, { url: 'root' });
+              traversalTracker.updateStatistic(
+                { url: source, metadata: { seed: true }},
+                { url: 'root', metadata: {}},
+              );
             }
-
             return (await this.mediatorQuerySourceIdentify.mediate({
               querySourceUnidentified: {
                 value: source,
