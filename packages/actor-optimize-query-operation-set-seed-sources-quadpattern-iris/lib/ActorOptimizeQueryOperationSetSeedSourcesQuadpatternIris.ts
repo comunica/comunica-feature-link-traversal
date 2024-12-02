@@ -4,10 +4,10 @@ import type {
 } from '@comunica/bus-optimize-query-operation';
 import { ActorOptimizeQueryOperation } from '@comunica/bus-optimize-query-operation';
 import type { MediatorQuerySourceIdentify } from '@comunica/bus-query-source-identify';
-import { KeysQueryOperation, KeysQuerySourceIdentify } from '@comunica/context-entries';
+import { KeysQueryOperation, KeysQuerySourceIdentify, KeysStatistics } from '@comunica/context-entries';
 import type { IActorArgs, IActorTest, TestResult } from '@comunica/core';
 import { ActionContext, passTestVoid } from '@comunica/core';
-import type { IQuerySourceWrapper } from '@comunica/types';
+import type { IQuerySourceWrapper, IDiscoverEventData, IStatisticBase } from '@comunica/types';
 import { Algebra, Util } from 'sparqlalgebrajs';
 
 /**
@@ -39,6 +39,11 @@ export class ActorOptimizeQueryOperationSetSeedSourcesQuadpatternIris extends Ac
             const hashPosition = source.indexOf('#');
             if (hashPosition >= 0) {
               source = source.slice(0, hashPosition);
+            }
+            const traversalTracker: IStatisticBase<IDiscoverEventData> | undefined =
+              action.context.get(KeysStatistics.discoveredLinks);
+            if (traversalTracker) {
+              traversalTracker.updateStatistic({ url: source, metadata: { seed: true }}, { url: 'root' });
             }
 
             return (await this.mediatorQuerySourceIdentify.mediate({
