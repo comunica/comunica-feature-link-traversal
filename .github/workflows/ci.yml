@@ -35,8 +35,10 @@ jobs:
           path: |
             **/node_modules
           key: ${{ runner.os }}-modules-${{ hashFiles('yarn.lock') }}
-      - name: Install dependencies
+      - name: Install dependencies and build project
         run: yarn install --frozen-lockfile --ignore-engines
+      - name: Build project with esModuleInterop flag
+        run: yarn run build:ts --esModuleInterop true
       - name: Run linter
         run: yarn run lint
       - name: Run depcheck
