@@ -51,6 +51,6 @@
     "@rdfjs/types": "*",
     "rdf-store-stream": "^2.0.1",
     "rdf-string": "^1.6.3",
-    "sparqlalgebrajs": "^4.2.0"
+    "sparqlalgebrajs": "^4.3.8"
   }
 }

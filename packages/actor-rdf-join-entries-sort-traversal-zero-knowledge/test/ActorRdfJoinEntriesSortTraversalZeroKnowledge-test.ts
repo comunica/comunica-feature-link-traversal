@@ -499,8 +499,8 @@ describe('ActorRdfJoinEntriesSortTraversalZeroKnowledge', () => {
 
       it('should handle multiple entries', async() => {
         context = context.set(KeysQueryOperation.querySources, [
-          { source: { referenceValue: 'ex:seed' }},
-          { source: { referenceValue: 'ex:seed2' }},
+          { source: <any> { referenceValue: 'ex:seed' }},
+          { source: <any> { referenceValue: 'ex:seed2' }},
         ]);
         await expect(actor.run({
           entries: [
