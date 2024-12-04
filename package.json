@@ -14,7 +14,7 @@
     "test": "yarn run test:unit && yarn run test:system -i packages/",
     "test-ci:unit": "jest packages/ --ci --maxWorkers=4 --coverage",
     "test-ci:system": "jest engines/ --ci --maxWorkers=4 --coverage=false",
-    "test-browser": "karma start karma.config.js --single-run",
+    "test:browser": "karma start karma.config.js --single-run",
     "lint": "eslint . --cache",
     "lint-fix": "eslint . --fix",
     "clean": "tsc --build --clean && rm -rf ./node_modules && rm -rf ./packages/*/node_modules",
