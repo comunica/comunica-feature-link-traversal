@@ -21,21 +21,6 @@ module.exports = config([
       'ts/no-unsafe-return': 'off',
       'ts/no-unsafe-argument': 'off',
       'ts/no-unsafe-assignment': 'off',
-
-      'ts/no-require-imports': [ 'error', { allow: [
-        'process/',
-        'web-streams-ponyfill',
-        'is-stream',
-        'readable-stream-node-to-web',
-        'stream-to-string',
-      ]}],
-      'ts/no-var-requires': [ 'error', { allow: [
-        'process/',
-        'web-streams-ponyfill',
-        'is-stream',
-        'readable-stream-node-to-web',
-        'stream-to-string',
-      ]}],
     },
   },
   {
@@ -61,7 +46,6 @@ module.exports = config([
   },
   {
     // Some test files import 'jest-rdf' which triggers this
-    // The http actors import 'cross-fetch/polyfill' which also triggers this
     // Some jest tests import '../../lib' which triggers this
     files: [
       '**/test/*-test.ts',
