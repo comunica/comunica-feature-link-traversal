@@ -32,8 +32,8 @@ const config: Config.InitialOptions = {
       // isolatedModules: true
     }],
   },
-  // The test timeout can be increased if the tests take too long
-  // testTimeout: 20_000,
+  // The system tests from engines require a timeout longer than the default 5 seconds
+  testTimeout: 20_000,
 };
 
 export default config;
