@@ -58,11 +58,10 @@ module.exports = config([
   {
     // Files that do not require linting
     ignores: [
-      'setup-jest.js',
+      '.github/**',
       '**/engine-default.js',
       '**/engine-browser.js',
       '**/comunica-browser.js',
-      '.github/**',
       '**/web-clients/**',
       '**/bintest/**',
       'lerna.json',
