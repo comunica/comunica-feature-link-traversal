@@ -4,7 +4,7 @@ import type { MediatorRdfResolveHypermediaLinks } from '@comunica/bus-rdf-resolv
 import { KeysRdfResolveHypermediaLinks } from '@comunica/context-entries-link-traversal';
 import { ActionContext, Bus } from '@comunica/core';
 import type { IActionContext } from '@comunica/types';
-import arrayifyStream from 'arrayify-stream';
+import { arrayifyStream } from 'arrayify-stream';
 import { DataFactory } from 'rdf-data-factory';
 import {
   ActorRdfResolveHypermediaLinksTraverseAnnotateSourceGraph,

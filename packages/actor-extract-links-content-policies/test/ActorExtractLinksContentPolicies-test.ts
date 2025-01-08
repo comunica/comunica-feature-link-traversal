@@ -2,7 +2,7 @@ import type { Readable } from 'node:stream';
 import { KeysQueryOperation } from '@comunica/context-entries';
 import { ActionContext, Bus } from '@comunica/core';
 import { BindingsFactory } from '@comunica/utils-bindings-factory';
-import arrayifyStream from 'arrayify-stream';
+import { arrayifyStream } from 'arrayify-stream';
 import { ArrayIterator } from 'asynciterator';
 import { DataFactory } from 'rdf-data-factory';
 import { Factory } from 'sparqlalgebrajs';
@@ -15,7 +15,7 @@ import {
 import '@comunica/utils-jest';
 
 const quad = require('rdf-quad');
-const stream = require('streamify-array');
+const streamifyArray = require('streamify-array');
 
 const factory = new Factory();
 const DF = new DataFactory();
@@ -116,7 +116,7 @@ describe('ActorExtractLinksContentPolicies', () => {
         traverseConditional: false,
       });
       (<any>actor).queryEngine = queryEngine;
-      input = stream([
+      input = streamifyArray([
         quad('ex:s1', 'ex:px', 'ex:o1', 'ex:gx'),
         quad('ex:s2', 'ex:p', '"o"', 'ex:g'),
         quad('ex:s3', 'ex:px', 'ex:o3', 'ex:gx'),
