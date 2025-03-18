@@ -74,7 +74,6 @@ export class ActorExtractLinksSolidTypeIndex extends ActorExtractLinks {
 
     // Follow all type links in the other case
     const links: ILink[] = [];
-    
     for (const linksInner of Object.values(typeLinks)) {
       links.push(...linksInner);
     }
