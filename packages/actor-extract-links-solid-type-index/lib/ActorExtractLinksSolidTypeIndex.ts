@@ -11,7 +11,7 @@ import type { ILink, IActionContext } from '@comunica/types';
 import type * as RDF from '@rdfjs/types';
 import { storeStream } from 'rdf-store-stream';
 import { termToString } from 'rdf-string';
-import type { Algebra } from 'sparqlalgebrajs';
+import { Algebra } from 'sparqlalgebrajs';
 import { Util as AlgebraUtil } from 'sparqlalgebrajs';
 
 /**
@@ -44,7 +44,6 @@ export class ActorExtractLinksSolidTypeIndex extends ActorExtractLinks {
   public async run(action: IActionExtractLinks): Promise<IActorExtractLinksOutput> {
     // Determine links to type indexes
     const typeIndexes = [ ...await this.extractTypeIndexLinks(action.metadata) ];
-
     // Dereference all type indexes, and collect them in one record
     const typeLinks = (await Promise.all(typeIndexes
       .map(typeIndex => this.dereferenceTypeIndex(typeIndex, action.context))))
@@ -63,15 +62,12 @@ export class ActorExtractLinksSolidTypeIndex extends ActorExtractLinks {
     if (Object.keys(typeLinks).length === 0) {
       return { links: []};
     }
-
     // Different behaviour depending on whether or not we match type index entries with the current query.
     if (this.onlyMatchingTypes) {
-      // Filter out those links that match with the query
       return {
         links: await this.getLinksMatchingQuery(
           typeLinks,
           action.context.get(KeysInitQuery.query)!,
-          <Algebra.Pattern> action.context.get(KeysQueryOperation.operation)!,
         ),
       };
     }
@@ -214,16 +210,18 @@ export class ActorExtractLinksSolidTypeIndex extends ActorExtractLinks {
   public async getLinksMatchingQuery(
     typeLinks: Record<string, ILink[]>,
     query: Algebra.Operation,
-    pattern: Algebra.Pattern,
   ): Promise<ILink[]> {
-    // Collect all subjects, and all subjects in the original query that refer to a specific type.
-    const allSubjects: Set<string> = new Set();
+
+    // Collect all non-variable subjects, and all subjects in the original query that refer to a specific type.
+    const ruleMatchingSubjects: Set<string> = new Set();
     const typeSubjects: Record<string, RDF.Term[]> = {};
     const predicateSubjects: Record<string, RDF.Term> = {};
 
     // Helper function for walking through query
     function handleQueryTriple(subject: RDF.Term, predicate: RDF.Term, object: RDF.Term): void {
-      allSubjects.add(termToString(subject));
+      if (["NamedNode", "Literal", "BlankNode"].includes(subject.termType)) {
+        ruleMatchingSubjects.add(termToString(subject));
+      } 
 
       if (predicate.value === ActorExtractLinksSolidTypeIndex.RDF_TYPE && object.termType === 'NamedNode') {
         const type = object.value;
@@ -269,22 +267,21 @@ export class ActorExtractLinksSolidTypeIndex extends ActorExtractLinks {
     // Check if the current pattern has any of the allowed subjects,
     // and consider the type index entry's links in that case.
     const links: ILink[] = [];
-
     for (const [ type, subjects ] of Object.entries(typeSubjects)) {
       const currentLinks = typeLinks[type];
-      if (currentLinks && subjects.some(subject => subject.equals(pattern.subject))) {
+      if (currentLinks) {
         links.push(...currentLinks);
       }
 
       // Remove subjects of this type from allSubjects
       for (const subject of subjects) {
-        allSubjects.delete(termToString(subject));
+        ruleMatchingSubjects.delete(termToString(subject));
       }
     }
 
     // Abort link pruning if there is at least one subject not matching a type index.
     // Because this means that we have an unknown type, which requires traversal over all entries.
-    if (allSubjects.size > 0) {
+    if (ruleMatchingSubjects.size > 0) {
       return Object.values(typeLinks).flat();
     }
 
