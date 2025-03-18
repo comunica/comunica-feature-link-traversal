@@ -1,6 +1,7 @@
 import type { MediatorQuerySourceIdentify } from '@comunica/bus-query-source-identify';
 import { KeysQueryOperation, KeysQuerySourceIdentify } from '@comunica/context-entries';
 import { Bus, ActionContext } from '@comunica/core';
+import { StatisticLinkDiscovery } from '@comunica/statistic-link-discovery';
 import { translate } from 'sparqlalgebrajs';
 import {
   ActorOptimizeQueryOperationSetSeedSourcesQuadpatternIris,
@@ -275,6 +276,15 @@ describe('ActorOptimizeQueryOperationSetSeedSourcesQuadpatternIris', () => {
           ],
         }),
       });
+    });
+
+    it('should record extracted IRIs in StatisticLinkDiscovery', async() => {
+      const statistic = new StatisticLinkDiscovery();
+      const spy = jest.spyOn(statistic, 'updateStatistic');
+      const operation = translate(`SELECT * { GRAPH ?g1 { <ex:s> ?p ?o } }`, { quads: true });
+      await actor.run({ operation, context: new ActionContext({ [statistic.key.name]: statistic }) });
+      expect(spy).toHaveBeenCalledTimes(1);
+      expect(spy).toHaveBeenCalledWith({ url: 'ex:s', metadata: { seed: true }}, { url: 'root' });
     });
   });
 });
