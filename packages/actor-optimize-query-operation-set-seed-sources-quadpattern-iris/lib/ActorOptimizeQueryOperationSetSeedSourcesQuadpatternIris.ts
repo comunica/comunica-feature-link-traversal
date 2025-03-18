@@ -7,7 +7,7 @@ import type { MediatorQuerySourceIdentify } from '@comunica/bus-query-source-ide
 import { KeysQueryOperation, KeysQuerySourceIdentify, KeysStatistics } from '@comunica/context-entries';
 import type { IActorArgs, IActorTest, TestResult } from '@comunica/core';
 import { ActionContext, passTestVoid } from '@comunica/core';
-import { StatisticLinkDiscovery } from '@comunica/statistic-link-discovery';
+import type { StatisticLinkDiscovery } from '@comunica/statistic-link-discovery';
 import type { IDiscoverEventData, IQuerySourceWrapper, IStatisticBase } from '@comunica/types';
 import { Algebra, Util } from 'sparqlalgebrajs';
 
