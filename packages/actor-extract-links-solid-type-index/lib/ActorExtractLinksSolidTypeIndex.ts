@@ -11,8 +11,8 @@ import type { ILink, IActionContext } from '@comunica/types';
 import type * as RDF from '@rdfjs/types';
 import { storeStream } from 'rdf-store-stream';
 import { termToString } from 'rdf-string';
-import { Algebra } from 'sparqlalgebrajs';
 import { Util as AlgebraUtil } from 'sparqlalgebrajs';
+import type { Algebra } from 'sparqlalgebrajs';
 
 /**
  * A comunica Solid Type Index Extract Links Actor.
@@ -205,13 +205,11 @@ export class ActorExtractLinksSolidTypeIndex extends ActorExtractLinks {
    * Determine all links that match with the current query pattern.
    * @param typeLinks The type index links.
    * @param query The original query that is being executed.
-   * @param pattern The current pattern that is being evaluated and traversed in.
    */
   public async getLinksMatchingQuery(
     typeLinks: Record<string, ILink[]>,
     query: Algebra.Operation,
   ): Promise<ILink[]> {
-
     // Collect all non-variable subjects, and all subjects in the original query that refer to a specific type.
     const ruleMatchingSubjects: Set<string> = new Set();
     const typeSubjects: Record<string, RDF.Term[]> = {};
@@ -219,9 +217,9 @@ export class ActorExtractLinksSolidTypeIndex extends ActorExtractLinks {
 
     // Helper function for walking through query
     function handleQueryTriple(subject: RDF.Term, predicate: RDF.Term, object: RDF.Term): void {
-      if (["NamedNode", "Literal", "BlankNode"].includes(subject.termType)) {
+      if ([ 'NamedNode', 'Literal', 'BlankNode' ].includes(subject.termType)) {
         ruleMatchingSubjects.add(termToString(subject));
-      } 
+      }
 
       if (predicate.value === ActorExtractLinksSolidTypeIndex.RDF_TYPE && object.termType === 'NamedNode') {
         const type = object.value;
