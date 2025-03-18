@@ -1,7 +1,6 @@
 import type { MediatorQuerySourceIdentify } from '@comunica/bus-query-source-identify';
 import { KeysQueryOperation, KeysQuerySourceIdentify } from '@comunica/context-entries';
 import { Bus, ActionContext } from '@comunica/core';
-import { StatisticLinkDiscovery } from '@comunica/statistic-link-discovery';
 import { translate } from 'sparqlalgebrajs';
 import {
   ActorOptimizeQueryOperationSetSeedSourcesQuadpatternIris,

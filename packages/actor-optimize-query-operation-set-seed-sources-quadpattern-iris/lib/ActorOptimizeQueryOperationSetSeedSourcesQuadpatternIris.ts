@@ -4,10 +4,10 @@ import type {
 } from '@comunica/bus-optimize-query-operation';
 import { ActorOptimizeQueryOperation } from '@comunica/bus-optimize-query-operation';
 import type { MediatorQuerySourceIdentify } from '@comunica/bus-query-source-identify';
-import { KeysQueryOperation, KeysQuerySourceIdentify, KeysStatistics } from '@comunica/context-entries';
+import { KeysQueryOperation, KeysQuerySourceIdentify } from '@comunica/context-entries';
 import type { IActorArgs, IActorTest, TestResult } from '@comunica/core';
 import { ActionContext, passTestVoid } from '@comunica/core';
-import type { IDiscoverEventData, IQuerySourceWrapper, IStatisticBase } from '@comunica/types';
+import type { IQuerySourceWrapper } from '@comunica/types';
 import { Algebra, Util } from 'sparqlalgebrajs';
 
 /**
