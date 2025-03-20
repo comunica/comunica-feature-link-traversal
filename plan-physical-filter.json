@@ -1,0 +1,24 @@
+project (messageId,messageCreationDate,messageContent)
+  join
+    join-inner(multi-smallest)
+      join-inner(hash-def) timeSelf: 0.064ms timeLife: 53.34ms
+        pattern (?message http: //localhost:3100/ldbc_socialnet/1.0/vocabulary/hasCreator http://localhost:3000/pods/00000000000000000933/profile/card#me) cardEst:~0 src:0
+        pattern (?message http: //www.w3.org/1999/02/22-rdf-syntax-ns#type http://localhost:3100/ldbc_socialnet/1.0/vocabulary/Post) cardEst:~0 src:0
+      join-inner(multi-smallest)
+        join-inner(hash-def) timeSelf: 0.474ms timeLife: 53.313ms
+          pattern (?message http: //localhost:3100/ldbc_socialnet/1.0/vocabulary/content ?messageContent) cardEst:~0 src:0
+          pattern (?message http: //localhost:3100/ldbc_socialnet/1.0/vocabulary/creationDate ?messageCreationDate) cardEst:~23 src:0
+        join-inner(multi-smallest)
+          join-inner(hash-def) timeSelf: 0.021ms timeLife: 53.151ms
+            pattern (?message http: //localhost:3100/ldbc_socialnet/1.0/vocabulary/id ?messageId) cardEst:~0 src:0
+          join-inner(hash-def) timeSelf: 0.074ms timeLife: 52.977ms
+
+sources: 0: QuerySourceHypermedia(http: //localhost:3000/pods/00000000000000000933/profile/card)
+
+custom log output for filtering, added manually for illustration:
+WARN: Extracted link filter from VoID { dataset: 'http: //localhost:3000/pods/00000000000000000933/', uriSpace: 'http://localhost:3000/pods/00000000000000000933/', actor: 'urn:comunica:default:rdf-metadata-extract/actors#link-filter-void' }
+WARN: Skipping link due to filtering: http: //localhost:3000/pods/00000000000000000933/comments/ { actor: 'urn:comunica:default:rdf-resolve-hypermedia-links-queue/actors#wrapper-filter' }
+WARN: Skipping link due to filtering: http: //localhost:3000/pods/00000000000000000933/noise/ { actor: 'urn:comunica:default:rdf-resolve-hypermedia-links-queue/actors#wrapper-filter' }
+WARN: Skipping link due to filtering: http: //localhost:3000/pods/00000000000000000933/settings/ { actor: 'urn:comunica:default:rdf-resolve-hypermedia-links-queue/actors#wrapper-filter' }
+WARN: Skipping link due to filtering: http: //localhost:3000/pods/00000000000000000933/posts/ { actor: 'urn:comunica:default:rdf-resolve-hypermedia-links-queue/actors#wrapper-filter' }
+WARN: Skipping link due to filtering: http: //localhost:3000/pods/00000000000000000933/profile/ { actor: 'urn:comunica:default:rdf-resolve-hypermedia-links-queue/actors#wrapper-filter' }

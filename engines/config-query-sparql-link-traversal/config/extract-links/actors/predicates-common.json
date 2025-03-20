@@ -14,7 +14,8 @@
       "predicateRegexes": [
         "http://www.w3.org/2000/01/rdf-schema#seeAlso",
         "http://www.w3.org/2002/07/owl##sameAs",
-        "http://xmlns.com/foaf/0.1/isPrimaryTopicOf"
+        "http://xmlns.com/foaf/0.1/isPrimaryTopicOf",
+        "http://rdfs.org/ns/void#sparqlEndpoint"
       ]
     }
   ]

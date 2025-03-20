@@ -1,0 +1,17 @@
+project (messageId,messageCreationDate,messageContent)
+  join
+    join-inner(multi-smallest)
+      join-inner(hash-def) cardReal:704 timeSelf:3.67ms timeLife:1,484.591ms
+        pattern (?message http://localhost:3100/ldbc_socialnet/1.0/vocabulary/hasCreator http://localhost:3000/pods/00000000000000000933/profile/card#me) cardEst:~0 src:0
+        pattern (?message http://www.w3.org/1999/02/22-rdf-syntax-ns#type http://localhost:3100/ldbc_socialnet/1.0/vocabulary/Post) cardEst:~0 src:0
+      join-inner(multi-smallest)
+        join-inner(hash-def) cardReal:66 timeSelf:2.061ms timeLife:1,484.398ms
+          pattern (?message http://localhost:3100/ldbc_socialnet/1.0/vocabulary/content ?messageContent) cardEst:~0 src:0
+          pattern (?message http://localhost:3100/ldbc_socialnet/1.0/vocabulary/creationDate ?messageCreationDate) cardEst:~23 src:0
+        join-inner(multi-smallest)
+          join-inner(hash-def) cardReal:704 timeSelf:2.066ms timeLife:1,487.954ms
+            pattern (?message http://localhost:3100/ldbc_socialnet/1.0/vocabulary/id ?messageId) cardEst:~0 src:0
+          join-inner(hash-def) cardReal:12 timeSelf:2.622ms timeLife:1,487.784ms
+
+sources:
+  0: QuerySourceHypermedia(http://localhost:3000/pods/00000000000000000933/profile/card)

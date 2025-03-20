@@ -3,6 +3,10 @@
   "packageManager": "yarn@1.22.22",
   "repository": "https://github.com/comunica/comunica-feature-link-traversal/",
   "workspaces": [
+    "../comunica/engines/*",
+    "../comunica/packages/*",
+    "../comunica-feature-solid/engines/*",
+    "../comunica-feature-solid/packages/*",
     "engines/*",
     "packages/*"
   ],

@@ -3,6 +3,7 @@
 import { HttpServiceSparqlEndpoint } from '@comunica/actor-init-query';
 import { CliArgsHandlerSolidAuth } from '@comunica/query-sparql-solid';
 import { CliArgsHandlerAnnotateSources } from '../lib/CliArgsHandlerAnnotateSources';
+import { CliArgsHandlerLinkFilters } from '../lib/CliArgsHandlerLinkFilters';
 
 const defaultConfigPath = `${__dirname}/../config/config-default.json`;
 
@@ -19,5 +20,6 @@ HttpServiceSparqlEndpoint.runArgsInProcess(
   [
     new CliArgsHandlerSolidAuth(),
     new CliArgsHandlerAnnotateSources(),
+    new CliArgsHandlerLinkFilters(),
   ],
 ).catch(error => process.stderr.write(`${error.message}/n`));

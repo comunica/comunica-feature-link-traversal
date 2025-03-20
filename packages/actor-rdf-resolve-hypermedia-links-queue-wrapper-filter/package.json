@@ -1,7 +1,7 @@
 {
-  "name": "@comunica/types-link-traversal",
+  "name": "@comunica/actor-rdf-resolve-hypermedia-links-queue-wrapper-filter",
   "version": "0.6.0",
-  "description": "Typings module for Comunica Link Traversal",
+  "description": "Comunica hypermedia links queue wrapper for filtering links",
   "lsd:module": true,
   "license": "MIT",
   "funding": {
@@ -12,14 +12,16 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/comunica/comunica-feature-link-traversal.git",
-    "directory": "packages/types-link-traversal"
+    "directory": "packages/actor-rdf-resolve-hypermedia-links-queue-wrapper-filter"
   },
   "bugs": {
     "url": "https://github.com/comunica/comunica-feature-link-traversal/issues"
   },
   "keywords": [
     "comunica",
-    "types"
+    "actor",
+    "rdf-resolve-hypermedia-links-queue",
+    "wrapper-filter"
   ],
   "sideEffects": false,
   "main": "lib/index.js",
@@ -28,9 +30,6 @@
     "access": "public"
   },
   "files": [
-    "bin/**/*.d.ts",
-    "bin/**/*.js",
-    "bin/**/*.js.map",
     "components",
     "lib/**/*.d.ts",
     "lib/**/*.js",
@@ -38,10 +37,13 @@
   ],
   "scripts": {
     "build": "yarn run build:ts && yarn run build:components",
-    "build:ts": "node \"../../node_modules/types-link-traversalcript/bin/tsc\"",
+    "build:ts": "node \"../../node_modules/typescript/bin/tsc\"",
     "build:components": "componentsjs-generator"
   },
   "dependencies": {
-    "@comunica/types": "^4.1.0"
+    "@comunica/bus-rdf-resolve-hypermedia-links-queue": "^4.1.0",
+    "@comunica/context-entries-link-traversal": "^0.6.0",
+    "@comunica/core": "^4.1.0",
+    "@comunica/types-link-traversal": "^0.6.0"
   }
 }

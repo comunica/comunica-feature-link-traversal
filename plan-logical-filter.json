@@ -1,0 +1,142 @@
+{
+  "type": "project",
+  "input": {
+    "type": "join",
+    "input": [
+      {
+        "termType": "Quad",
+        "value": "",
+        "subject": {
+          "termType": "Variable",
+          "value": "message"
+        },
+        "predicate": {
+          "termType": "NamedNode",
+          "value": "http://localhost:3100/ldbc_socialnet/1.0/vocabulary/hasCreator"
+        },
+        "object": {
+          "termType": "NamedNode",
+          "value": "http://localhost:3000/pods/00000000000000000933/profile/card#me"
+        },
+        "graph": {
+          "termType": "DefaultGraph",
+          "value": ""
+        },
+        "type": "pattern",
+        "metadata": {
+          "scopedSource": "QuerySourceHypermedia(http://localhost:3000/pods/00000000000000000933/profile/card)"
+        }
+      },
+      {
+        "termType": "Quad",
+        "value": "",
+        "subject": {
+          "termType": "Variable",
+          "value": "message"
+        },
+        "predicate": {
+          "termType": "NamedNode",
+          "value": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+        },
+        "object": {
+          "termType": "NamedNode",
+          "value": "http://localhost:3100/ldbc_socialnet/1.0/vocabulary/Post"
+        },
+        "graph": {
+          "termType": "DefaultGraph",
+          "value": ""
+        },
+        "type": "pattern",
+        "metadata": {
+          "scopedSource": "QuerySourceHypermedia(http://localhost:3000/pods/00000000000000000933/profile/card)"
+        }
+      },
+      {
+        "termType": "Quad",
+        "value": "",
+        "subject": {
+          "termType": "Variable",
+          "value": "message"
+        },
+        "predicate": {
+          "termType": "NamedNode",
+          "value": "http://localhost:3100/ldbc_socialnet/1.0/vocabulary/content"
+        },
+        "object": {
+          "termType": "Variable",
+          "value": "messageContent"
+        },
+        "graph": {
+          "termType": "DefaultGraph",
+          "value": ""
+        },
+        "type": "pattern",
+        "metadata": {
+          "scopedSource": "QuerySourceHypermedia(http://localhost:3000/pods/00000000000000000933/profile/card)"
+        }
+      },
+      {
+        "termType": "Quad",
+        "value": "",
+        "subject": {
+          "termType": "Variable",
+          "value": "message"
+        },
+        "predicate": {
+          "termType": "NamedNode",
+          "value": "http://localhost:3100/ldbc_socialnet/1.0/vocabulary/creationDate"
+        },
+        "object": {
+          "termType": "Variable",
+          "value": "messageCreationDate"
+        },
+        "graph": {
+          "termType": "DefaultGraph",
+          "value": ""
+        },
+        "type": "pattern",
+        "metadata": {
+          "scopedSource": "QuerySourceHypermedia(http://localhost:3000/pods/00000000000000000933/profile/card)"
+        }
+      },
+      {
+        "termType": "Quad",
+        "value": "",
+        "subject": {
+          "termType": "Variable",
+          "value": "message"
+        },
+        "predicate": {
+          "termType": "NamedNode",
+          "value": "http://localhost:3100/ldbc_socialnet/1.0/vocabulary/id"
+        },
+        "object": {
+          "termType": "Variable",
+          "value": "messageId"
+        },
+        "graph": {
+          "termType": "DefaultGraph",
+          "value": ""
+        },
+        "type": "pattern",
+        "metadata": {
+          "scopedSource": "QuerySourceHypermedia(http://localhost:3000/pods/00000000000000000933/profile/card)"
+        }
+      }
+    ]
+  },
+  "variables": [
+    {
+      "termType": "Variable",
+      "value": "messageId"
+    },
+    {
+      "termType": "Variable",
+      "value": "messageCreationDate"
+    },
+    {
+      "termType": "Variable",
+      "value": "messageContent"
+    }
+  ]
+}
