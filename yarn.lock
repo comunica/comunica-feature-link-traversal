@@ -3776,7 +3776,7 @@
     "@comunica/core" "^2.10.0"
     readable-stream "^4.4.2"
 
-"@comunica/bus-init@^4.1.0":
+"@comunica/bus-init@^4.0.2", "@comunica/bus-init@^4.1.0":
   version "4.1.0"
   resolved "https://registry.yarnpkg.com/@comunica/bus-init/-/bus-init-4.1.0.tgz#5a7184673eedc408496353162da775f9170b97ce"
   integrity sha512-+sJP2QUlEsROz6yy6cVLXFSJRWSMtsMf/Xm5gwEAjk/pR0LclOkLOhUwrVTExsZNqoIg9z6ODAOpNvojTcCr2g==
@@ -4065,7 +4065,7 @@
     "@comunica/types" "^2.10.0"
     immutable "^4.1.0"
 
-"@comunica/core@^4.0.1", "@comunica/core@^4.1.0":
+"@comunica/core@^4.0.1", "@comunica/core@^4.0.2", "@comunica/core@^4.1.0":
   version "4.1.0"
   resolved "https://registry.yarnpkg.com/@comunica/core/-/core-4.1.0.tgz#5316468c2881743812490a33743ba5d5134e2ecc"
   integrity sha512-8o69EmrO7UUztMN9Yb0KBusn0wBARKtSCVWRQ44Z2QUkQqjMdkkji+LVTV1qmALTOLsA3SxDDayWVP5hIZhI3Q==
@@ -4467,7 +4467,7 @@
     "@comunica/types" "^4.1.0"
     process "^0.11.10"
 
-"@comunica/runner@4.1.0", "@comunica/runner@^4.0.1", "@comunica/runner@^4.1.0":
+"@comunica/runner@4.1.0", "@comunica/runner@^4.1.0":
   version "4.1.0"
   resolved "https://registry.yarnpkg.com/@comunica/runner/-/runner-4.1.0.tgz#c0ed8d18165818296f3330b429ae8e28998a388a"
   integrity sha512-xLB3tdqWKc0lP+m3UV3t/5gMCUYtQWmPtk5phYF5hcmNhzOChsj0u5x8geXSvQCzMQ2Qdk2Q/64PbzQkX6JylA==
@@ -4476,6 +4476,33 @@
     "@comunica/core" "^4.1.0"
     componentsjs "^6.2.0"
     process "^0.11.10"
+
+"@comunica/runner@^4.0.1":
+  version "4.0.2"
+  resolved "https://registry.yarnpkg.com/@comunica/runner/-/runner-4.0.2.tgz#9c1042b4ccf8be10f62b881edc0cf75dda1fa02b"
+  integrity sha512-NMB9Fgh9z0PJbd2DZxMB9IEIrZFERG7oOEUrGHDhYvOWcuwAc1ra2S/aqgqphANiwFNLco3uqwahKQgNp65Pog==
+  dependencies:
+    "@comunica/bus-init" "^4.0.2"
+    "@comunica/core" "^4.0.2"
+    componentsjs "^6.2.0"
+    process "^0.11.10"
+
+"@comunica/statistic-base@^4.1.0":
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/@comunica/statistic-base/-/statistic-base-4.1.0.tgz#3137bc1ed7f57bf28c3ee51cee04561660a12ea3"
+  integrity sha512-NuRtwDB18EAIvN28e56MunkAd/6zyqf9XjKzNwtHpR1L9JWDsu0mOvY4eD/1DunmaXHC/X4hZh1Tt2BmHZ9btw==
+  dependencies:
+    "@comunica/types" "^4.1.0"
+
+"@comunica/statistic-link-discovery@^4.1.0":
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/@comunica/statistic-link-discovery/-/statistic-link-discovery-4.1.0.tgz#c7932294f9ff3247a1ba6056a0cab4b7d9878c42"
+  integrity sha512-v/Kvjb/a935XRGcWk1p0zAW1M8Zzkt7d3wGoEdNMcbPujovd3tfm6xP2cHUKvAbI9SPH7aMWL3Kpu/jftUHEHg==
+  dependencies:
+    "@comunica/context-entries" "^4.1.0"
+    "@comunica/core" "^4.1.0"
+    "@comunica/statistic-base" "^4.1.0"
+    "@comunica/types" "^4.1.0"
 
 "@comunica/types@4.1.0", "@comunica/types@^4.0.1", "@comunica/types@^4.1.0":
   version "4.1.0"
