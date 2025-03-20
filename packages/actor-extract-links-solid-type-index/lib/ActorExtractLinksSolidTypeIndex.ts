@@ -3,7 +3,7 @@ import type { ActorInitQueryBase } from '@comunica/actor-init-query';
 import type { MediatorDereferenceRdf } from '@comunica/bus-dereference-rdf';
 import type { IActionExtractLinks, IActorExtractLinksOutput } from '@comunica/bus-extract-links';
 import { ActorExtractLinks } from '@comunica/bus-extract-links';
-import { KeysInitQuery, KeysQueryOperation, KeysQuerySourceIdentify } from '@comunica/context-entries';
+import { KeysInitQuery, KeysQuerySourceIdentify } from '@comunica/context-entries';
 import { KeysRdfJoin } from '@comunica/context-entries-link-traversal';
 import type { IActorArgs, IActorTest, TestResult } from '@comunica/core';
 import { failTest, passTestVoid } from '@comunica/core';
@@ -11,8 +11,8 @@ import type { ILink, IActionContext } from '@comunica/types';
 import type * as RDF from '@rdfjs/types';
 import { storeStream } from 'rdf-store-stream';
 import { termToString } from 'rdf-string';
-import type { Algebra } from 'sparqlalgebrajs';
 import { Util as AlgebraUtil } from 'sparqlalgebrajs';
+import type { Algebra } from 'sparqlalgebrajs';
 
 /**
  * A comunica Solid Type Index Extract Links Actor.
@@ -34,9 +34,6 @@ export class ActorExtractLinksSolidTypeIndex extends ActorExtractLinks {
   public async test(action: IActionExtractLinks): Promise<TestResult<IActorTest>> {
     if (!action.context.get(KeysInitQuery.query)) {
       return failTest(`Actor ${this.name} can only work in the context of a query.`);
-    }
-    if (!action.context.get(KeysQueryOperation.operation)) {
-      return failTest(`Actor ${this.name} can only work in the context of a query operation.`);
     }
     return passTestVoid();
   }
@@ -71,7 +68,6 @@ export class ActorExtractLinksSolidTypeIndex extends ActorExtractLinks {
         links: await this.getLinksMatchingQuery(
           typeLinks,
           action.context.get(KeysInitQuery.query)!,
-          <Algebra.Pattern> action.context.get(KeysQueryOperation.operation)!,
         ),
       };
     }
@@ -209,21 +205,21 @@ export class ActorExtractLinksSolidTypeIndex extends ActorExtractLinks {
    * Determine all links that match with the current query pattern.
    * @param typeLinks The type index links.
    * @param query The original query that is being executed.
-   * @param pattern The current pattern that is being evaluated and traversed in.
    */
   public async getLinksMatchingQuery(
     typeLinks: Record<string, ILink[]>,
     query: Algebra.Operation,
-    pattern: Algebra.Pattern,
   ): Promise<ILink[]> {
-    // Collect all subjects, and all subjects in the original query that refer to a specific type.
-    const allSubjects: Set<string> = new Set();
+    // Collect all non-variable subjects, and all subjects in the original query that refer to a specific type.
+    const ruleMatchingSubjects: Set<string> = new Set();
     const typeSubjects: Record<string, RDF.Term[]> = {};
     const predicateSubjects: Record<string, RDF.Term> = {};
 
     // Helper function for walking through query
     function handleQueryTriple(subject: RDF.Term, predicate: RDF.Term, object: RDF.Term): void {
-      allSubjects.add(termToString(subject));
+      if ([ 'NamedNode', 'Literal', 'BlankNode' ].includes(subject.termType)) {
+        ruleMatchingSubjects.add(termToString(subject));
+      }
 
       if (predicate.value === ActorExtractLinksSolidTypeIndex.RDF_TYPE && object.termType === 'NamedNode') {
         const type = object.value;
@@ -269,22 +265,21 @@ export class ActorExtractLinksSolidTypeIndex extends ActorExtractLinks {
     // Check if the current pattern has any of the allowed subjects,
     // and consider the type index entry's links in that case.
     const links: ILink[] = [];
-
     for (const [ type, subjects ] of Object.entries(typeSubjects)) {
       const currentLinks = typeLinks[type];
-      if (currentLinks && subjects.some(subject => subject.equals(pattern.subject))) {
+      if (currentLinks) {
         links.push(...currentLinks);
       }
 
       // Remove subjects of this type from allSubjects
       for (const subject of subjects) {
-        allSubjects.delete(termToString(subject));
+        ruleMatchingSubjects.delete(termToString(subject));
       }
     }
 
     // Abort link pruning if there is at least one subject not matching a type index.
     // Because this means that we have an unknown type, which requires traversal over all entries.
-    if (allSubjects.size > 0) {
+    if (ruleMatchingSubjects.size > 0) {
       return Object.values(typeLinks).flat();
     }
 
