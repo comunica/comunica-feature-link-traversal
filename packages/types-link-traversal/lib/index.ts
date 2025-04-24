@@ -1,2 +1,2 @@
 export * from './AnnotateSourcesType';
-export * from './LinkFilterType';
+export * from './LinkFilter';

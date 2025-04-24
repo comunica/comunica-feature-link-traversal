@@ -5,4 +5,4 @@ import type { ILink } from '@comunica/types';
  * @param {ILink} link The link to be tested.
  * @returns {boolean} True if the link should be considered, false if it should be discarded.
  */
-export type LinkFilterType = (link: ILink) => boolean;
+export type LinkFilter = (link: ILink) => boolean;
