@@ -1,5 +1,5 @@
 import { ActionContextKey } from '@comunica/core';
-import type { AnnotateSourcesType } from '@comunica/types-link-traversal';
+import type { AnnotateSourcesType, LinkFilter } from '@comunica/types-link-traversal';
 
 /**
  * When adding entries to this file, also add a shortcut for them in the contextKeyShortcuts TSDoc comment in
@@ -8,12 +8,18 @@ import type { AnnotateSourcesType } from '@comunica/types-link-traversal';
  */
 
 export const KeysRdfResolveHypermediaLinks = {
-
   /**
    * Context entry for indicating the type of source annotation.
    */
   annotateSources: new ActionContextKey<AnnotateSourcesType>(
     '@comunica/bus-rdf-resolve-hypermedia-links:annotateSources',
+  ),
+  /**
+   * Context entry containing the link filters applied on link queues within the context scope.
+   * Setting this entry too high in the context hierarchy could result in too much being filtered out.
+   */
+  linkFilters: new ActionContextKey<LinkFilter[]>(
+    '@comunica/bus-rdf-resolve-hypermedia-links:linkFilters',
   ),
 };
 
