@@ -1,4 +1,5 @@
 import { KeysQuerySourceIdentify } from '@comunica/context-entries';
+import { KeysRdfResolveHypermediaLinks } from '@comunica/context-entries-link-traversal';
 import { ActionContext, Bus } from '@comunica/core';
 import { ActorContextPreprocessSetDefaultsLinkTraversal } from '../lib/ActorContextPreprocessSetDefaultsLinkTraversal';
 import '@comunica/utils-jest';
@@ -25,13 +26,49 @@ describe('ActorContextPreprocessSetDefaultsLinkTraversal', () => {
       it('with empty context', async() => {
         const contextIn = new ActionContext();
         const { context: contextOut } = await actor.run({ context: contextIn });
-        expect(contextOut).toEqual(new ActionContext().set(KeysQuerySourceIdentify.traverse, true));
+
+        const expectedContext = new ActionContext()
+          .set(KeysQuerySourceIdentify.traverse, true)
+          .set(KeysRdfResolveHypermediaLinks.linkFilters, []);
+
+        expect(contextOut).toEqual(expectedContext);
       });
 
       it('with KeysQuerySourceIdentify.traverse false', async() => {
         const contextIn = new ActionContext().set(KeysQuerySourceIdentify.traverse, false);
         const { context: contextOut } = await actor.run({ context: contextIn });
-        expect(contextOut).toEqual(new ActionContext().set(KeysQuerySourceIdentify.traverse, false));
+
+        const expectedContext = new ActionContext()
+          .set(KeysQuerySourceIdentify.traverse, false)
+          .set(KeysRdfResolveHypermediaLinks.linkFilters, []);
+
+        expect(contextOut).toEqual(expectedContext);
+      });
+
+      it('with KeysRdfResolveHypermediaLinks.linkFilters defined', async() => {
+        const a_filter = () => true;
+        const contextIn = new ActionContext().set(KeysRdfResolveHypermediaLinks.linkFilters, [ a_filter ]);
+        const { context: contextOut } = await actor.run({ context: contextIn });
+
+        const expectedContext = new ActionContext()
+          .set(KeysQuerySourceIdentify.traverse, true)
+          .set(KeysRdfResolveHypermediaLinks.linkFilters, [ a_filter ]);
+
+        expect(contextOut).toEqual(expectedContext);
+      });
+
+      it('with KeysRdfResolveHypermediaLinks.linkFilters and KeysQuerySourceIdentify.traverse defined', async() => {
+        const a_filter = () => true;
+        const contextIn = new ActionContext()
+          .set(KeysRdfResolveHypermediaLinks.linkFilters, [ a_filter ])
+          .set(KeysQuerySourceIdentify.traverse, false);
+        const { context: contextOut } = await actor.run({ context: contextIn });
+
+        const expectedContext = new ActionContext()
+          .set(KeysQuerySourceIdentify.traverse, false)
+          .set(KeysRdfResolveHypermediaLinks.linkFilters, [ a_filter ]);
+
+        expect(contextOut).toEqual(expectedContext);
       });
     });
   });
