@@ -42,7 +42,7 @@
     "@babel/core": "^7.26.0",
     "@babel/preset-env": "^7.26.0",
     "@comunica/packager": "^4.0.1",
-    "@comunica/utils-jest": "^4.1.0",
+    "@comunica/utils-jest": "^4.2.0",
     "@comunica/utils-monorepo": "^4.0.1",
     "@pollyjs/adapter-node-http": "^6.0.6",
     "@pollyjs/core": "^6.0.6",
@@ -93,7 +93,7 @@
   },
   "resolutions": {
     "@comunica/packager": "4.0.1",
-    "@comunica/utils-jest": "^4.1.0",
+    "@comunica/utils-jest": "^4.2.0",
     "@comunica/utils-monorepo": "4.0.1",
     "typescript": "5.5.4"
   }
