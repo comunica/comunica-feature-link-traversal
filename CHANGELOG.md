@@ -1,6 +1,23 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+<a name="v0.7.0"></a>
+## [v0.7.0](https://github.com/comunica/comunica-feature-link-traversal/compare/v0.6.1...v0.7.0) - 2025-05-12
+
+### Added
+* [Add link filter type and filtering link queue wrapper](https://github.com/comunica/comunica-feature-link-traversal/commit/368b9180b4f654136b2fe8ff3474ca7b808e460a)
+* [Add discovery tracking of extracted seed URIs from query (#169)](https://github.com/comunica/comunica-feature-link-traversal/commit/be8d8c362a75d1e88cbac08f36bcb512a8a96255)
+
+### Changed
+* [Update Comunica monorepo packages to ^4.2.0](https://github.com/comunica/comunica-feature-link-traversal/commit/0cb09e3467435a18cb3b4ba0f6b3cda800ec6bc3)
+* [Update dependency immutable to v5](https://github.com/comunica/comunica-feature-link-traversal/commit/d37c0acb81d048c77845ae8eea8c20e22ad4eb70)
+* [Remove blocking hash join from config (#170)](https://github.com/comunica/comunica-feature-link-traversal/commit/ffb4ec0ee3c5760d8726e01cfee7bddafb61d516)
+
+### Fixed
+* [Fix incorrect test in zero knowledge actor in 4.2.0 update, #175](https://github.com/comunica/comunica-feature-link-traversal/commit/fa5bccc516894a69d868b85670f84fcc21b42cc6)
+* [Fix link metadata disappearing when priority=0 in pushed links (#152)](https://github.com/comunica/comunica-feature-link-traversal/commit/2d170e26821d6f242ac1aefd4b7a2e011c5c87ee)
+* [Fix outdated type index extraction actor (#168)](https://github.com/comunica/comunica-feature-link-traversal/commit/ba83b2ff1921a169d6325bb2534a4208621049ec)
+
 <a name="v0.6.1"></a>
 ## [v0.6.1](https://github.com/comunica/comunica-feature-link-traversal/compare/v0.6.0...v0.6.1) - 2024-10-15
 
