@@ -464,7 +464,7 @@ describe('ActorRdfJoinEntriesSortTraversalZeroKnowledge', () => {
 
     describe('test', () => {
       it('should return true', async() => {
-        await expect(actor.test(<any> {})).resolves.toPassTestVoid();
+        await expect(actor.test(<any> {})).resolves.toPassTest({ accuracy: 1 });
       });
     });
 
