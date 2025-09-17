@@ -42,6 +42,6 @@
     "build:components": "componentsjs-generator"
   },
   "dependencies": {
-    "@comunica/types": "^4.2.0"
+    "@comunica/types": "^4.4.0"
   }
 }
