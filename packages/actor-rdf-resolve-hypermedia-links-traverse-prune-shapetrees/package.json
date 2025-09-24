@@ -42,8 +42,8 @@
   },
   "dependencies": {
     "@comunica/actor-rdf-metadata-extract-shapetrees": "^0.7.0",
-    "@comunica/bus-rdf-resolve-hypermedia-links": "^4.2.0",
-    "@comunica/core": "^4.2.0",
-    "@comunica/types": "^4.2.0"
+    "@comunica/bus-rdf-resolve-hypermedia-links": "^4.4.0",
+    "@comunica/core": "^4.4.0",
+    "@comunica/types": "^4.4.0"
   }
 }
