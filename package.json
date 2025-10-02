@@ -95,6 +95,6 @@
     "@comunica/packager": "4.0.1",
     "@comunica/utils-jest": "^4.4.0",
     "@comunica/utils-monorepo": "4.0.1",
-    "typescript": "5.5.4"
+    "typescript": "5.9.3"
   }
 }
