@@ -27,21 +27,18 @@ describe('ActorRdfResolveHypermediaLinksQueueWrapperFilter', () => {
   describe('test', () => {
     it('should accept', async() => {
       await expect(actor.test({
-        firstUrl: 'first',
         context: new ActionContext({ [KeysRdfResolveHypermediaLinks.linkFilters.name]: []}),
       })).resolves.toPassTestVoid();
     });
 
     it('should reject with a missing filter list', async() => {
       await expect(actor.test({
-        firstUrl: 'first',
         context: new ActionContext(),
       })).resolves.toFailTest('Unable to wrap link queue with missing filter list');
     });
 
     it('should reject when wrapped already', async() => {
       await expect(actor.test({
-        firstUrl: 'first',
         context: new ActionContext({
           [(<any>ActorRdfResolveHypermediaLinksQueueWrapperFilter).keyWrapped.name]: true,
           [KeysRdfResolveHypermediaLinks.linkFilters.name]: [],
@@ -53,7 +50,6 @@ describe('ActorRdfResolveHypermediaLinksQueueWrapperFilter', () => {
   describe('run', () => {
     it('should execute successfully', async() => {
       await expect(actor.run({
-        firstUrl: 'first',
         context: new ActionContext({ [KeysRdfResolveHypermediaLinks.linkFilters.name]: []}),
       })).resolves.toEqual({ linkQueue: expect.any(LinkQueueWrapperFilter) });
     });

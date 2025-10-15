@@ -47,6 +47,6 @@
     "@comunica/mediatortype-join-coefficients": "^4.4.0",
     "@comunica/types": "^4.4.0",
     "@comunica/utils-iterator": "^4.0.1",
-    "asynciterator": "^3.9.0"
+    "asynciterator": "^3.10.0"
   }
 }

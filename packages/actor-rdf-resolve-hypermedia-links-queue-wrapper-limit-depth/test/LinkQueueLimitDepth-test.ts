@@ -1,4 +1,4 @@
-import type { ILinkQueue } from '@comunica/bus-rdf-resolve-hypermedia-links-queue';
+import type { ILinkQueue } from '@comunica/types';
 import { LinkQueueLimitDepth } from '..';
 
 describe('LinkQueueLimitDepth', () => {
@@ -18,6 +18,14 @@ describe('LinkQueueLimitDepth', () => {
       expect(inner.push).toHaveBeenCalledWith(
         { url: 'a', metadata: { 'actor-rdf-resolve-hypermedia-links-queue-wrapper-limit-depth:depth': 1 }},
         { url: 'parent', metadata: { 'actor-rdf-resolve-hypermedia-links-queue-wrapper-limit-depth:depth': 0 }},
+      );
+    });
+
+    it('invokes the inner queue when called without parent', () => {
+      expect(queue.push({ url: 'a' })).toBeTruthy();
+      expect(inner.push).toHaveBeenCalledWith(
+        { url: 'a', metadata: { 'actor-rdf-resolve-hypermedia-links-queue-wrapper-limit-depth:depth': 1 }},
+        undefined,
       );
     });
 

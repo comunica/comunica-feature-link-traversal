@@ -1,4 +1,4 @@
-import type { ILinkQueue } from '@comunica/bus-rdf-resolve-hypermedia-links-queue';
+import type { ILinkQueue } from '@comunica/types';
 import { LinkQueueLimitCount } from '..';
 
 describe('LinkQueueLimitCount', () => {

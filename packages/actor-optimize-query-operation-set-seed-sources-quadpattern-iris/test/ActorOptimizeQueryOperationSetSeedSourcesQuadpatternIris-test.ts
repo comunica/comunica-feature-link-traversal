@@ -1,5 +1,4 @@
-import type { MediatorQuerySourceIdentify } from '@comunica/bus-query-source-identify';
-import { KeysQueryOperation, KeysQuerySourceIdentify } from '@comunica/context-entries';
+import { KeysInitQuery } from '@comunica/context-entries';
 import { Bus, ActionContext } from '@comunica/core';
 import { StatisticLinkDiscovery } from '@comunica/statistic-link-discovery';
 import { translate } from 'sparqlalgebrajs';
@@ -10,15 +9,9 @@ import '@comunica/utils-jest';
 
 describe('ActorOptimizeQueryOperationSetSeedSourcesQuadpatternIris', () => {
   let bus: any;
-  let mediatorQuerySourceIdentify: MediatorQuerySourceIdentify;
 
   beforeEach(() => {
     bus = new Bus({ name: 'bus' });
-    mediatorQuerySourceIdentify = <any>{
-      mediate: jest.fn((action: any) => {
-        return { querySource: action.querySourceUnidentified.value };
-      }),
-    };
   });
 
   describe('An ActorOptimizeQueryOperationSetSeedSourcesQuadpatternIris instance', () => {
@@ -28,7 +21,6 @@ describe('ActorOptimizeQueryOperationSetSeedSourcesQuadpatternIris', () => {
       actor = new ActorOptimizeQueryOperationSetSeedSourcesQuadpatternIris({
         name: 'actor',
         bus,
-        mediatorQuerySourceIdentify,
         extractSubjects: true,
         extractPredicates: true,
         extractObjects: true,
@@ -47,7 +39,7 @@ describe('ActorOptimizeQueryOperationSetSeedSourcesQuadpatternIris', () => {
       await expect(actor.run({ operation, context: new ActionContext({}) })).resolves.toEqual({
         operation,
         context: new ActionContext({
-          [KeysQueryOperation.querySources.name]: [ 'ex:s', 'ex:p', 'ex:o', 'ex:g' ],
+          [KeysInitQuery.querySourcesUnidentified.name]: [ 'ex:s', 'ex:p', 'ex:o', 'ex:g' ],
         }),
       });
     });
@@ -56,12 +48,12 @@ describe('ActorOptimizeQueryOperationSetSeedSourcesQuadpatternIris', () => {
       await expect(actor.run({
         operation: <any> 'bla',
         context: new ActionContext({
-          [KeysQueryOperation.querySources.name]: [ 'a', 'b' ],
+          [KeysInitQuery.querySourcesUnidentified.name]: [ 'a', 'b' ],
         }),
       })).resolves.toEqual({
         operation: <any> 'bla',
         context: new ActionContext({
-          [KeysQueryOperation.querySources.name]: [ 'a', 'b' ],
+          [KeysInitQuery.querySourcesUnidentified.name]: [ 'a', 'b' ],
         }),
       });
     });
@@ -71,42 +63,13 @@ describe('ActorOptimizeQueryOperationSetSeedSourcesQuadpatternIris', () => {
       await expect(actor.run({
         operation,
         context: new ActionContext({
-          [KeysQueryOperation.querySources.name]: [],
+          [KeysInitQuery.querySourcesUnidentified.name]: [],
         }),
       })).resolves.toEqual({
         operation,
         context: new ActionContext({
-          [KeysQueryOperation.querySources.name]: [ 'ex:s', 'ex:p', 'ex:o', 'ex:g' ],
+          [KeysInitQuery.querySourcesUnidentified.name]: [ 'ex:s', 'ex:p', 'ex:o', 'ex:g' ],
         }),
-      });
-
-      expect(mediatorQuerySourceIdentify.mediate).toHaveBeenCalledWith({
-        querySourceUnidentified: {
-          value: 'ex:s',
-          context: new ActionContext().set(KeysQuerySourceIdentify.traverse, true),
-        },
-        context: new ActionContext({ [KeysQueryOperation.querySources.name]: []}),
-      });
-      expect(mediatorQuerySourceIdentify.mediate).toHaveBeenCalledWith({
-        querySourceUnidentified: {
-          value: 'ex:p',
-          context: new ActionContext().set(KeysQuerySourceIdentify.traverse, true),
-        },
-        context: new ActionContext({ [KeysQueryOperation.querySources.name]: []}),
-      });
-      expect(mediatorQuerySourceIdentify.mediate).toHaveBeenCalledWith({
-        querySourceUnidentified: {
-          value: 'ex:o',
-          context: new ActionContext().set(KeysQuerySourceIdentify.traverse, true),
-        },
-        context: new ActionContext({ [KeysQueryOperation.querySources.name]: []}),
-      });
-      expect(mediatorQuerySourceIdentify.mediate).toHaveBeenCalledWith({
-        querySourceUnidentified: {
-          value: 'ex:g',
-          context: new ActionContext().set(KeysQuerySourceIdentify.traverse, true),
-        },
-        context: new ActionContext({ [KeysQueryOperation.querySources.name]: []}),
       });
     });
 
@@ -115,12 +78,12 @@ describe('ActorOptimizeQueryOperationSetSeedSourcesQuadpatternIris', () => {
       await expect(actor.run({
         operation,
         context: new ActionContext({
-          [KeysQueryOperation.querySources.name]: [ 'a', 'b' ],
+          [KeysInitQuery.querySourcesUnidentified.name]: [ 'a', 'b' ],
         }),
       })).resolves.toEqual({
         operation,
         context: new ActionContext({
-          [KeysQueryOperation.querySources.name]: [ 'a', 'b' ],
+          [KeysInitQuery.querySourcesUnidentified.name]: [ 'a', 'b' ],
         }),
       });
     });
@@ -130,12 +93,12 @@ describe('ActorOptimizeQueryOperationSetSeedSourcesQuadpatternIris', () => {
       await expect(actor.run({
         operation,
         context: new ActionContext({
-          [KeysQueryOperation.querySources.name]: [],
+          [KeysInitQuery.querySourcesUnidentified.name]: [],
         }),
       })).resolves.toEqual({
         operation,
         context: new ActionContext({
-          [KeysQueryOperation.querySources.name]: [
+          [KeysInitQuery.querySourcesUnidentified.name]: [
             'ex:s',
             'ex:p',
             'ex:o',
@@ -149,7 +112,6 @@ describe('ActorOptimizeQueryOperationSetSeedSourcesQuadpatternIris', () => {
       actor = new ActorOptimizeQueryOperationSetSeedSourcesQuadpatternIris({
         name: 'actor',
         bus,
-        mediatorQuerySourceIdentify,
         extractSubjects: true,
         extractPredicates: false,
         extractObjects: true,
@@ -160,12 +122,12 @@ describe('ActorOptimizeQueryOperationSetSeedSourcesQuadpatternIris', () => {
       await expect(actor.run({
         operation,
         context: new ActionContext({
-          [KeysQueryOperation.querySources.name]: [],
+          [KeysInitQuery.querySourcesUnidentified.name]: [],
         }),
       })).resolves.toEqual({
         operation,
         context: new ActionContext({
-          [KeysQueryOperation.querySources.name]: [
+          [KeysInitQuery.querySourcesUnidentified.name]: [
             'ex:s',
             'ex:o',
           ],
@@ -177,7 +139,6 @@ describe('ActorOptimizeQueryOperationSetSeedSourcesQuadpatternIris', () => {
       actor = new ActorOptimizeQueryOperationSetSeedSourcesQuadpatternIris({
         name: 'actor',
         bus,
-        mediatorQuerySourceIdentify,
         extractSubjects: true,
         extractPredicates: false,
         extractObjects: true,
@@ -188,12 +149,12 @@ describe('ActorOptimizeQueryOperationSetSeedSourcesQuadpatternIris', () => {
       await expect(actor.run({
         operation,
         context: new ActionContext({
-          [KeysQueryOperation.querySources.name]: [],
+          [KeysInitQuery.querySourcesUnidentified.name]: [],
         }),
       })).resolves.toEqual({
         operation,
         context: new ActionContext({
-          [KeysQueryOperation.querySources.name]: [
+          [KeysInitQuery.querySourcesUnidentified.name]: [
             'ex:s',
             'ex:o',
           ],
@@ -206,12 +167,12 @@ describe('ActorOptimizeQueryOperationSetSeedSourcesQuadpatternIris', () => {
       await expect(actor.run({
         operation,
         context: new ActionContext({
-          [KeysQueryOperation.querySources.name]: [],
+          [KeysInitQuery.querySourcesUnidentified.name]: [],
         }),
       })).resolves.toEqual({
         operation,
         context: new ActionContext({
-          [KeysQueryOperation.querySources.name]: [],
+          [KeysInitQuery.querySourcesUnidentified.name]: [],
         }),
       });
     });
@@ -221,12 +182,12 @@ describe('ActorOptimizeQueryOperationSetSeedSourcesQuadpatternIris', () => {
       await expect(actor.run({
         operation,
         context: new ActionContext({
-          [KeysQueryOperation.querySources.name]: [],
+          [KeysInitQuery.querySourcesUnidentified.name]: [],
         }),
       })).resolves.toEqual({
         operation,
         context: new ActionContext({
-          [KeysQueryOperation.querySources.name]: [
+          [KeysInitQuery.querySourcesUnidentified.name]: [
             'ex:s',
             'ex:o',
             'ex:g',
@@ -240,12 +201,12 @@ describe('ActorOptimizeQueryOperationSetSeedSourcesQuadpatternIris', () => {
       await expect(actor.run({
         operation,
         context: new ActionContext({
-          [KeysQueryOperation.querySources.name]: [],
+          [KeysInitQuery.querySourcesUnidentified.name]: [],
         }),
       })).resolves.toEqual({
         operation,
         context: new ActionContext({
-          [KeysQueryOperation.querySources.name]: [],
+          [KeysInitQuery.querySourcesUnidentified.name]: [],
         }),
       });
     });
@@ -254,7 +215,6 @@ describe('ActorOptimizeQueryOperationSetSeedSourcesQuadpatternIris', () => {
       actor = new ActorOptimizeQueryOperationSetSeedSourcesQuadpatternIris({
         name: 'actor',
         bus,
-        mediatorQuerySourceIdentify,
         extractSubjects: true,
         extractPredicates: false,
         extractObjects: true,
@@ -265,12 +225,12 @@ describe('ActorOptimizeQueryOperationSetSeedSourcesQuadpatternIris', () => {
       await expect(actor.run({
         operation,
         context: new ActionContext({
-          [KeysQueryOperation.querySources.name]: [],
+          [KeysInitQuery.querySourcesUnidentified.name]: [],
         }),
       })).resolves.toEqual({
         operation,
         context: new ActionContext({
-          [KeysQueryOperation.querySources.name]: [
+          [KeysInitQuery.querySourcesUnidentified.name]: [
             'ex:s',
             'ex:o',
           ],

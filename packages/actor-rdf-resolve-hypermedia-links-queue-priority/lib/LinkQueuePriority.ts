@@ -1,4 +1,4 @@
-import type { ILink, ILinkQueue } from '@comunica/bus-rdf-resolve-hypermedia-links-queue';
+import type { ILink, ILinkQueue } from '@comunica/types';
 
 /**
  * A link queue based on priority, using binary heap.

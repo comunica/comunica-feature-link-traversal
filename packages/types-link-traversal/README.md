@@ -1,6 +1,6 @@
 # Comunica Types for Link Traversal
 
-[![npm version](https://badge.fury.io/js/%40comunica%2Ftypes.svg)](https://www.npmjs.com/package/@comunica/types-link-traversal)
+[![npm version](https://badge.fury.io/js/%40comunica%2Ftypes-link-traversal.svg)](https://www.npmjs.com/package/@comunica/types-link-traversal)
 
 A collection of reusable Comunica Typescript interfaces and types for link traversal.
 

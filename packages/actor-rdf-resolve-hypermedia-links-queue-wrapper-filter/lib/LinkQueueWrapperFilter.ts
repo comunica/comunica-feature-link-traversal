@@ -1,5 +1,5 @@
-import type { ILinkQueue, ILink } from '@comunica/bus-rdf-resolve-hypermedia-links-queue';
 import { LinkQueueWrapper } from '@comunica/bus-rdf-resolve-hypermedia-links-queue';
+import type { ILinkQueue, ILink } from '@comunica/types';
 import type { LinkFilter } from '@comunica/types-link-traversal';
 
 /**

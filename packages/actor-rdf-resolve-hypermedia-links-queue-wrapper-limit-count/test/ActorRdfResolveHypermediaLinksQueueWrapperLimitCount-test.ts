@@ -36,12 +36,11 @@ IActorRdfResolveHypermediaLinksQueueOutput
     });
 
     it('should test', async() => {
-      await expect(actor.test({ firstUrl: 'first', context: new ActionContext() })).resolves.toPassTestVoid();
+      await expect(actor.test({ context: new ActionContext() })).resolves.toPassTestVoid();
     });
 
     it('should not test when called recursively', async() => {
       await expect(actor.test({
-        firstUrl: 'first',
         context: new ActionContext({
           [KEY_CONTEXT_WRAPPED.name]: true,
         }),
@@ -49,11 +48,10 @@ IActorRdfResolveHypermediaLinksQueueOutput
     });
 
     it('should run', async() => {
-      await expect(actor.run({ firstUrl: 'first', context: new ActionContext() })).resolves.toMatchObject({
+      await expect(actor.run({ context: new ActionContext() })).resolves.toMatchObject({
         linkQueue: new LinkQueueLimitCount(<any> 'inner', 10),
       });
       expect(mediatorRdfResolveHypermediaLinksQueue.mediate).toHaveBeenCalledWith({
-        firstUrl: 'first',
         context: new ActionContext({
           [KEY_CONTEXT_WRAPPED.name]: true,
         }),

@@ -1,6 +1,5 @@
-import type { ILinkQueue, ILink } from '@comunica/bus-rdf-resolve-hypermedia-links-queue';
 import { LinkQueueWrapper } from '@comunica/bus-rdf-resolve-hypermedia-links-queue';
-import type { Logger } from '@comunica/types';
+import type { ILinkQueue, ILink, Logger } from '@comunica/types';
 
 /**
  * A link queue that log information about event happening in the queue
@@ -87,7 +86,7 @@ export class LinkQueueLogger extends LinkQueueWrapper {
     };
   }
 
-  public override push(link: ILink, parent: ILink): boolean {
+  public override push(link: ILink, parent?: ILink): boolean {
     const resp: boolean = super.push(link, parent);
     if (resp) {
       this.emitEvent(this.createLinkQueueEvent(link, 'push', parent));

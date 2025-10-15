@@ -12,7 +12,9 @@
     "ContentPolicy",
     "BindingsStreamAdaptiveDestroy",
     "MetadataValidationState",
-    "ILink"
+    "ILink",
+    "IQuerySource",
+    "AggregatedStoreMemory"
   ],
   "modulePrefix": {}
 }

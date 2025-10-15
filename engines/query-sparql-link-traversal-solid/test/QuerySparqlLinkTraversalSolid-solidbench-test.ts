@@ -39,6 +39,7 @@ describe('System test: QuerySparqlLinkTraversalSolid', () => {
     // The following test works, but is causing the following error:
     //   ReferenceError: You are trying to `import` a file after the Jest environment has been torn down.
     // [ 'interactive-discover-8-1.sparql', 10 ],
+    // [ 'interactive-discover-8-5.sparql', 10 ],
 
   ], (file, expectedCount) => () => {
     it('produces the expected results', async() => {

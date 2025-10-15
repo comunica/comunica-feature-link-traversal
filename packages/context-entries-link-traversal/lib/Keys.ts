@@ -1,5 +1,10 @@
 import { ActionContextKey } from '@comunica/core';
-import type { AnnotateSourcesType, LinkFilter } from '@comunica/types-link-traversal';
+import type {
+  AnnotateSourcesType,
+  LinkFilter,
+  IAggregatedStore,
+  ILinkTraversalManager,
+} from '@comunica/types-link-traversal';
 
 /**
  * When adding entries to this file, also add a shortcut for them in the contextKeyShortcuts TSDoc comment in
@@ -37,4 +42,19 @@ export const KeysRdfJoin = {
    * If adaptive joining must not be done.
    */
   skipAdaptiveJoin: new ActionContextKey<boolean>('@comunica/bus-rdf-join:skipAdaptiveJoin'),
+};
+
+export const KeysQuerySourceIdentifyLinkTraversal = {
+  /**
+   * Aggregated store for a traversal link traversal source.
+   */
+  linkTraversalAggregatedStore: new ActionContextKey<IAggregatedStore>(
+    '@comunica/bus-query-source-identify:linkTraversalAggregatedStore',
+  ),
+  /**
+   * Manager for the link traversal.
+   */
+  linkTraversalManager: new ActionContextKey<ILinkTraversalManager>(
+    '@comunica/bus-query-source-identify:linkTraversalManager',
+  ),
 };

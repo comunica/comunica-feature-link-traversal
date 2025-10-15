@@ -3,19 +3,15 @@ import type {
   IActorOptimizeQueryOperationOutput,
 } from '@comunica/bus-optimize-query-operation';
 import { ActorOptimizeQueryOperation } from '@comunica/bus-optimize-query-operation';
-import type { MediatorQuerySourceIdentify } from '@comunica/bus-query-source-identify';
-import { KeysQueryOperation, KeysQuerySourceIdentify, KeysStatistics } from '@comunica/context-entries';
+import { KeysInitQuery, KeysStatistics } from '@comunica/context-entries';
 import type { IActorArgs, IActorTest, TestResult } from '@comunica/core';
-import { ActionContext, passTestVoid } from '@comunica/core';
-import type { StatisticLinkDiscovery } from '@comunica/statistic-link-discovery';
-import type { IDiscoverEventData, IQuerySourceWrapper, IStatisticBase } from '@comunica/types';
+import { passTestVoid } from '@comunica/core';
 import { Algebra, Util } from 'sparqlalgebrajs';
 
 /**
  * A comunica Set Seed Sources Quadpattern IRIs Optimize Query Operation Actor.
  */
 export class ActorOptimizeQueryOperationSetSeedSourcesQuadpatternIris extends ActorOptimizeQueryOperation {
-  public readonly mediatorQuerySourceIdentify: MediatorQuerySourceIdentify;
   private readonly extractSubjects: boolean;
   private readonly extractPredicates: boolean;
   private readonly extractObjects: boolean;
@@ -31,33 +27,23 @@ export class ActorOptimizeQueryOperationSetSeedSourcesQuadpatternIris extends Ac
   }
 
   public async run(action: IActionOptimizeQueryOperation): Promise<IActorOptimizeQueryOperationOutput> {
-    let sources: IQuerySourceWrapper[] | undefined = action.context.get(KeysQueryOperation.querySources);
+    const sources = action.context.get(KeysInitQuery.querySourcesUnidentified);
     if (!sources || sources.length === 0) {
-      sources = await Promise.all(
-        [ ...new Set(this.extractIrisFromOperation(action.operation)) ]
-          .map(async(source) => {
-            // Remove fragment from URL
-            const hashPosition = source.indexOf('#');
-            if (hashPosition >= 0) {
-              source = source.slice(0, hashPosition);
-            }
+      const links: string[] = [ ...new Set(this.extractIrisFromOperation(action.operation)) ]
+        .map((source) => {
+          // Remove fragment from URL
+          const hashPosition = source.indexOf('#');
+          if (hashPosition >= 0) {
+            source = source.slice(0, hashPosition);
+          }
 
-            const traversalTracker: IStatisticBase<IDiscoverEventData> | StatisticLinkDiscovery | undefined =
-              action.context.get(KeysStatistics.discoveredLinks);
-            if (traversalTracker) {
-              traversalTracker.updateStatistic({ url: source, metadata: { seed: true }}, { url: 'root' });
-            }
+          // Track as discovered link
+          action.context.get(KeysStatistics.discoveredLinks)
+            ?.updateStatistic({ url: source, metadata: { seed: true }}, { url: 'root' });
 
-            return (await this.mediatorQuerySourceIdentify.mediate({
-              querySourceUnidentified: {
-                value: source,
-                context: new ActionContext().set(KeysQuerySourceIdentify.traverse, true),
-              },
-              context: action.context,
-            })).querySource;
-          }),
-      );
-      action.context = action.context.set(KeysQueryOperation.querySources, sources);
+          return source;
+        });
+      action.context = action.context.set(KeysInitQuery.querySourcesUnidentified, links);
     }
     return { ...action, context: action.context };
   }
@@ -101,10 +87,6 @@ export class ActorOptimizeQueryOperationSetSeedSourcesQuadpatternIris extends Ac
 
 export interface IActorOptimizeQueryOperationSetSeedSourcesQuadpatternIrisArgs
   extends IActorArgs<IActionOptimizeQueryOperation, IActorTest, IActorOptimizeQueryOperationOutput> {
-  /**
-   * Mediator for identifying query sources.
-   */
-  mediatorQuerySourceIdentify: MediatorQuerySourceIdentify;
   /**
    * If IRIs should be extracted from subject positions.
    * @default {true}

@@ -1,0 +1,9 @@
+{
+  "@context": [
+    "https://linkedsoftwaredependencies.org/bundles/npm/@comunica/bus-factory-aggregated-store/^0.0.0/components/context.jsonld",
+    "https://linkedsoftwaredependencies.org/bundles/npm/@comunica/mediator-race/^4.0.0/components/context.jsonld"
+  ],
+  "@id": "urn:comunica:default:factory-aggregated-store/mediators#main",
+  "@type": "MediatorRace",
+  "bus": { "@id": "ActorFactoryAggregatedStore:_default_bus" }
+}

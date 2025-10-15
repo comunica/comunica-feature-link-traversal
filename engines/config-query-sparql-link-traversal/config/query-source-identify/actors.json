@@ -1,11 +1,22 @@
 {
   "@context": [
     "https://linkedsoftwaredependencies.org/bundles/npm/@comunica/config-query-sparql/^4.0.0/components/context.jsonld",
-    "https://linkedsoftwaredependencies.org/bundles/npm/@comunica/config-query-sparql-link-traversal/^0.0.0/components/context.jsonld"
+    "https://linkedsoftwaredependencies.org/bundles/npm/@comunica/config-query-sparql-link-traversal/^0.0.0/components/context.jsonld",
+    "https://linkedsoftwaredependencies.org/bundles/npm/@comunica/actor-query-source-identify-link-traversal/^0.0.0/components/context.jsonld"
   ],
-  "import": [
-    "ccqslt:config/query-source-identify/actors/hypermedia.json",
-    "ccqs:config/query-source-identify/actors/rdfjs.json",
-    "ccqs:config/query-source-identify/actors/serialized.json"
+  "@graph": [
+    {
+      "import": [
+        "ccqslt:config/query-source-identify/actors/hypermedia.json",
+        "ccqslt:config/query-source-identify/actors/link-traversal.json",
+        "ccqs:config/query-source-identify/actors/rdfjs.json",
+        "ccqs:config/query-source-identify/actors/serialized.json"
+      ]
+    },
+    {
+      "@id": "urn:comunica:default:query-source-identify/actors#link-traversal",
+      "@type": "ActorQuerySourceIdentifyLinkTraversal",
+      "beforeActors": { "@id": "urn:comunica:default:query-source-identify/actors#hypermedia" }
+    }
   ]
 }
