@@ -1,7 +1,7 @@
 import { QuerySourceRdfJs } from '@comunica/actor-query-source-identify-rdfjs';
 import type { MediatorQuerySourceHypermediaResolve } from '@comunica/bus-query-source-hypermedia-resolve';
 import type { MediatorRdfResolveHypermediaLinks } from '@comunica/bus-rdf-resolve-hypermedia-links';
-import { KeysStatistics } from '@comunica/context-entries';
+import { KeysHttp, KeysStatistics } from '@comunica/context-entries';
 import type {
   ComunicaDataFactory,
   IActionContext,
@@ -25,7 +25,7 @@ export class LinkTraversalManagerMediated implements ILinkTraversalManager {
   protected running = false;
   protected ended = false;
   protected readonly handledUrls: Record<string, boolean> = {};
-  protected linksDereferencing = 0;
+  protected linksDereferencing: Set<AbortController> = new Set();
   protected querySourceAggregated: IQuerySource;
   protected querySourcesNonAggregated: AsyncReiterable<IQuerySource>;
   protected rejectionHandler: ((error: Error) => void) | undefined;
@@ -106,6 +106,10 @@ export class LinkTraversalManagerMediated implements ILinkTraversalManager {
         this.querySourcesNonAggregated.push(null);
         this.aggregatedStore.end();
         this.aggregatedStore.removeAllIteratorsClosedListener(this.allIteratorsClosedListener);
+        // If any HTTP requests are still pending, abort them to avoid a hanging Node.js process
+        for (const abortController of this.linksDereferencing) {
+          abortController.abort();
+        }
         for (const cb of this.stopListeners) {
           cb();
         }
@@ -114,7 +118,7 @@ export class LinkTraversalManagerMediated implements ILinkTraversalManager {
     }
 
     // Traverse multiple links in parallel
-    while (this.linksDereferencing < this.linkParallelization) {
+    while (this.linksDereferencing.size < this.linkParallelization) {
       const nextLink = this.linkQueue.pop();
       if (nextLink) {
         this.followLink(nextLink);
@@ -124,7 +128,7 @@ export class LinkTraversalManagerMediated implements ILinkTraversalManager {
     }
 
     // If there are no further links to be traversed, we terminate
-    if (this.linksDereferencing === 0 && this.linkQueue.isEmpty()) {
+    if (this.linksDereferencing.size === 0 && this.linkQueue.isEmpty()) {
       this.stop();
     }
   }
@@ -152,14 +156,15 @@ export class LinkTraversalManagerMediated implements ILinkTraversalManager {
   }
 
   protected followLink(nextLink: ILink): void {
-    this.linksDereferencing++;
+    const abortController = new AbortController();
+    this.linksDereferencing.add(abortController);
     const context = nextLink.context ? this.context.merge(nextLink.context) : this.context;
 
     this.mediatorQuerySourceHypermediaResolve.mediate({
       url: nextLink.url,
       forceSourceType: nextLink.forceSourceType,
       transformQuads: nextLink.transform,
-      context,
+      context: context.set(KeysHttp.httpAbortSignal, abortController.signal),
     })
       .then(async({ source, metadata }) => {
         // Determine next links
@@ -177,11 +182,11 @@ export class LinkTraversalManagerMediated implements ILinkTraversalManager {
         }
 
         // Queue next iteration
-        this.linksDereferencing--;
+        this.linksDereferencing.delete(abortController);
         setTimeout(() => this.tryTraversingNextLinks());
       })
       .catch((error) => {
-        this.linksDereferencing--;
+        this.linksDereferencing.delete(abortController);
         this.stop();
         this.rejectionHandler!(error);
       });

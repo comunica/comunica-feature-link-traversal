@@ -8,6 +8,8 @@ if (!globalThis.window) {
   jest.unmock('follow-redirects');
 }
 
+jest.useRealTimers();
+
 const queries = loadQueries();
 
 describe('System test: QuerySparqlLinkTraversalSolid', () => {
@@ -30,22 +32,26 @@ describe('System test: QuerySparqlLinkTraversalSolid', () => {
     [ 'interactive-discover-5-5.sparql', 20 ],
     [ 'interactive-discover-6-5.sparql', 27 ],
     [ 'interactive-discover-7-5.sparql', 1 ],
+    [ 'interactive-discover-8-1.sparql', 10 ],
+    [ 'interactive-discover-8-5.sparql', 10 ],
 
     // The following tests are disabled, as they consume too much memory under default Node.js limits.
     // We may be able to enable these with future optimizations.
     // [ 'interactive-discover-6-1.sparql', 33 ],
     // [ 'interactive-discover-7-1.sparql', 6 ],
 
-    // The following test works, but is causing the following error:
-    //   ReferenceError: You are trying to `import` a file after the Jest environment has been torn down.
-    // [ 'interactive-discover-8-1.sparql', 10 ],
-    // [ 'interactive-discover-8-5.sparql', 10 ],
-
   ], (file, expectedCount) => () => {
     it('produces the expected results', async() => {
       const bindings = await engine.queryBindings(queries[file], { lenient: true });
       await expect((bindings.toArray())).resolves.toHaveLength(expectedCount);
     });
+  });
+
+  // For queries discover 8 (with LIMIT), we need to wait a bit, as we can not await abort controller completion.
+  // Otherwise we get the following error:
+  //   ReferenceError: You are trying to `import` a file after the Jest environment has been torn down.
+  afterAll(async() => {
+    await new Promise(resolve => setTimeout(resolve, 1000));
   });
 });
 
