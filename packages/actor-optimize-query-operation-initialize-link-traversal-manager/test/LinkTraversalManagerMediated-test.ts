@@ -1,7 +1,7 @@
 import { AggregatedStoreMemory } from '@comunica/actor-factory-aggregated-store-memory';
 import { QuerySourceRdfJs } from '@comunica/actor-query-source-identify-rdfjs';
 import { LinkQueueFifo } from '@comunica/actor-rdf-resolve-hypermedia-links-queue-fifo';
-import type { MediatorQuerySourceHypermediaResolve } from '@comunica/bus-query-source-hypermedia-resolve';
+import type { MediatorQuerySourceDereferenceLink } from '@comunica/bus-query-source-dereference-link';
 import type { MediatorRdfResolveHypermediaLinks } from '@comunica/bus-rdf-resolve-hypermedia-links';
 import { KeysStatistics } from '@comunica/context-entries';
 import { ActionContext } from '@comunica/core';
@@ -21,7 +21,7 @@ const BF = new BindingsFactory(DF);
 
 describe('LinkTraversalManagerMediated', () => {
   let mediatorRdfResolveHypermediaLinks: MediatorRdfResolveHypermediaLinks;
-  let mediatorQuerySourceHypermediaResolve: MediatorQuerySourceHypermediaResolve;
+  let mediatorQuerySourceDereferenceLink: MediatorQuerySourceDereferenceLink;
   let mgr: LinkTraversalManagerMediated;
   let rejectionHandler: (error: Error) => void;
   let onDereferenceLink: ((url: string) => void) | undefined;
@@ -40,20 +40,20 @@ describe('LinkTraversalManagerMediated', () => {
         return { links: [{ url: metadata.next, context }]};
       }),
     };
-    mediatorQuerySourceHypermediaResolve = <any> {
-      mediate: jest.fn(async({ url }: any) => {
+    mediatorQuerySourceDereferenceLink = <any> {
+      mediate: jest.fn(async({ link }: any) => {
         if (onDereferenceLink) {
-          onDereferenceLink(url);
+          onDereferenceLink(link.url);
         }
         return {
           source: new QuerySourceRdfJs(
             await storeStream(Readable.from([
-              DF.quad(DF.namedNode(url), DF.namedNode('p'), DF.namedNode('o')),
+              DF.quad(DF.namedNode(link.url), DF.namedNode('p'), DF.namedNode('o')),
             ])),
             DF,
             new BindingsFactory(DF),
           ),
-          metadata: { next: `${url}-`, url },
+          metadata: { next: `${link.url}-`, url: link.url },
         };
       }),
     };
@@ -74,7 +74,7 @@ describe('LinkTraversalManagerMediated', () => {
       DF,
       new BindingsFactory(DF),
       mediatorRdfResolveHypermediaLinks,
-      mediatorQuerySourceHypermediaResolve,
+      mediatorQuerySourceDereferenceLink,
     );
     rejectionHandler = jest.fn();
   });
@@ -120,7 +120,7 @@ describe('LinkTraversalManagerMediated', () => {
       expect(mgr.aggregatedStore.hasEnded()).toBe(true);
       expect(mgr.aggregatedStore.hasRunningIterators()).toBe(false);
       expect(mediatorRdfResolveHypermediaLinks.mediate).toHaveBeenCalledTimes(20);
-      expect(mediatorQuerySourceHypermediaResolve.mediate).toHaveBeenCalledTimes(20);
+      expect(mediatorQuerySourceDereferenceLink.mediate).toHaveBeenCalledTimes(20);
     });
 
     it('performs traversal and tracks discovered links', async() => {
@@ -143,7 +143,7 @@ describe('LinkTraversalManagerMediated', () => {
         DF,
         new BindingsFactory(DF),
         mediatorRdfResolveHypermediaLinks,
-        mediatorQuerySourceHypermediaResolve,
+        mediatorQuerySourceDereferenceLink,
       );
 
       // Start and wait until done
@@ -158,7 +158,7 @@ describe('LinkTraversalManagerMediated', () => {
       expect(mgr.aggregatedStore.hasEnded()).toBe(true);
       expect(mgr.aggregatedStore.hasRunningIterators()).toBe(false);
       expect(mediatorRdfResolveHypermediaLinks.mediate).toHaveBeenCalledTimes(20);
-      expect(mediatorQuerySourceHypermediaResolve.mediate).toHaveBeenCalledTimes(20);
+      expect(mediatorQuerySourceDereferenceLink.mediate).toHaveBeenCalledTimes(20);
       expect(stat.count).toBe(18);
     });
 
@@ -182,7 +182,7 @@ describe('LinkTraversalManagerMediated', () => {
       expect(mgr.aggregatedStore.hasEnded()).toBe(true);
       expect(mgr.aggregatedStore.hasRunningIterators()).toBe(false);
       expect(mediatorRdfResolveHypermediaLinks.mediate).toHaveBeenCalledTimes(22);
-      expect(mediatorQuerySourceHypermediaResolve.mediate).toHaveBeenCalledTimes(22);
+      expect(mediatorQuerySourceDereferenceLink.mediate).toHaveBeenCalledTimes(22);
     });
 
     it('stops early when all iterators are closed early', async() => {
@@ -210,7 +210,7 @@ describe('LinkTraversalManagerMediated', () => {
     });
 
     it('stops when a link fails to resolve', async() => {
-      mediatorQuerySourceHypermediaResolve.mediate = () => Promise
+      mediatorQuerySourceDereferenceLink.mediate = () => Promise
         .reject(new Error('LinkTraversalManagerMediated rejection'));
 
       // Start traversal and an iterator
@@ -273,10 +273,10 @@ describe('LinkTraversalManagerMediated', () => {
     });
 
     it('provides non-aggregated sources when traversing over non-documents', async() => {
-      mediatorQuerySourceHypermediaResolve.mediate = <any> jest.fn(async({ url }: any) => {
+      mediatorQuerySourceDereferenceLink.mediate = <any> jest.fn(async({ link }: any) => {
         const source = new QuerySourceRdfJs(
           await storeStream(Readable.from([
-            DF.quad(DF.namedNode(url), DF.namedNode('p'), DF.namedNode('o')),
+            DF.quad(DF.namedNode(link.url), DF.namedNode('p'), DF.namedNode('o')),
           ])),
           DF,
           new BindingsFactory(DF),
@@ -284,7 +284,7 @@ describe('LinkTraversalManagerMediated', () => {
         source.getFilterFactor = async() => 1;
         return {
           source,
-          metadata: { next: `${url}-` },
+          metadata: { next: `${link.url}-` },
         };
       });
 

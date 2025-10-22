@@ -45,7 +45,7 @@
     "@comunica/bus-factory-aggregated-store": "^0.7.0",
     "@comunica/bus-merge-bindings-context": "^4.4.0",
     "@comunica/bus-optimize-query-operation": "^4.4.0",
-    "@comunica/bus-query-source-hypermedia-resolve": "^4.0.0",
+    "@comunica/bus-query-source-dereference-link": "^4.0.0",
     "@comunica/bus-rdf-resolve-hypermedia-links": "^4.4.0",
     "@comunica/bus-rdf-resolve-hypermedia-links-queue": "^4.4.0",
     "@comunica/context-entries": "^4.4.1",

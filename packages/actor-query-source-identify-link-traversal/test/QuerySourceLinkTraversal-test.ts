@@ -4,7 +4,7 @@ import {
 } from '@comunica/actor-optimize-query-operation-initialize-link-traversal-manager';
 import { QuerySourceRdfJs } from '@comunica/actor-query-source-identify-rdfjs';
 import { LinkQueueFifo } from '@comunica/actor-rdf-resolve-hypermedia-links-queue-fifo';
-import type { MediatorQuerySourceHypermediaResolve } from '@comunica/bus-query-source-hypermedia-resolve';
+import type { MediatorQuerySourceDereferenceLink } from '@comunica/bus-query-source-dereference-link';
 import type { MediatorRdfResolveHypermediaLinks } from '@comunica/bus-rdf-resolve-hypermedia-links';
 import { ActionContext } from '@comunica/core';
 import type { IActionContext } from '@comunica/types';
@@ -26,7 +26,7 @@ const BF = new BindingsFactory(DF);
 describe('QuerySourceLinkTraversal', () => {
   let ctx: IActionContext;
   let mediatorRdfResolveHypermediaLinks: MediatorRdfResolveHypermediaLinks;
-  let mediatorQuerySourceHypermediaResolve: MediatorQuerySourceHypermediaResolve;
+  let mediatorQuerySourceDereferenceLink: MediatorQuerySourceDereferenceLink;
   let linkTraversalManager: ILinkTraversalManager;
   let source: QuerySourceLinkTraversal;
 
@@ -40,17 +40,17 @@ describe('QuerySourceLinkTraversal', () => {
         return { links: [{ url: metadata.next }]};
       }),
     };
-    mediatorQuerySourceHypermediaResolve = <any> {
-      mediate: jest.fn(async({ url }: any) => {
+    mediatorQuerySourceDereferenceLink = <any> {
+      mediate: jest.fn(async({ link }: any) => {
         return {
           source: new QuerySourceRdfJs(
             await storeStream(Readable.from([
-              DF.quad(DF.namedNode(url), DF.namedNode('p'), DF.namedNode('o')),
+              DF.quad(DF.namedNode(link.url), DF.namedNode('p'), DF.namedNode('o')),
             ])),
             DF,
             new BindingsFactory(DF),
           ),
-          metadata: { next: `${url}-` },
+          metadata: { next: `${link.url}-` },
         };
       }),
     };
@@ -71,7 +71,7 @@ describe('QuerySourceLinkTraversal', () => {
       DF,
       BF,
       mediatorRdfResolveHypermediaLinks,
-      mediatorQuerySourceHypermediaResolve,
+      mediatorQuerySourceDereferenceLink,
     );
     jest.spyOn(linkTraversalManager, 'start');
     jest.spyOn(linkTraversalManager, 'stop');
@@ -135,20 +135,20 @@ describe('QuerySourceLinkTraversal', () => {
     });
 
     it('should return bindings over the union of all discovered documents and query sources', async() => {
-      mediatorQuerySourceHypermediaResolve.mediate = <any> jest.fn(async({ url }: any) => {
+      mediatorQuerySourceDereferenceLink.mediate = <any> jest.fn(async({ link }: any) => {
         const source = new QuerySourceRdfJs(
           await storeStream(Readable.from([
-            DF.quad(DF.namedNode(url), DF.namedNode('p'), DF.namedNode('o')),
+            DF.quad(DF.namedNode(link.url), DF.namedNode('p'), DF.namedNode('o')),
           ])),
           DF,
           new BindingsFactory(DF),
         );
-        if (url.startsWith('b')) {
+        if (link.url.startsWith('b')) {
           source.getFilterFactor = async() => 1;
         }
         return {
           source,
-          metadata: { next: `${url}-` },
+          metadata: { next: `${link.url}-` },
         };
       });
 

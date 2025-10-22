@@ -32,7 +32,7 @@ After installing, this package can be added to your engine's configuration as fo
       "@type": "ActorOptimizeQueryOperationInitializeLinkTraversalManager",
       "mediatorRdfResolveHypermediaLinks": { "@id": "urn:comunica:default:rdf-resolve-hypermedia-links/mediators#main" },
       "mediatorRdfResolveHypermediaLinksQueue": { "@id": "urn:comunica:default:rdf-resolve-hypermedia-links-queue/mediators#main" },
-      "mediatorQuerySourceHypermediaResolve": { "@id": "urn:comunica:default:query-source-hypermedia-resolve/mediators#main" },
+      "mediatorQuerySourceHypermediaResolve": { "@id": "urn:comunica:default:query-source-dereference-link/mediators#main" },
       "mediatorMergeBindingsContext": { "@id": "urn:comunica:default:merge-bindings-context/mediators#main" },
       "mediatorFactoryAggregatedStore": { "@id": "urn:comunica:default:factory-aggregated-store/mediators#main" }
     }
@@ -44,6 +44,6 @@ After installing, this package can be added to your engine's configuration as fo
 
 * `mediatorRdfResolveHypermediaLinks`: A mediator over the [RDF Resolve Hypermedia Links bus](https://github.com/comunica/comunica/tree/master/packages/bus-rdf-resolve-hypermedia-links).
 * `mediatorRdfResolveHypermediaLinksQueue`: A mediator over the [RDF Resolve Hypermedia Links Queue bus](https://github.com/comunica/comunica/tree/master/packages/bus-rdf-resolve-hypermedia-links-queue).
-* `mediatorQuerySourceHypermediaResolve`: A mediator over the [Query Source Hypermedia Resolve bus](https://github.com/comunica/comunica/tree/master/packages/bus-query-source-hypermedia-resolve).
+* `mediatorQuerySourceHypermediaResolve`: A mediator over the [Query Source Hypermedia Resolve bus](https://github.com/comunica/comunica/tree/master/packages/bus-query-source-dereference-link).
 * `mediatorMergeBindingsContext`: A mediator over the [Merge Bindings Context bus](https://github.com/comunica/comunica/tree/master/packages/bus-merge-bindings-context).
 * `mediatorFactoryAggregatedStore`: A mediator over the [Aggregated Store Factory bus](https://github.com/comunica/comunica/tree/master/packages/bus-factory-aggregated-store).

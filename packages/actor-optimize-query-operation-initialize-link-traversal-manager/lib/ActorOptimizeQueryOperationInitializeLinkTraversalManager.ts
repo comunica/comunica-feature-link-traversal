@@ -6,7 +6,7 @@ import type {
   IActorOptimizeQueryOperationArgs,
 } from '@comunica/bus-optimize-query-operation';
 import { ActorOptimizeQueryOperation } from '@comunica/bus-optimize-query-operation';
-import type { MediatorQuerySourceHypermediaResolve } from '@comunica/bus-query-source-hypermedia-resolve';
+import type { MediatorQuerySourceDereferenceLink } from '@comunica/bus-query-source-dereference-link';
 import type { MediatorRdfResolveHypermediaLinks } from '@comunica/bus-rdf-resolve-hypermedia-links';
 import type { MediatorRdfResolveHypermediaLinksQueue } from '@comunica/bus-rdf-resolve-hypermedia-links-queue';
 import { KeysInitQuery, KeysQuerySourceIdentify } from '@comunica/context-entries';
@@ -24,7 +24,7 @@ export class ActorOptimizeQueryOperationInitializeLinkTraversalManager extends A
   public readonly linkParallelization: number;
   public readonly mediatorRdfResolveHypermediaLinks: MediatorRdfResolveHypermediaLinks;
   public readonly mediatorRdfResolveHypermediaLinksQueue: MediatorRdfResolveHypermediaLinksQueue;
-  public readonly mediatorQuerySourceHypermediaResolve: MediatorQuerySourceHypermediaResolve;
+  public readonly mediatorQuerySourceDereferenceLink: MediatorQuerySourceDereferenceLink;
   public readonly mediatorMergeBindingsContext: MediatorMergeBindingsContext;
   public readonly mediatorFactoryAggregatedStore: MediatorFactoryAggregatedStore;
 
@@ -89,7 +89,7 @@ export class ActorOptimizeQueryOperationInitializeLinkTraversalManager extends A
         dataFactory,
         await BindingsFactory.create(this.mediatorMergeBindingsContext, action.context, dataFactory),
         this.mediatorRdfResolveHypermediaLinks,
-        this.mediatorQuerySourceHypermediaResolve,
+        this.mediatorQuerySourceDereferenceLink,
       );
       linkTraversalContext = linkTraversalContext
         .setDefault(KeysQuerySourceIdentifyLinkTraversal.linkTraversalManager, linkTraversalManager);
@@ -125,7 +125,7 @@ export interface IActorOptimizeQueryOperationInitializeLinkTraversalManagerArgs
   /**
    * The mediator for resolving hypermedia sources
    */
-  mediatorQuerySourceHypermediaResolve: MediatorQuerySourceHypermediaResolve;
+  mediatorQuerySourceDereferenceLink: MediatorQuerySourceDereferenceLink;
   /**
    * A mediator for creating binding context merge handlers
    */

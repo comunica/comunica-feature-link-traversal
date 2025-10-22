@@ -1,7 +1,7 @@
 import { LinkQueueFifo } from '@comunica/actor-rdf-resolve-hypermedia-links-queue-fifo';
 import type { MediatorFactoryAggregatedStore } from '@comunica/bus-factory-aggregated-store';
 import type { MediatorMergeBindingsContext } from '@comunica/bus-merge-bindings-context';
-import type { MediatorQuerySourceHypermediaResolve } from '@comunica/bus-query-source-hypermedia-resolve';
+import type { MediatorQuerySourceDereferenceLink } from '@comunica/bus-query-source-dereference-link';
 import type { MediatorRdfResolveHypermediaLinks } from '@comunica/bus-rdf-resolve-hypermedia-links';
 import type { MediatorRdfResolveHypermediaLinksQueue } from '@comunica/bus-rdf-resolve-hypermedia-links-queue';
 import { KeysInitQuery, KeysQuerySourceIdentify } from '@comunica/context-entries';
@@ -22,7 +22,7 @@ describe('ActorOptimizeQueryOperationInitializeLinkTraversalManager', () => {
   let operation: Algebra.Operation;
   let mediatorRdfResolveHypermediaLinks: MediatorRdfResolveHypermediaLinks;
   let mediatorRdfResolveHypermediaLinksQueue: MediatorRdfResolveHypermediaLinksQueue;
-  let mediatorQuerySourceHypermediaResolve: MediatorQuerySourceHypermediaResolve;
+  let mediatorQuerySourceDereferenceLink: MediatorQuerySourceDereferenceLink;
   let mediatorMergeBindingsContext: MediatorMergeBindingsContext;
   let mediatorAggregatedStoreFactory: MediatorFactoryAggregatedStore;
 
@@ -37,7 +37,7 @@ describe('ActorOptimizeQueryOperationInitializeLinkTraversalManager', () => {
     mediatorRdfResolveHypermediaLinksQueue = <any> {
       mediate: () => Promise.resolve({ linkQueue: new LinkQueueFifo() }),
     };
-    mediatorQuerySourceHypermediaResolve = <any> {
+    mediatorQuerySourceDereferenceLink = <any> {
       mediate: async() => {
         return { source: 'SRC', metadata: { a: 1 }};
       },
@@ -64,7 +64,7 @@ describe('ActorOptimizeQueryOperationInitializeLinkTraversalManager', () => {
         linkParallelization: 2,
         mediatorRdfResolveHypermediaLinks,
         mediatorRdfResolveHypermediaLinksQueue,
-        mediatorQuerySourceHypermediaResolve,
+        mediatorQuerySourceDereferenceLink,
         mediatorMergeBindingsContext,
         mediatorFactoryAggregatedStore: mediatorAggregatedStoreFactory,
       });
@@ -118,7 +118,7 @@ describe('ActorOptimizeQueryOperationInitializeLinkTraversalManager', () => {
         expect(mgr.linkQueue).toBeInstanceOf(LinkQueueFifo);
         expect(mgr.aggregatedStore).toBe('AGGSTORE');
         expect(mgr.mediatorRdfResolveHypermediaLinks).toBe(mediatorRdfResolveHypermediaLinks);
-        expect(mgr.mediatorQuerySourceHypermediaResolve).toBe(mediatorQuerySourceHypermediaResolve);
+        expect(mgr.mediatorQuerySourceDereferenceLink).toBe(mediatorQuerySourceDereferenceLink);
       });
 
       it('should group sources of mixed types when traverse flag is true', async() => {

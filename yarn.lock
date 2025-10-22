@@ -10399,6 +10399,15 @@ mv@~2:
     ncp "~2.0.0"
     rimraf "~2.4.0"
 
+n3@2.0.0-beta.1:
+  version "2.0.0-beta.1"
+  resolved "https://registry.yarnpkg.com/n3/-/n3-2.0.0-beta.1.tgz#e966ccd02548cdd58a429c9c8b1e3dbae5982613"
+  integrity sha512-mOAlmgDP6XFKSxIL9OEX/wrmoiMyawl40PgXWYtjH6zUtnUKyppqen3JkEZBsmUV68CZp5OaLN+ii5t6A6Zrew==
+  dependencies:
+    buffer "^6.0.3"
+    queue-microtask "^1.1.2"
+    readable-stream "^4.0.0"
+
 n3@^1.0.0, n3@^1.16.3, n3@^1.17.0:
   version "1.23.1"
   resolved "https://registry.yarnpkg.com/n3/-/n3-1.23.1.tgz#42a5aded4802db7a3c5d22feec19bdd919190268"
@@ -10406,14 +10415,6 @@ n3@^1.0.0, n3@^1.16.3, n3@^1.17.0:
   dependencies:
     buffer "^6.0.3"
     queue-microtask "^1.1.2"
-    readable-stream "^4.0.0"
-
-n3@^1.26.0:
-  version "1.26.0"
-  resolved "https://registry.yarnpkg.com/n3/-/n3-1.26.0.tgz#3d69de04bee680b9ebec9dbc1033dc1e6934d351"
-  integrity sha512-SQknS0ua90rN+3RHuk8BeIqeYyqIH/+ecViZxX08jR4j6MugqWRjtONl3uANG/crWXnOM2WIqBJtjIhVYFha+w==
-  dependencies:
-    buffer "^6.0.3"
     readable-stream "^4.0.0"
 
 nan@^2.14.0:

@@ -23,7 +23,7 @@
       "@type": "ActorOptimizeQueryOperationInitializeLinkTraversalManager",
       "mediatorRdfResolveHypermediaLinks": { "@id": "urn:comunica:default:rdf-resolve-hypermedia-links/mediators#main" },
       "mediatorRdfResolveHypermediaLinksQueue": { "@id": "urn:comunica:default:rdf-resolve-hypermedia-links-queue/mediators#main" },
-      "mediatorQuerySourceHypermediaResolve": { "@id": "urn:comunica:default:query-source-hypermedia-resolve/mediators#main" },
+      "mediatorQuerySourceDereferenceLink": { "@id": "urn:comunica:default:query-source-dereference-link/mediators#main" },
       "mediatorMergeBindingsContext": { "@id": "urn:comunica:default:merge-bindings-context/mediators#main" },
       "mediatorFactoryAggregatedStore": { "@id": "urn:comunica:default:factory-aggregated-store/mediators#main" },
       "beforeActors": { "@id": "urn:comunica:default:optimize-query-operation/actors#query-source-identify" }

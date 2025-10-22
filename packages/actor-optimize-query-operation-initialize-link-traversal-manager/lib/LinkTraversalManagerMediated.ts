@@ -1,5 +1,5 @@
 import { QuerySourceRdfJs } from '@comunica/actor-query-source-identify-rdfjs';
-import type { MediatorQuerySourceHypermediaResolve } from '@comunica/bus-query-source-hypermedia-resolve';
+import type { MediatorQuerySourceDereferenceLink } from '@comunica/bus-query-source-dereference-link';
 import type { MediatorRdfResolveHypermediaLinks } from '@comunica/bus-rdf-resolve-hypermedia-links';
 import { KeysHttp, KeysStatistics } from '@comunica/context-entries';
 import type {
@@ -41,7 +41,7 @@ export class LinkTraversalManagerMediated implements ILinkTraversalManager {
     protected readonly dataFactory: ComunicaDataFactory,
     protected readonly bindingsFactory: BindingsFactory,
     protected readonly mediatorRdfResolveHypermediaLinks: MediatorRdfResolveHypermediaLinks,
-    protected readonly mediatorQuerySourceHypermediaResolve: MediatorQuerySourceHypermediaResolve,
+    protected readonly mediatorQuerySourceDereferenceLink: MediatorQuerySourceDereferenceLink,
   ) {
     this.querySourceAggregated = new QuerySourceRdfJs(
       this.aggregatedStore,
@@ -158,13 +158,10 @@ export class LinkTraversalManagerMediated implements ILinkTraversalManager {
   protected followLink(nextLink: ILink): void {
     const abortController = new AbortController();
     this.linksDereferencing.add(abortController);
-    const context = nextLink.context ? this.context.merge(nextLink.context) : this.context;
 
-    this.mediatorQuerySourceHypermediaResolve.mediate({
-      url: nextLink.url,
-      forceSourceType: nextLink.forceSourceType,
-      transformQuads: nextLink.transform,
-      context: context.set(KeysHttp.httpAbortSignal, abortController.signal),
+    this.mediatorQuerySourceDereferenceLink.mediate({
+      link: nextLink,
+      context: this.context.set(KeysHttp.httpAbortSignal, abortController.signal),
     })
       .then(async({ source, metadata }) => {
         // Determine next links
@@ -174,9 +171,9 @@ export class LinkTraversalManagerMediated implements ILinkTraversalManager {
 
         // If the source is a document, add to aggregate store.
         // Otherwise, append to non-document sources.
-        if (await source.getFilterFactor(context) === 0) {
+        if (await source.getFilterFactor(this.context) === 0) {
           this.aggregatedStore.setBaseMetadata(metadata, this.aggregatedStore.containedSources.size > 0);
-          await this.aggregatedStore.importSource(nextLink.url, source, context);
+          await this.aggregatedStore.importSource(nextLink.url, source, this.context);
         } else {
           this.querySourcesNonAggregated.push(source);
         }
