@@ -41,9 +41,10 @@
   "devDependencies": {
     "@babel/core": "^7.26.0",
     "@babel/preset-env": "^7.26.0",
-    "@comunica/packager": "^4.0.1",
-    "@comunica/utils-jest": "^4.4.0",
-    "@comunica/utils-monorepo": "^4.0.1",
+    "@comunica/packager": "4.4.2-alpha.49.0",
+    "@comunica/statistic-link-discovery": "4.4.2-alpha.49.0",
+    "@comunica/utils-jest": "4.4.2-alpha.49.0",
+    "@comunica/utils-monorepo": "4.4.2-alpha.49.0",
     "@pollyjs/adapter-node-http": "^6.0.6",
     "@pollyjs/core": "^6.0.6",
     "@pollyjs/persister-fs": "^6.0.6",
@@ -92,9 +93,8 @@
     "webpack-cli": "^6.0.1"
   },
   "resolutions": {
-    "@comunica/packager": "4.0.1",
-    "@comunica/utils-jest": "^4.4.0",
-    "@comunica/utils-monorepo": "4.0.1",
+    "@comunica/types": "4.4.2-alpha.49.0",
+    "@comunica/utils-metadata": "4.4.2-alpha.49.0",
     "typescript": "5.5.4"
   }
 }

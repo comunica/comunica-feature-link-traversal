@@ -42,7 +42,7 @@
     "build:components": "componentsjs-generator"
   },
   "dependencies": {
-    "@comunica/types": "^4.4.0",
+    "@comunica/types": "4.4.2-alpha.49.0",
     "@rdfjs/types": "*",
     "asynciterator": "^3.10.0"
   }
