@@ -7,16 +7,16 @@ import { KeysStatistics } from '@comunica/context-entries';
 import { ActionContext } from '@comunica/core';
 import { StatisticLinkDiscovery } from '@comunica/statistic-link-discovery';
 import type { IActionContext } from '@comunica/types';
+import { AlgebraFactory } from '@comunica/utils-algebra';
 import { BindingsFactory } from '@comunica/utils-bindings-factory';
 import { DataFactory } from 'rdf-data-factory';
 import { storeStream } from 'rdf-store-stream';
 import { Readable } from 'readable-stream';
-import { Factory } from 'sparqlalgebrajs';
 import { LinkTraversalManagerMediated } from '../lib';
 import '@comunica/utils-jest';
 
 const DF = new DataFactory();
-const AF = new Factory();
+const AF = new AlgebraFactory();
 const BF = new BindingsFactory(DF);
 
 describe('LinkTraversalManagerMediated', () => {

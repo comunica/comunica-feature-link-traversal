@@ -4,8 +4,8 @@ import { KeysQueryOperation } from '@comunica/context-entries';
 import type { IActorArgs, IActorTest, TestResult } from '@comunica/core';
 import { failTest, passTestVoid } from '@comunica/core';
 import type { IActionContext } from '@comunica/types';
+import { Algebra, algebraUtils } from '@comunica/utils-algebra';
 import { filterQuadTermNames, getNamedNodes, getTerms, matchPatternComplete } from 'rdf-terms';
-import type { Algebra } from 'sparqlalgebrajs';
 
 /**
  * A comunica Traverse Quad Pattern RDF Metadata Extract Actor.
@@ -19,7 +19,7 @@ export class ActorExtractLinksQuadPattern extends ActorExtractLinks {
 
   public static getCurrentQuadPattern(context: IActionContext): Algebra.Pattern | undefined {
     const currentQueryOperation: Algebra.Operation | undefined = context.get(KeysQueryOperation.operation);
-    if (!currentQueryOperation || currentQueryOperation.type !== 'pattern') {
+    if (!currentQueryOperation || !algebraUtils.isKnownOperation(currentQueryOperation, Algebra.Types.PATTERN)) {
       return;
     }
     return currentQueryOperation;

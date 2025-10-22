@@ -1,12 +1,12 @@
 import { KeysQueryOperation } from '@comunica/context-entries';
 import { ActionContext, Bus } from '@comunica/core';
 import type { IActionContext } from '@comunica/types';
+import { AlgebraFactory } from '@comunica/utils-algebra';
 import { DataFactory } from 'rdf-data-factory';
-import { Factory } from 'sparqlalgebrajs';
 import { ActorRdfJoinEntriesSortTraversalZeroKnowledge } from '../lib/ActorRdfJoinEntriesSortTraversalZeroKnowledge';
 import '@comunica/utils-jest';
 
-const FACTORY = new Factory();
+const FACTORY = new AlgebraFactory();
 const DF = new DataFactory();
 
 describe('ActorRdfJoinEntriesSortTraversalZeroKnowledge', () => {

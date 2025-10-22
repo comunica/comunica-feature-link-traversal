@@ -1,4 +1,4 @@
-import type { Algebra } from 'sparqlalgebrajs';
+import type { Algebra } from '@comunica/utils-algebra';
 
 /**
  * A content policies represents a function from graph pattern to matching variables.

@@ -6,11 +6,11 @@ import type {
   IQuerySource,
 } from '@comunica/types';
 import type { ILinkTraversalManager } from '@comunica/types-link-traversal';
+import type { Algebra } from '@comunica/utils-algebra';
 import { ClosableTransformIterator } from '@comunica/utils-iterator';
 import type * as RDF from '@rdfjs/types';
 import type { AsyncIterator } from 'asynciterator';
 import { UnionIterator } from 'asynciterator';
-import type { Algebra } from 'sparqlalgebrajs';
 
 /**
  * A query source that operates sources obtained from a link queue.

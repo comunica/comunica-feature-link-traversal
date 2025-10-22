@@ -9,18 +9,18 @@ import type { MediatorRdfResolveHypermediaLinks } from '@comunica/bus-rdf-resolv
 import { ActionContext } from '@comunica/core';
 import type { IActionContext } from '@comunica/types';
 import type { ILinkTraversalManager } from '@comunica/types-link-traversal';
+import { AlgebraFactory } from '@comunica/utils-algebra';
 import { BindingsFactory } from '@comunica/utils-bindings-factory';
 import { MetadataValidationState } from '@comunica/utils-metadata';
 import { DataFactory } from 'rdf-data-factory';
 import { storeStream } from 'rdf-store-stream';
 import { Readable } from 'readable-stream';
-import { Factory } from 'sparqlalgebrajs';
 import { QuerySourceLinkTraversal } from '../lib/QuerySourceLinkTraversal';
 import '@comunica/utils-jest';
 import 'jest-rdf';
 
 const DF = new DataFactory();
-const AF = new Factory();
+const AF = new AlgebraFactory();
 const BF = new BindingsFactory(DF);
 
 describe('QuerySourceLinkTraversal', () => {

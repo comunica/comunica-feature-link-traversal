@@ -47,11 +47,11 @@
     "@comunica/core": "^4.4.0",
     "@comunica/types": "^4.4.0",
     "@comunica/types-link-traversal": "^0.7.0",
+    "@comunica/utils-algebra": "^4.0.2",
     "@comunica/utils-iterator": "^4.0.1",
     "@comunica/utils-metadata": "^4.4.0",
     "@rdfjs/types": "*",
     "asynciterator": "^3.10.0",
-    "rdf-streaming-store": "^2.1.1",
-    "sparqlalgebrajs": "^4.3.8"
+    "rdf-streaming-store": "^2.1.1"
   }
 }

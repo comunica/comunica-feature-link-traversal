@@ -1,5 +1,6 @@
-import type { Algebra } from 'sparqlalgebrajs';
-import { translate } from 'sparqlalgebrajs';
+import type { Algebra } from '@comunica/utils-algebra';
+import { toAlgebra } from '@traqula/algebra-sparql-1-2';
+import { Parser as SparqlParser } from '@traqula/parser-sparql-1-2';
 import type { IVariable } from './ContentPolicy';
 import { ContentPolicy } from './ContentPolicy';
 
@@ -15,8 +16,6 @@ export class SimpleSclParser {
   public parse(contentPolicy: string, baseIRI?: string): ContentPolicy {
     this.cursor = 0;
 
-    const translateOptions = { quads: true, baseIRI, blankToVariable: true };
-
     // Parse FOLLOW and variables
     this.readFollowClause(contentPolicy);
     const variables = this.readVariables(contentPolicy);
@@ -27,7 +26,7 @@ export class SimpleSclParser {
     if (includePos >= 0) {
       // Simulate a SPARQL CONSTRUCT query around our include clause for easy parsing
       const constructQuery = `CONSTRUCT ${contentPolicy.slice(includePos + 7)}`;
-      filter = <Algebra.Construct> translate(constructQuery, translateOptions);
+      filter = <Algebra.Construct> translate(constructQuery, baseIRI);
 
       // Chop off the include clause for further processing
       contentPolicy = contentPolicy.slice(0, includePos);
@@ -42,7 +41,7 @@ export class SimpleSclParser {
 
     // Simulate a SPARQL SELECT query around our graph pattern for easy parsing.
     const sparqlQuery = `SELECT * WHERE { ${graphPatternString} }`;
-    const graphPattern = (<Algebra.Project> translate(sparqlQuery, translateOptions)).input;
+    const graphPattern = (<Algebra.Project> translate(sparqlQuery, baseIRI)).input;
 
     return new ContentPolicy(graphPattern, variables, filter);
   }
@@ -143,4 +142,16 @@ export class SimpleSclParser {
     }
     return variables;
   }
+}
+
+function translate(query: string, baseIRI?: string): Algebra.Operation {
+  const parser = new SparqlParser({ lexerConfig: {
+    positionTracking: 'onlyOffset',
+  }});
+  const parsedSyntax = parser.parse(query);
+  return toAlgebra(parsedSyntax, {
+    quads: true,
+    blankToVariable: true,
+    baseIRI,
+  });
 }

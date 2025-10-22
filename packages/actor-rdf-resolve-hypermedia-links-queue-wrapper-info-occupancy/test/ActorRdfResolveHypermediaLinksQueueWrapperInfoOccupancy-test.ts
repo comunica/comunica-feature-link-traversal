@@ -1,6 +1,5 @@
-import { KeysInitQuery, KeysCore } from '@comunica/context-entries';
+import { KeysCore } from '@comunica/context-entries';
 import { Bus, ActionContext } from '@comunica/core';
-import { translate, toSparql } from 'sparqlalgebrajs';
 import {
   ActorRdfResolveHypermediaLinksQueueWrapperInfoOccupancy,
   KEY_CONTEXT_WRAPPED,
@@ -91,29 +90,9 @@ describe('ActorRdfResolveHypermediaLinksQueueRdfResolveHypermediaLinkQueueWrappe
           mediatorRdfResolveHypermediaLinksQueue: mediator,
         });
 
-        const query = toSparql(translate(`SELECT ?personId ?firstName ?lastName WHERE {
-        <http://localhost:3000/pods/00000000000000000150/comments/Mexico#68719564521> <http://localhost:3000/www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/id> ?messageId.
-        <http://localhost:3000/pods/00000000000000000150/comments/Mexico#68719564521> <http://localhost:3000/www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/hasCreator> ?creator.
-        ?creator <http://localhost:3000/www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/id> ?personId.
-        ?creator <http://localhost:3000/www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/firstName> ?firstName.
-        ?creator <http://localhost:3000/www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/lastName> ?lastName.
-        }`));
+        const expectedLinkQueueWrapper = new LinkQueueLogger(linkQueue, <any>'foo');
 
-        const logger: any = jest.fn();
-
-        jest.spyOn(action.context, 'get').mockImplementation((key: any) => {
-          if (key.name === KeysInitQuery.query.name) {
-            return translate(query);
-          }
-          if (key.name === KeysCore.log.name) {
-            return logger;
-          }
-          return undefined;
-        });
-
-        const expectedLinkQueueWrapper = new LinkQueueLogger(linkQueue, query, logger);
-
-        await expect(actor.run(action)).resolves.toStrictEqual({ linkQueue: expectedLinkQueueWrapper });
+        await expect(actor.run(action)).resolves.toEqual({ linkQueue: expectedLinkQueueWrapper });
         expect(action.context.set).toHaveBeenCalledTimes(1);
         expect(action.context.set).toHaveBeenLastCalledWith(KEY_CONTEXT_WRAPPED, true);
       });
@@ -128,28 +107,9 @@ describe('ActorRdfResolveHypermediaLinksQueueRdfResolveHypermediaLinkQueueWrappe
           mediatorRdfResolveHypermediaLinksQueue: mediator,
         });
 
-        const query = toSparql(translate(`SELECT ?personId ?firstName ?lastName WHERE {
-          <http://localhost:3000/pods/00000000000000000150/comments/Mexico#68719564521> <http://localhost:3000/www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/id> ?messageId.
-          <http://localhost:3000/pods/00000000000000000150/comments/Mexico#68719564521> <http://localhost:3000/www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/hasCreator> ?creator.
-          ?creator <http://localhost:3000/www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/id> ?personId.
-          ?creator <http://localhost:3000/www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/firstName> ?firstName.
-          ?creator <http://localhost:3000/www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/lastName> ?lastName.
-          }`));
+        const expectedLinkQueueWrapper = new LinkQueueLogger(linkQueue, <any>'foo');
 
-        const logger: any = jest.fn();
-        jest.spyOn(action.context, 'get').mockImplementation((key: any) => {
-          if (key.name === KeysInitQuery.query.name) {
-            return translate(query);
-          }
-          if (key.name === KeysCore.log.name) {
-            return logger;
-          }
-          return undefined;
-        });
-
-        const expectedLinkQueueWrapper = new LinkQueueLogger(linkQueue, query, logger);
-
-        await expect(actor.run(action)).resolves.toStrictEqual({ linkQueue: expectedLinkQueueWrapper });
+        await expect(actor.run(action)).resolves.toEqual({ linkQueue: expectedLinkQueueWrapper });
         expect(action.context.set).toHaveBeenCalledTimes(1);
         expect(action.context.set).toHaveBeenLastCalledWith(KEY_CONTEXT_WRAPPED, true);
       });

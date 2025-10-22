@@ -8,12 +8,12 @@ import type {
   IActionContext,
 } from '@comunica/types';
 import type { IAggregatedStore } from '@comunica/types-link-traversal';
+import { AlgebraFactory } from '@comunica/utils-algebra';
 import { ClosableTransformIterator } from '@comunica/utils-iterator';
 import { MetadataValidationState } from '@comunica/utils-metadata';
 import type * as RDF from '@rdfjs/types';
 import type { AsyncIterator } from 'asynciterator';
 import { StreamingStore } from 'rdf-streaming-store';
-import { Factory } from 'sparqlalgebrajs';
 
 /**
  * An aggregated store that returns AsyncIterators with a valid MetadataQuads property.
@@ -57,7 +57,7 @@ export class AggregatedStoreMemory extends StreamingStore implements IAggregated
 
   public async importSource(url: string, source: IQuerySource, context: IActionContext): Promise<void> {
     if (!this.ended) {
-      const AF = new Factory();
+      const AF = new AlgebraFactory();
       this.containedSources.add(url);
       const eventEmitter = this.import(source.queryQuads(AF.createPattern(
         this.dataFactory.variable('s'),

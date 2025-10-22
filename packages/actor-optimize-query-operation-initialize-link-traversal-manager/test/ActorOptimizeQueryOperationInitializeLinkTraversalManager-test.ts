@@ -8,8 +8,8 @@ import { KeysInitQuery, KeysQuerySourceIdentify } from '@comunica/context-entrie
 import { KeysQuerySourceIdentifyLinkTraversal } from '@comunica/context-entries-link-traversal';
 import { ActionContext, Bus } from '@comunica/core';
 import type { IActionContext } from '@comunica/types';
+import type { Algebra } from '@comunica/utils-algebra';
 import { DataFactory } from 'rdf-data-factory';
-import type { Algebra } from 'sparqlalgebrajs';
 import {
   ActorOptimizeQueryOperationInitializeLinkTraversalManager,
 } from '../lib/ActorOptimizeQueryOperationInitializeLinkTraversalManager';

@@ -2,8 +2,8 @@ import type { Readable } from 'node:stream';
 import { ActorExtractLinks } from '@comunica/bus-extract-links';
 import { KeysInitQuery } from '@comunica/context-entries';
 import { ActionContext, Bus } from '@comunica/core';
+import { AlgebraFactory } from '@comunica/utils-algebra';
 import { DataFactory } from 'rdf-data-factory';
-import { Factory } from 'sparqlalgebrajs';
 import {
   ActorExtractLinksQuadPatternQuery,
 } from '../lib/ActorExtractLinksQuadPatternQuery';
@@ -12,7 +12,7 @@ import '@comunica/utils-jest';
 const quad = require('rdf-quad');
 const stream = require('streamify-array');
 
-const FACTORY = new Factory();
+const FACTORY = new AlgebraFactory();
 const DF = new DataFactory();
 
 describe('ActorExtractLinksQuadPatternQuery', () => {

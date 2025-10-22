@@ -8,10 +8,10 @@ import { KeysQueryOperation } from '@comunica/context-entries';
 import type { IActorArgs, IActorTest, TestResult } from '@comunica/core';
 import { ActionContext, ActionContextKey, passTestVoid } from '@comunica/core';
 import type { ILink, Bindings, IActionContext } from '@comunica/types';
+import { Algebra, algebraUtils } from '@comunica/utils-algebra';
 import type * as RDF from '@rdfjs/types';
 import { storeStream } from 'rdf-store-stream';
 import { matchPatternComplete } from 'rdf-terms';
-import type { Algebra } from 'sparqlalgebrajs';
 import type { ContentPolicy } from './ContentPolicy';
 import { SimpleSclParser } from './SimpleSclParser';
 
@@ -57,7 +57,7 @@ export class ActorExtractLinksContentPolicies extends ActorExtractLinks
 
   public static getCurrentQuadPattern(context: IActionContext): Algebra.Pattern | undefined {
     const currentQueryOperation: Algebra.Operation | undefined = context.get(KeysQueryOperation.operation);
-    if (!currentQueryOperation || currentQueryOperation.type !== 'pattern') {
+    if (!currentQueryOperation || !algebraUtils.isKnownOperation(currentQueryOperation, Algebra.Types.PATTERN)) {
       return;
     }
     return currentQueryOperation;

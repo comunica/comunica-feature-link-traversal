@@ -5,7 +5,6 @@ import type { ILinkQueue, ILink, Logger } from '@comunica/types';
  * A link queue that log information about event happening in the queue
  */
 export class LinkQueueLogger extends LinkQueueWrapper {
-  public readonly query: string;
   private readonly logger: Logger;
   private readonly linkProductionRatio: ILinkProductionActorRatio = {
     push: {},
@@ -15,13 +14,11 @@ export class LinkQueueLogger extends LinkQueueWrapper {
   /**
    *
    * @param {ILinkQueue} linkQueue - The link queue
-   * @param {Algebra.Operation} query - The current query
    * @param {Logger} logger - The logger where the events are output
    */
-  public constructor(linkQueue: ILinkQueue, query: string, logger: Logger) {
+  public constructor(linkQueue: ILinkQueue, logger: Logger) {
     super(linkQueue);
     this.logger = logger;
-    this.query = query;
   }
 
   /**
@@ -78,7 +75,6 @@ export class LinkQueueLogger extends LinkQueueWrapper {
     return {
       type: eventType,
       link: linkInfo,
-      query: this.query,
       queue: {
         size: this.getSize(),
         ...this.linkProductionRatio,
@@ -117,7 +113,6 @@ export class LinkQueueLogger extends LinkQueueWrapper {
 interface ILinkQueueEvent {
   type: 'push' | 'pop';
   link: IUrlStatistic;
-  query: string;
   queue: IQueueStatistics;
 }
 /**

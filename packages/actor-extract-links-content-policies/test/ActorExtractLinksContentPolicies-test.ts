@@ -1,11 +1,11 @@
 import type { Readable } from 'node:stream';
 import { KeysQueryOperation } from '@comunica/context-entries';
 import { ActionContext, Bus } from '@comunica/core';
+import { AlgebraFactory } from '@comunica/utils-algebra';
 import { BindingsFactory } from '@comunica/utils-bindings-factory';
 import { arrayifyStream } from 'arrayify-stream';
 import { ArrayIterator } from 'asynciterator';
 import { DataFactory } from 'rdf-data-factory';
-import { Factory } from 'sparqlalgebrajs';
 import {
   ActorExtractLinksContentPolicies,
   ContentPolicy,
@@ -17,7 +17,7 @@ import '@comunica/utils-jest';
 const quad = require('rdf-quad');
 const streamifyArray = require('streamify-array');
 
-const factory = new Factory();
+const factory = new AlgebraFactory();
 const DF = new DataFactory();
 const BF = new BindingsFactory(DF);
 

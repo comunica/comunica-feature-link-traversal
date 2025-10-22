@@ -4,12 +4,11 @@ import { KeysInitQuery } from '@comunica/context-entries';
 import type { IActorArgs, IActorTest, TestResult } from '@comunica/core';
 import { failTest, passTestVoid } from '@comunica/core';
 import type { IActionContext } from '@comunica/types';
+import { Algebra, algebraUtils } from '@comunica/utils-algebra';
 import type * as RDF from '@rdfjs/types';
 import { DataFactory } from 'rdf-data-factory';
 import type { QuadTermName } from 'rdf-terms';
 import { filterQuadTermNames, getNamedNodes, getTerms, matchPatternComplete } from 'rdf-terms';
-import type { Algebra } from 'sparqlalgebrajs';
-import { Util as AlgebraUtil } from 'sparqlalgebrajs';
 
 const DF = new DataFactory<RDF.BaseQuad>();
 const VAR = DF.variable('__comunica:pp_var');
@@ -34,33 +33,41 @@ export class ActorExtractLinksQuadPatternQuery extends ActorExtractLinks {
 
   public static matchQuadPatternInOperation(quad: RDF.Quad, operation: Algebra.Operation): RDF.BaseQuad[] {
     const matchingPatterns: RDF.BaseQuad[] = [];
-    AlgebraUtil.recurseOperation(operation, {
-      pattern(pattern: Algebra.Pattern) {
-        if (matchPatternComplete(quad, pattern)) {
-          matchingPatterns.push(pattern);
-        }
-        return false;
+    algebraUtils.visitOperation(operation, {
+      [Algebra.Types.PATTERN]: {
+        preVisitor: () => ({ continue: false }),
+        visitor: (pattern) => {
+          if (matchPatternComplete(quad, pattern)) {
+            matchingPatterns.push(pattern);
+          }
+        },
       },
-      path(path: Algebra.Path) {
-        AlgebraUtil.recurseOperation(path, {
-          link(link: Algebra.Link) {
-            const pattern = DF.quad(VAR, link.iri, VAR, path.graph);
-            if (matchPatternComplete(quad, pattern)) {
-              matchingPatterns.push(pattern);
-            }
-            return false;
-          },
-          nps(nps: Algebra.Nps) {
-            for (const iri of nps.iris) {
-              const pattern = DF.quad(VAR, iri, VAR, path.graph);
-              if (matchPatternComplete(quad, pattern)) {
-                matchingPatterns.push(pattern);
-              }
-            }
-            return false;
-          },
-        });
-        return false;
+      [Algebra.Types.PATH]: {
+        preVisitor: () => ({ continue: false }),
+        visitor: (path: Algebra.Path) => {
+          algebraUtils.visitOperation(path, {
+            [Algebra.Types.LINK]: {
+              preVisitor: () => ({ continue: false }),
+              visitor: (link: Algebra.Link) => {
+                const pattern = DF.quad(VAR, link.iri, VAR, path.graph);
+                if (matchPatternComplete(quad, pattern)) {
+                  matchingPatterns.push(pattern);
+                }
+              },
+            },
+            [Algebra.Types.NPS]: {
+              preVisitor: () => ({ continue: false }),
+              visitor: (nps: Algebra.Nps) => {
+                for (const iri of nps.iris) {
+                  const pattern = DF.quad(VAR, iri, VAR, path.graph);
+                  if (matchPatternComplete(quad, pattern)) {
+                    matchingPatterns.push(pattern);
+                  }
+                }
+              },
+            },
+          });
+        },
       },
     });
     return matchingPatterns;

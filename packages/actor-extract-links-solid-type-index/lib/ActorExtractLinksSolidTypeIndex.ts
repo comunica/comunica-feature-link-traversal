@@ -8,11 +8,10 @@ import { KeysRdfJoin } from '@comunica/context-entries-link-traversal';
 import type { IActorArgs, IActorTest, TestResult } from '@comunica/core';
 import { failTest, passTestVoid } from '@comunica/core';
 import type { ILink, IActionContext } from '@comunica/types';
+import { algebraUtils, Algebra } from '@comunica/utils-algebra';
 import type * as RDF from '@rdfjs/types';
 import { storeStream } from 'rdf-store-stream';
 import { termToString } from 'rdf-string';
-import { Util as AlgebraUtil } from 'sparqlalgebrajs';
-import type { Algebra } from 'sparqlalgebrajs';
 
 /**
  * A comunica Solid Type Index Extract Links Actor.
@@ -236,25 +235,33 @@ export class ActorExtractLinksSolidTypeIndex extends ActorExtractLinks {
     }
 
     // Visit nodes in query to determine subjects
-    AlgebraUtil.recurseOperation(query, {
-      pattern(queryPattern) {
-        handleQueryTriple(queryPattern.subject, queryPattern.predicate, queryPattern.object);
-        return false;
+    algebraUtils.visitOperation(query, {
+      [Algebra.Types.PATTERN]: {
+        preVisitor: () => ({ continue: false }),
+        visitor: (queryPattern) => {
+          handleQueryTriple(queryPattern.subject, queryPattern.predicate, queryPattern.object);
+        },
       },
-      path(path: Algebra.Path) {
-        AlgebraUtil.recurseOperation(path, {
-          link(link: Algebra.Link) {
-            handleQueryTriple(path.subject, link.iri, path.object);
-            return false;
-          },
-          nps(nps: Algebra.Nps) {
-            for (const iri of nps.iris) {
-              handleQueryTriple(path.subject, iri, path.object);
-            }
-            return false;
-          },
-        });
-        return false;
+      [Algebra.Types.PATH]: {
+        preVisitor: () => ({ continue: false }),
+        visitor: (path: Algebra.Path) => {
+          algebraUtils.visitOperation(path, {
+            [Algebra.Types.LINK]: {
+              preVisitor: () => ({ continue: false }),
+              visitor: (link: Algebra.Link) => {
+                handleQueryTriple(path.subject, link.iri, path.object);
+              },
+            },
+            [Algebra.Types.NPS]: {
+              preVisitor: () => ({ continue: false }),
+              visitor: (nps: Algebra.Nps) => {
+                for (const iri of nps.iris) {
+                  handleQueryTriple(path.subject, iri, path.object);
+                }
+              },
+            },
+          });
+        },
       },
     });
 

@@ -6,7 +6,7 @@ import { ActorOptimizeQueryOperation } from '@comunica/bus-optimize-query-operat
 import { KeysInitQuery, KeysStatistics } from '@comunica/context-entries';
 import type { IActorArgs, IActorTest, TestResult } from '@comunica/core';
 import { passTestVoid } from '@comunica/core';
-import { Algebra, Util } from 'sparqlalgebrajs';
+import { Algebra, algebraUtils } from '@comunica/utils-algebra';
 
 /**
  * A comunica Set Seed Sources Quadpattern IRIs Optimize Query Operation Actor.
@@ -50,35 +50,39 @@ export class ActorOptimizeQueryOperationSetSeedSourcesQuadpatternIris extends Ac
 
   public extractIrisFromOperation(operation: Algebra.Operation): string[] {
     const iris: string[] = [];
-    Util.recurseOperation(operation, {
-      [Algebra.types.PATH]: (path) => {
-        if (this.extractSubjects && path.subject.termType === 'NamedNode') {
-          iris.push(path.subject.value);
-        }
-        // Predicates are ignored
-        if (this.extractObjects && path.object.termType === 'NamedNode') {
-          iris.push(path.object.value);
-        }
-        if (this.extractGraphs && path.graph.termType === 'NamedNode') {
-          iris.push(path.graph.value);
-        }
-        return false;
+    algebraUtils.visitOperation(operation, {
+      [Algebra.Types.PATH]: {
+        preVisitor: () => ({ continue: false }),
+        visitor: (path) => {
+          if (this.extractSubjects && path.subject.termType === 'NamedNode') {
+            iris.push(path.subject.value);
+          }
+          // Predicates are ignored
+          if (this.extractObjects && path.object.termType === 'NamedNode') {
+            iris.push(path.object.value);
+          }
+          if (this.extractGraphs && path.graph.termType === 'NamedNode') {
+            iris.push(path.graph.value);
+          }
+        },
       },
-      [Algebra.types.PATTERN]: (pattern) => {
-        if (this.extractSubjects && pattern.subject.termType === 'NamedNode') {
-          iris.push(pattern.subject.value);
-        }
-        if (this.extractPredicates && pattern.predicate.termType === 'NamedNode') {
-          iris.push(pattern.predicate.value);
-        }
-        if (this.extractObjects && pattern.object.termType === 'NamedNode' &&
-          (this.extractVocabIris || pattern.predicate.value !== 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type')) {
-          iris.push(pattern.object.value);
-        }
-        if (this.extractGraphs && pattern.graph.termType === 'NamedNode') {
-          iris.push(pattern.graph.value);
-        }
-        return false;
+      [Algebra.Types.PATTERN]: {
+        preVisitor: () => ({ continue: false }),
+        visitor: (pattern) => {
+          if (this.extractSubjects && pattern.subject.termType === 'NamedNode') {
+            iris.push(pattern.subject.value);
+          }
+          if (this.extractPredicates && pattern.predicate.termType === 'NamedNode') {
+            iris.push(pattern.predicate.value);
+          }
+          if (this.extractObjects && pattern.object.termType === 'NamedNode' &&
+              (this.extractVocabIris || pattern.predicate.value !== 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type')) {
+            iris.push(pattern.object.value);
+          }
+          if (this.extractGraphs && pattern.graph.termType === 'NamedNode') {
+            iris.push(pattern.graph.value);
+          }
+        },
       },
     });
     return iris;

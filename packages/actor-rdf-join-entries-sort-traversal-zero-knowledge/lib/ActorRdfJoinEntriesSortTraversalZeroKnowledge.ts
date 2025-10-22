@@ -8,9 +8,10 @@ import { KeysQueryOperation } from '@comunica/context-entries';
 import type { IActorArgs, TestResult } from '@comunica/core';
 import { passTest } from '@comunica/core';
 import type { IJoinEntryWithMetadata, IQuerySourceWrapper } from '@comunica/types';
+import { Algebra, algebraUtils } from '@comunica/utils-algebra';
+import { isKnownOperation } from '@comunica/utils-algebra/lib/utils';
 import type * as RDF from '@rdfjs/types';
 import { getNamedNodes, getTerms, getVariables, QUAD_TERM_NAMES } from 'rdf-terms';
-import { Algebra, Util as AlgebraUtil } from 'sparqlalgebrajs';
 
 /**
  * An actor that sorts join entries based on Hartig's heuristic for plan selection in link traversal environments.
@@ -47,16 +48,22 @@ export class ActorRdfJoinEntriesSortTraversalZeroKnowledge extends ActorRdfJoinE
     if (pattern.type === 'pattern') {
       predicates.push(pattern.predicate);
     } else {
-      AlgebraUtil.recurseOperation(pattern, {
-        link(link: Algebra.Link) {
-          predicates.push(link.iri);
-          return false;
+      algebraUtils.visitOperation(pattern, {
+        [Algebra.Types.LINK]: {
+          preVisitor: () => ({ continue: false }),
+          visitor: (link: Algebra.Link) => {
+            predicates.push(link.iri);
+            return false;
+          },
         },
-        nps(nps: Algebra.Nps) {
-          for (const iri of nps.iris) {
-            predicates.push(iri);
-          }
-          return false;
+        [Algebra.Types.NPS]: {
+          preVisitor: () => ({ continue: false }),
+          visitor: (nps: Algebra.Nps) => {
+            for (const iri of nps.iris) {
+              predicates.push(iri);
+            }
+            return false;
+          },
         },
       });
     }
@@ -115,8 +122,10 @@ export class ActorRdfJoinEntriesSortTraversalZeroKnowledge extends ActorRdfJoinE
    */
   public static sortJoinEntries(entries: IJoinEntryWithMetadata[], sources: string[]): IJoinEntryWithMetadata[] {
     return [ ...entries ].sort((entryA: IJoinEntryWithMetadata, entryB: IJoinEntryWithMetadata) => {
-      if ((entryA.operation.type === Algebra.types.PATTERN || entryA.operation.type === Algebra.types.PATH) &&
-        (entryB.operation.type === Algebra.types.PATTERN || entryB.operation.type === Algebra.types.PATH)) {
+      if ((isKnownOperation(entryA.operation, Algebra.Types.PATTERN) ||
+              isKnownOperation(entryA.operation, Algebra.Types.PATH)) &&
+        (isKnownOperation(entryB.operation, Algebra.Types.PATTERN) ||
+            isKnownOperation(entryB.operation, Algebra.Types.PATH))) {
         const compSeedNonVocab = ActorRdfJoinEntriesSortTraversalZeroKnowledge
           .getScoreSeedNonVocab(entryB.operation, sources) -
           ActorRdfJoinEntriesSortTraversalZeroKnowledge.getScoreSeedNonVocab(entryA.operation, sources);
@@ -126,7 +135,7 @@ export class ActorRdfJoinEntriesSortTraversalZeroKnowledge extends ActorRdfJoinE
         }
         return compSeedNonVocab;
       }
-      return entryA.operation.type === Algebra.types.PATTERN ? -1 : 1;
+      return entryA.operation.type === Algebra.Types.PATTERN ? -1 : 1;
     });
   }
 

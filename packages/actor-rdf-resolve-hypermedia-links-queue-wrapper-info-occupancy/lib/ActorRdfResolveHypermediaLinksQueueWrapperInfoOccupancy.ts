@@ -3,11 +3,10 @@ import type {
   IActorRdfResolveHypermediaLinksQueueOutput,
 } from '@comunica/bus-rdf-resolve-hypermedia-links-queue';
 import { ActorRdfResolveHypermediaLinksQueue } from '@comunica/bus-rdf-resolve-hypermedia-links-queue';
-import { KeysInitQuery, KeysCore } from '@comunica/context-entries';
+import { KeysCore } from '@comunica/context-entries';
 import type { Actor, IActorArgs, IActorTest, Mediator, TestResult } from '@comunica/core';
 import { ActionContextKey, failTest, passTestVoid } from '@comunica/core';
 import type { Logger } from '@comunica/types';
-import { type Algebra, toSparql } from 'sparqlalgebrajs';
 import { LinkQueueLogger } from './LinkQueueLogger';
 
 /**
@@ -38,12 +37,11 @@ export class ActorRdfResolveHypermediaLinksQueueWrapperInfoOccupancy
 
   public async run(action: IActionRdfResolveHypermediaLinksQueue): Promise<IActorRdfResolveHypermediaLinksQueueOutput> {
     const context = action.context.set(KEY_CONTEXT_WRAPPED, true);
-    const query: Algebra.Operation = action.context.get(KeysInitQuery.query)!;
     const logger: Logger = action.context.get(KeysCore.log)!;
 
     const { linkQueue } = await this.mediatorRdfResolveHypermediaLinksQueue.mediate({ ...action, context });
     return {
-      linkQueue: new LinkQueueLogger(linkQueue, toSparql(query), logger),
+      linkQueue: new LinkQueueLogger(linkQueue, logger),
     };
   }
 }

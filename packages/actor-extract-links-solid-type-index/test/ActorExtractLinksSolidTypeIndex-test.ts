@@ -3,10 +3,10 @@ import type { ActorInitQuery } from '@comunica/actor-init-query';
 import type { MediatorDereferenceRdf } from '@comunica/bus-dereference-rdf';
 import { KeysInitQuery } from '@comunica/context-entries';
 import { ActionContext, Bus } from '@comunica/core';
+import { AlgebraFactory } from '@comunica/utils-algebra';
 import { BindingsFactory } from '@comunica/utils-bindings-factory';
 import { ArrayIterator } from 'asynciterator';
 import { DataFactory } from 'rdf-data-factory';
-import { Factory as AlgebraFactory } from 'sparqlalgebrajs';
 import { ActorExtractLinksSolidTypeIndex } from '../lib/ActorExtractLinksSolidTypeIndex';
 import '@comunica/utils-jest';
 

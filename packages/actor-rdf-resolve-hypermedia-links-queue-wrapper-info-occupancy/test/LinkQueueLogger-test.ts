@@ -11,7 +11,6 @@ const PRODUCED_BY_ACTOR = 'producedByActor';
 const LINK_QUEUE_EVENT_NAME = 'Link queue changed';
 
 describe('LinkQueueFilterLinks', () => {
-  const query = 'SELECT * {?s ?p ?o}';
   const logger: any = {
     warn: jest.fn(),
     trace: jest.fn(),
@@ -29,7 +28,7 @@ describe('LinkQueueFilterLinks', () => {
         },
       };
 
-      expect(new LinkQueueLogger(linkqueue, query, logger)).toBeDefined();
+      expect(new LinkQueueLogger(linkqueue, logger)).toBeDefined();
     });
   });
 
@@ -60,7 +59,7 @@ describe('LinkQueueFilterLinks', () => {
 
       jest.spyOn(performance, 'now').mockReturnValueOnce(1);
 
-      const wrapper = new LinkQueueLogger(linkQueue, query, logger);
+      const wrapper = new LinkQueueLogger(linkQueue, logger);
       const resp = wrapper.push(iri, iri);
 
       expect(resp).toBe(true);
@@ -80,7 +79,7 @@ describe('LinkQueueFilterLinks', () => {
           timestamp: 1,
           parent: 'foo',
         },
-        query,
+
         queue: {
           size: queueSize,
           push: { [reachabilityCriteria]: 1 },
@@ -117,7 +116,7 @@ describe('LinkQueueFilterLinks', () => {
 
       jest.spyOn(performance, 'now').mockReturnValueOnce(1);
 
-      const wrapper = new LinkQueueLogger(linkQueue, query, logger);
+      const wrapper = new LinkQueueLogger(linkQueue, logger);
       const resp = wrapper.push(iri, parent);
 
       expect(resp).toBe(true);
@@ -131,7 +130,6 @@ describe('LinkQueueFilterLinks', () => {
           parent: 'bar',
           [PRODUCED_BY_ACTOR]: undefined,
         },
-        query,
         queue: {
           size: queueSize,
           push: { unknown: 1 },
@@ -175,7 +173,7 @@ describe('LinkQueueFilterLinks', () => {
 
       jest.spyOn(performance, 'now').mockReturnValueOnce(1);
 
-      const wrapper = new LinkQueueLogger(linkQueue, query, logger);
+      const wrapper = new LinkQueueLogger(linkQueue, logger);
       const resp = wrapper.push(iri, parent);
 
       expect(resp).toBe(true);
@@ -189,7 +187,7 @@ describe('LinkQueueFilterLinks', () => {
           [PRODUCED_BY_ACTOR]: undefined,
           parent: 'bar',
         },
-        query,
+
         queue: {
           size: queueSize,
           push: { unknown: 1 },
@@ -219,7 +217,7 @@ describe('LinkQueueFilterLinks', () => {
 
       jest.spyOn(performance, 'now').mockReturnValueOnce(1);
 
-      const wrapper = new LinkQueueLogger(linkQueue, query, logger);
+      const wrapper = new LinkQueueLogger(linkQueue, logger);
       const resp = wrapper.push(iri, iri);
 
       expect(resp).toBe(false);
@@ -238,7 +236,7 @@ describe('LinkQueueFilterLinks', () => {
         getSize: () => i,
       };
       jest.spyOn(performance, 'now').mockImplementation(() => i);
-      const wrapper = new LinkQueueLogger(linkQueue, query, logger);
+      const wrapper = new LinkQueueLogger(linkQueue, logger);
 
       const reachabilityRatio: Record<string, Record<string, number>> = {
         push: {},
@@ -282,7 +280,7 @@ describe('LinkQueueFilterLinks', () => {
               },
               parent: String(i - 1),
             },
-            query,
+
             queue: {
               size: i,
               ...JSON.parse(JSON.stringify(reachabilityRatio)),
@@ -307,7 +305,7 @@ describe('LinkQueueFilterLinks', () => {
               [PRODUCED_BY_ACTOR]: undefined,
               parent: String(i),
             },
-            query,
+
             queue: {
               size: i,
               ...JSON.parse(JSON.stringify(reachabilityRatio)),
@@ -357,7 +355,7 @@ describe('LinkQueueFilterLinks', () => {
 
       jest.spyOn(performance, 'now').mockReturnValueOnce(1);
 
-      const wrapper = new LinkQueueLogger(linkQueue, query, logger);
+      const wrapper = new LinkQueueLogger(linkQueue, logger);
       const resp = wrapper.pop();
 
       expect(resp).toBe(iri);
@@ -377,7 +375,7 @@ describe('LinkQueueFilterLinks', () => {
           },
           timestamp: 1,
         },
-        query,
+
         queue: {
           size: queueSize,
           push: {},
@@ -397,7 +395,7 @@ describe('LinkQueueFilterLinks', () => {
 
       jest.spyOn(performance, 'now').mockReturnValueOnce(1);
 
-      const wrapper = new LinkQueueLogger(linkQueue, query, logger);
+      const wrapper = new LinkQueueLogger(linkQueue, logger);
       wrapper.pop();
 
       expect(logger.trace).not.toHaveBeenCalled();
@@ -417,7 +415,7 @@ describe('LinkQueueFilterLinks', () => {
 
       jest.spyOn(performance, 'now').mockReturnValueOnce(1);
 
-      const wrapper = new LinkQueueLogger(linkQueue, query, logger);
+      const wrapper = new LinkQueueLogger(linkQueue, logger);
       const resp = wrapper.pop();
 
       expect(resp).toBe(iri);
@@ -431,7 +429,7 @@ describe('LinkQueueFilterLinks', () => {
           parent: undefined,
           [PRODUCED_BY_ACTOR]: undefined,
         },
-        query,
+
         queue: {
           size: queueSize,
           push: {},
@@ -471,7 +469,7 @@ describe('LinkQueueFilterLinks', () => {
       };
 
       jest.spyOn(performance, 'now').mockImplementation(() => i);
-      const wrapper = new LinkQueueLogger(linkQueue, query, logger);
+      const wrapper = new LinkQueueLogger(linkQueue, logger);
       let expectedLink: any;
       const reachabilityRatio: Record<string, Record<string, number>> = {
         push: {},
@@ -504,7 +502,7 @@ describe('LinkQueueFilterLinks', () => {
               },
               parent: undefined,
             },
-            query,
+
             queue: {
               size: i,
               ...JSON.parse(JSON.stringify(reachabilityRatio)),
@@ -525,7 +523,7 @@ describe('LinkQueueFilterLinks', () => {
               parent: undefined,
               timestamp: i,
             },
-            query,
+
             queue: {
               size: i,
               ...JSON.parse(JSON.stringify(reachabilityRatio)),

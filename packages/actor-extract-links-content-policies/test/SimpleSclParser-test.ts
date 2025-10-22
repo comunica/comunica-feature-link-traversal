@@ -1,6 +1,6 @@
+import type { Algebra } from '@comunica/utils-algebra';
+import { AlgebraFactory } from '@comunica/utils-algebra';
 import { DataFactory } from 'rdf-data-factory';
-import type { Algebra } from 'sparqlalgebrajs';
-import { Factory } from 'sparqlalgebrajs';
 import { ContentPolicy } from '../lib/ContentPolicy';
 import { SimpleSclParser } from '../lib/SimpleSclParser';
 
@@ -8,11 +8,11 @@ const DF = new DataFactory();
 
 describe('SimpleSclParser', () => {
   let parser: SimpleSclParser;
-  let factory: Factory;
+  let factory: AlgebraFactory;
 
   beforeEach(() => {
     parser = new SimpleSclParser();
-    factory = new Factory();
+    factory = new AlgebraFactory();
   });
 
   function makeIncludeClause(patterns: Algebra.Pattern[]): Algebra.Construct {
@@ -303,7 +303,7 @@ describe('SimpleSclParser', () => {
       it('should throw for an invalid FOLLOW clause', () => {
         expect(() => parser.parse(`FOLLOW ?var {
         ?s <ex:p>>>>>> ?uri.
-      }`)).toThrow(/^Parse error on line 2/u);
+      }`)).toThrow(/^Parse error/u);
       });
 
       it('should throw for an invalid INCLUDE WHERE clause', () => {
@@ -311,7 +311,7 @@ describe('SimpleSclParser', () => {
         ?s <ex:p> ?uri.
       } INCLUDE WHERE {
         ?s <ex:p>>>>>> ?uri.
-      }`)).toThrow(/^Parse error on line 2/u);
+      }`)).toThrow(/^Parse error/u);
       });
 
       it('should throw on a policy with IRI relative but no baseIRI', () => {
