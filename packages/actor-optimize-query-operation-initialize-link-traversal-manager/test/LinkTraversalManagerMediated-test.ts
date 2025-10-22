@@ -224,6 +224,34 @@ describe('LinkTraversalManagerMediated', () => {
       expect(rejectionHandler).toHaveBeenCalledWith(new Error('LinkTraversalManagerMediated rejection'));
       expect(mgr.aggregatedStore.hasEnded()).toBe(true);
     });
+
+    it('aborts requests when stopping during link dereferencing', async() => {
+      const abortSpy = jest.spyOn(AbortController.prototype, 'abort');
+
+      // Start traversal and an iterator
+      mgr.start(rejectionHandler);
+      const it1 = mgr.aggregatedStore.match();
+
+      // Close pending iterators during link dereferencing
+      mediatorQuerySourceDereferenceLink.mediate = async() => {
+        it1.destroy();
+        await new Promise(setImmediate);
+        await new Promise(setImmediate);
+        await new Promise(setImmediate);
+        throw new Error('LinkTraversalManagerMediated rejection');
+      };
+
+      // Wait until done
+      await new Promise<void>(resolve => mgr.addStopListener(resolve));
+
+      // Check end state
+      expect(mgr.linkQueue.isEmpty()).toBe(true);
+      expect((await mgr.aggregatedStore.match().toArray()).length).toBeGreaterThanOrEqual(2);
+      expect((await mgr.aggregatedStore.match().toArray()).length).toBeLessThanOrEqual(2);
+      expect(mgr.aggregatedStore.hasEnded()).toBe(true);
+      expect(mgr.aggregatedStore.hasRunningIterators()).toBe(false);
+      expect(abortSpy).toHaveBeenCalledTimes(2);
+    });
   });
 
   describe('getQuerySourceAggregated', () => {
