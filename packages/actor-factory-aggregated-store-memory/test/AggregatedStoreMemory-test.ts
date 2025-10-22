@@ -226,4 +226,12 @@ describe('AggregatedStoreMemory', () => {
       store.setBaseMetadata(<any>{}, true);
     });
   });
+
+  describe('clone', () => {
+    it('should return a cloned store', () => {
+      const clone = store.clone();
+      expect(clone).not.toBe(store);
+      expect((<any> clone).store).toBe((<any> store).store);
+    });
+  });
 });

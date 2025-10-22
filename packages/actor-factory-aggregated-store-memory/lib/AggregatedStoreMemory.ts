@@ -192,4 +192,13 @@ export class AggregatedStoreMemory extends StreamingStore implements IAggregated
   public removeAllIteratorsClosedListener(listener: () => void): void {
     this.allIteratorsClosedListeners.delete(listener);
   }
+
+  public clone(): IAggregatedStore {
+    return new AggregatedStoreMemory(
+      this.store,
+      this.metadataAccumulator,
+      this.emitPartialCardinalities,
+      this.dataFactory,
+    );
+  }
 }

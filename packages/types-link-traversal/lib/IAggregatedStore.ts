@@ -94,4 +94,10 @@ export interface IAggregatedStore<Q extends RDF.BaseQuad = RDF.Quad>
    * @param context The context.
    */
   importSource: (url: string, source: IQuerySource, context: IActionContext) => Promise<void>;
+
+  /**
+   * Create a copy of this aggregated store.
+   * Independent of the state of the current store, the returned store is safe to use within a new query execution.
+   */
+  clone: () => IAggregatedStore<Q>;
 }
