@@ -1,7 +1,7 @@
 import { QuerySourceRdfJs } from '@comunica/actor-query-source-identify-rdfjs';
 import type { MediatorQuerySourceDereferenceLink } from '@comunica/bus-query-source-dereference-link';
 import type { MediatorRdfResolveHypermediaLinks } from '@comunica/bus-rdf-resolve-hypermedia-links';
-import { KeysHttp, KeysStatistics } from '@comunica/context-entries';
+import { KeysHttp, KeysQueryOperation, KeysStatistics } from '@comunica/context-entries';
 import type {
   ComunicaDataFactory,
   IActionContext,
@@ -31,9 +31,11 @@ export class LinkTraversalManagerMediated implements ILinkTraversalManager {
   protected rejectionHandler: ((error: Error) => void) | undefined;
   protected readonly stopListeners: (() => void)[] = [];
   private allIteratorsClosedListener: () => void;
+  protected linkParallelization: number;
 
   public constructor(
-    protected readonly linkParallelization: number,
+    protected readonly linkParallelizationDefault: number,
+    protected readonly linkParallelizationLimit: number,
     public readonly seeds: ILink[],
     public readonly linkQueue: ILinkQueue,
     public readonly aggregatedStore: IAggregatedStore,
@@ -43,6 +45,7 @@ export class LinkTraversalManagerMediated implements ILinkTraversalManager {
     protected readonly mediatorRdfResolveHypermediaLinks: MediatorRdfResolveHypermediaLinks,
     protected readonly mediatorQuerySourceDereferenceLink: MediatorQuerySourceDereferenceLink,
   ) {
+    this.linkParallelization = linkParallelizationDefault;
     this.querySourceAggregated = new QuerySourceRdfJs(
       this.aggregatedStore,
       this.dataFactory,
@@ -59,9 +62,15 @@ export class LinkTraversalManagerMediated implements ILinkTraversalManager {
     return this.ended;
   }
 
-  public start(rejectionHandler: (error: Error) => void): void {
+  public start(rejectionHandler: (error: Error) => void, context: IActionContext): void {
     if (this.started) {
       throw new Error('Tried to start link traversal manager more than once');
+    }
+
+    // Reduce parallelization if we have a LIMIT clause
+    // This ensures we do not spam the event loop with traverse events if we need to prioritize query processing events.
+    if (context.get(KeysQueryOperation.limitIndicator)) {
+      this.linkParallelization = this.linkParallelizationLimit;
     }
 
     // Prepare link queue iteration

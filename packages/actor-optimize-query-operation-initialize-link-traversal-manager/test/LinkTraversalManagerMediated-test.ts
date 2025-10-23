@@ -3,7 +3,7 @@ import { QuerySourceRdfJs } from '@comunica/actor-query-source-identify-rdfjs';
 import { LinkQueueFifo } from '@comunica/actor-rdf-resolve-hypermedia-links-queue-fifo';
 import type { MediatorQuerySourceDereferenceLink } from '@comunica/bus-query-source-dereference-link';
 import type { MediatorRdfResolveHypermediaLinks } from '@comunica/bus-rdf-resolve-hypermedia-links';
-import { KeysStatistics } from '@comunica/context-entries';
+import { KeysQueryOperation, KeysStatistics } from '@comunica/context-entries';
 import { ActionContext } from '@comunica/core';
 import { StatisticLinkDiscovery } from '@comunica/statistic-link-discovery';
 import type { IActionContext } from '@comunica/types';
@@ -25,6 +25,7 @@ describe('LinkTraversalManagerMediated', () => {
   let mgr: LinkTraversalManagerMediated;
   let rejectionHandler: (error: Error) => void;
   let onDereferenceLink: ((url: string) => void) | undefined;
+  let ctx: IActionContext;
 
   beforeEach(() => {
     onDereferenceLink = undefined;
@@ -59,6 +60,7 @@ describe('LinkTraversalManagerMediated', () => {
     };
     mgr = new LinkTraversalManagerMediated(
       2,
+      1,
       [
         { url: 'a' },
         { url: 'b' },
@@ -77,6 +79,7 @@ describe('LinkTraversalManagerMediated', () => {
       mediatorQuerySourceDereferenceLink,
     );
     rejectionHandler = jest.fn();
+    ctx = new ActionContext();
   });
 
   describe('started', () => {
@@ -85,7 +88,7 @@ describe('LinkTraversalManagerMediated', () => {
     });
 
     it('to be true when started', () => {
-      mgr.start(rejectionHandler);
+      mgr.start(rejectionHandler, ctx);
       expect(mgr.started).toBe(true);
     });
   });
@@ -103,13 +106,13 @@ describe('LinkTraversalManagerMediated', () => {
 
   describe('start', () => {
     it('to throw when starting twice', () => {
-      mgr.start(rejectionHandler);
-      expect(() => mgr.start(rejectionHandler)).toThrow('Tried to start link traversal manager more than once');
+      mgr.start(rejectionHandler, ctx);
+      expect(() => mgr.start(rejectionHandler, ctx)).toThrow('Tried to start link traversal manager more than once');
     });
 
     it('performs traversal', async() => {
       // Start and wait until done
-      mgr.start(rejectionHandler);
+      mgr.start(rejectionHandler, ctx);
       await new Promise<void>(resolve => mgr.addStopListener(resolve));
 
       // Check end state
@@ -121,12 +124,31 @@ describe('LinkTraversalManagerMediated', () => {
       expect(mgr.aggregatedStore.hasRunningIterators()).toBe(false);
       expect(mediatorRdfResolveHypermediaLinks.mediate).toHaveBeenCalledTimes(20);
       expect(mediatorQuerySourceDereferenceLink.mediate).toHaveBeenCalledTimes(20);
+      expect((<any> mgr).linkParallelization).toBe(2);
+    });
+
+    it('performs traversal for a query with LIMIT', async() => {
+      // Start and wait until done
+      mgr.start(rejectionHandler, ctx.set(KeysQueryOperation.limitIndicator, 10));
+      await new Promise<void>(resolve => mgr.addStopListener(resolve));
+
+      // Check end state
+      expect(rejectionHandler).not.toHaveBeenCalled();
+      expect(mgr.linkQueue.isEmpty()).toBe(true);
+      await expect(mgr.aggregatedStore.match().toArray()).resolves.toHaveLength(20);
+      expect([ ...mgr.aggregatedStore.containedSources ]).toHaveLength(20);
+      expect(mgr.aggregatedStore.hasEnded()).toBe(true);
+      expect(mgr.aggregatedStore.hasRunningIterators()).toBe(false);
+      expect(mediatorRdfResolveHypermediaLinks.mediate).toHaveBeenCalledTimes(20);
+      expect(mediatorQuerySourceDereferenceLink.mediate).toHaveBeenCalledTimes(20);
+      expect((<any> mgr).linkParallelization).toBe(1);
     });
 
     it('performs traversal and tracks discovered links', async() => {
       const stat = new StatisticLinkDiscovery();
       mgr = new LinkTraversalManagerMediated(
         2,
+        1,
         [
           { url: 'a' },
           { url: 'b' },
@@ -147,7 +169,7 @@ describe('LinkTraversalManagerMediated', () => {
       );
 
       // Start and wait until done
-      mgr.start(rejectionHandler);
+      mgr.start(rejectionHandler, ctx);
       await new Promise<void>(resolve => mgr.addStopListener(resolve));
 
       // Check end state
@@ -171,7 +193,7 @@ describe('LinkTraversalManagerMediated', () => {
       });
 
       // Start and wait until done
-      mgr.start(rejectionHandler);
+      mgr.start(rejectionHandler, ctx);
       await new Promise<void>(resolve => mgr.addStopListener(resolve));
 
       // Check end state
@@ -187,7 +209,7 @@ describe('LinkTraversalManagerMediated', () => {
 
     it('stops early when all iterators are closed early', async() => {
       // Start traversal and an iterator
-      mgr.start(rejectionHandler);
+      mgr.start(rejectionHandler, ctx);
       const it1 = mgr.aggregatedStore.match();
 
       // Close pending iterators once a certain link is reached
@@ -214,7 +236,7 @@ describe('LinkTraversalManagerMediated', () => {
         .reject(new Error('LinkTraversalManagerMediated rejection'));
 
       // Start traversal and an iterator
-      mgr.start(rejectionHandler);
+      mgr.start(rejectionHandler, ctx);
       mgr.aggregatedStore.match();
 
       // Wait until done
@@ -229,7 +251,7 @@ describe('LinkTraversalManagerMediated', () => {
       const abortSpy = jest.spyOn(AbortController.prototype, 'abort');
 
       // Start traversal and an iterator
-      mgr.start(rejectionHandler);
+      mgr.start(rejectionHandler, ctx);
       const it1 = mgr.aggregatedStore.match();
 
       // Close pending iterators during link dereferencing
@@ -257,7 +279,7 @@ describe('LinkTraversalManagerMediated', () => {
   describe('getQuerySourceAggregated', () => {
     it('allows querying over the aggregate store', async() => {
       // Start and wait until done
-      mgr.start(rejectionHandler);
+      mgr.start(rejectionHandler, ctx);
       const bindingsStream1 = mgr.getQuerySourceAggregated().queryBindings(
         AF.createPattern(DF.namedNode('a---------'), DF.variable('p'), DF.variable('o')),
         new ActionContext(),
@@ -281,7 +303,7 @@ describe('LinkTraversalManagerMediated', () => {
 
     it('provides no non-aggregated sources when traversing over plain documents', async() => {
       // Start and wait until done
-      mgr.start(rejectionHandler);
+      mgr.start(rejectionHandler, ctx);
       const bindingsStream1 = mgr.getQuerySourceAggregated().queryBindings(
         AF.createPattern(DF.namedNode('a---------'), DF.variable('p'), DF.variable('o')),
         new ActionContext(),
@@ -317,7 +339,7 @@ describe('LinkTraversalManagerMediated', () => {
       });
 
       // Start and wait until done
-      mgr.start(rejectionHandler);
+      mgr.start(rejectionHandler, ctx);
       const bindingsStream1 = mgr.getQuerySourceAggregated().queryBindings(
         AF.createPattern(DF.namedNode('a---------'), DF.variable('p'), DF.variable('o')),
         new ActionContext(),

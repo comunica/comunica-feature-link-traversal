@@ -247,6 +247,7 @@
     "@comunica/actor-query-source-dereference-link-hypermedia": "^4.0.0",
     "@comunica/actor-query-source-identify-hypermedia": "^4.4.0",
     "@comunica/actor-query-source-identify-hypermedia-none": "^4.4.0",
+    "@comunica/actor-query-source-identify-hypermedia-none-lazy": "^0.7.0",
     "@comunica/actor-query-source-identify-hypermedia-qpf": "^4.4.0",
     "@comunica/actor-query-source-identify-hypermedia-sparql": "^4.4.0",
     "@comunica/actor-query-source-identify-link-traversal": "^0.7.0",

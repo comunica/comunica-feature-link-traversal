@@ -1,4 +1,4 @@
-import type { ILink, ILinkQueue, IQuerySource } from '@comunica/types';
+import type { IActionContext, ILink, ILinkQueue, IQuerySource } from '@comunica/types';
 import type { AsyncIterator } from 'asynciterator';
 
 /**
@@ -27,8 +27,9 @@ export interface ILinkTraversalManager {
   /**
    * Start traversal over the link queue.
    * @param rejectionHandler A callback for error events.
+   * @param context          The query context.
    */
-  start: (rejectionHandler: (error: Error) => void) => void;
+  start: (rejectionHandler: (error: Error) => void, context: IActionContext) => void;
   /**
    * Terminate traversal.
    */

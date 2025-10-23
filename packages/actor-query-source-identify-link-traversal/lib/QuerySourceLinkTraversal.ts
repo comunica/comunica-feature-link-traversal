@@ -39,7 +39,7 @@ export class QuerySourceLinkTraversal implements IQuerySource {
   ): BindingsStream {
     // Start link traversal manager if it had not been started yet
     if (!this.linkTraversalManager.started && !this.linkTraversalManager.stopped) {
-      this.linkTraversalManager.start(error => iterator.destroy(error));
+      this.linkTraversalManager.start(error => iterator.destroy(error), context);
     }
 
     // Take the union of the bindings produced when querying over the aggregated and non-aggregated sources.

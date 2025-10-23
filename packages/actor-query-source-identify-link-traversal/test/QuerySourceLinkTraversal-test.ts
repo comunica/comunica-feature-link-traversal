@@ -56,6 +56,7 @@ describe('QuerySourceLinkTraversal', () => {
     };
     linkTraversalManager = new LinkTraversalManagerMediated(
       2,
+      1,
       [
         { url: 'a' },
         { url: 'b' },
@@ -169,7 +170,7 @@ describe('QuerySourceLinkTraversal', () => {
     });
 
     it('does not restart traversal if already started', async() => {
-      linkTraversalManager.start(<any>undefined);
+      linkTraversalManager.start(<any>undefined, ctx);
       const data = source.queryBindings(
         AF.createPattern(DF.variable('s'), DF.namedNode('p'), DF.variable('o')),
         ctx,

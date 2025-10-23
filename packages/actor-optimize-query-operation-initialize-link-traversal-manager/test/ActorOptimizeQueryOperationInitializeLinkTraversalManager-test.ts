@@ -62,6 +62,7 @@ describe('ActorOptimizeQueryOperationInitializeLinkTraversalManager', () => {
         name: 'actor',
         bus,
         linkParallelization: 2,
+        linkParallelizationLimit: 1,
         mediatorRdfResolveHypermediaLinks,
         mediatorRdfResolveHypermediaLinksQueue,
         mediatorQuerySourceDereferenceLink,

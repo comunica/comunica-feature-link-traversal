@@ -22,6 +22,7 @@ import { LinkTraversalManagerMediated } from './LinkTraversalManagerMediated';
  */
 export class ActorOptimizeQueryOperationInitializeLinkTraversalManager extends ActorOptimizeQueryOperation {
   public readonly linkParallelization: number;
+  public readonly linkParallelizationLimit: number;
   public readonly mediatorRdfResolveHypermediaLinks: MediatorRdfResolveHypermediaLinks;
   public readonly mediatorRdfResolveHypermediaLinksQueue: MediatorRdfResolveHypermediaLinksQueue;
   public readonly mediatorQuerySourceDereferenceLink: MediatorQuerySourceDereferenceLink;
@@ -77,6 +78,7 @@ export class ActorOptimizeQueryOperationInitializeLinkTraversalManager extends A
       const dataFactory = mergedContext.getSafe(KeysInitQuery.dataFactory);
       const linkTraversalManager = new LinkTraversalManagerMediated(
         this.linkParallelization,
+        this.linkParallelizationLimit,
         traversalSeedLinks,
         await this.mediatorRdfResolveHypermediaLinksQueue
           .mediate({ context: mergedContext })
@@ -114,6 +116,11 @@ export interface IActorOptimizeQueryOperationInitializeLinkTraversalManagerArgs
    * @default {64}
    */
   linkParallelization: number;
+  /**
+   * The maximum number of links that can be followed in parallel for queries with a LIMIT clause.
+   * @default {2}
+   */
+  linkParallelizationLimit: number;
   /**
    * The hypermedia links resolve mediator
    */
