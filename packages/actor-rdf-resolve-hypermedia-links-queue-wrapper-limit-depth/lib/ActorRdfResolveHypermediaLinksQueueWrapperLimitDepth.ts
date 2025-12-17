@@ -1,9 +1,10 @@
 import type {
   IActionRdfResolveHypermediaLinksQueue,
   IActorRdfResolveHypermediaLinksQueueOutput,
+  MediatorRdfResolveHypermediaLinksQueue,
 } from '@comunica/bus-rdf-resolve-hypermedia-links-queue';
 import { ActorRdfResolveHypermediaLinksQueue } from '@comunica/bus-rdf-resolve-hypermedia-links-queue';
-import type { Actor, IActorArgs, IActorTest, Mediator, TestResult } from '@comunica/core';
+import type { IActorArgs, IActorTest, TestResult } from '@comunica/core';
 import { ActionContextKey, failTest, passTestVoid } from '@comunica/core';
 import { LinkQueueLimitDepth } from './LinkQueueLimitDepth';
 
@@ -12,12 +13,7 @@ import { LinkQueueLimitDepth } from './LinkQueueLimitDepth';
  */
 export class ActorRdfResolveHypermediaLinksQueueWrapperLimitDepth extends ActorRdfResolveHypermediaLinksQueue {
   private readonly limit: number;
-  private readonly mediatorRdfResolveHypermediaLinksQueue: Mediator<
-  Actor<IActionRdfResolveHypermediaLinksQueue, IActorTest, IActorRdfResolveHypermediaLinksQueueOutput>,
-  IActionRdfResolveHypermediaLinksQueue,
-IActorTest,
-IActorRdfResolveHypermediaLinksQueueOutput
->;
+  private readonly mediatorRdfResolveHypermediaLinksQueue: MediatorRdfResolveHypermediaLinksQueue;
 
   public constructor(args: IActorRdfResolveHypermediaLinksQueueWrapperLimitDepthArgs) {
     super(args);
@@ -40,12 +36,8 @@ IActorRdfResolveHypermediaLinksQueueOutput
 export interface IActorRdfResolveHypermediaLinksQueueWrapperLimitDepthArgs
   extends IActorArgs<IActionRdfResolveHypermediaLinksQueue, IActorTest, IActorRdfResolveHypermediaLinksQueueOutput> {
   limit: number;
-  mediatorRdfResolveHypermediaLinksQueue: Mediator<
-  Actor<IActionRdfResolveHypermediaLinksQueue, IActorTest, IActorRdfResolveHypermediaLinksQueueOutput>,
-  IActionRdfResolveHypermediaLinksQueue,
-IActorTest,
-IActorRdfResolveHypermediaLinksQueueOutput
->;
+  mediatorRdfResolveHypermediaLinksQueue: MediatorRdfResolveHypermediaLinksQueue;
+
 }
 
 export const KEY_CONTEXT_WRAPPED = new ActionContextKey<boolean>(
