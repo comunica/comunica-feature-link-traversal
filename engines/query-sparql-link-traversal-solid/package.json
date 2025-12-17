@@ -281,6 +281,8 @@
     "@comunica/actor-rdf-parse-xml-rdfa": "^4.4.0",
     "@comunica/actor-rdf-resolve-hypermedia-links-next": "^4.4.0",
     "@comunica/actor-rdf-resolve-hypermedia-links-queue-fifo": "^4.4.0",
+    "@comunica/actor-rdf-resolve-hypermedia-links-queue-wrapper-limit-count": "^0.7.0",
+    "@comunica/actor-rdf-resolve-hypermedia-links-queue-wrapper-limit-depth": "^0.7.0",
     "@comunica/actor-rdf-resolve-hypermedia-links-traverse": "^0.7.0",
     "@comunica/actor-rdf-serialize-jsonld": "^4.4.0",
     "@comunica/actor-rdf-serialize-n3": "^4.4.0",
