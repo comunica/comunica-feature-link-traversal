@@ -41,7 +41,7 @@
     "build:components": "componentsjs-generator"
   },
   "dependencies": {
-    "@comunica/actor-init-query": "^5.0.0",
+    "@comunica/actor-init-query": "^5.0.1",
     "@comunica/bus-dereference-rdf": "^5.0.0",
     "@comunica/bus-http": "^5.0.0",
     "@comunica/bus-rdf-metadata-extract": "^5.0.0",

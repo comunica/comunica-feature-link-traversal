@@ -2236,7 +2236,7 @@
     "@comunica/core" "^5.0.0"
     "@jeswr/stream-to-string" "^2.0.0"
 
-"@comunica/actor-init-query@^5.0.0", "@comunica/actor-init-query@^5.0.1":
+"@comunica/actor-init-query@^5.0.1":
   version "5.0.1"
   resolved "https://registry.yarnpkg.com/@comunica/actor-init-query/-/actor-init-query-5.0.1.tgz#157ad82baa932f533156d96fa0cf72f41ebc3b1c"
   integrity sha512-mnePr+MR4ImqkWrjr2hD/l7uZ+KBxDp6sFSfxs4vWuFS76EW53JV/smMt0HSEswoNxylCOX1mL1OPeIyQwvY4w==
