@@ -1,6 +1,6 @@
 {
   "name": "@comunica/mediator-combine-array",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "description": "A combine-array mediator",
   "lsd:module": true,
   "license": "MIT",

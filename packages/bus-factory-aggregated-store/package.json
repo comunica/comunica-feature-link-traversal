@@ -1,6 +1,6 @@
 {
   "name": "@comunica/bus-factory-aggregated-store",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "description": "A comunica bus for factory-aggregated-store events.",
   "lsd:module": true,
   "license": "MIT",
@@ -41,6 +41,6 @@
   },
   "dependencies": {
     "@comunica/core": "^5.0.0",
-    "@comunica/types-link-traversal": "^0.7.0"
+    "@comunica/types-link-traversal": "^0.8.0"
   }
 }

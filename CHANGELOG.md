@@ -1,6 +1,19 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+<a name="v0.8.0"></a>
+## [v0.8.0](https://github.com/comunica/comunica-feature-link-traversal/compare/v0.7.0...v0.8.0) - 2026-01-08
+
+### BREAKING CHANGE
+* [Update to Comunica v5](https://github.com/comunica/comunica-feature-link-traversal/commit/7dfb2e5f912841f3d1e88b34db49061d001c4313)
+  A full list of changes is available on: https://github.com/comunica/comunica/blob/master/CHANGELOG.md#v501---2026-01-08
+* Incorporate link traversal logic that was removed from base Comunica:
+  * [Add traversal manager and query source](https://github.com/comunica/comunica-feature-link-traversal/commit/f5ceb2833f4b4e8fafb63279267691a6a27843c3)
+  * [Abort pending link fetch requests if queue stops early](https://github.com/comunica/comunica-feature-link-traversal/commit/441b33eb2f0d80f912b4e34609178d29fa6131b1)
+  * [Migrate to new query-source-dereference-link bus](https://github.com/comunica/comunica-feature-link-traversal/commit/b49f56afcceabdfaa14d82657d3da91a5884f597)
+  * [Allow cloning of aggregated stores](https://github.com/comunica/comunica-feature-link-traversal/commit/8ad0723656f80117663660b635433c811762830c)
+  * [Avoid duplicate indexing when using aggregated store](https://github.com/comunica/comunica-feature-link-traversal/commit/2928dd29501459fb12b2950563e8305bf83e176c)
+
 <a name="v0.7.0"></a>
 ## [v0.7.0](https://github.com/comunica/comunica-feature-link-traversal/compare/v0.6.1...v0.7.0) - 2025-05-12
 

@@ -1,6 +1,6 @@
 {
   "name": "@comunica/actor-query-source-identify-hypermedia-none-lazy",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "description": "A none-lazy query-source-identify-hypermedia actor",
   "lsd:module": true,
   "license": "MIT",

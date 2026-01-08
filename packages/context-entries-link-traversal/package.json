@@ -1,6 +1,6 @@
 {
   "name": "@comunica/context-entries-link-traversal",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "description": "A collection of reusable Comunica context key definitions for link traversal.",
   "license": "MIT",
   "funding": {
@@ -39,6 +39,6 @@
   },
   "dependencies": {
     "@comunica/core": "^5.0.0",
-    "@comunica/types-link-traversal": "^0.7.0"
+    "@comunica/types-link-traversal": "^0.8.0"
   }
 }
