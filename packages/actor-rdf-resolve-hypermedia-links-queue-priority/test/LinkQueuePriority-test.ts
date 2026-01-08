@@ -99,6 +99,8 @@ describe('LinkQueuePriority', () => {
 
   describe('pop', () => {
     it('reduces internal array size', () => {
+      expect(queue.pop()).toBeUndefined();
+
       queue.push({ url: 'a', metadata: { priority: 0 }});
       queue.push({ url: 'b', metadata: { priority: 3 }});
       queue.push({ url: 'c', metadata: { priority: 5 }});

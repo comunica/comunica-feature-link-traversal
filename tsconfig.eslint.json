@@ -3,7 +3,8 @@
   "include": [
     "engines/**/*.ts",
     "packages/**/*.ts",
-    "jest.config.ts"
+    "jest.config.ts",
+    "karma.setup.ts"
   ],
   "exclude": [
     "**/node_modules"

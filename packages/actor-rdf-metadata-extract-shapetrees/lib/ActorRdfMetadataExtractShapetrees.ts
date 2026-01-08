@@ -208,18 +208,16 @@ export class ActorRdfMetadataExtractShapetrees extends ActorRdfMetadataExtract {
     // Parse as ShEx shape
     const parser = shexParser.construct(shapeIri);
     const schema: ShEx.Schema = parser.parse(data);
-    if (schema.shapes) {
-      for (const shapeDeclaration of schema.shapes) {
-        const shape = <ShEx.Shape> shapeDeclaration.shapeExpr;
+    for (const shapeDeclaration of schema.shapes!) {
+      const shape = <ShEx.Shape> shapeDeclaration.shapeExpr;
 
-        // TODO: workaround for https://github.com/shexjs/shex.js/issues/93
-        if (shapeDeclaration.id === 'https://shapes.pub/ns/medical-record/MedicalRecordShape') {
-          shapeDeclaration.id = 'http://shapes.pub/ns/medical-record/shex#MedicalRecordShape';
-        }
+      // TODO: workaround for https://github.com/shexjs/shex.js/issues/93
+      if (shapeDeclaration.id === 'https://shapes.pub/ns/medical-record/MedicalRecordShape') {
+        shapeDeclaration.id = 'http://shapes.pub/ns/medical-record/shex#MedicalRecordShape';
+      }
 
-        if (shapeDeclaration.id === shapeIri) {
-          return shape;
-        }
+      if (shapeDeclaration.id === shapeIri) {
+        return shape;
       }
     }
 

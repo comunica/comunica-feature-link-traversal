@@ -78,4 +78,22 @@ module.exports = config([
       'import/extensions': 'off',
     },
   },
+  {
+    // Karma setup script
+    files: [
+      'karma.setup.ts',
+    ],
+    rules: {
+      'import/no-extraneous-dependencies': 'off',
+    },
+  },
+  {
+    files: [
+      'eslint.config.js',
+    ],
+    rules: {
+      'ts/no-var-requires': 'off',
+      'ts/no-require-imports': 'off',
+    },
+  },
 ]);
