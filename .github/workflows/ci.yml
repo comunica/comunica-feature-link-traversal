@@ -92,6 +92,7 @@ jobs:
     name: System tests
     strategy:
       fail-fast: false
+      max-parallel: 1 # Avoids overloading SolidBench test server
       matrix:
         node-version:
           - 20.x
@@ -130,6 +131,7 @@ jobs:
     name: Browser tests
     strategy:
       fail-fast: false
+      max-parallel: 1 # Avoids overloading SolidBench test server
       matrix:
         browser:
           - Chrome
