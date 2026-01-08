@@ -46,8 +46,8 @@
     "@comunica/core": "^5.0.0",
     "@comunica/types": "^5.0.0",
     "@comunica/types-link-traversal": "^0.8.0",
-    "@comunica/utils-algebra": "^4.0.2",
-    "@comunica/utils-iterator": "^4.0.1",
+    "@comunica/utils-algebra": "^5.0.0",
+    "@comunica/utils-iterator": "^5.0.0",
     "@rdfjs/types": "*",
     "asynciterator": "^3.10.0"
   }
