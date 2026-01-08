@@ -165,14 +165,12 @@ export class ActorExtractLinksSolidTypeIndex extends ActorExtractLinks {
         .map(async predicate => [ predicate, await this.fetchPredicateDomains(predicate) ]));
       const predicateDomainsRec = Object.fromEntries(predicateDomainsInner);
       for (const [ predicate, subject ] of Object.entries(predicateSubjects)) {
-        const typeNames = predicateDomainsRec[predicate];
-        if (typeNames) {
-          for (const typeName of typeNames) {
-            if (!typeSubjects[typeName]) {
-              typeSubjects[typeName] = [];
-            }
-            typeSubjects[typeName].push(subject);
+        const typeNames = predicateDomainsRec[predicate]!;
+        for (const typeName of typeNames) {
+          if (!typeSubjects[typeName]) {
+            typeSubjects[typeName] = [];
           }
+          typeSubjects[typeName].push(subject);
         }
       }
     }

@@ -33,16 +33,16 @@ export class BindingsStreamAdaptiveDestroy extends TransformIterator<Bindings> {
 
     // Switch to the second stream after a timeout
     this.timeoutHandle = setTimeout(() => {
-      if (this.source && !this.source.done) {
-        // Stop current iterator
-        this.source.destroy();
+      // Assuming this.source && !this.source.done
 
-        // Start a new iterator
-        this.timeoutHandle = undefined;
-        this._source = undefined;
-        this._createSource = this.delayedSource;
-        this._loadSourceAsync();
-      }
+      // Stop current iterator
+      this.source!.destroy();
+
+      // Start a new iterator
+      this.timeoutHandle = undefined;
+      this._source = undefined;
+      this._createSource = this.delayedSource;
+      this._loadSourceAsync();
     }, this.timeout);
   }
 

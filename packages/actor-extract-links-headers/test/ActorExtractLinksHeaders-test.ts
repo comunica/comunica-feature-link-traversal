@@ -47,5 +47,52 @@ describe('ActorExtractLinksHeaders', () => {
           ],
         });
     });
+
+    it('should run on empty link headers', async() => {
+      const inputThis = new Headers();
+      inputThis.append('Content-Type', 'text-turtle');
+      inputThis.append('Location', '/storage/resource');
+      inputThis.append('Content-Length', '1024');
+      inputThis.append('Link', '');
+      await expect(actor.run({ url: 'http://pod.example.com/storage/resource', metadata: inputMetadata, headers: inputThis, requestTime: 0, context: new ActionContext() })).resolves
+        .toEqual({
+          links: [],
+        });
+    });
+
+    it('should run on no link headers', async() => {
+      const inputThis = new Headers();
+      inputThis.append('Content-Type', 'text-turtle');
+      inputThis.append('Location', '/storage/resource');
+      inputThis.append('Content-Length', '1024');
+      await expect(actor.run({ url: 'http://pod.example.com/storage/resource', metadata: inputMetadata, headers: inputThis, requestTime: 0, context: new ActionContext() })).resolves
+        .toEqual({
+          links: [],
+        });
+    });
+
+    it('should run on unknown link headers', async() => {
+      const inputThis = new Headers();
+      inputThis.append('Content-Type', 'text-turtle');
+      inputThis.append('Location', '/storage/resource');
+      inputThis.append('Content-Length', '1024');
+      inputThis.append('Link', '</storage/resource.meta>;rel="unknown"');
+      await expect(actor.run({ url: 'http://pod.example.com/storage/resource', metadata: inputMetadata, headers: inputThis, requestTime: 0, context: new ActionContext() })).resolves
+        .toEqual({
+          links: [],
+        });
+    });
+
+    it('should run on invalid link headers', async() => {
+      const inputThis = new Headers();
+      inputThis.append('Content-Type', 'text-turtle');
+      inputThis.append('Location', '/storage/resource');
+      inputThis.append('Content-Length', '1024');
+      inputThis.append('Link', '/storage/resource.meta;rel="describedby"');
+      await expect(actor.run({ url: 'http://pod.example.com/storage/resource', metadata: inputMetadata, headers: inputThis, requestTime: 0, context: new ActionContext() })).resolves
+        .toEqual({
+          links: [],
+        });
+    });
   });
 });

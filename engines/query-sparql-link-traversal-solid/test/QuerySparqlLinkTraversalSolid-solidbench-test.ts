@@ -1,14 +1,10 @@
 /** @jest-environment setup-polly-jest/jest-environment-node */
-
-// Needed to undo automock from actor-http-native, cleaner workarounds do not appear to be working.
 import { QueryEngine } from '../lib';
 import { usePolly, loadQueries } from './util';
 
 if (!globalThis.window) {
-  jest.unmock('follow-redirects');
+  jest.useRealTimers();
 }
-
-jest.useRealTimers();
 
 const queries = loadQueries();
 
@@ -43,7 +39,9 @@ describe('System test: QuerySparqlLinkTraversalSolid', () => {
   ], (file, expectedCount) => () => {
     it('produces the expected results', async() => {
       const bindings = await engine.queryBindings(queries[file], { lenient: true });
-      await expect((bindings.toArray())).resolves.toHaveLength(expectedCount);
+      // Ignore eslint suggestion to make this work in karma as well!
+      // eslint-disable-next-line jest/prefer-to-have-length
+      expect((await bindings.toArray()).length).toBe(expectedCount);
     });
   });
 

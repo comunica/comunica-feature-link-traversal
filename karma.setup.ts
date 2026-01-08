@@ -1,3 +1,8 @@
+/* eslint-disable import/first */
+(<any> window).process = {
+  env: {},
+};
+
 import expect from 'expect';
 import jest from 'jest-mock';
 
@@ -9,5 +14,5 @@ window.test.each = inputs => (testName, test) => {
   }
 };
 window.test.todo = function() {};
-window.jest = jest;
-window.expect = expect;
+(<any>window).jest = jest;
+(<any>window).expect = expect;

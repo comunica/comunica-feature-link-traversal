@@ -501,6 +501,7 @@ describe('ActorRdfJoinEntriesSortTraversalZeroKnowledge', () => {
         context = context.set(KeysQueryOperation.querySources, [
           { source: <any> { referenceValue: 'ex:seed' }},
           { source: <any> { referenceValue: 'ex:seed2' }},
+          { source: <any> { referenceValue: 123 }},
         ]);
         await expect(actor.run({
           entries: [

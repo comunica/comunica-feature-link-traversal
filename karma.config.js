@@ -9,7 +9,7 @@ const testFiles = [
 // Based on https://github.com/tom-sherman/blog/blob/main/posts/02-running-jest-tests-in-a-browser.md
 module.exports = function(config) {
   config.set({
-    basePath: '',
+    basePath: __dirname,
     browserNoActivityTimeout: 100_000,
     plugins: [
       'karma-webpack',
@@ -21,7 +21,7 @@ module.exports = function(config) {
     ],
     frameworks: [ 'jasmine', 'webpack' ],
 
-    files: [ './karma-setup.js', ...testFiles ],
+    files: [ './karma.setup.ts', ...testFiles ],
     client: {
       args: [ '--grep', '/^(?!.*no browser).*$/' ],
       jasmine: {
@@ -29,7 +29,7 @@ module.exports = function(config) {
       },
     },
     preprocessors: {
-      './karma-setup.js': [ 'webpack' ],
+      './karma.setup.ts': [ 'webpack' ],
       ...Object.fromEntries(testFiles.map(key => [ key, [ 'webpack', 'sourcemap' ]])),
     },
 
