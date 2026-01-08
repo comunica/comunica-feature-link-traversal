@@ -19,6 +19,8 @@ TS = undefined,
 
   public constructor(args: IMediatorCombineUnionArgs<A, I, T, O, TS>) {
     super(args);
+    this.filterErrors = args.filterErrors;
+    this.fields = args.fields;
     this.combiner = this.createCombiner();
   }
 

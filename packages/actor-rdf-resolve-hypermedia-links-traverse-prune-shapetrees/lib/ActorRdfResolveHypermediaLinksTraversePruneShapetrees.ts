@@ -18,6 +18,7 @@ export class ActorRdfResolveHypermediaLinksTraversePruneShapetrees extends Actor
 
   public constructor(args: IActorRdfResolveHypermediaLinksTraversePruneShapetreesArgs) {
     super(args);
+    this.mediatorRdfResolveHypermediaLinks = args.mediatorRdfResolveHypermediaLinks;
   }
 
   public async test(action: IActionRdfResolveHypermediaLinks): Promise<TestResult<IActorTest>> {

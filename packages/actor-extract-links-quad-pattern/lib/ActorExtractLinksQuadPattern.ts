@@ -15,6 +15,7 @@ export class ActorExtractLinksQuadPattern extends ActorExtractLinks {
 
   public constructor(args: IActorExtractLinksQuadPatternArgs) {
     super(args);
+    this.onlyVariables = args.onlyVariables;
   }
 
   public static getCurrentQuadPattern(context: IActionContext): Algebra.Pattern | undefined {

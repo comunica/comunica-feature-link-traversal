@@ -12,6 +12,7 @@ export class ActorRdfMetadataExtractTraverse extends ActorRdfMetadataExtract {
 
   public constructor(args: IActorRdfMetadataExtractTraverseArgs) {
     super(args);
+    this.mediatorExtractLinks = args.mediatorExtractLinks;
   }
 
   public async test(_action: IActionRdfMetadataExtract): Promise<TestResult<IActorTest>> {

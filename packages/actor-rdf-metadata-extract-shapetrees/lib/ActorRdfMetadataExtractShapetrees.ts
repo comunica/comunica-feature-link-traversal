@@ -34,6 +34,8 @@ export class ActorRdfMetadataExtractShapetrees extends ActorRdfMetadataExtract {
 
   public constructor(args: IActorRdfMetadataExtractShapetreesArgs) {
     super(args);
+    this.mediatorDereferenceRdf = args.mediatorDereferenceRdf;
+    this.mediatorHttp = args.mediatorHttp;
     this.queryEngine = new QueryEngineBase(args.actorInitQuery);
   }
 

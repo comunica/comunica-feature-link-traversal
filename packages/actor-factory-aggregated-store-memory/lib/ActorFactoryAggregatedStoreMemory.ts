@@ -20,6 +20,8 @@ export class ActorFactoryAggregatedStoreMemory extends ActorFactoryAggregatedSto
 
   public constructor(args: IActorFactoryAggregatedStoreMemoryArgs) {
     super(args);
+    this.emitPartialCardinalities = args.emitPartialCardinalities;
+    this.mediatorMetadataAccumulate = args.mediatorMetadataAccumulate;
   }
 
   public async test(_action: IActionFactoryAggregatedStore): Promise<TestResult<IActorTest>> {

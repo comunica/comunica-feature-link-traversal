@@ -17,6 +17,8 @@ export class ActorRdfResolveHypermediaLinksQueueWrapperLimitCount extends ActorR
 
   public constructor(args: IActorRdfResolveHypermediaLinksQueueWrapperLimitCountArgs) {
     super(args);
+    this.limit = args.limit;
+    this.mediatorRdfResolveHypermediaLinksQueue = args.mediatorRdfResolveHypermediaLinksQueue;
   }
 
   public async test(action: IActionRdfResolveHypermediaLinksQueue): Promise<TestResult<IActorTest>> {

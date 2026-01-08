@@ -29,6 +29,8 @@ export class ActorExtractLinksContentPolicies extends ActorExtractLinks
   public constructor(args: IActorExtractLinksContentPoliciesArgs) {
     super(args);
     this.sclParser = new SimpleSclParser();
+    this.actorInitQuery = args.actorInitQuery;
+    this.traverseConditional = args.traverseConditional;
     this.queryEngine = new QueryEngineBase(args.actorInitQuery);
   }
 

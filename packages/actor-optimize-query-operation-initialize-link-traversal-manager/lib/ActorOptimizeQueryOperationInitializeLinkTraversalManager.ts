@@ -31,6 +31,13 @@ export class ActorOptimizeQueryOperationInitializeLinkTraversalManager extends A
 
   public constructor(args: IActorOptimizeQueryOperationInitializeLinkTraversalManagerArgs) {
     super(args);
+    this.linkParallelization = args.linkParallelization;
+    this.linkParallelizationLimit = args.linkParallelizationLimit;
+    this.mediatorRdfResolveHypermediaLinks = args.mediatorRdfResolveHypermediaLinks;
+    this.mediatorRdfResolveHypermediaLinksQueue = args.mediatorRdfResolveHypermediaLinksQueue;
+    this.mediatorQuerySourceDereferenceLink = args.mediatorQuerySourceDereferenceLink;
+    this.mediatorMergeBindingsContext = args.mediatorMergeBindingsContext;
+    this.mediatorFactoryAggregatedStore = args.mediatorFactoryAggregatedStore;
   }
 
   public async test(_action: IActionOptimizeQueryOperation): Promise<TestResult<IActorTest>> {

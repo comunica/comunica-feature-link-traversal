@@ -11,7 +11,7 @@ import { ContentPolicy } from './ContentPolicy';
  * (such as when 'INCLUDE' is used in an IRI or string in the graph pattern).
  */
 export class SimpleSclParser {
-  protected cursor: number;
+  protected cursor = 0;
 
   public parse(contentPolicy: string, baseIRI?: string): ContentPolicy {
     this.cursor = 0;

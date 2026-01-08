@@ -20,6 +20,11 @@ export class ActorOptimizeQueryOperationSetSeedSourcesQuadpatternIris extends Ac
 
   public constructor(args: IActorOptimizeQueryOperationSetSeedSourcesQuadpatternIrisArgs) {
     super(args);
+    this.extractSubjects = args.extractSubjects;
+    this.extractPredicates = args.extractPredicates;
+    this.extractObjects = args.extractObjects;
+    this.extractGraphs = args.extractGraphs;
+    this.extractVocabIris = args.extractVocabIris;
   }
 
   public async test(_action: IActionOptimizeQueryOperation): Promise<TestResult<IActorTest>> {

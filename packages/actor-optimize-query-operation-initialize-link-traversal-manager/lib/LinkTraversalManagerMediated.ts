@@ -30,7 +30,7 @@ export class LinkTraversalManagerMediated implements ILinkTraversalManager {
   protected querySourcesNonAggregated: AsyncReiterable<IQuerySource>;
   protected rejectionHandler: ((error: Error) => void) | undefined;
   protected readonly stopListeners: (() => void)[] = [];
-  private allIteratorsClosedListener: () => void;
+  private allIteratorsClosedListener: (() => void) | undefined;
   protected linkParallelization: number;
 
   public constructor(
@@ -114,7 +114,7 @@ export class LinkTraversalManagerMediated implements ILinkTraversalManager {
       if (!this.querySourcesNonAggregated.isEnded()) {
         this.querySourcesNonAggregated.push(null);
         this.aggregatedStore.end();
-        this.aggregatedStore.removeAllIteratorsClosedListener(this.allIteratorsClosedListener);
+        this.aggregatedStore.removeAllIteratorsClosedListener(this.allIteratorsClosedListener!);
         // If any HTTP requests are still pending, abort them to avoid a hanging Node.js process
         for (const abortController of this.linksDereferencing) {
           abortController.abort();

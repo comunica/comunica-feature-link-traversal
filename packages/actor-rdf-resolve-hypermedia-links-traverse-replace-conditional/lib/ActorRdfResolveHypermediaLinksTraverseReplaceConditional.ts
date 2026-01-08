@@ -1,9 +1,9 @@
-import { ActorRdfResolveHypermediaLinks } from '@comunica/bus-rdf-resolve-hypermedia-links';
 import type {
   IActionRdfResolveHypermediaLinks,
   IActorRdfResolveHypermediaLinksOutput,
   MediatorRdfResolveHypermediaLinks,
 } from '@comunica/bus-rdf-resolve-hypermedia-links';
+import { ActorRdfResolveHypermediaLinks } from '@comunica/bus-rdf-resolve-hypermedia-links';
 import type { IActorArgs, IActorTest, TestResult } from '@comunica/core';
 import { failTest, passTestVoid } from '@comunica/core';
 import type { ILink } from '@comunica/types';
@@ -16,6 +16,7 @@ export class ActorRdfResolveHypermediaLinksTraverseReplaceConditional extends Ac
 
   public constructor(args: IActorRdfResolveHypermediaLinksTraverseReplaceConditionalArgs) {
     super(args);
+    this.mediatorRdfResolveHypermediaLinks = args.mediatorRdfResolveHypermediaLinks;
   }
 
   public async test(action: IActionRdfResolveHypermediaLinks): Promise<TestResult<IActorTest>> {

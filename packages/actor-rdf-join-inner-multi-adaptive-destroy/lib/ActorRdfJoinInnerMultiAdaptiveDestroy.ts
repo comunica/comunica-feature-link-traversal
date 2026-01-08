@@ -28,6 +28,8 @@ export class ActorRdfJoinInnerMultiAdaptiveDestroy extends ActorRdfJoin {
       logicalType: 'inner',
       physicalName: 'multi-adaptive-destroy',
     });
+    this.mediatorJoin = args.mediatorJoin;
+    this.timeout = args.timeout;
   }
 
   public override async test(

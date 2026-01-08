@@ -21,6 +21,7 @@ export class ActorExtractLinksQuadPatternQuery extends ActorExtractLinks {
 
   public constructor(args: IActorExtractLinksQuadPatternQueryArgs) {
     super(args);
+    this.onlyVariables = args.onlyVariables;
   }
 
   public static getCurrentQuery(context: IActionContext): Algebra.Operation | undefined {

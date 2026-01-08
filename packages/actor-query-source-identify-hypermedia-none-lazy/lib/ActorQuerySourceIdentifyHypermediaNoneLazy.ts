@@ -21,6 +21,7 @@ export class ActorQuerySourceIdentifyHypermediaNoneLazy extends ActorQuerySource
 
   public constructor(args: IActorQuerySourceIdentifyHypermediaNoneLazyArgs) {
     super(args, 'file');
+    this.mediatorQuerySourceIdentifyHypermedia = args.mediatorQuerySourceIdentifyHypermedia;
   }
 
   public async testMetadata(

@@ -14,6 +14,7 @@ export class ActorExtractLinksPredicates extends ActorExtractLinks {
   public constructor(args: IActorExtractLinksTraversePredicatesArgs) {
     super(args);
 
+    this.checkSubject = args.checkSubject;
     this.stringPredicates = args.predicateRegexes;
     this.predicates = args.predicateRegexes.map(stringRegex => new RegExp(stringRegex, 'u'));
   }

@@ -23,6 +23,7 @@ export class ActorRdfResolveHypermediaLinksQueueWrapperInfoOccupancy
 
   public constructor(args: IActorRdfResolveHypermediaLinksQueueWrapperInfoOccupancyArgs) {
     super(args);
+    this.mediatorRdfResolveHypermediaLinksQueue = args.mediatorRdfResolveHypermediaLinksQueue;
   }
 
   public async test(action: IActionRdfResolveHypermediaLinksQueue): Promise<TestResult<IActorTest>> {

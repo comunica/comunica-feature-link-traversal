@@ -27,6 +27,10 @@ export class ActorExtractLinksSolidTypeIndex extends ActorExtractLinks {
 
   public constructor(args: IActorExtractLinksSolidTypeIndexArgs) {
     super(args);
+    this.typeIndexPredicates = args.typeIndexPredicates;
+    this.onlyMatchingTypes = args.onlyMatchingTypes;
+    this.inference = args.inference;
+    this.mediatorDereferenceRdf = args.mediatorDereferenceRdf;
     this.queryEngine = new QueryEngineBase(args.actorInitQuery);
   }
 

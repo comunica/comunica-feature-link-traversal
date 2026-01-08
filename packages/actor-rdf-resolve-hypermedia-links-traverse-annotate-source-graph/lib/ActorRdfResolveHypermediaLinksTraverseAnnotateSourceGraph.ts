@@ -26,6 +26,7 @@ export class ActorRdfResolveHypermediaLinksTraverseAnnotateSourceGraph extends A
 
   public constructor(args: IActorRdfResolveHypermediaLinksTraverseAnnotateSourceGraphArgs) {
     super(args);
+    this.mediatorRdfResolveHypermediaLinks = args.mediatorRdfResolveHypermediaLinks;
   }
 
   public async test(action: IActionRdfResolveHypermediaLinks): Promise<TestResult<IActorTest>> {
