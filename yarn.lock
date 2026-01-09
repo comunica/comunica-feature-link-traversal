@@ -6601,6 +6601,13 @@
   dependencies:
     chevrotain "^11.0.3"
 
+"@traqula/chevrotain@^0.0.25":
+  version "0.0.25"
+  resolved "https://registry.yarnpkg.com/@traqula/chevrotain/-/chevrotain-0.0.25.tgz#058f915cd8d4405707b5b066f450b4f20a5841ae"
+  integrity sha512-d3YePFda4ACFjtke7CevQwUDK1h00rz+EG4HB8Va+PcRUklNSBYFsfKAXzhiR7ERAL8QJIg6sPpQXY2OcncOng==
+  dependencies:
+    chevrotain "^11.0.3"
+
 "@traqula/chevrotain@^1.0.0":
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/@traqula/chevrotain/-/chevrotain-1.0.0.tgz#c23f7b531e9c4eb5501ca2722c1ecb09ab6d9e50"
@@ -6614,6 +6621,13 @@
   integrity sha512-JTnQ/n56tQnaNug17Cb67oM9Xj8gHFMqtyF2dnOOFQeqB4kMN3bMN1973QlEf45TExF+tN2uFiZKCfgH0LGkng==
   dependencies:
     "@traqula/chevrotain" "^0.0.24"
+
+"@traqula/core@^0.0.25":
+  version "0.0.25"
+  resolved "https://registry.yarnpkg.com/@traqula/core/-/core-0.0.25.tgz#9bd8deac451f4ecc4cea4fe74977dad9685bf710"
+  integrity sha512-bJRQlbOwBB6RfzZU5wvfu1YNWvI8hEOWNnjz6AiMverzqzBMx/sAhgb6U7Hf4nS+jm70ZExVY5/gyTEWcgys8g==
+  dependencies:
+    "@traqula/chevrotain" "^0.0.25"
 
 "@traqula/core@^1.0.0":
   version "1.0.0"
@@ -6640,13 +6654,13 @@
     "@traqula/rules-sparql-1-1" "^1.0.0"
     "@traqula/rules-sparql-1-2" "^1.0.0"
 
-"@traqula/parser-sparql-1-1@^0.0.24":
-  version "0.0.24"
-  resolved "https://registry.yarnpkg.com/@traqula/parser-sparql-1-1/-/parser-sparql-1-1-0.0.24.tgz#a9a00abd0963e9419b2c1ae47d5c935cd6132115"
-  integrity sha512-thffmJEvj+lTq1yF9Xq287acAxMAbyklH15AC4zaB4b2xxRGhg1eSfa7TSSUUWXqrjX2yLPZQ54/ZaH68kbTlg==
+"@traqula/parser-sparql-1-1@^0.0.25":
+  version "0.0.25"
+  resolved "https://registry.yarnpkg.com/@traqula/parser-sparql-1-1/-/parser-sparql-1-1-0.0.25.tgz#d4d700c35dd60dc8325d0edcce77db871e0ed798"
+  integrity sha512-9yNmbA9+hU9SqUXC3MoY0uxawULyJH38xs2Plv3yhawZdsBK4h9W7oGEwTUAd89m+cI7oLlmC5uiSbSNn2OvPQ==
   dependencies:
-    "@traqula/core" "^0.0.24"
-    "@traqula/rules-sparql-1-1" "^0.0.24"
+    "@traqula/core" "^0.0.25"
+    "@traqula/rules-sparql-1-1" "^0.0.25"
 
 "@traqula/parser-sparql-1-1@^1.0.0":
   version "1.0.0"
@@ -6656,15 +6670,15 @@
     "@traqula/core" "^1.0.0"
     "@traqula/rules-sparql-1-1" "^1.0.0"
 
-"@traqula/parser-sparql-1-2@^0.0.24":
-  version "0.0.24"
-  resolved "https://registry.yarnpkg.com/@traqula/parser-sparql-1-2/-/parser-sparql-1-2-0.0.24.tgz#4135d5405003f309c5a9f1f0e709f3636d311c63"
-  integrity sha512-3DrzEouLLOEElE370fu6xrlXa/0zEp6p47Kgk/kOV8+EDUZBuWxv84GmRuHvgRYfn9OAVP6H3w8wVoFvqqIiNg==
+"@traqula/parser-sparql-1-2@^0.0.25":
+  version "0.0.25"
+  resolved "https://registry.yarnpkg.com/@traqula/parser-sparql-1-2/-/parser-sparql-1-2-0.0.25.tgz#6b727ab7b9030c220aead9862906a95877cb799b"
+  integrity sha512-O4mtAkgK74ax0EN2YiYurP6ED4P7J1npdsGvRXeJiIxQCFH0TK4T/nDoltot+T5TZ1k7eOyc0wroADcAHbnPWQ==
   dependencies:
-    "@traqula/core" "^0.0.24"
-    "@traqula/parser-sparql-1-1" "^0.0.24"
-    "@traqula/rules-sparql-1-1" "^0.0.24"
-    "@traqula/rules-sparql-1-2" "^0.0.24"
+    "@traqula/core" "^0.0.25"
+    "@traqula/parser-sparql-1-1" "^0.0.25"
+    "@traqula/rules-sparql-1-1" "^0.0.25"
+    "@traqula/rules-sparql-1-2" "^0.0.25"
     rdf-data-factory "^2.0.1"
 
 "@traqula/parser-sparql-1-2@^1.0.0":
@@ -6686,6 +6700,14 @@
     "@traqula/chevrotain" "^0.0.24"
     "@traqula/core" "^0.0.24"
 
+"@traqula/rules-sparql-1-1@^0.0.25":
+  version "0.0.25"
+  resolved "https://registry.yarnpkg.com/@traqula/rules-sparql-1-1/-/rules-sparql-1-1-0.0.25.tgz#5f2200f0bbd51b44f0665e60481c92eb7e9a2fe8"
+  integrity sha512-7xFAAiS/TsRLGJp2myUv6zGk/PUfWJ5MFGgIJ804CxodbCGu4PfDmW0No5duFSzHGhkxMTe7pn3NytJGBOQcwA==
+  dependencies:
+    "@traqula/chevrotain" "^0.0.25"
+    "@traqula/core" "^0.0.25"
+
 "@traqula/rules-sparql-1-1@^1.0.0":
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/@traqula/rules-sparql-1-1/-/rules-sparql-1-1-1.0.0.tgz#bc2287575e89a6dc93c803e6f385ceae5d64a8bb"
@@ -6701,6 +6723,14 @@
   dependencies:
     "@traqula/core" "^0.0.24"
     "@traqula/rules-sparql-1-1" "^0.0.24"
+
+"@traqula/rules-sparql-1-2@^0.0.25":
+  version "0.0.25"
+  resolved "https://registry.yarnpkg.com/@traqula/rules-sparql-1-2/-/rules-sparql-1-2-0.0.25.tgz#8e9b430441c25caf8f0bd4666ecd2a694a5c9b7e"
+  integrity sha512-J4COrwuFXvFrhWjV2sNid1CuUStNq+7xH/F8o++EYKNb1ilexNDPtNuxPRuBh91cPirQvWWhOxkJZUa5KjaEZg==
+  dependencies:
+    "@traqula/core" "^0.0.25"
+    "@traqula/rules-sparql-1-1" "^0.0.25"
 
 "@traqula/rules-sparql-1-2@^1.0.0":
   version "1.0.0"
