@@ -49,7 +49,7 @@
     "@comunica/utils-algebra": "^5.0.0",
     "@rdfjs/types": "*",
     "@traqula/algebra-sparql-1-2": "^0.0.24",
-    "@traqula/parser-sparql-1-2": "^0.0.24",
+    "@traqula/parser-sparql-1-2": "^1.0.0",
     "rdf-store-stream": "^2.0.1",
     "rdf-terms": "^2.0.0"
   }
