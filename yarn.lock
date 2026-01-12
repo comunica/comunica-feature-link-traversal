@@ -3299,6 +3299,32 @@
   optionalDependencies:
     process "^0.11.10"
 
+"@comunica/actor-init-query@^5.0.2":
+  version "5.0.2"
+  resolved "https://registry.yarnpkg.com/@comunica/actor-init-query/-/actor-init-query-5.0.2.tgz#8588163b6ef8d0d793234e21312bbc096f8a8f96"
+  integrity sha512-OjxYBMVkY57+2djQaeOdV4xjcbIQa2QcUyL+HxzvCZ4Cv7nzNr17qdk6R60Qqx5vAsbj3PAZwPXT34NMjzZOag==
+  dependencies:
+    "@comunica/actor-http-proxy" "^5.0.2"
+    "@comunica/bus-http-invalidate" "^5.0.2"
+    "@comunica/bus-init" "^5.0.2"
+    "@comunica/bus-query-process" "^5.0.2"
+    "@comunica/bus-query-result-serialize" "^5.0.2"
+    "@comunica/context-entries" "^5.0.2"
+    "@comunica/core" "^5.0.2"
+    "@comunica/logger-pretty" "^5.0.0"
+    "@comunica/runner" "^5.0.2"
+    "@comunica/types" "^5.0.0"
+    "@comunica/utils-algebra" "^5.0.0"
+    "@rdfjs/types" "*"
+    "@types/yargs" "^17.0.24"
+    asynciterator "^3.10.0"
+    negotiate "^1.0.1"
+    rdf-quad "^2.0.0"
+    readable-stream "^4.7.0"
+    yargs "^17.7.2"
+  optionalDependencies:
+    process "^0.11.10"
+
 "@comunica/actor-optimize-query-operation-assign-sources-exhaustive@^5.0.0":
   version "5.0.0"
   resolved "https://registry.yarnpkg.com/@comunica/actor-optimize-query-operation-assign-sources-exhaustive/-/actor-optimize-query-operation-assign-sources-exhaustive-5.0.0.tgz#07c8475bacd7cd010fa152b31d82146678b9a450"
@@ -7842,13 +7868,13 @@
   dependencies:
     "@comunica/types" "^5.0.0"
 
-"@comunica/statistic-link-discovery@^5.0.0":
-  version "5.0.0"
-  resolved "https://registry.yarnpkg.com/@comunica/statistic-link-discovery/-/statistic-link-discovery-5.0.0.tgz#459da763895bebb1db6e3da478cdccdc0d06a67c"
-  integrity sha512-U1iXHlZD4lSbDUp3HAPSbhoHSAntjs/qkN0n39EYunIExD+PL6WWZ6AtCUpeMCWRdkHlRAjIdlPaFpYNR1w9rw==
+"@comunica/statistic-link-discovery@^5.0.2":
+  version "5.0.2"
+  resolved "https://registry.yarnpkg.com/@comunica/statistic-link-discovery/-/statistic-link-discovery-5.0.2.tgz#8ccc051dec54a2cfb63a2c66e7cc7dafd63dfee3"
+  integrity sha512-0GGbBjn3nYZ3kIBrvOCzAkOmDI5oRYVFDSgvnqLUf8WTyoAIlunmrngOpWIXbkbJK7gH1aHR+q8BoqMuCy8DeA==
   dependencies:
-    "@comunica/context-entries" "^5.0.0"
-    "@comunica/core" "^5.0.0"
+    "@comunica/context-entries" "^5.0.2"
+    "@comunica/core" "^5.0.2"
     "@comunica/statistic-base" "^5.0.0"
     "@comunica/types" "^5.0.0"
 
@@ -7953,14 +7979,14 @@
   dependencies:
     asynciterator "^3.10.0"
 
-"@comunica/utils-jest@^5.0.0":
-  version "5.0.0"
-  resolved "https://registry.yarnpkg.com/@comunica/utils-jest/-/utils-jest-5.0.0.tgz#b12e0346d831b779850e1978c0ba5c70820536cb"
-  integrity sha512-m27LKQz7HhDiornde8B861NcAKy1XxOceGN2lW3Vu5sOSB5RCKfg1MI195z7kA/VTPMoY+fPwS+jB8mub3i9OA==
+"@comunica/utils-jest@^5.0.2":
+  version "5.0.2"
+  resolved "https://registry.yarnpkg.com/@comunica/utils-jest/-/utils-jest-5.0.2.tgz#b3ae9b0d8aaa890e78635f7c2d96feee54a749ec"
+  integrity sha512-/hMfa5kmp5Nwn1jtQc7GE9rhLa4pcczOYXz9FJirAM86rDXYnqwJtwdMLwjXmdSOLZ+YPNsECg2wdxU9lgkm4w==
   dependencies:
-    "@comunica/core" "^5.0.0"
+    "@comunica/core" "^5.0.2"
     "@comunica/types" "^5.0.0"
-    "@comunica/utils-bindings-factory" "^5.0.0"
+    "@comunica/utils-bindings-factory" "^5.0.2"
     "@jest/expect-utils" "^30.2.0"
     "@rdfjs/types" "*"
     "@types/object-inspect" "^1.13.0"
