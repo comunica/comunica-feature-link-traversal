@@ -38,7 +38,7 @@
     "build": "node \"../../node_modules/typescript/bin/tsc\""
   },
   "dependencies": {
-    "@comunica/core": "^5.0.2",
+    "@comunica/core": "^5.0.3",
     "@comunica/types-link-traversal": "^0.8.0"
   }
 }

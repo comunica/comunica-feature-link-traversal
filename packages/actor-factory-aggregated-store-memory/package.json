@@ -42,9 +42,9 @@
   },
   "dependencies": {
     "@comunica/bus-factory-aggregated-store": "^0.8.0",
-    "@comunica/bus-rdf-metadata-accumulate": "^5.0.2",
-    "@comunica/context-entries": "^5.0.2",
-    "@comunica/core": "^5.0.2",
+    "@comunica/bus-rdf-metadata-accumulate": "^5.0.3",
+    "@comunica/context-entries": "^5.0.3",
+    "@comunica/core": "^5.0.3",
     "@comunica/types": "^5.0.0",
     "@comunica/types-link-traversal": "^0.8.0",
     "@comunica/utils-algebra": "^5.0.0",
