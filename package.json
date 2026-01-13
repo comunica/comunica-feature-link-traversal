@@ -70,7 +70,7 @@
     "karma-jasmine-html-reporter": "^2.1.0",
     "karma-sourcemap-loader": "^0.4.0",
     "karma-webpack": "^5.0.1",
-    "lerna": "^8.1.9",
+    "lerna": "^9.0.0",
     "manual-git-changelog": "^1.0.2",
     "node-polyfill-webpack-plugin": "^4.1.0",
     "npm-check-updates": "^17.1.13",
