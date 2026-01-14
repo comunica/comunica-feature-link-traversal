@@ -254,7 +254,7 @@ jobs:
         run: yarn install --frozen-lockfile --ignore-engines
       - name: Run benchmarks
         run: cd performance/benchmark-${{ matrix.benchmark }}/ && yarn run performance:ci
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v6
         with:
           name: performance-benchmark-${{ matrix.benchmark }}
           path: performance/benchmark-${{ matrix.benchmark }}/combinations/combination_0/output/
@@ -279,7 +279,7 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version: ${{ env.DEFAULT_NODE_VERSION }}
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v7
         with:
           name: performance-benchmark-solidbench
           path: performance/benchmark-solidbench/combinations/combination_0/output/
