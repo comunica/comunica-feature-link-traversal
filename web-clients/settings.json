@@ -4,6 +4,7 @@
     "graphql": true
   },
   "allowNoSources": true,
+  "prefetchSources": true,
   "context": {
     "lenient": true,
     "@comunica/actor-rdf-resolve-hypermedia-links-traverse:traverse": true,
@@ -140,6 +141,14 @@
     "mf":          "http://www.w3.org/2001/sw/DataAccess/tests/test-manifest#",
     "tree":        "https://w3id.org/tree#",
     "ldes":        "https://w3id.org/ldes#"
+  },
+  "alternativeEngines": {
+    "Default": "https://query.comunica.dev/",
+    "Link Traversal Solid (default)": "https://comunica.github.io/comunica-feature-link-traversal-web-clients/builds/solid-default/",
+    "Link Traversal Solid (single pod)": "https://comunica.github.io/comunica-feature-link-traversal-web-clients/builds/solid-single-pod/",
+    "Link Traversal (default)": "https://comunica.github.io/comunica-feature-link-traversal-web-clients/builds/default/",
+    "Link Traversal (follow all)": "https://comunica.github.io/comunica-feature-link-traversal-web-clients/builds/follow-all/",
+    "Link Traversal (TREE)": "https://comunica.github.io/comunica-feature-link-traversal-web-clients/builds/tree/"
   },
   "queries": "(Will be generated from the 'queries' folder by running the './queries-to-json' script.)"
 }
