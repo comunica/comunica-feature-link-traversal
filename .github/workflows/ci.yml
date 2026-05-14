@@ -56,9 +56,9 @@ jobs:
           - ubuntu-latest
           - windows-latest
         node-version:
-          - 20.x
           - 22.x
           - 24.x
+          - 26.x
     runs-on: ${{ matrix.os }}
     steps:
       - name: Ensure line endings are consistent
@@ -95,9 +95,9 @@ jobs:
       max-parallel: 1 # Avoids overloading SolidBench test server
       matrix:
         node-version:
-          - 20.x
           - 22.x
           - 24.x
+          - 26.x
         os:
           - ubuntu-latest
     runs-on: ${{ matrix.os }}
