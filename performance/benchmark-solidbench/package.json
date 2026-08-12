@@ -12,12 +12,12 @@
     "performance:ci": "yarn install --ignore-engines && npm run fetch-assets && sudo npm run set-host && jbr prepare -c 0 && jbr run -c 0 && sudo npm run remove-host"
   },
   "dependencies": {
-    "@jbr-experiment/solidbench": "^5.3.1",
-    "@jbr-hook/cli": "^5.2.0",
-    "@jbr-hook/sparql-endpoint-comunica": "^5.2.0",
+    "@jbr-experiment/solidbench": "^6.0.0",
+    "@jbr-hook/cli": "^6.0.0",
+    "@jbr-hook/sparql-endpoint-comunica": "^6.0.0",
     "cross-env": "^7.0.3",
     "hostile": "^1.4.0",
-    "jbr": "^5.2.0"
+    "jbr": "^6.0.0"
   },
   "resolutions": {
     "componentsjs": "6.0.1"
