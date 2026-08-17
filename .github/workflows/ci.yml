@@ -155,7 +155,7 @@ jobs:
             **/node_modules
           key: ${{ runner.os }}-modules-${{ hashFiles('yarn.lock') }}
       - name: Install dependencies and build
-        run: yarn install --frozen-lockfile
+        run: yarn install --frozen-lockfile --ignore-engines
       - name: Install ${{ matrix.browser }} via Playwright
         if: startsWith(matrix.browser, 'Webkit')
         # The @L will convert 'Webkit' into lowercase 'webkit' which is the name Playwright expects.
