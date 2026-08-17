@@ -31,6 +31,7 @@ for config in ../config-query-sparql-link-traversal/config/*.json; do
     -d $cwd/web-clients/builds/$id \
     -s $cwd/web-clients/settings.custom.json \
     -q $cwd/web-clients/queries \
+    -w $cwd/web-clients/webpack.config.js \
     -b https://comunica.github.io/comunica-feature-link-traversal-web-clients/builds/$id/
 
   rm $cwd/web-clients/settings.custom.json
