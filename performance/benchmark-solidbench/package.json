@@ -15,7 +15,7 @@
     "@jbr-experiment/solidbench": "^5.3.1",
     "@jbr-hook/cli": "^5.2.0",
     "@jbr-hook/sparql-endpoint-comunica": "^5.2.0",
-    "cross-env": "^7.0.3",
+    "cross-env": "^10.0.0",
     "hostile": "^1.4.0",
     "jbr": "^5.2.0"
   },
