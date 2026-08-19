@@ -15,7 +15,7 @@ import { QuerySourceFileLazy } from '../lib/QuerySourceFileLazy';
 import '@comunica/utils-jest';
 
 const quad = require('rdf-quad');
-const streamifyArray = require('streamify-array');
+const { streamifyArray } = require('streamify-array');
 
 const DF = new DataFactory();
 const AF = new AlgebraFactory();

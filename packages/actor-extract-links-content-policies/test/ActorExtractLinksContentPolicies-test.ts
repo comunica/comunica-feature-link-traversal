@@ -15,7 +15,7 @@ import {
 import '@comunica/utils-jest';
 
 const quad = require('rdf-quad');
-const streamifyArray = require('streamify-array');
+const { streamifyArray } = require('streamify-array');
 
 const factory = new AlgebraFactory();
 const DF = new DataFactory();
