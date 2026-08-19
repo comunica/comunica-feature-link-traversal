@@ -11,7 +11,7 @@ import { ActorExtractLinksSolidTypeIndex } from '../lib/ActorExtractLinksSolidTy
 import '@comunica/utils-jest';
 
 const quad = require('rdf-quad');
-const stream = require('streamify-array');
+const { streamifyArray: stream } = require('streamify-array');
 
 const DF = new DataFactory();
 const BF = new BindingsFactory(DF);

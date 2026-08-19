@@ -5,7 +5,7 @@ import { DataFactory } from 'rdf-data-factory';
 import { ActorExtractLinksTree } from '../lib/ActorExtractLinksTree';
 import '@comunica/utils-jest';
 
-const stream = require('streamify-array');
+const { streamifyArray: stream } = require('streamify-array');
 
 const DF = new DataFactory<RDF.BaseQuad>();
 

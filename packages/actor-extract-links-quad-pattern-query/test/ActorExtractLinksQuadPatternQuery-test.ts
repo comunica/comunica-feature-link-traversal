@@ -10,7 +10,7 @@ import {
 import '@comunica/utils-jest';
 
 const quad = require('rdf-quad');
-const stream = require('streamify-array');
+const { streamifyArray: stream } = require('streamify-array');
 
 const FACTORY = new AlgebraFactory();
 const DF = new DataFactory();

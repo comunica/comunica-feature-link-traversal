@@ -11,7 +11,7 @@ import {
 } from '../lib/ActorRdfResolveHypermediaLinksTraverseAnnotateSourceGraph';
 import '@comunica/utils-jest';
 
-const streamifyArray = require('streamify-array');
+const { streamifyArray } = require('streamify-array');
 
 const DF = new DataFactory();
 

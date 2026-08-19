@@ -4,7 +4,7 @@ import { ActorExtractLinksHeaders } from '../lib/ActorExtractLinksHeaders';
 import '@comunica/utils-jest';
 
 const quad = require('rdf-quad');
-const stream = require('streamify-array');
+const { streamifyArray: stream } = require('streamify-array');
 
 describe('ActorExtractLinksHeaders', () => {
   let bus: any;
