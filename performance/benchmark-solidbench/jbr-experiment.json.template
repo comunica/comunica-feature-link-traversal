@@ -1,16 +1,15 @@
 {
   "@context": [
-    "https://linkedsoftwaredependencies.org/bundles/npm/jbr/^5.0.0/components/context.jsonld",
-    "https://linkedsoftwaredependencies.org/bundles/npm/@jbr-experiment/solidbench/^5.0.0/components/context.jsonld",
-    "https://linkedsoftwaredependencies.org/bundles/npm/@jbr-hook/sparql-endpoint-comunica/^5.0.0/components/context.jsonld",
-    "https://linkedsoftwaredependencies.org/bundles/npm/@jbr-hook/cli/^5.0.0/components/context.jsonld"
+    "https://linkedsoftwaredependencies.org/bundles/npm/jbr/^6.0.0/components/context.jsonld",
+    "https://linkedsoftwaredependencies.org/bundles/npm/@jbr-experiment/solidbench/^6.0.0/components/context.jsonld",
+    "https://linkedsoftwaredependencies.org/bundles/npm/@jbr-hook/sparql-endpoint-comunica/^6.0.0/components/context.jsonld",
+    "https://linkedsoftwaredependencies.org/bundles/npm/@jbr-hook/cli/^6.0.0/components/context.jsonld"
   ],
   "@id": "urn:jbr:benchmark-solidbench",
   "@type": "ExperimentSolidBench",
   "scale": "0.1",
-  "configGenerateAux": "input/config-enhancer.json",
+  "configEnhance": "input/config-enhancer.json",
   "configFragment": "input/config-fragmenter.json",
-  "configFragmentAux": "input/config-fragmenter-auxiliary.json",
   "configQueries": "input/config-queries.json",
   "configServer": "input/config-server.json",
   "validationParamsUrl": "https://cloud.ilabt.imec.be/index.php/s/bBZZKb7cP95WgcD/download/validation_params.zip",

@@ -1,16 +1,15 @@
 {
   "@context": [
-    "https://linkedsoftwaredependencies.org/bundles/npm/jbr/^5.0.0/components/context.jsonld",
-    "https://linkedsoftwaredependencies.org/bundles/npm/@jbr-experiment/solidbench/^5.0.0/components/context.jsonld",
-    "https://linkedsoftwaredependencies.org/bundles/npm/@jbr-hook/sparql-endpoint-comunica/^5.0.0/components/context.jsonld",
-    "https://linkedsoftwaredependencies.org/bundles/npm/@jbr-hook/cli/^5.0.0/components/context.jsonld"
+    "https://linkedsoftwaredependencies.org/bundles/npm/jbr/^6.0.0/components/context.jsonld",
+    "https://linkedsoftwaredependencies.org/bundles/npm/@jbr-experiment/solidbench/^6.0.0/components/context.jsonld",
+    "https://linkedsoftwaredependencies.org/bundles/npm/@jbr-hook/sparql-endpoint-comunica/^6.0.0/components/context.jsonld",
+    "https://linkedsoftwaredependencies.org/bundles/npm/@jbr-hook/cli/^6.0.0/components/context.jsonld"
   ],
   "@id": "urn:jbr:benchmark-solidbench:combination_1",
   "@type": "ExperimentSolidBench",
   "scale": "0.1",
-  "configGenerateAux": "input/config-enhancer.json",
+  "configEnhance": "input/config-enhancer.json",
   "configFragment": "input/config-fragmenter.json",
-  "configFragmentAux": "input/config-fragmenter-auxiliary.json",
   "configQueries": "input/config-queries.json",
   "configServer": "input/config-server.json",
   "validationParamsUrl": "https://cloud.ilabt.imec.be/index.php/s/bBZZKb7cP95WgcD/download/validation_params.zip",
@@ -30,6 +29,6 @@
   "queryRunnerRequestDelay": 100,
   "queryRunnerEndpointAvailabilityCheckTimeout": 500,
   "queryRunnerUrlParams": { "context": "{ \"lenient\": true }" },
-  "queryTimeoutFallback": 20000,
-  "hookSparqlEndpoint": {"@id": "urn:jbr:benchmark-solidbench:combination_1:hookSparqlEndpoint",  "@type": "HookSparqlEndpointComunica",  "dockerfileClient": "input/dockerfiles/Dockerfile-client",  "resourceConstraints": {"@type": "StaticDockerResourceConstraints","cpu_percentage": 100  },  "configClient": "input/config-client.json",  "contextClient": "input/context-client.json",  "additionalBinds": [],  "clientPort": 3001,  "clientLogLevel": "info",  "queryTimeout": 10,  "maxMemory": 8192}
+  "queryTimeoutFallback": 60000,
+  "hookSparqlEndpoint": {"@id": "urn:jbr:benchmark-solidbench:combination_1:hookSparqlEndpoint",  "@type": "HookSparqlEndpointComunica",  "dockerfileClient": "input/dockerfiles/Dockerfile-client",  "resourceConstraints": {"@type": "StaticDockerResourceConstraints","cpu_percentage": 100  },  "configClient": "input/config-client.json",  "contextClient": "input/context-client.json",  "additionalBinds": [],  "clientPort": 3001,  "clientLogLevel": "info",  "queryTimeout": 30,  "maxMemory": 8192}
 }
