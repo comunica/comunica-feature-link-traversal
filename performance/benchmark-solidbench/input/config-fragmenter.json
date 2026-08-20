@@ -26,29 +26,24 @@
   },
   "transformers": [
     {
-      "@type": "QuadTransformerBlankToNamed",
-      "searchRegex": "^(b[0-9]*_tagclass)",
-      "replacementString": "http://localhost:3000/www.ldbc.eu/tagclass/$1"
-    },
-    {
       "@type": "QuadTransformerReplaceIri",
       "searchRegex": "^http://www.ldbc.eu",
-      "replacementString": "http://localhost:3000/www.ldbc.eu"
+      "replacementString": "http://solidbench-server:3000/www.ldbc.eu"
     },
     {
       "@type": "QuadTransformerReplaceIri",
       "searchRegex": "^http://dbpedia.org",
-      "replacementString": "http://localhost:3000/dbpedia.org"
+      "replacementString": "http://solidbench-server:3000/dbpedia.org"
     },
     {
       "@type": "QuadTransformerReplaceIri",
       "searchRegex": "^http://www.w3.org/2002/07/owl",
-      "replacementString": "http://localhost:3000/www.w3.org/2002/07/owl"
+      "replacementString": "http://solidbench-server:3000/www.w3.org/2002/07/owl"
     },
     {
       "@type": "QuadTransformerReplaceIri",
-      "searchRegex": "^http://localhost:3000/www.ldbc.eu/ldbc_socialnet/1.0/data/pers([0-9]*)$",
-      "replacementString": "http://localhost:3000/pods/$1/profile/card#me"
+      "searchRegex": "^http://solidbench-server:3000/www.ldbc.eu/ldbc_socialnet/1.0/data/pers([0-9]*)$",
+      "replacementString": "http://solidbench-server:3000/pods/$1/profile/card#me"
     },
     {
       "@type": "QuadTransformerRemapResourceIdentifier",
@@ -104,8 +99,8 @@
                   "predicateRegex": "vocabulary/hasCreator$"
                 },
                 "identifier": "object",
-                "predicate": "http://localhost:3000/internal/postsFragmentation",
-                "link": "http://localhost:3000/internal/FragmentationPerResource"
+                "predicate": "http://solidbench-server:3000/internal/postsFragmentation",
+                "link": "http://solidbench-server:3000/internal/FragmentationPerResource"
               }
             },
             {
@@ -142,8 +137,8 @@
                   "predicateRegex": "vocabulary/hasCreator$"
                 },
                 "identifier": "object",
-                "predicate": "http://localhost:3000/internal/postsFragmentation",
-                "link": "http://localhost:3000/internal/FragmentationOneFile"
+                "predicate": "http://solidbench-server:3000/internal/postsFragmentation",
+                "link": "http://solidbench-server:3000/internal/FragmentationOneFile"
               }
             },
             {
@@ -180,8 +175,8 @@
                   "predicateRegex": "vocabulary/hasCreator$"
                 },
                 "identifier": "object",
-                "predicate": "http://localhost:3000/internal/postsFragmentation",
-                "link": "http://localhost:3000/internal/FragmentationLocation"
+                "predicate": "http://solidbench-server:3000/internal/postsFragmentation",
+                "link": "http://solidbench-server:3000/internal/FragmentationLocation"
               }
             },
             {
@@ -230,8 +225,8 @@
                   "predicateRegex": "vocabulary/hasCreator$"
                 },
                 "identifier": "object",
-                "predicate": "http://localhost:3000/internal/postsFragmentation",
-                "link": "http://localhost:3000/internal/FragmentationCreationDate"
+                "predicate": "http://solidbench-server:3000/internal/postsFragmentation",
+                "link": "http://solidbench-server:3000/internal/FragmentationCreationDate"
               }
             },
             {
@@ -287,8 +282,8 @@
                   "predicateRegex": "vocabulary/hasCreator$"
                 },
                 "identifier": "object",
-                "predicate": "http://localhost:3000/internal/commentsFragmentation",
-                "link": "http://localhost:3000/internal/FragmentationPerResource"
+                "predicate": "http://solidbench-server:3000/internal/commentsFragmentation",
+                "link": "http://solidbench-server:3000/internal/FragmentationPerResource"
               }
             },
             {
@@ -325,8 +320,8 @@
                   "predicateRegex": "vocabulary/hasCreator$"
                 },
                 "identifier": "object",
-                "predicate": "http://localhost:3000/internal/commentsFragmentation",
-                "link": "http://localhost:3000/internal/FragmentationOneFile"
+                "predicate": "http://solidbench-server:3000/internal/commentsFragmentation",
+                "link": "http://solidbench-server:3000/internal/FragmentationOneFile"
               }
             },
             {
@@ -363,8 +358,8 @@
                   "predicateRegex": "vocabulary/hasCreator$"
                 },
                 "identifier": "object",
-                "predicate": "http://localhost:3000/internal/commentsFragmentation",
-                "link": "http://localhost:3000/internal/FragmentationLocation"
+                "predicate": "http://solidbench-server:3000/internal/commentsFragmentation",
+                "link": "http://solidbench-server:3000/internal/FragmentationLocation"
               }
             },
             {
@@ -413,8 +408,8 @@
                   "predicateRegex": "vocabulary/hasCreator$"
                 },
                 "identifier": "object",
-                "predicate": "http://localhost:3000/internal/commentsFragmentation",
-                "link": "http://localhost:3000/internal/FragmentationCreationDate"
+                "predicate": "http://solidbench-server:3000/internal/commentsFragmentation",
+                "link": "http://solidbench-server:3000/internal/FragmentationCreationDate"
               }
             },
             {
