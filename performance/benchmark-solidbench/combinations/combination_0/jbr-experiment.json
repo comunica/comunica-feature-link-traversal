@@ -29,6 +29,6 @@
   "queryRunnerRequestDelay": 100,
   "queryRunnerEndpointAvailabilityCheckTimeout": 500,
   "queryRunnerUrlParams": { "context": "{ \"lenient\": true }" },
-  "queryTimeoutFallback": 60000,
-  "hookSparqlEndpoint": {"@id": "urn:jbr:benchmark-solidbench:combination_0:hookSparqlEndpoint","@type": "HookCli","entrypoint": [  "node",  "../../engines/query-sparql-link-traversal-solid/bin/http.js", "-c", "input/context-client.json",  "-p",  "3001",  "-t",  "30", "--idp", "void", "-i", "-w", "1", "--contextOverride"],"statsFilePath": "output/stats.csv"  }
+  "queryTimeoutFallback": 20000,
+  "hookSparqlEndpoint": {"@id": "urn:jbr:benchmark-solidbench:combination_0:hookSparqlEndpoint","@type": "HookCli","entrypoint": [  "node",  "../../engines/query-sparql-link-traversal-solid/bin/http.js", "-c", "input/context-client.json",  "-p",  "3001",  "-t",  "10", "--idp", "void", "-i", "-w", "1", "--contextOverride"],"statsFilePath": "output/stats.csv"  }
 }
