@@ -188,9 +188,6 @@ jobs:
       - test
       - systemtest
       - browsertest
-    env:
-      # TODO: remove this override once lerna-docker works with Node 18+
-      DEFAULT_NODE_VERSION: 18.x
     runs-on: ubuntu-latest
     steps:
       - name: Ensure line endings are consistent
