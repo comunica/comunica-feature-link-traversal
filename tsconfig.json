@@ -8,6 +8,10 @@
     ],
     "module": "commonjs",
     "resolveJsonModule": true,
+    "types": [
+      "node",
+      "jest"
+    ],
 
     "strict": true,
     "strictFunctionTypes": true,
