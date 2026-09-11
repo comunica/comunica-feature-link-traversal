@@ -9675,10 +9675,10 @@
   resolved "https://registry.yarnpkg.com/@rushstack/eslint-patch/-/eslint-patch-1.10.5.tgz#3a1c12c959010a55c17d46b395ed3047b545c246"
   integrity sha512-kkKUDVlII2DQiKy7UstOR1ErJP8kUKAQ4oa+SQtM0K+lPdmmjj0YnnxBgtTVYH7mUKtbsxeFC9y0AmK7Yb78/A==
 
-"@shexjs/parser@1.0.0-alpha.30":
-  version "1.0.0-alpha.30"
-  resolved "https://registry.yarnpkg.com/@shexjs/parser/-/parser-1.0.0-alpha.30.tgz#70ffeedc4fbb95192ce0870a9fd3f136826a13ae"
-  integrity sha512-Wc0VlzgKljpNItVeuAoa3qHBwlGG577RXRgvq8zQOckUC1x+ibApQvUQ1mr/Gf0Eh20iKXMit6FX/I8Vd8CfsA==
+"@shexjs/parser@1.0.0-alpha.31":
+  version "1.0.0-alpha.31"
+  resolved "https://registry.yarnpkg.com/@shexjs/parser/-/parser-1.0.0-alpha.31.tgz#9dbd1b9192eda17ae78ce90c02008e437fb5c5cf"
+  integrity sha512-yePbMPW8YsljTwkaZX6CFmdWt6O8rRDuvFYj02CPPf7113XC5QbrKKa6q1YHCWcIp4iaXA35aJ2Mv57ymVc0Hw==
   dependencies:
     "@shexjs/term" "^1.0.0-alpha.28"
     "@ts-jison/lexer" "^0.4.1-alpha.1"
