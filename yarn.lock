@@ -9616,7 +9616,7 @@
   dependencies:
     "@types/node" "*"
 
-"@rdfjs/types@^2.0.0":
+"@rdfjs/types@^2.0.0", "@rdfjs/types@^2.0.1":
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/@rdfjs/types/-/types-2.0.1.tgz#f10b50ceffff00b961c4265e60ac9f74550251da"
   integrity sha512-uyAzpugX7KekAXAHq26m3JlUIZJOC0uSBhpnefGV5i15bevDyyejoB7I+9MKeUrzXD8OOUI3+4FeV1wwQr5ihA==
@@ -9694,10 +9694,14 @@
     rdf-data-factory "^1.1.2"
     relativize-url "^0.1.0"
 
-"@shexjs/visitor@1.0.0-alpha.25":
-  version "1.0.0-alpha.25"
-  resolved "https://registry.yarnpkg.com/@shexjs/visitor/-/visitor-1.0.0-alpha.25.tgz#1c0e79be34c876f65309e870d11e95f4b794b18d"
-  integrity sha512-DbqXXbzbzjJm2mjld7cSORgmJRyBr/RsXirDaNcRrQfZKXp+TJea8jHjY6PuHubs6SVA3Xj/SwTPGz6o5z8+WA==
+"@shexjs/visitor@1.0.0-alpha.33":
+  version "1.0.0-alpha.33"
+  resolved "https://registry.yarnpkg.com/@shexjs/visitor/-/visitor-1.0.0-alpha.33.tgz#777eee38a968023711c2a1f178e40d176053f29a"
+  integrity sha512-0XlxhLy3OHSZ4HeUNaU6FBtVvhr8xax7UX0DN3nB24xFOmhvGEsRHzEl2jYktlF1VmeGDIZRPzXP0+vHEDXJbg==
+  dependencies:
+    "@rdfjs/types" "^2.0.1"
+    "@shexjs/term" "^1.0.0-alpha.28"
+    "@types/shexj" "^2.1.7"
 
 "@shikijs/engine-oniguruma@^3.21.0":
   version "3.21.0"
