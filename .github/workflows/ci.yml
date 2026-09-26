@@ -317,7 +317,7 @@ jobs:
           name: performance-benchmark-solidbench
           path: performance/benchmark-solidbench/combinations/combination_0/output/
       - name: Process benchmark detailed results
-        run: npx -p @rubensworks/process-sparql-benchmark-results psbr csv ghbench performance/benchmark-solidbench/combinations/combination_0/output/ --overrideCombinationLabels SolidBench --total false --detailed true --name ghbench-detail.json
+        run: npx -p @rubensworks/process-sparql-benchmark-results psbr csv ghbench performance/benchmark-solidbench/combinations/combination_0/output/ --overrideCombinationLabels SolidBench --total false --detailed true --failures --name ghbench-detail.json
       - name: Process benchmark total results
         run: npx -p @rubensworks/process-sparql-benchmark-results psbr csv ghbench performance/benchmark-solidbench/combinations/combination_0/output/ --overrideCombinationLabels SolidBench --total true --detailed false --name ghbench-total.json
       - name: Determine benchmark detailed results target directory name
@@ -355,7 +355,14 @@ jobs:
           gh-pages-branch: 'master'
           benchmark-data-dir-path: ${{ env.BENCHMARK_DATA_DIR_PATH_TOTAL }}
       - name: Prepare comment on commit with link to performance results
-        run: echo -e "Performance benchmarks succeeded! 🚀\n\n\[[Summarized results](https://comunica.github.io/comunica-performance-results/comunica-feature-link-traversal/${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}/benchmarks-total/)\] \[[Detailed results](https://comunica.github.io/comunica-performance-results/comunica-feature-link-traversal/${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}/benchmarks-detail/)\]" > ./commit-comment-body.txt
+        run: |
+          echo -e "Performance benchmarks succeeded! 🚀\n\n\[[Summarized results](https://comunica.github.io/comunica-performance-results/comunica-feature-link-traversal/${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}/benchmarks-total/)\] \[[Detailed results](https://comunica.github.io/comunica-performance-results/comunica-feature-link-traversal/${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}/benchmarks-detail/)\]" > ./commit-comment-body.txt
+          # Failed queries have no time, so they are listed separately
+          jq -r '
+            map(select((.name | endswith(" - failed queries")) and .value > 0))
+            | select(length > 0)
+            | "\n:warning: Some queries failed:\n" + (map("- `\(.name | sub(" - failed queries$"; ""))`: \(.extra)") | join("\n"))
+          ' ghbench-detail.json >> ./commit-comment-body.txt
       - name: Comment on commit with link to performance results
         uses: peter-evans/commit-comment@v4
         with:
@@ -389,11 +396,11 @@ jobs:
           name: performance-benchmark-base-solidbench
           path: base/performance/benchmark-solidbench/combinations/combination_0/output/
       - name: Process benchmark detailed results
-        run: npx -p @rubensworks/process-sparql-benchmark-results psbr csv ghbench performance/benchmark-solidbench/combinations/combination_0/output/ --overrideCombinationLabels SolidBench --total false --detailed true --name ghbench-detail.json
+        run: npx -p @rubensworks/process-sparql-benchmark-results psbr csv ghbench performance/benchmark-solidbench/combinations/combination_0/output/ --overrideCombinationLabels SolidBench --total false --detailed true --failures --name ghbench-detail.json
       - name: Process benchmark total results
         run: npx -p @rubensworks/process-sparql-benchmark-results psbr csv ghbench performance/benchmark-solidbench/combinations/combination_0/output/ --overrideCombinationLabels SolidBench --total true --detailed false --name ghbench-total.json
       - name: Process base commit benchmark detailed results
-        run: npx -p @rubensworks/process-sparql-benchmark-results psbr csv ghbench base/performance/benchmark-solidbench/combinations/combination_0/output/ --overrideCombinationLabels SolidBench --total false --detailed true --name ghbench-base-detail.json
+        run: npx -p @rubensworks/process-sparql-benchmark-results psbr csv ghbench base/performance/benchmark-solidbench/combinations/combination_0/output/ --overrideCombinationLabels SolidBench --total false --detailed true --failures --name ghbench-base-detail.json
       - name: Process base commit benchmark total results
         run: npx -p @rubensworks/process-sparql-benchmark-results psbr csv ghbench base/performance/benchmark-solidbench/combinations/combination_0/output/ --overrideCombinationLabels SolidBench --total true --detailed false --name ghbench-base-total.json
       - name: Wrap the base commit results into baseline data files
