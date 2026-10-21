@@ -5,7 +5,7 @@ on:
 
 jobs:
   comment:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-26.04
     steps:
     - name: get comment count
       id: getCommentCount
